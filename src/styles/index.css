@@ -1,0 +1,22 @@
+/* CSS集約エントリ。main.tsx はこのファイルだけを import する。
+   各CSSはtsxの隣ではなく、この styles/ 配下にまとめて管理する。 */
+
+/* 基盤 */
+@import './base/variables.css';
+@import './base/global.css';
+
+/* レイアウト */
+@import './layout/root-layout.css';
+@import './layout/resource-bar.css';
+
+/* ページ */
+@import './pages/top.css';
+@import './pages/party.css';
+@import './pages/story.css';
+@import './pages/battle.css';
+@import './pages/member.css';
+@import './pages/recruit.css';
+@import './pages/base.css';
+
+/* 共通コンポーネント */
+@import './components/member-card.css';
