@@ -6,10 +6,13 @@
 @import './base/global.css';
 
 /* レイアウト */
+@import './layout/screen-frame.css';
 @import './layout/root-layout.css';
 @import './layout/resource-bar.css';
 
 /* ページ */
+@import './pages/boot.css';
+@import './pages/start.css';
 @import './pages/top.css';
 @import './pages/party.css';
 @import './pages/story.css';

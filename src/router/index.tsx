@@ -1,5 +1,8 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { paths } from './paths'
 import RootLayout from '../layouts/RootLayout'
+import BootPage from '../pages/boot/BootPage'
+import StartPage from '../pages/start/StartPage'
 import TopPage from '../pages/top/TopPage'
 import PartyPage from '../pages/party/PartyPage'
 import StoryMapPage from '../pages/story/StoryMapPage'
@@ -8,14 +11,26 @@ import MemberPage from '../pages/member/MemberPage'
 import RecruitPage from '../pages/recruit/RecruitPage'
 import BasePage from '../pages/base/BasePage'
 
+// 起動フロー（ロゴ→スタート）を通過済みかどうかでホーム表示を出し分ける。
+// 同一セッションでホームへ戻ったときに毎回ロゴへ戻らないよう sessionStorage で判定する。
+function HomeOrBoot() {
+  if (!sessionStorage.getItem('glacia:booted')) {
+    return <Navigate to={paths.boot} replace />
+  }
+  return <TopPage />
+}
+
 // ルート定義。新しい画面を足すときはここに追加し、パスは paths.ts に定義する。
 // basename は vite の base（/project-glacia/）に合わせる。
 export const router = createBrowserRouter(
   [
+    // 起動フローはリソースバー無しの全画面で表示するため RootLayout の外に置く。
+    { path: 'boot', element: <BootPage /> }, // 起動時のロゴ画面
+    { path: 'start', element: <StartPage /> }, // スタート画面（タップ／初回ログイン）
     {
       element: <RootLayout />,
       children: [
-        { index: true, element: <TopPage /> }, // Top（ホーム）
+        { index: true, element: <HomeOrBoot /> }, // Top（ホーム）。未起動ならロゴへ誘導
         { path: 'party', element: <PartyPage /> }, // 編成
         { path: 'story', element: <StoryMapPage /> }, // シナリオ：ステージマップ
         { path: 'battle/:stageId', element: <BattlePage /> }, // HEXタイル戦闘

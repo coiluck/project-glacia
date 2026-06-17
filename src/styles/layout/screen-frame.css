@@ -1,0 +1,24 @@
+/* 画面フレーム。 .screen-viewport（実画面いっぱい）/ .screen-safe（設計解像度のセーフエリア）。
+   背景はビューポートいっぱいに広がり、セーフエリアを一様拡大して中央に配置する。 */
+.screen-viewport {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* 設計座標系（--design-w × --design-h）の箱。中央に固定し、--scale で表示領域にフィットさせる。
+   背景色はビューポートと同じにして、セーフエリア外まで地続きに見せる（帯を出さない）。 */
+.screen-safe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--design-w);
+  height: var(--design-h);
+  transform: translate(-50%, -50%) scale(var(--scale));
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  background: var(--bg);
+  overflow: hidden;
+}

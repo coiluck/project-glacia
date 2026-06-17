@@ -1,0 +1,52 @@
+/* スタート画面。 .start-screen / .start-tap / .start-logo / .start-prompt / .start-login */
+.start-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  background: var(--bg);
+}
+
+.start-tap {
+  cursor: pointer;
+  user-select: none;
+}
+
+.start-logo {
+  margin: 0;
+  letter-spacing: 4px;
+}
+
+.start-prompt {
+  color: var(--text);
+  animation: start-prompt-blink 1.6s ease-in-out infinite;
+}
+
+@keyframes start-prompt-blink {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.start-login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.start-login button {
+  font: inherit;
+  color: var(--text-h);
+  padding: 10px 28px;
+  border: 1px solid var(--accent-border);
+  border-radius: 8px;
+  background: var(--accent-bg);
+  cursor: pointer;
+}

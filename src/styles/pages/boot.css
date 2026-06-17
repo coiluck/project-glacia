@@ -1,0 +1,23 @@
+/* 起動時のロゴ画面。 .boot-screen / .boot-logo */
+.boot-screen {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+}
+
+.boot-logo {
+  margin: 0;
+  letter-spacing: 4px;
+  animation: boot-logo-in 1.2s ease-out;
+}
+
+@keyframes boot-logo-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
