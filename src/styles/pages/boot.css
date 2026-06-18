@@ -1,23 +1,104 @@
-/* 起動時のロゴ画面。 .boot-screen / .boot-logo */
-.boot-screen {
-  flex: 1;
+/* 起動時のロゴ画面 */
+@font-face {
+  font-family: 'Quantum';
+  src: url('../fonts/Quantum.otf') format('opentype');
+}
+
+.boot-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: fit-content;
+  height: fit-content;
+  margin: 0 auto;
 }
 
-.boot-logo {
-  margin: 0;
-  letter-spacing: 4px;
-  animation: boot-logo-in 1.2s ease-out;
+.boot-image-container {
+  width: 100%;
+  max-width: 25rem;
+  height: 100%;
+  max-height: 25rem;
+}
+.boot-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 }
 
-@keyframes boot-logo-in {
-  from {
+.boot-text-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.boot-text-container p {
+  color: #fff3f1;
+  font-size: 5rem;
+  font-family: 'Quantum', sans-serif;
+  font-weight: bold;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+.boot-text-container p span {
+  display: inline-block;
+  opacity: 0;
+}
+
+/* アニメーション */
+.boot-text-container p .animate-bounce {
+  animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+.boot-text-container p .animate-scale {
+  animation: scaleUp 0.6s ease-out forwards;
+}
+
+.boot-text-container p .animate-jump {
+  animation: jumpIn 0.6s ease-out forwards;
+}
+
+@keyframes bounceIn {
+  from { opacity: 0; transform: translateY(-40px); }
+  to { opacity: 1; transform: translateY(-8px); }
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.5) translateY(-8px); }
+  to { opacity: 1; transform: scale(1) translateY(-8px); }
+}
+
+@keyframes jumpIn {
+  0% {
+    transform: scale(1.5) translateY(10px);
     opacity: 0;
   }
-  to {
+  40% {
+    transform: scale(.75) translateY(3px);
+  }
+  60% {
+    transform: scale(1.2) translateY(-1px);
+    opacity: 0.8;
+  }
+  80% {
+    transform: scale(0.9) translateY(-5px);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) translateY(-8px);
     opacity: 1;
   }
 }
