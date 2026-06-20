@@ -1,47 +1,61 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { paths } from '../../router/paths'
+import Screen from '../../layouts/Screen'
+import StartActions from './StartActions'
 
 // スタート画面。通常はタップするだけでHOMEへ進む。初回のみログイン（プレースホルダー）を表示する。
 const BOOTED_KEY = 'glacia:booted' // セッション中に起動フローを通過済みか（sessionStorage）
 const LOGGED_IN_KEY = 'glacia:loggedIn' // ログイン済みか＝初回かどうかの判定（localStorage）
 
+// 背景画像（BASE_URL 基準の相対パス）。Screen がビューポート全体に敷く。
+const BACKGROUND = 'images/start/background.png'
+
 export default function StartPage() {
   const navigate = useNavigate()
-  // マウント時に一度だけ初回判定する（ログイン後は通常のタップ画面になる）。
+  // 初回判定
   const [isFirstTime] = useState(() => !localStorage.getItem(LOGGED_IN_KEY))
 
-  // HOMEへ入る。起動フロー通過済みフラグを立ててから遷移する。
+  const logoSrc = `${import.meta.env.BASE_URL}images/start/logo.svg`
+
+  // 起動フロー通過済みフラグ
   const enterGame = () => {
     sessionStorage.setItem(BOOTED_KEY, '1')
     navigate(paths.top, { replace: true })
   }
 
-  // 初回ログイン。現状はプレースホルダーで、押すとログイン済み扱いにする。
-  // TODO: 実際の認証処理に差し替える（認証基盤の導入後）。
+  // 初回ログイン
+  // TODO: 認証処理
   const handleLogin = () => {
     localStorage.setItem(LOGGED_IN_KEY, '1')
-    enterGame()
   }
 
   if (isFirstTime) {
     return (
-      <div className="start-screen">
-        <h1 className="start-logo">GLACIA</h1>
-        <div className="start-login">
-          <p>はじめての方はログインしてください</p>
-          <button type="button" onClick={handleLogin}>
-            ログイン
-          </button>
+      <Screen background={BACKGROUND}>
+        <div className="start-screen fade-in" onClick={handleLogin}>
+          <div className="start-title-container">
+            <img className="start-emblem" src={logoSrc} alt="" aria-hidden />
+            <h1 className="start-logo">氷途</h1>
+          </div>
+          <p className="start-prompt">ログインが必要です</p>
         </div>
-      </div>
+      </Screen>
     )
   }
 
   return (
-    <div className="start-screen start-tap" onClick={enterGame}>
-      <h1 className="start-logo">GLACIA</h1>
-      <p className="start-prompt">タップしてスタート</p>
-    </div>
+    <Screen
+      background={BACKGROUND}
+      viewport={<StartActions buttonText="アカウント管理" onClick={handleLogin} />}
+    >
+      <div className="start-screen start-tap fade-in" onClick={enterGame}>
+        <div className="start-title-container">
+          <img className="start-emblem" src={logoSrc} alt="" aria-hidden />
+          <h1 className="start-logo">氷途</h1>
+        </div>
+        <p className="start-prompt">TAP TO START</p>
+      </div>
+    </Screen>
   )
 }

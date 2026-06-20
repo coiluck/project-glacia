@@ -1,8 +1,6 @@
-/* CSS集約エントリ。main.tsx はこのファイルだけを import する。
-   各CSSはtsxの隣ではなく、この styles/ 配下にまとめて管理する。 */
+/* CSS集約エントリ。main.tsx はこのファイルだけを import する */
 
 /* 基盤 */
-@import './base/variables.css';
 @import './base/global.css';
 
 /* レイアウト */

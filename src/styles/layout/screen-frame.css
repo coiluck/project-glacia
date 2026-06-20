@@ -22,3 +22,20 @@
   background: var(--bg);
   overflow: hidden;
 }
+
+/* 全画面背景レイヤー（useViewportBackground 経由で ScreenFrame が描画）。
+   ビューポート全体を cover で覆い、セーフエリアの後ろに敷く。 */
+.viewport-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* 背景があるときはセーフエリアの塗りを透かし、背景を全面に見せる。 */
+.screen-viewport.has-bg .screen-safe {
+  z-index: 1;
+  background: transparent;
+}

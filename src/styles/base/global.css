@@ -4,9 +4,9 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  color: var(--color-text);
   font-weight: normal;
-  font-family: var(--font-family);
+  line-height: 1.6;
+  color: #fff;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -14,7 +14,32 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* .screen-viewport が position:fixed で実画面を覆うから、#root 自体のサイズは意味ない */
 #root {
-  min-height: 100svh;
+  height: 100dvh;
+  background: #000;
+}
+
+.fade-in {
+  animation: FadeIn .3s;
+  animation-fill-mode: both;
+}
+@keyframes FadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.fade-out {
+  animation: FadeOut .3s;
+  animation-fill-mode: both;
+}
+@keyframes FadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
