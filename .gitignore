@@ -26,6 +26,6 @@ dist-ssr
 CLAUDE.md
 
 # バイナリ系は重いので除外
-public/images/*
+public/images/**
 !public/images/**/
 !public/images/**/*.svg

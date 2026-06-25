@@ -1,3 +1,325 @@
-/* ホーム画面 */
+/* absoluteだからね */
 .page-top {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* 端からは2remずつ */
+
+/* ===== 左中央：キャラ立ち絵 ===== */
+.top-character-art {
+  position: absolute;
+  left: calc(2rem * var(--scale));
+  bottom: 0;
+  height: calc(720px * var(--scale));
+  width: calc(1200px * var(--scale));
+}
+.top-character-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom;
+}
+.top-character-text-container {
+  position: absolute;
+  left: calc(180px * var(--scale));
+  bottom: calc(12vw + 2rem * var(--scale) + 12px * var(--scale));
+  padding: calc(12px * var(--scale));
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.2));
+  z-index: 1;
+}
+.top-character-name {
+  position: absolute;
+  top: 0;
+  left: calc(36px * var(--scale));
+  transform: translateY(-50%);
+  width: fit-content;
+  padding: 0 calc(24px * var(--scale));
+  font-size: calc(1.2rem * var(--scale));
+  letter-spacing: 0.1rem;
+  color: #282828;
+  text-align: center;
+  background-color: #fff;
+  clip-path: polygon(
+    calc(12px * var(--scale)) 0,
+    calc(100% - 12px * var(--scale)) 0,
+    100% 50%,
+    calc(100% - 12px * var(--scale)) 100%,
+    calc(12px * var(--scale)) 100%,
+    0 50%
+  );
+}
+.top-character-line {
+  padding-top: calc(12px * var(--scale));
+  min-width: calc(480px * var(--scale));
+  min-height: calc(80px * var(--scale));
+  font-size: calc(1.6rem * var(--scale));
+  text-shadow: 0 calc(2px * var(--scale)) calc(6px * var(--scale)) rgba(0, 0, 0, 0.8);
+}
+
+/* ===== 左下：イベントバナー ===== */
+.top-event-banner {
+  position: absolute;
+  left: calc(2rem * var(--scale));
+  bottom: calc(2rem * var(--scale));
+  display: flex;
+  flex-direction: column;
+  gap: calc(4px * var(--scale));
+  aspect-ratio: 5 / 2;
+  width: 30vw;
+  background: linear-gradient(135deg, rgba(180, 30, 30, 0.85), rgba(40, 0, 0, 0.85));
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+}
+.top-event-banner-item {
+  font-size: calc(1.1rem * var(--scale));
+  letter-spacing: 0.15em;
+  opacity: 0.9;
+}
+
+/* ===== 右下：システムメニュー ===== */
+.top-system-menu {
+  position: absolute;
+  right: calc(2rem * var(--scale));
+  bottom: calc(2rem * var(--scale));
+  width: 50vw;
+  display: flex;
+  justify-content: space-between;
+}
+
+.top-system-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(8px * var(--scale));
+  position: relative;
+  min-width: calc(96px * var(--scale));
+  height: calc(64px * var(--scale));
+  padding: 0 calc(16px * var(--scale));
+  font-size: calc(1.3rem * var(--scale));
+  color: #fff;
+  background: rgba(20, 20, 24, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+@media (hover: hover) {
+  .top-system-menu-item:hover {
+    background: rgba(60, 60, 70, 0.85);
+  }
+}
+
+.top-system-menu-item.notice::before {
+  content: '';
+  position: absolute;
+  right: calc(4px * var(--scale));
+  top: calc(4px * var(--scale));
+  width: calc(16px * var(--scale));
+  height: calc(16px * var(--scale));
+  background: rgba(252, 212, 140, 0.85);
+  filter: drop-shadow(0 0 calc(16px * var(--scale)) rgba(255, 233, 192, 0.85));
+  mask-image: url('/project-glacia/images/top/menu/notice.svg');
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+}
+
+.top-system-menu-item-icon {
+  display: inline-block;
+  width: calc(48px * var(--scale));
+  height: calc(48px * var(--scale));
+  background-color: #ffffff;
+  mask-image: var(--icon-url);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+}
+
+.top-system-menu-item-label {
+  font-size: calc(1.5rem * var(--scale));
+}
+
+/* ===== 右中央：メインメニュー ===== */
+.top-menu-buttons {
+  position: absolute;
+  right: calc(96px * var(--scale));
+  top: calc(240px * var(--scale));
+  bottom: calc(180px * var(--scale));
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: calc(32px * var(--scale));
+  width: 40vw;
+}
+.top-menu-buttons-row {
+  display: flex;
+  gap: calc(16px * var(--scale));
+  width: 100%;
+  height: 100%;
+}
+.top-menu-buttons-row:nth-child(2), .top-menu-buttons-row:nth-child(4) {
+  margin-left: calc(64px * var(--scale));
+}
+.top-menu-buttons a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: calc(3rem * var(--scale));
+  text-decoration: none;
+  text-shadow: calc(3px * var(--scale)) calc(3px * var(--scale)) calc(5px * var(--scale)) rgba(0, 0, 0, 0.8);
+  color: #282828;
+  background: rgb(226, 231, 235);
+  box-shadow: calc(-8px * var(--scale)) calc(8px * var(--scale)) calc(12px * var(--scale)) rgba(0, 0, 0, 0.8);
+}
+.top-menu-buttons a span {
+  color: #282828;
+}
+
+.top-menu-buttons a.top-menu-button-battle {
+  justify-content: flex-start;
+  gap: calc(96px * var(--scale));
+  padding: calc(24px * var(--scale));
+  background: linear-gradient(to right, rgb(107, 191, 252), rgb(102, 255, 255));
+}
+
+.top-menu-button-stamina-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: repeating-linear-gradient(
+    45deg,
+    #a3fcff 0,
+    #a3fcff calc(20px * var(--scale)),
+    #4d9fc5 calc(20px * var(--scale)),
+    #4d9fc5 calc(40px * var(--scale))
+  );
+}
+.top-menu-button-stamina-icon {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  height: 100%;
+}
+.top-menu-button-stamina-icon::before {
+  content: '';
+  position: absolute;
+  inset: calc(12px * var(--scale));
+  mask-image: url('/project-glacia/images/top/menu-main/bolt.svg');
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  background-color: #282828;
+}
+
+.top-menu-buttons a .top-menu-button-stamina-value-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(4px * var(--scale));
+}
+
+.top-menu-buttons a .top-menu-button-stamina-value {
+  padding: 0 calc(12px * var(--scale));
+  font-size: calc(3rem * var(--scale));
+  font-weight: bold;
+  text-shadow: calc(3px * var(--scale)) calc(3px * var(--scale)) calc(5px * var(--scale)) rgba(255, 255, 255, 0.8);
+  color: #282828;
+}
+.top-menu-buttons a .top-menu-button-stamina-max {
+  position: relative;
+  padding-right: calc(8px * var(--scale));
+  padding-left: calc(16px * var(--scale));
+  font-size: calc(1.5rem * var(--scale));
+  color: #fff;
+  background-color: #282828;
+  clip-path: polygon(
+    calc(12px * var(--scale)) 0,
+    100% 0,
+    100% 100%,
+    calc(12px * var(--scale)) 100%,
+    0 50%
+  );
+}
+
+.top-menu-button-party-icon {
+  width: calc(72px * var(--scale));
+  height: calc(72px * var(--scale));
+  mask-image: url('/project-glacia/images/top/menu-main/knight.svg');
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  background-color: #282828;
+  opacity: 0.2;
+}
+.top-menu-button-member-icon {
+  width: calc(72px * var(--scale));
+  height: calc(72px * var(--scale));
+  mask-image: url('/project-glacia/images/top/menu-main/team.svg');
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  background-color: #282828;
+  opacity: 0.2;
+}
+
+.top-menu-button-mission-icon {
+  width: calc(72px * var(--scale));
+  height: calc(72px * var(--scale));
+  mask-image: url('/project-glacia/images/top/menu-main/mission.svg');
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  background-color: #282828;
+  opacity: 0.2;
+}
+.top-menu-button-exchange-icon {
+  width: calc(72px * var(--scale));
+  height: calc(72px * var(--scale));
+  mask-image: url('/project-glacia/images/top/menu-main/exchange.svg');
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  background-color: #282828;
+  opacity: 0.2;
+}
+.top-menu-button-recruit-icon {
+  width: calc(72px * var(--scale));
+  height: calc(72px * var(--scale));
+  mask-image: url('/project-glacia/images/top/menu-main/graduation_hat.svg');
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  background-color: #282828;
+  opacity: 0.2;
+}
+
+.top-menu-buttons a.top-menu-button-base {
+  padding: 0 calc(48px * var(--scale));
+  gap: calc(32px * var(--scale));
+}
+.top-menu-button-base-icon {
+  width: calc(72px * var(--scale));
+  height: calc(72px * var(--scale));
+  mask-image: url('/project-glacia/images/top/menu-main/base.svg');
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  background-color: #282828;
+  opacity: 0.2;
+}
+
+.top-menu-buttons a.top-menu-button-store {
+  width: fit-content;
+  padding: 0 calc(24px * var(--scale));
+  text-wrap: nowrap;
+  font-size: calc(2rem * var(--scale));
+  background-color: #282828;
+  color: #fff;
+  text-shadow: calc(3px * var(--scale)) calc(3px * var(--scale)) calc(5px * var(--scale)) rgba(255, 255, 255, 0.8);
 }

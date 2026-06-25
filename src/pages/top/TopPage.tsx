@@ -1,14 +1,19 @@
-import StoryPanel from './components/StoryPanel'
+import ViewportLayer from '../../layouts/ViewportLayer'
+import CharacterStage from './components/CharacterStage'
+import EventBanner from './components/EventBanner'
 import MenuButtons from './components/MenuButtons'
+import SystemMenu from './components/SystemMenu'
 
-// Top（ホーム）画面。中央にキャラ立ち絵、右に物語パネル、各種メニューへの導線。
+// ホーム画面
 export default function TopPage() {
   return (
-    <div className="page-top">
-      <h1>HOME</h1>
-      {/* TODO: 中央キャラ立ち絵 / 左サイドメニュー（設定・お知らせ等） */}
-      <StoryPanel />
-      <MenuButtons />
-    </div>
+    <ViewportLayer>
+      <div className="page-top">
+        <CharacterStage />
+        <EventBanner />
+        <MenuButtons />
+        <SystemMenu />
+      </div>
+    </ViewportLayer>
   )
 }
