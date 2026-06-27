@@ -179,8 +179,54 @@
   opacity: 0.6;
 }
 
+/* 言語切り替えポップオーバー */
+.start-actions-lang-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+}
+
+.start-actions-lang-popover {
+  position: fixed;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  min-width: calc(14rem * var(--scale));
+  background: #333;
+  border: 1px solid #bbb;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.6);
+}
+
+.start-actions-lang-option {
+  display: flex;
+  align-items: center;
+  gap: calc(0.8rem * var(--scale));
+  padding: calc(1.2rem * var(--scale)) calc(1.6rem * var(--scale));
+  font-size: calc(1.6rem * var(--scale));
+  color: #fff;
+  line-height: 1;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+@media (hover: hover) {
+  .start-actions-lang-option:hover {
+    opacity: 1;
+    background: #555;
+  }
+}
+
+.start-actions-lang-check {
+  width: 1em;
+  flex: none;
+  line-height: 1;
+}
+
 /* 利用規約modal */
-.start-terms-overlay {
+.start-actions-overlay {
   position: fixed;
   inset: 0;
   z-index: 10;
@@ -190,28 +236,35 @@
   background: rgba(0, 0, 0, 0.5);
 }
 
-.start-terms-modal {
+.start-actions-modal {
   width: min(80vw, 600px);
   max-height: 70vh;
-  overflow-y: auto;
-  padding: 32px;
-  border-radius: 12px;
-  background: #fff;
-  color: #000;
+  padding: calc(36px * var(--scale));
+  background: #eef0f8;
   text-align: left;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
-.start-terms-title {
-  margin: 0 0 16px;
-  font-size: 1.5rem;
+.start-actions-title {
+  padding-bottom: calc(24px * var(--scale));
+  color: #000;
+  font-size: calc(36px * var(--scale));
+  border-bottom: 1px solid #000;
 }
 
-.start-terms-text {
-  margin: 0 0 24px;
-  line-height: 1.7;
+.start-actions-text {
+  margin-top: calc(24px * var(--scale));
+  color: #000;
+  line-height: 1.6;
+  font-size: calc(24px * var(--scale));
 }
 
-.start-terms-close {
+.start-actions-close {
   font: inherit;
   color: var(--text-h);
   padding: 8px 24px;

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { paths } from '../../router/paths'
+import { useTranslations } from '../../i18n'
 import Screen from '../../layouts/Screen'
 import StartActions from './StartActions'
 
@@ -15,6 +16,12 @@ export default function StartPage() {
   const navigate = useNavigate()
   // 初回判定
   const [isFirstTime] = useState(() => !localStorage.getItem(LOGGED_IN_KEY))
+
+  const t = useTranslations('start', {
+    needLogin: 'needLogin',
+    manageAccount: 'manageAccount',
+    tapToStart: 'tapToStart',
+  })
 
   const logoSrc = `${import.meta.env.BASE_URL}images/start/logo.svg`
 
@@ -38,7 +45,7 @@ export default function StartPage() {
             <img className="start-emblem" src={logoSrc} alt="" aria-hidden />
             <h1 className="start-logo">氷途</h1>
           </div>
-          <p className="start-prompt">ログインが必要です</p>
+          <p className="start-prompt">{t.needLogin}</p>
         </div>
       </Screen>
     )
@@ -47,14 +54,14 @@ export default function StartPage() {
   return (
     <Screen
       background={BACKGROUND}
-      viewport={<StartActions buttonText="アカウント管理" onClick={handleLogin} />}
+      viewport={<StartActions buttonText={t.manageAccount} onClick={handleLogin} />}
     >
       <div className="start-screen start-tap fade-in" onClick={enterGame}>
         <div className="start-title-container">
           <img className="start-emblem" src={logoSrc} alt="" aria-hidden />
           <h1 className="start-logo">氷途</h1>
         </div>
-        <p className="start-prompt">TAP TO START</p>
+        <p className="start-prompt">{t.tapToStart}</p>
       </div>
     </Screen>
   )
