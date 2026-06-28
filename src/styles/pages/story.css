@@ -1,3 +1,294 @@
-/* シナリオ：ステージマップ画面。 .page-story / .story-map / .stage-node */
+/* シナリオ：ステージマップ画面。
+   .page-story / .story-map / .stage-node はセーフエリア内（設計座標 1920×1080 の生px）。
+   .story-map-chapter-select-* / .story-map-stage-info-* は ViewportLayer 経由で
+   実画面の端に配置するため var(--scale) を掛ける。 */
+
+/* ===== セーフエリア内：マップ本体 ===== */
 .page-story {
+  position: absolute;
+  inset: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.story-map {
+  position: absolute;
+  inset: 0;
+}
+
+/* ===== ノード間のパス ===== */
+.story-paths {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+.story-path {
+  stroke: #ffd271d0;
+  stroke-width: 6;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 6px rgba(255, 200, 90, 0.85));
+}
+.story-path.locked {
+  stroke: #5677a5;
+  stroke-width: 6;
+  stroke-dasharray: 10 14;
+  filter: drop-shadow(0 0 6px rgba(68, 101, 148, 0.85));
+}
+
+/* ステージノード */
+.story-stage-node-card {
+  position: absolute;
+  z-index: 1;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
+}
+.story-stage-card-header {
+  display: block;
+  width: 100%;
+  padding: 2px 0;
+  color: #08121c;
+  font-size: 14px;
+  line-height: 1;
+  letter-spacing: 0.2rem;
+  background: linear-gradient(160deg, rgb(123, 191, 255), rgb(123, 241, 196));
+  border-radius: 10px 10px 0 0;
+}
+.story-stage-card-main {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  padding: 14px 24px;
+  background: linear-gradient(160deg, rgba(34, 46, 64, 1), rgba(10, 14, 22, 1));
+  border-radius: 0 0 10px 10px;
+}
+.story-stage-card-main-id {
+  font-size: 36px;
+  line-height: 1;
+  letter-spacing: 4px;
+  color: rgba(255, 255, 255, 0.92);
+  text-wrap: nowrap;
+}
+.story-stage-card-main-cleared-icon {
+  position: relative;
+  width: 45px;
+  height: 45px;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.85));
+}
+.story-stage-card-main-cleared-icon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  mask-image: url('/project-glacia/images/story/ice.svg');
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  background-color: #7dc7e4;
+}
+
+.story-stage-card-main-locked-icon {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #8b8b8b;
+  background-color: #ffffff;
+  clip-path: polygon(
+    30% 0%, 70% 0%,
+    100% 30%, 100% 70%,
+    70% 100%, 30% 100%,
+    0% 70%, 0% 30%
+  );
+}
+/* チャプター選択 */
+.story-map-chapter-select-container {
+  position: absolute;
+  bottom: calc(32px * var(--scale));
+  left: calc(32px * var(--scale));
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+}
+.story-map-chapter-select-header {
+  display: flex;
+  width: 100%;
+  background: rgba(123, 218, 255, 0.6);
+}
+.story-map-chapter-select-header-text {
+  position: relative;
+  width: calc(180px * var(--scale));
+  padding: calc(4px * var(--scale)) calc(12px * var(--scale));
+  background: rgb(123, 255, 248);
+  font-size: calc(1.2rem * var(--scale));
+  line-height: 1;
+  letter-spacing: calc(0.1rem * var(--scale));
+  color: #08121c;
+  text-transform: uppercase;
+}
+.story-map-chapter-select-header-text::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: calc(100% - 1px);
+  width: calc(20px * var(--scale));
+  height: 100%;
+  background: rgb(123, 255, 248);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+.story-map-chapter-select-main {
+  display: flex;
+  flex-direction: column;
+  gap: calc(16px * var(--scale));
+  width: 100%;
+  padding: calc(16px * var(--scale)) calc(16px * var(--scale));
+  background: linear-gradient(160deg, rgba(26, 34, 48, 0.7), rgba(10, 14, 22, 0.7));
+}
+.story-map-chapter-select-main-title {
+  font-size: calc(1.8rem * var(--scale));
+  line-height: 1;
+  letter-spacing: calc(0.1rem * var(--scale));
+  color: #fff;
+  padding-left: calc(16px * var(--scale));
+  border-left: 4px solid #7fe0ff;
+}
+.story-map-chapter-select-main-progress {
+  display: flex;
+  align-items: center;
+  gap: calc(12px * var(--scale));
+  width: calc(240px * var(--scale));
+  height: calc(8px * var(--scale));
+}
+.story-map-chapter-select-main-progress-bar {
+  width: 100%;
+  height: 100%;
+  background: #8f8f8f;
+}
+.story-map-chapter-select-main-progress-bar-fill {
+  width: 80%;
+  height: 100%;
+  background: linear-gradient(to right, #7fe0ff, #b6f5ff);
+}
+.story-map-chapter-select-main-progress-text {
+  font-size: calc(1.2rem * var(--scale));
+  line-height: 1;
+  letter-spacing: calc(0.1rem * var(--scale));
+  color: #fff;
+}
+
+/* 選択中ステージの情報 */
+.story-map-stage-info-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+}
+.story-map-stage-info-container {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  right: -1px;
+  transform: translateX(100%);
+  width: calc(540px * var(--scale));
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: calc(12px * var(--scale));
+  min-width: calc(360px * var(--scale));
+  background: #f4f7ff;
+  animation: story-map-stage-info-container-fade-in 0.3s ease-out forwards;
+}
+@keyframes story-map-stage-info-container-fade-in {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.story-map-stage-info-thumbnail-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  background-color: #555555;
+}
+.story-map-stage-info-thumbnail-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.story-map-stage-info-thumbnail-number {
+  position: absolute;
+  top: calc(16px * var(--scale));
+  left: calc(16px * var(--scale));
+  font-size: calc(2.6rem * var(--scale));
+  font-weight: bold;
+  color: #e0f9ff;
+}
+
+.story-map-stage-info-description-container {
+  padding: calc(24px * var(--scale));
+  padding-bottom: calc(150px * var(--scale));
+  min-height: calc(100px * var(--scale));
+  display: flex;
+  flex-direction: column;
+  gap: calc(36px * var(--scale));
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+.story-map-stage-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: calc(8px * var(--scale));
+}
+.story-map-stage-info-item-title {
+  padding-left: calc(8px * var(--scale));
+  font-size: calc(2rem * var(--scale));
+  color: #fafafa;
+  background: linear-gradient(to right, #263544, #6c7070);
+}
+
+
+.story-map-stage-info-button-container {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: calc(160px * var(--scale));
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 45%);
+}
+.story-map-stage-info-button {
+  position: absolute;
+  bottom: calc(32px * var(--scale));
+  left: calc(32px * var(--scale));
+  right: calc(32px * var(--scale));
+  padding: calc(12px * var(--scale)) 0;
+  text-align: center;
+  text-decoration: none;
+}
+.story-map-stage-info-button.sortie {
+  font-size: calc(1.6rem * var(--scale));
+  letter-spacing: 0.2em;
+  color: #08121c;
+  background: linear-gradient(to right, #7fe0ff, #b6f5ff);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+}
+.story-map-stage-info-button.locked {
+  font-size: calc(1.4rem * var(--scale));
+  color: #6f7881;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(to right, #e2e2e2, #d8d8d8);
 }
