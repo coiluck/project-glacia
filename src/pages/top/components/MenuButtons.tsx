@@ -1,8 +1,12 @@
 import { Link } from 'react-router-dom'
 import { paths } from '../../../router/paths'
+import { useStaminaStore } from '../../../stores/staminaStore'
 
 // Top画面下部のメインメニュー
 export default function MenuButtons() {
+  const stamina = useStaminaStore((s) => s.stamina)
+  const staminaMax = useStaminaStore((s) => s.staminaMax)
+
   return (
     <nav className="top-menu-buttons">
       <div className="top-menu-buttons-row">
@@ -11,8 +15,8 @@ export default function MenuButtons() {
             <div className="top-menu-button-stamina-icon" />
 
             <div className="top-menu-button-stamina-value-container">
-              <span className="top-menu-button-stamina-value">100</span>
-              <span className="top-menu-button-stamina-max">MAX 100</span>
+              <span className="top-menu-button-stamina-value">{stamina}</span>
+              <span className="top-menu-button-stamina-max">MAX {staminaMax}</span>
             </div>
           </div>
 

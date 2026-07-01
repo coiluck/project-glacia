@@ -2,6 +2,8 @@ import { type ReactNode } from 'react'
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { paths } from '../../router/paths'
+import { useResourceStore } from '../../stores/resourceStore'
+import { formatCompact } from '../../utils/format'
 import '../../styles/components/resource-bar.css'
 import MenuMap from './MenuMap'
 
@@ -19,9 +21,10 @@ const gemIcon = (
 )
 
 // 全画面共通の上部リソースバー
-// TODO: D1のデータと接続する。
 export default function ResourceBar() {
   const navigate = useNavigate()
+  const currency = useResourceStore((s) => s.currency)
+  const gems = useResourceStore((s) => s.gems)
   const isTopPage = useLocation().pathname === paths.top;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMenuClosing, setIsMenuClosing] = useState(false);
@@ -76,8 +79,8 @@ export default function ResourceBar() {
         }
       </div>
       <div className="resource-bar-component-container-right">
-        {resouceItem(billIcon, '1111111111')}
-        {resouceItem(gemIcon, '1000')}
+        {resouceItem(billIcon, formatCompact(currency))}
+        {resouceItem(gemIcon, formatCompact(gems))}
       </div>
 
       {isMenuOpen && (
