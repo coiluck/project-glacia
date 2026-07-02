@@ -1,23 +1,22 @@
-/* シナリオ：ステージマップ画面。
-   .page-story / .story-map / .stage-node はセーフエリア内（設計座標 1920×1080 の生px）。
-   .story-map-chapter-select-* / .story-map-stage-info-* は ViewportLayer 経由で
-   実画面の端に配置するため var(--scale) を掛ける。 */
-
-/* ===== セーフエリア内：マップ本体 ===== */
-.page-story {
+/*マップ本体 */
+.story-map-scroll {
   position: absolute;
   inset: 0;
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  z-index: 1;
+}
+.story-map-scroll::-webkit-scrollbar {
+  display: none;
 }
 .story-map {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  height: 100%;
 }
 
-/* ===== ノード間のパス ===== */
+/* ノード間のパス */
 .story-paths {
   position: absolute;
   inset: 0;
@@ -29,15 +28,15 @@
 }
 .story-path {
   stroke: #ffd271d0;
-  stroke-width: 6;
+  stroke-width: 0.6;
   stroke-linecap: round;
-  filter: drop-shadow(0 0 6px rgba(255, 200, 90, 0.85));
+  filter: drop-shadow(0 0 0.6px rgba(255, 200, 90, 0.85));
 }
 .story-path.locked {
   stroke: #5677a5;
-  stroke-width: 6;
-  stroke-dasharray: 10 14;
-  filter: drop-shadow(0 0 6px rgba(68, 101, 148, 0.85));
+  stroke-width: 0.6;
+  stroke-dasharray: 1 1.4;
+  filter: drop-shadow(0 0 0.6px rgba(68, 101, 148, 0.85));
 }
 
 /* ステージノード */
@@ -48,7 +47,7 @@
   padding: 0;
   border: 0;
   background: none;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(var(--scale));
   cursor: pointer;
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
 }
@@ -186,11 +185,6 @@
 }
 
 /* 選択中ステージの情報 */
-.story-map-stage-info-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-}
 .story-map-stage-info-container {
   position: absolute;
   top: -1px;
