@@ -20,7 +20,7 @@
   z-index: 3; /* menu-overlay(2)より上 */
 }
 
-/* 左側 */
+/* 左側・移動用 */
 .resource-bar-move-container {
   display: flex;
   gap: calc(1rem * var(--scale));
@@ -52,6 +52,22 @@
   inset: calc(16px * var(--scale));
   border: 1px solid #fff;
   transform: rotate(45deg);
+}
+
+/* 左側・ユーザー用 */
+.resource-bar-user-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  height: calc((84px + 32px) * var(--scale));
+}
+.resource-bar-user-svg {
+  height: 100%;
+  width: auto;
+  display: block;
+}
+.resource-bar-user-exp-fill {
+  transition: width 0.4s ease-out;
 }
 
 /* 右側 */

@@ -14,8 +14,8 @@ export interface RankState {
 const initial = {
   rank: 1,
   totalExp: 0,
-  expInRank: 0,
-  expToNext: 0,
+  expInRank: 1,
+  expToNext: 1,
 }
 
 export const useRankStore = create<RankState>((set) => ({
