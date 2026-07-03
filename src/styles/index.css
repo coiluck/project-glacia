@@ -11,9 +11,14 @@
 /* ページ */
 @import './pages/boot.css';
 @import './pages/start.css';
-@import './pages/top.css';
+@import './pages/top/top.css';
+@import './pages/top/character-stage.css';
+@import './pages/top/event-banner.css';
+@import './pages/top/system-menu.css';
+@import './pages/top/menu-buttons.css';
 @import './pages/party.css';
-@import './pages/story.css';
+@import './pages/story/story.css';
+@import './pages/story/stage-node.css';
 @import './pages/battle.css';
 @import './pages/member.css';
 @import './pages/recruit.css';
@@ -21,3 +26,18 @@
 
 /* 共通コンポーネント */
 @import './components/member-card.css';
+
+
+/* font */
+@font-face {
+  font-family: 'HakkouMincho';
+  src: url('./fonts/HakkouMincho.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'SoukouMincho';
+  src: url('./fonts/SoukouMincho.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'CaviarDreams';
+  src: url('./fonts/CaviarDreams.ttf') format('truetype');
+}

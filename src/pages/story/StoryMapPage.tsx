@@ -6,7 +6,6 @@ import ViewportLayer from '../../layouts/ViewportLayer'
 import StageNode from './components/StageNode'
 import { useProgressStore } from '../../stores/progressStore'
 import { chapters, type Stage, type StageStatus } from '../../data/stages'
-import '../../styles/pages/story.css'
 
 // マップ描画用にstatusを付与
 export type StageNodeData = Stage & { status: StageStatus }

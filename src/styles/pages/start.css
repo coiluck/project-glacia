@@ -1,7 +1,3 @@
-@font-face {
-  font-family: 'HakkouMincho';
-  src: url('../fonts/HakkouMincho.woff2') format('woff2');
-}
 .start-screen {
   flex: 1;
   display: flex;

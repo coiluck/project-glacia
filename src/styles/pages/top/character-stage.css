@@ -1,0 +1,50 @@
+/* ===== 左中央：キャラ立ち絵 ===== */
+.top-character-art {
+  position: absolute;
+  left: calc(2rem * var(--scale));
+  bottom: 0;
+  height: calc(720px * var(--scale));
+  width: calc(1200px * var(--scale));
+}
+.top-character-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom;
+}
+.top-character-text-container {
+  position: absolute;
+  left: calc(180px * var(--scale));
+  bottom: calc(12vw + 2rem * var(--scale) + 12px * var(--scale));
+  padding: calc(12px * var(--scale));
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.2));
+  z-index: 1;
+}
+.top-character-name {
+  position: absolute;
+  top: 0;
+  left: calc(36px * var(--scale));
+  transform: translateY(-50%);
+  width: fit-content;
+  padding: 0 calc(24px * var(--scale));
+  font-size: calc(1.2rem * var(--scale));
+  letter-spacing: 0.1rem;
+  color: #282828;
+  text-align: center;
+  background-color: #fff;
+  clip-path: polygon(
+    calc(12px * var(--scale)) 0,
+    calc(100% - 12px * var(--scale)) 0,
+    100% 50%,
+    calc(100% - 12px * var(--scale)) 100%,
+    calc(12px * var(--scale)) 100%,
+    0 50%
+  );
+}
+.top-character-line {
+  padding-top: calc(12px * var(--scale));
+  min-width: calc(480px * var(--scale));
+  min-height: calc(80px * var(--scale));
+  font-size: calc(1.6rem * var(--scale));
+  text-shadow: 0 calc(2px * var(--scale)) calc(6px * var(--scale)) rgba(0, 0, 0, 0.8);
+}

@@ -1,0 +1,19 @@
+/* ===== 左下：イベントバナー ===== */
+.top-event-banner {
+  position: absolute;
+  left: calc(2rem * var(--scale));
+  bottom: calc(2rem * var(--scale));
+  display: flex;
+  flex-direction: column;
+  gap: calc(4px * var(--scale));
+  aspect-ratio: 5 / 2;
+  width: 30vw;
+  background: linear-gradient(135deg, rgba(180, 30, 30, 0.85), rgba(40, 0, 0, 0.85));
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+}
+.top-event-banner-item {
+  font-size: calc(1.1rem * var(--scale));
+  letter-spacing: 0.15em;
+  opacity: 0.9;
+}

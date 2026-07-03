@@ -1,0 +1,61 @@
+/* ===== 右下：システムメニュー ===== */
+.top-system-menu {
+  position: absolute;
+  right: calc(2rem * var(--scale));
+  bottom: calc(2rem * var(--scale));
+  width: 50vw;
+  display: flex;
+  justify-content: space-between;
+}
+
+.top-system-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(8px * var(--scale));
+  position: relative;
+  min-width: calc(96px * var(--scale));
+  height: calc(64px * var(--scale));
+  padding: 0 calc(16px * var(--scale));
+  font-size: calc(1.3rem * var(--scale));
+  color: #fff;
+  background: rgba(20, 20, 24, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+@media (hover: hover) {
+  .top-system-menu-item:hover {
+    background: rgba(60, 60, 70, 0.85);
+  }
+}
+
+.top-system-menu-item.notice::before {
+  content: '';
+  position: absolute;
+  right: calc(4px * var(--scale));
+  top: calc(4px * var(--scale));
+  width: calc(16px * var(--scale));
+  height: calc(16px * var(--scale));
+  background: rgba(252, 212, 140, 0.85);
+  filter: drop-shadow(0 0 calc(16px * var(--scale)) rgba(255, 233, 192, 0.85));
+  mask-image: url('/project-glacia/images/top/menu/notice.svg');
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+}
+
+.top-system-menu-item-icon {
+  display: inline-block;
+  width: calc(48px * var(--scale));
+  height: calc(48px * var(--scale));
+  background-color: #ffffff;
+  mask-image: var(--icon-url);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+}
+
+.top-system-menu-item-label {
+  font-size: calc(1.5rem * var(--scale));
+}

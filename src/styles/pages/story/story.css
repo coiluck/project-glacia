@@ -39,74 +39,6 @@
   filter: drop-shadow(0 0 0.6px rgba(68, 101, 148, 0.85));
 }
 
-/* ステージノード */
-.story-stage-node-card {
-  position: absolute;
-  z-index: 1;
-  display: block;
-  padding: 0;
-  border: 0;
-  background: none;
-  transform: translate(-50%, -50%) scale(var(--scale));
-  cursor: pointer;
-  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
-}
-.story-stage-card-header {
-  display: block;
-  width: 100%;
-  padding: 2px 0;
-  color: #08121c;
-  font-size: 14px;
-  line-height: 1;
-  letter-spacing: 0.2rem;
-  background: linear-gradient(160deg, rgb(123, 191, 255), rgb(123, 241, 196));
-  border-radius: 10px 10px 0 0;
-}
-.story-stage-card-main {
-  display: flex;
-  align-items: center;
-  gap: 36px;
-  padding: 14px 24px;
-  background: linear-gradient(160deg, rgba(34, 46, 64, 1), rgba(10, 14, 22, 1));
-  border-radius: 0 0 10px 10px;
-}
-.story-stage-card-main-id {
-  font-size: 36px;
-  line-height: 1;
-  letter-spacing: 4px;
-  color: rgba(255, 255, 255, 0.92);
-  text-wrap: nowrap;
-}
-.story-stage-card-main-cleared-icon {
-  position: relative;
-  width: 45px;
-  height: 45px;
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.85));
-}
-.story-stage-card-main-cleared-icon::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  mask-image: url('/project-glacia/images/story/ice.svg');
-  mask-repeat: no-repeat;
-  mask-position: center;
-  mask-size: contain;
-  background-color: #7dc7e4;
-}
-
-.story-stage-card-main-locked-icon {
-  position: relative;
-  width: 40px;
-  height: 40px;
-  border: 2px solid #8b8b8b;
-  background-color: #ffffff;
-  clip-path: polygon(
-    30% 0%, 70% 0%,
-    100% 30%, 100% 70%,
-    70% 100%, 30% 100%,
-    0% 70%, 0% 30%
-  );
-}
 /* チャプター選択 */
 .story-map-chapter-select-container {
   position: absolute;
@@ -129,6 +61,8 @@
   padding: calc(4px * var(--scale)) calc(12px * var(--scale));
   background: rgb(123, 255, 248);
   font-size: calc(1.2rem * var(--scale));
+  font-family: 'CaviarDreams', sans-serif;
+  font-weight: bold;
   line-height: 1;
   letter-spacing: calc(0.1rem * var(--scale));
   color: #08121c;

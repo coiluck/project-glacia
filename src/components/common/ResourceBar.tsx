@@ -117,11 +117,11 @@ export default function ResourceBar() {
                width={230 * expProgress}
              />
              {/* RANK ラベル */}
-             <text x={115.71895} y={25.794933} textAnchor="middle" fontFamily="HakkouMincho" fontWeight={600} fontSize={18} fill="#ccc">RANK</text>
+             <text x={115.71895} y={25.794933} textAnchor="middle" fontFamily="CaviarDreams" fontWeight={600} fontSize={18} fill="#ccc">RANK</text>
              {/* ランク値 */}
-             <text x={165.15924} y={27.586248} textAnchor="middle" fontFamily="HakkouMincho" fontWeight={600} fontSize={30} fill="#fff">{String(rank).padStart(2, '0')}</text>
+             <text x={165.15924} y={27.586248} textAnchor="middle" fontFamily="CaviarDreams" fontWeight={600} fontSize={30} fill="#fff">{String(rank).padStart(2, '0')}</text>
              {/* 経験値テキスト */}
-             <text x={324.84299} y={58.396862} textAnchor="end" fontFamily="HakkouMincho" fontWeight={600} fontSize={18} fill="#ccc">EXP {expInRank} / {expToNext}</text>
+             <text x={324.84299} y={58.396862} textAnchor="end" fontFamily="CaviarDreams" fontWeight={600} fontSize={18} fill="#ccc">EXP {expInRank} / {expToNext}</text>
            </svg>
          </div>
         }
