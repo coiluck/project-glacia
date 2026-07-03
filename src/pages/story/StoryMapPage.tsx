@@ -1,4 +1,4 @@
-import { useState, type MouseEvent } from 'react'
+import { useRef, useState, type MouseEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { paths } from '../../router/paths'
 import Screen from '../../layouts/Screen'
@@ -38,17 +38,50 @@ export default function StoryMapPage() {
 
   // クリック場所がカードならトグル、それ以外は閉じる。
   const handleMapClick = (e: MouseEvent<HTMLDivElement>) => {
+    if (draggedRef.current) return
     const card = (e.target as HTMLElement).closest<HTMLElement>('.story-stage-node-card')
     const id = card?.dataset.stageId ?? null
     const node = id !== null ? nodes.find((n) => n.id === id) ?? null : null
     setSelectedNode((prev) => (node && prev?.id === node.id ? null : node))
   }
 
+  // クリック&ドラッグで横スクロール
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const dragRef = useRef({ down: false, startX: 0, scrollLeft: 0 })
+  const draggedRef = useRef(false)
+
+  const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+    const el = scrollRef.current
+    if (!el) return
+    dragRef.current = { down: true, startX: e.clientX, scrollLeft: el.scrollLeft }
+    draggedRef.current = false
+  }
+
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    const el = scrollRef.current
+    if (!el || !dragRef.current.down) return
+    const dx = e.clientX - dragRef.current.startX
+    if (Math.abs(dx) > 4) draggedRef.current = true
+    el.scrollLeft = dragRef.current.scrollLeft - dx
+  }
+
+  const handleMouseUp = () => {
+    dragRef.current.down = false
+  }
+
   return (
     <>
       <ViewportLayer>
         {/* マップ */}
-        <div className="story-map-scroll fade-in" onClick={handleMapClick}>
+        <div
+          ref={scrollRef}
+          className="story-map-scroll fade-in"
+          onClick={handleMapClick}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+        >
           <div className="story-map" style={{ width: `calc(${mapWidth} * 1vh)` }}>
             {/* ノード間のパス */}
             <svg className="story-paths" viewBox={`0 0 ${mapWidth} 100`} preserveAspectRatio="none" aria-hidden>
