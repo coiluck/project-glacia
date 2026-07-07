@@ -8,7 +8,6 @@
   background: none;
   transform: translate(-50%, -50%) scale(var(--scale));
   cursor: pointer;
-  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
 }
 .story-stage-card-header {
   display: block;

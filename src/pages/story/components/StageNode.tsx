@@ -9,7 +9,7 @@ export default function StageNode({ node }: { node: StageNodeData }) {
     <button
       type="button"
       className="story-stage-node-card"
-      style={{ left: `calc(${node.x} * 1vh)`, top: `calc(${node.y} * 1vh)`, filter: locked ? 'grayscale(0.6) brightness(0.4)' : 'none' }}
+      style={{ left: `calc(${node.x} * 1vh)`, top: `calc(${node.y} * 1vh)`, filter: locked ? 'grayscale(0.6) brightness(0.4) drop-shadow(0 0 10px rgba(0, 0, 0, 0.5))' : 'drop-shadow(0 0 10px rgba(0, 0, 0, 0.5))' }}
       data-stage-id={node.id}
     >
       <span className="story-stage-card-header">
