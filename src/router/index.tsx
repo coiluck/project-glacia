@@ -6,6 +6,7 @@ import StartPage from '../pages/start/StartPage'
 import TopPage from '../pages/top/TopPage'
 import PartyPage from '../pages/party/PartyPage'
 import StoryMapPage from '../pages/story/StoryMapPage'
+import ScenarioPage from '../pages/scenario/ScenarioPage'
 import BattlePage from '../pages/battle/BattlePage'
 import MemberPage from '../pages/member/MemberPage'
 import RecruitPage from '../pages/recruit/RecruitPage'
@@ -32,13 +33,14 @@ export const router = createBrowserRouter(
       children: [
         { index: true, element: <HomeOrBoot /> }, // Top（ホーム）。未起動ならロゴへ誘導
         { path: 'party', element: <PartyPage /> }, // 編成
-        { path: 'story', element: <StoryMapPage /> }, // シナリオ：ステージマップ
-        { path: 'battle/:stageId', element: <BattlePage /> }, // HEXタイル戦闘
+        { path: 'story', element: <StoryMapPage /> }, // ステージマップ
         { path: 'member', element: <MemberPage /> }, // 人員
         { path: 'recruit', element: <RecruitPage /> }, // 召集
         { path: 'base', element: <BasePage /> }, // 基地
       ],
     },
+    { path: 'battle/:stageId', element: <BattlePage /> }, // 戦闘
+    { path: 'scenario/:scenarioId', element: <ScenarioPage /> }, // シナリオ
   ],
   { basename: import.meta.env.BASE_URL },
 )

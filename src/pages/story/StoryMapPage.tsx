@@ -150,7 +150,7 @@ export default function StoryMapPage() {
                 {selectedNode.status === 'locked' ? (
                   <div className="story-map-stage-info-button locked">未解放</div>
                 ) : (
-                  <Link className="story-map-stage-info-button sortie" to={paths.battle(selectedNode.id)}>
+                  <Link className="story-map-stage-info-button sortie" to={paths.scenario(selectedNode.id)}>
                     出撃
                   </Link>
                 )}
