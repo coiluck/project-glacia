@@ -1,0 +1,262 @@
+/* チャプター選択 */
+.story-map-chapter-select-container {
+  position: absolute;
+  bottom: calc(32px * var(--scale));
+  left: calc(32px * var(--scale));
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  z-index: 1;
+  transition: all 0.3s ease-out;
+}
+.story-map-chapter-select-container.open {
+  transform: translateX(calc(-100% - 32px * var(--scale)));
+}
+.story-map-chapter-select-header {
+  display: flex;
+  width: 100%;
+  background: rgba(123, 218, 255, 0.6);
+}
+.story-map-chapter-select-header-text {
+  position: relative;
+  width: calc(180px * var(--scale));
+  padding: calc(4px * var(--scale)) calc(12px * var(--scale));
+  background: rgb(123, 255, 248);
+  font-size: calc(1.2rem * var(--scale));
+  font-family: 'CaviarDreams', sans-serif;
+  font-weight: bold;
+  line-height: 1;
+  letter-spacing: calc(0.1rem * var(--scale));
+  color: #08121c;
+  text-transform: uppercase;
+}
+.story-map-chapter-select-header-text::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: calc(100% - 1px);
+  width: calc(20px * var(--scale));
+  height: 100%;
+  background: rgb(123, 255, 248);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+.story-map-chapter-select-main {
+  display: flex;
+  flex-direction: column;
+  gap: calc(16px * var(--scale));
+  width: 100%;
+  padding: calc(16px * var(--scale)) calc(16px * var(--scale));
+  background: linear-gradient(160deg, rgba(26, 34, 48, 0.7), rgba(10, 14, 22, 0.7));
+}
+.story-map-chapter-select-main-title {
+  font-size: calc(1.8rem * var(--scale));
+  line-height: 1;
+  letter-spacing: calc(0.1rem * var(--scale));
+  color: #fff;
+  padding-left: calc(16px * var(--scale));
+  border-left: 4px solid #7fe0ff;
+}
+.story-map-chapter-select-main-progress {
+  display: flex;
+  align-items: center;
+  gap: calc(12px * var(--scale));
+  width: calc(240px * var(--scale));
+  height: calc(8px * var(--scale));
+}
+.story-map-chapter-select-main-progress-bar {
+  width: 100%;
+  height: 100%;
+  background: #8f8f8f;
+}
+.story-map-chapter-select-main-progress-bar-fill {
+  width: 80%;
+  height: 100%;
+  background: linear-gradient(to right, #7fe0ff, #b6f5ff);
+}
+.story-map-chapter-select-main-progress-text {
+  font-size: calc(1.2rem * var(--scale));
+  line-height: 1;
+  letter-spacing: calc(0.1rem * var(--scale));
+  color: #fff;
+}
+
+
+/* チャプター選択モーダル */
+.story-map-chapter-select-modal {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: calc(32px * var(--scale));
+  display: flex;
+  flex-direction: column;
+  width: calc(600px * var(--scale));
+  height: 80%;
+  padding: calc(24px * var(--scale));
+  background: rgba(9, 18, 27, 0.85);
+  backdrop-filter: blur(2px);
+  z-index: 2;
+  animation: story-map-chapter-select-modal-fade-in 0.3s ease-out;
+}
+@keyframes story-map-chapter-select-modal-fade-in {
+  from {
+    transform: translateX(-100%) translateY(-50%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0) translateY(-50%);
+    opacity: 1;
+  }
+}
+.story-map-chapter-select-modal-content-header {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: calc(32px * var(--scale));
+  margin-bottom: calc(32px * var(--scale));
+  border-bottom: 1px solid #c9cdd4;
+  line-height: 1;
+}
+.story-map-chapter-select-modal-content-header-text {
+  font-size: calc(2rem * var(--scale));
+  letter-spacing: calc(0.1rem * var(--scale));
+  color: #fff;
+  font-family: 'HakkouMincho', sans-serif;
+}
+
+.story-map-chapter-select-modal-content-body {
+  display: flex;
+  flex-direction: column;
+  gap: calc(32px * var(--scale));
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  -ms-scrollbar-width: thin;
+  -ms-scrollbar-color: #8f8f8f #262626;
+  scrollbar-color: #8f8f8f #262626;
+}
+.story-map-chapter-select-modal-content-body.has-scrollbar {
+  padding-right: calc(16px * var(--scale));
+}
+.story-map-chapter-select-modal-content-body-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: calc(28px * var(--scale));
+  width: 100%;
+  aspect-ratio: 3 / 1;
+  padding: calc(16px * var(--scale)) calc(32px * var(--scale)) calc(16px * var(--scale)) calc(40px * var(--scale));
+  --cut: calc(48px * var(--scale));
+  clip-path: polygon(
+    var(--cut) 0%,        /* 左上カット */
+    100% 0%,
+    100% calc(100% - var(--cut)),  /* 右下カット */
+    calc(100% - var(--cut)) 100%,
+    0% 100%,
+    0% var(--cut)
+  );
+  cursor: pointer;
+  transition: filter 0.2s ease-out;
+}
+.story-map-chapter-select-modal-content-body-item:not(.locked):hover {
+  filter: brightness(1.15);
+}
+.story-map-chapter-select-modal-content-body-item.current {
+  background: linear-gradient(120deg, rgba(123, 255, 233, 0.9), rgba(127, 224, 255, 0.55));
+}
+.story-map-chapter-select-modal-content-body-item.unlocked {
+  background: linear-gradient(120deg, rgba(81, 134, 132, 0.65), rgba(32, 56, 66, 0.75));
+}
+.story-map-chapter-select-modal-content-body-item.locked {
+  background: linear-gradient(120deg, rgba(75, 80, 88, 0.6), rgba(42, 46, 52, 0.7));
+  cursor: default;
+}
+
+/* 章番号 */
+.story-map-chapter-select-modal-content-body-item-number {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: calc(4.4rem * var(--scale));
+  font-weight: bold;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.9);
+}
+.story-map-chapter-select-modal-content-body-item.current .story-map-chapter-select-modal-content-body-item-number {
+  color: #08121c;
+}
+.story-map-chapter-select-modal-content-body-item.locked .story-map-chapter-select-modal-content-body-item-number {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* チャプター名 + クリア率 */
+.story-map-chapter-select-modal-content-body-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: calc(14px * var(--scale));
+}
+.story-map-chapter-select-modal-content-body-item-title {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: calc(1.6rem * var(--scale));
+  font-weight: bold;
+  line-height: 1;
+  letter-spacing: calc(0.2rem * var(--scale));
+  text-transform: uppercase;
+  color: #fff;
+}
+.story-map-chapter-select-modal-content-body-item.current .story-map-chapter-select-modal-content-body-item-title {
+  color: #08121c;
+}
+.story-map-chapter-select-modal-content-body-item.locked .story-map-chapter-select-modal-content-body-item-title {
+  color: rgba(255, 255, 255, 0.45);
+}
+.story-map-chapter-select-modal-content-body-item-progress {
+  display: flex;
+  align-items: center;
+  gap: calc(12px * var(--scale));
+}
+.story-map-chapter-select-modal-content-body-item-progress-bar {
+  width: calc(220px * var(--scale));
+  height: calc(8px * var(--scale));
+  background: rgba(255, 255, 255, 0.25);
+}
+.story-map-chapter-select-modal-content-body-item-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(to right, #7fe0ff, #b6f5ff);
+}
+.story-map-chapter-select-modal-content-body-item.current .story-map-chapter-select-modal-content-body-item-progress-bar {
+  background: rgba(8, 18, 28, 0.25);
+}
+.story-map-chapter-select-modal-content-body-item.current .story-map-chapter-select-modal-content-body-item-progress-bar-fill {
+  background: #08121c;
+}
+.story-map-chapter-select-modal-content-body-item-progress-text {
+  font-size: calc(1.2rem * var(--scale));
+  line-height: 1;
+  letter-spacing: calc(0.1rem * var(--scale));
+  color: #fff;
+}
+.story-map-chapter-select-modal-content-body-item.current .story-map-chapter-select-modal-content-body-item-progress-text {
+  color: #08121c;
+}
+
+/* 現在地 */
+.story-map-chapter-select-modal-content-body-item-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: calc(6px * var(--scale)) calc(16px * var(--scale)) calc(8px * var(--scale)) calc(20px * var(--scale));
+  background: #08121c;
+  clip-path: polygon(calc(12px * var(--scale)) 0%, 100% 0%, 100% 100%, 0% 100%);
+  font-size: calc(1.1rem * var(--scale));
+  line-height: 1;
+  letter-spacing: calc(0.2rem * var(--scale));
+  color: #7bfff8;
+}
+
+/* ロック中の錠アイコン */
+.story-map-chapter-select-modal-content-body-item-lock {
+  width: calc(40px * var(--scale));
+  height: calc(40px * var(--scale));
+  margin-left: auto;
+  fill: rgba(255, 255, 255, 0.35);
+}

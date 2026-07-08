@@ -4,12 +4,14 @@ import type { GameState } from '../features/scenario/types'
 
 // シナリオ進行（現在の章・クリア済みステージ・進行中シナリオ）
 export interface ProgressState {
+  chapter: number // 到達している最大章
   currentChapter: number
   clearedStageIds: string[]
   // 進行中シナリオのセーブ（スロット無しの単一データ）。
   // 進行中のみ保持し、終わったら null に戻す（復元不可にする）。
   scenarioId: string | null
   scenarioState: GameState | null
+  setCurrentChapter: (chapter: number) => void
   saveScenario: (id: string, state: GameState) => void
   clearScenario: () => void
   hydrate: (row: UserRow) => void
@@ -17,6 +19,7 @@ export interface ProgressState {
 }
 
 const initial = {
+  chapter: 2,
   currentChapter: 1,
   clearedStageIds: [] as string[],
   scenarioId: null as string | null,
@@ -28,6 +31,6 @@ export const useProgressStore = create<ProgressState>((set) => ({
   setCurrentChapter: (chapter: number) => set({ currentChapter: chapter }), // これのみcurrentChapterをフロント側で変更できるようにする
   saveScenario: (id, state) => set({ scenarioId: id, scenarioState: state }),
   clearScenario: () => set({ scenarioId: null, scenarioState: null }),
-  hydrate: (row) => set({ currentChapter: row.current_chapter, clearedStageIds: row.cleared_stage_ids }),
+  hydrate: (row) => set({ chapter: row.chapter, currentChapter: row.current_chapter, clearedStageIds: row.cleared_stage_ids }),
   reset: () => set(initial),
 }))

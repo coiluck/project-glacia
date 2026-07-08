@@ -1,19 +1,22 @@
-import { useRef, useState, type MouseEvent } from 'react'
+import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { paths } from '../../router/paths'
 import Screen from '../../layouts/Screen'
 import ViewportLayer from '../../layouts/ViewportLayer'
 import StageNode from './components/StageNode'
 import { useProgressStore } from '../../stores/progressStore'
-import { chapters, type Stage, type StageStatus } from '../../data/stages'
+import { chapters, type Chapter, type ChapterStatus, type Stage, type StageStatus } from '../../data/stages'
 
 // マップ描画用にstatusを付与
 export type StageNodeData = Stage & { status: StageStatus }
 
 export default function StoryMapPage() {
   const [selectedNode, setSelectedNode] = useState<StageNodeData | null>(null)
+  const [isChapterSelectOpen, setIsChapterSelectOpen] = useState(false)
+  const maxChapter = useProgressStore((s) => s.chapter)
   const currentChapter = useProgressStore((s) => s.currentChapter)
   const clearedStageIds = useProgressStore((s) => s.clearedStageIds)
+  const setCurrentChapter = useProgressStore((s) => s.setCurrentChapter)
   const current = chapters.find((c) => c.id === currentChapter)
 
   if (!current) return
@@ -31,6 +34,13 @@ export default function StoryMapPage() {
     return unlocked ? 'next' : 'locked'
   }
   const nodes: StageNodeData[] = current.stages.map((s) => ({ ...s, status: getStatus(s) }))
+
+  // 章のステータス（currentが優先。到達最大章以下なら解放済み）
+  const getChapterStatus = (c: Chapter): ChapterStatus =>
+    c.id === currentChapter ? 'current' : c.id <= maxChapter ? 'unlocked' : 'locked'
+  // 章ごとのクリア率（%）
+  const getChapterClearRate = (c: Chapter) =>
+    c.stages.length ? Math.round((c.stages.filter((s) => clearedStageIds.includes(s.id)).length / c.stages.length) * 100) : 0
   const edges = current.stages.flatMap((s) => (s.next ?? []).map((to) => [s.id, to] as const))
   // マップ幅（最後のノード + 右端の余白）。単位は vh。
   const mapWidth = current.stages.reduce((m, s) => Math.max(m, s.x), 0) + 100
@@ -42,6 +52,7 @@ export default function StoryMapPage() {
     const id = card?.dataset.stageId ?? null
     const node = id !== null ? nodes.find((n) => n.id === id) ?? null : null
     setSelectedNode((prev) => (node && prev?.id === node.id ? null : node))
+    setIsChapterSelectOpen(false)
   }
 
   // クリック&ドラッグで横スクロール
@@ -68,12 +79,25 @@ export default function StoryMapPage() {
     dragRef.current.down = false
   }
 
+  // チャプター選択モーダルにスクロールバーがあるときだけhas-scrollbarを付与
+  const chapterBodyRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = chapterBodyRef.current
+    if (!el) return
+    const update = () => el.classList.toggle('has-scrollbar', el.scrollHeight > el.clientHeight)
+    update()
+    const observer = new ResizeObserver(update)
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [isChapterSelectOpen])
+
   return (
     <>
       <ViewportLayer>
         {/* マップ */}
         <div
           ref={scrollRef}
+          key={currentChapter}
           className="story-map-scroll fade-in"
           onClick={handleMapClick}
           onMouseDown={handleMouseDown}
@@ -111,9 +135,15 @@ export default function StoryMapPage() {
         </div>
 
         {/* チャプター選択 */}
-        <div className="story-map-chapter-select-container">
+        <div
+          className={`story-map-chapter-select-container${isChapterSelectOpen ? ' open' : ''}`}
+          onClick={() => {
+            setSelectedNode(null)
+            setIsChapterSelectOpen(true)
+          }}
+        >
           <div className="story-map-chapter-select-header">
-            <span className="story-map-chapter-select-header-text">chapter {currentChapter}</span>
+            <span className="story-map-chapter-select-header-text">{current.name}</span>
           </div>
           <div className="story-map-chapter-select-main">
             <div className="story-map-chapter-select-main-title">都市の影</div>
@@ -125,6 +155,61 @@ export default function StoryMapPage() {
             </div>
           </div>
         </div>
+
+        {/* チャプター選択 */}
+        {isChapterSelectOpen && (
+          <div className="story-map-chapter-select-modal">
+            <div className="story-map-chapter-select-modal-content-header">
+              <span className="story-map-chapter-select-modal-content-header-text">チャプター選択</span>
+            </div>
+            <div ref={chapterBodyRef} className="story-map-chapter-select-modal-content-body">
+              {chapters.map((chapter) => {
+                const status = getChapterStatus(chapter)
+                const clearRate = getChapterClearRate(chapter)
+                return (
+                  <div
+                    key={chapter.id}
+                    className={`story-map-chapter-select-modal-content-body-item ${status}`}
+                    onClick={
+                      status === 'locked'
+                        ? undefined
+                        : () => {
+                            setCurrentChapter(chapter.id)
+                            setIsChapterSelectOpen(false)
+                          }
+                    }
+                  >
+                    <div className="story-map-chapter-select-modal-content-body-item-number">
+                      {String(chapter.id).padStart(2, '0')}
+                    </div>
+                    <div className="story-map-chapter-select-modal-content-body-item-info">
+                      <div className="story-map-chapter-select-modal-content-body-item-title">{chapter.name}</div>
+                      {status !== 'locked' && (
+                        <div className="story-map-chapter-select-modal-content-body-item-progress">
+                          <div className="story-map-chapter-select-modal-content-body-item-progress-bar">
+                            <div
+                              className="story-map-chapter-select-modal-content-body-item-progress-bar-fill"
+                              style={{ width: `${clearRate}%` }}
+                            ></div>
+                          </div>
+                          <div className="story-map-chapter-select-modal-content-body-item-progress-text">{clearRate}%</div>
+                        </div>
+                      )}
+                    </div>
+                    {status === 'current' && (
+                      <div className="story-map-chapter-select-modal-content-body-item-badge">現在地</div>
+                    )}
+                    {status === 'locked' && (
+                      <svg className="story-map-chapter-select-modal-content-body-item-lock" viewBox="0 0 24 24" aria-hidden>
+                        <path d="M7 10V7a5 5 0 0 1 10 0v3h1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1h1zm2 0h6V7a3 3 0 0 0-6 0v3z" />
+                      </svg>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
 
         {/* 選択中ステージの情報 */}
         {selectedNode && (

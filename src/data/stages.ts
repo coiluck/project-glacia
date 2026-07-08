@@ -1,6 +1,8 @@
 // 静的ゲームデータ（ステージ構成）の置き場。
 
-export type StageStatus = 'cleared' | 'next' | 'locked' // これどうしようかね
+export type StageStatus = 'cleared' | 'next' | 'locked'
+
+export type ChapterStatus = 'current' | 'unlocked' | 'locked'
 
 export interface Stage {
   id: string // ステージ番号
