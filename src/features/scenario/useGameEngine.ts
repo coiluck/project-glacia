@@ -106,5 +106,6 @@ export function useGameEngine(initial: GameState) {
     restore,
     getChoices: (id: string): Choice[] => engine.getChoices(id),
     getState: () => engine.getState(),
+    getHistorySnapshots: () => engine.getHistorySnapshots(),
   };
 }

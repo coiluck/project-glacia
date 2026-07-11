@@ -1,5 +1,5 @@
 import type {
-  GameState, ScenarioLine, TransientCommand, ScenarioFile, BranchFrame, Choice, Condition,
+  GameState, ScenarioLine, TransientCommand, ScenarioFile, BranchFrame, Choice, Condition, SceneSnapshot,
 } from './types';
 import { reduceLine } from './SceneReducer';
 import { isTransient } from './commands';
@@ -32,6 +32,11 @@ export class ScenarioEngine {
 
   peek(): ScenarioLine | null {
     return peekLine(this.state.progress, this.registry);
+  }
+
+  // ログ表示用。過去の行の snapshot を古い順で返す（現在の行は含まない）。
+  getHistorySnapshots(): SceneSnapshot[] {
+    return this.history.list().map((s) => structuredClone(s.snapshot));
   }
 
   // showIf を満たす選択肢だけ返す (UIに見せる一覧)。

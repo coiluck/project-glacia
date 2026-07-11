@@ -59,7 +59,7 @@ export function Background({ bg, motion }: Props) {
       <img
         key={bg.file}
         ref={imgRef}
-        src={`${import.meta.env.BASE_URL}images/scenario/background/${bg.file}`}
+        src={`${import.meta.env.BASE_URL}${bg.file}`}
         className={`scenario-bg-image transition-${bg.transition}`}
       />
     </div>

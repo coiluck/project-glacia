@@ -16,6 +16,11 @@ export class HistoryManager<T> {
     return this.stack.pop() ?? null;
   }
 
+  /** 古い順の全履歴。 */
+  list(): readonly T[] {
+    return this.stack;
+  }
+
   clear(): void {
     this.stack.length = 0;
   }
