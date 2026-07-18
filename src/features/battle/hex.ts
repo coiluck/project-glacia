@@ -84,6 +84,14 @@ export function hexToPixel(c: Axial, size: number): Pixel {
   };
 }
 
+// 六角形の頂点6つ（pointy-top）。中心からの相対座標で返す
+export function hexCorners(size: number): Pixel[] {
+  return Array.from({ length: 6 }, (_, i) => {
+    const angle = (Math.PI / 180) * (60 * i - 30);
+    return { x: size * Math.cos(angle), y: size * Math.sin(angle) };
+  });
+}
+
 // 攻撃範囲の形
 // range: 距離 min〜max 以内の任意マスを対象に選ぶ（向きなし）
 // pattern: 東(+q)向きを基準にした相対座標の集合。使用時に6方向のどれかへ回転して発動する

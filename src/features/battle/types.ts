@@ -19,8 +19,8 @@ export interface UnitClassDef {
 // なるべく固有のスキル効果を定義しない
 export type SkillEffect =
   | { type: 'damage'; power: number; shape: AttackShape; target: 'self' | 'ally' | 'enemy'; targets: TargetCount }
-  | { type: 'healHp'; amount: number }
-  | { type: 'grantAp'; amount: number };
+  | { type: 'healHp'; amount: number; target: 'self' | 'ally' }
+  | { type: 'grantAp'; amount: number; target: 'self' | 'ally' };
 
 export interface SkillDef {
   id: string;

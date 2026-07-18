@@ -8,14 +8,14 @@ export function refillApForTurn(
   side: Side,
   classes: Record<string, UnitClassDef>,
   partyApPerTurn: number,
-): void {
-  for (const unit of state.units) {
-    if (unit.side !== side) continue;
+): BattleState {
+  const units = state.units.map((unit) => {
+    if (unit.side !== side) return unit;
     const cls = classes[unit.classId];
     if (!cls) throw new Error(`Unknown unit class: ${unit.classId}`);
-    unit.ap = cls.apPerTurn;
-  }
-  if (side === 'ally') state.partyAp = partyApPerTurn;
+    return { ...unit, ap: cls.apPerTurn };
+  });
+  return { ...state, units, partyAp: side === 'ally' ? partyApPerTurn : state.partyAp };
 }
 
 // 味方は個人APとパーティAPの両方、敵は個人APのみを見る。
@@ -25,12 +25,16 @@ export function canSpendAp(state: BattleState, unit: Unit, cost: number): boolea
 }
 
 // APを支払う
-export function spendAp(state: BattleState, unit: Unit, cost: number): void {
-  if (!canSpendAp(state, unit, cost)) {
+export function spendAp(state: BattleState, unitId: string, cost: number): BattleState {
+  const unit = state.units.find((u) => u.id === unitId);
+  if (!unit || !canSpendAp(state, unit, cost)) {
     throw new Error(
-      `Cannot spend AP: unit=${unit.id} cost=${cost} ap=${unit.ap} partyAp=${state.partyAp}`,
+      `Cannot spend AP: unit=${unitId} cost=${cost} ap=${unit?.ap} partyAp=${state.partyAp}`,
     );
   }
-  unit.ap -= cost;
-  if (unit.side === 'ally') state.partyAp -= cost;
+  return {
+    ...state,
+    units: state.units.map((u) => (u.id === unitId ? { ...u, ap: u.ap - cost } : u)),
+    partyAp: unit.side === 'ally' ? state.partyAp - cost : state.partyAp,
+  };
 }

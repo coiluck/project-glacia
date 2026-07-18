@@ -2,7 +2,7 @@
 // 移動先ごとに「移動後の残りAPで攻撃したとき倒せる数・削れる総HP」をスコアにし、
 // スコアが最大・同点ならAP消費が最小の位置へ移動してから攻撃する。
 // スキルは nターン周期 / HPしきい値 のルールに従って発動する
-import { attack, availableAp, castSkill, moveUnit, movementRange } from './battle';
+import { attack, availableAp, castSkill, moveUnit, movementRange, unitById } from './battle';
 import { canSpendAp } from './ap';
 import { calcDamage } from './damage';
 import { axialKey, distance, shapeTiles } from './hex';
@@ -16,47 +16,34 @@ import type {
   UnitClassDef,
 } from './types';
 
-// 敵全員を順に行動させる。呼び出し側は phase が 'enemy' になったらこれを呼び、終わったら endTurn する
-export function runEnemyTurn(
+// 敵1体分の行動。行動後の state を返す（すでに倒されていれば state をそのまま返す）
+// UI側で1体ずつ間を置いて見せる
+export function actEnemy(
   state: BattleState,
   stage: BattleStageData,
   classes: Record<string, UnitClassDef>,
-): void {
-  if (state.phase !== 'enemy') throw new Error(`Not in enemy phase: ${state.phase}`);
-  // 行動中に倒される可能性があるため id で追い、毎回生存確認する
-  const enemyIds = state.units.filter((u) => u.side === 'enemy').map((u) => u.id);
-  for (const id of enemyIds) {
-    const unit = state.units.find((u) => u.id === id);
-    if (!unit) continue;
-    actEnemy(state, stage, classes, unit);
-    if (state.phase !== 'enemy') return; // 勝敗がついた
-  }
-}
-
-// 敵1体分の行動
-function actEnemy(
-  state: BattleState,
-  stage: BattleStageData,
-  classes: Record<string, UnitClassDef>,
-  unit: Unit,
-): void {
+  unitId: string,
+): BattleState {
+  const unit = state.units.find((u) => u.id === unitId);
+  if (!unit) return state;
   const cls = classes[unit.classId];
   if (!cls) throw new Error(`Unknown unit class: ${unit.classId}`);
 
+  let next = state;
   // スキルを使う番なら先に発動を試みる（射程に入れる移動込み）
-  if (isSkillDue(state, unit)) {
-    trySkill(state, stage, unit);
-    if (state.phase !== 'enemy') return;
+  if (isSkillDue(next, unit)) {
+    next = trySkill(next, stage, unitId);
+    if (next.phase !== 'enemy') return next;
   }
 
-  const plan = findBestAttackPlan(state, stage, cls, unit);
+  const current = unitById(next, unitId); // trySkill で移動している可能性がある
+  const plan = findBestAttackPlan(next, stage, cls, current);
   if (plan) {
-    if (plan.moveCost > 0) moveUnit(state, stage, unit, plan.dest);
-    executeAttacks(state, classes, cls, unit);
-  } else {
-    // どこへ動いても攻撃できない -> 最寄りの味方に近づく
-    approachNearestAlly(state, stage, unit);
+    if (plan.moveCost > 0) next = moveUnit(next, stage, unitId, plan.dest);
+    return executeAttacks(next, classes, cls, unitId);
   }
+  // どこへ動いても攻撃できない -> 最寄りの味方に近づく
+  return approachNearestAlly(next, stage, unitId);
 }
 
 // スキルを使う番か（nターン周期 or HPしきい値）
@@ -72,21 +59,30 @@ function isSkillDue(state: BattleState, unit: Unit): boolean {
   return (unit.skillHpTriggers ?? []).some((t) => hpPercent <= t);
 }
 
-// 敵のスキル使用を記録
-function markSkillUsed(state: BattleState, unit: Unit): void {
-  unit.lastSkillTurn = state.turn;
-  if (unit.skillHpTriggers) {
-    const hpPercent = (unit.hp / unit.maxHp) * 100;
-    unit.skillHpTriggers = unit.skillHpTriggers.filter((t) => hpPercent > t);
-  }
+// 敵のスキル使用。hpPercentは効果適用前のHP
+function markSkillUsed(state: BattleState, unitId: string, hpPercent: number): BattleState {
+  return {
+    ...state,
+    units: state.units.map((u) =>
+      u.id === unitId
+        ? {
+            ...u,
+            lastSkillTurn: state.turn,
+            skillHpTriggers: u.skillHpTriggers?.filter((t) => hpPercent > t),
+          }
+        : u,
+    ),
+  };
 }
 
-// スキルの発動を試みる。使えたら true
-function trySkill(state: BattleState, stage: BattleStageData, unit: Unit): boolean {
+// スキル発動
+function trySkill(state: BattleState, stage: BattleStageData, unitId: string): BattleState {
+  const unit = unitById(state, unitId);
   const skill = unit.skill;
-  if (!skill) return false;
+  if (!skill) return state;
   const ap = availableAp(state, unit);
-  if (ap < skill.apCost) return false;
+  if (ap < skill.apCost) return state;
+  const hpPercentBefore = (unit.hp / unit.maxHp) * 100;
 
   const damageEffects = skill.effect.filter(
     (e): e is Extract<SkillEffect, { type: 'damage' }> => e.type === 'damage',
@@ -94,13 +90,12 @@ function trySkill(state: BattleState, stage: BattleStageData, unit: Unit): boole
 
   // 攻撃系でないスキルならいまでも使える
   if (damageEffects.length === 0) {
-    castSkill(state, unit, [unit]);
-    markSkillUsed(state, unit);
-    return true;
+    const next = castSkill(state, unitId, [unitId]);
+    return markSkillUsed(next, unitId, hpPercentBefore);
   }
 
   const allies = state.units.filter((u) => u.side === 'ally');
-  if (allies.length === 0) return false;
+  if (allies.length === 0) return state;
   const dmg = (t: Unit) =>
     damageEffects.reduce((sum, e) => sum + calcDamage(unit, t, e.power), 0);
 
@@ -137,11 +132,11 @@ function trySkill(state: BattleState, stage: BattleStageData, unit: Unit): boole
       best = { dest: cand.pos, cost: cand.cost, targets, kills, damage };
     }
   }
-  if (!best) return false;
-  if (best.cost > 0) moveUnit(state, stage, unit, best.dest);
-  castSkill(state, unit, best.targets);
-  markSkillUsed(state, unit);
-  return true;
+  if (!best) return state;
+  let next = state;
+  if (best.cost > 0) next = moveUnit(next, stage, unitId, best.dest);
+  next = castSkill(next, unitId, best.targets.map((t) => t.id));
+  return markSkillUsed(next, unitId, hpPercentBefore);
 }
 
 // 通常攻撃
@@ -256,13 +251,16 @@ function executeAttacks(
   state: BattleState,
   classes: Record<string, UnitClassDef>,
   cls: UnitClassDef,
-  unit: Unit,
-): void {
-  while (state.phase === 'enemy' && canSpendAp(state, unit, cls.attackCost)) {
-    const allies = state.units.filter((u) => u.side === 'ally');
+  unitId: string,
+): BattleState {
+  let next = state;
+  for (;;) {
+    const unit = next.units.find((u) => u.id === unitId);
+    if (!unit || next.phase !== 'enemy' || !canSpendAp(next, unit, cls.attackCost)) return next;
+    const allies = next.units.filter((u) => u.side === 'ally');
     const choice = bestAttackFrom(cls, unit, unit.pos, allies, (t) => t.hp);
-    if (!choice) return;
-    attack(state, classes, unit, choice.targets, choice.direction);
+    if (!choice) return next;
+    next = attack(next, classes, unitId, choice.targets.map((t) => t.id), choice.direction);
   }
 }
 
@@ -288,9 +286,14 @@ function countOf(limit: TargetCount, available: number): number {
 }
 
 // 攻撃もスキルも撃てないターンのフォールバック。最寄りの味方との距離が最小になるマスへ移動する
-function approachNearestAlly(state: BattleState, stage: BattleStageData, unit: Unit): void {
+function approachNearestAlly(
+  state: BattleState,
+  stage: BattleStageData,
+  unitId: string,
+): BattleState {
+  const unit = unitById(state, unitId);
   const allies = state.units.filter((u) => u.side === 'ally');
-  if (allies.length === 0) return;
+  if (allies.length === 0) return state;
   const distToNearest = (pos: Axial) => Math.min(...allies.map((a) => distance(pos, a.pos)));
   const current = distToNearest(unit.pos);
   let best: { pos: Axial; cost: number; d: number } | undefined;
@@ -301,5 +304,5 @@ function approachNearestAlly(state: BattleState, stage: BattleStageData, unit: U
       best = { pos: option.pos, cost: option.cost, d };
     }
   }
-  if (best) moveUnit(state, stage, unit, best.pos);
+  return best ? moveUnit(state, stage, unitId, best.pos) : state;
 }

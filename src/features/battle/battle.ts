@@ -1,4 +1,6 @@
 // 戦闘の初期化・アクション実行（移動/通常攻撃/スキル）・ターン進行・勝敗判定
+// すべて純粋関数。state は変更せず新しい state を返す。
+// ユニットの参照は id で受ける（更新のたびにオブジェクトが作り直されるため）
 import { axialKey, distance, reachable, shapeTiles } from './hex';
 import type { Axial } from './hex';
 import { canSpendAp, refillApForTurn, spendAp } from './ap';
@@ -16,6 +18,13 @@ import type {
 // 指定座標に居るユニット
 export function unitAt(state: BattleState, pos: Axial): Unit | undefined {
   return state.units.find((u) => u.pos.q === pos.q && u.pos.r === pos.r);
+}
+
+// id からユニットを引く。盤面に居なければ throw
+export function unitById(state: BattleState, unitId: string): Unit {
+  const unit = state.units.find((u) => u.id === unitId);
+  if (!unit) throw new Error(`Unknown unit: ${unitId}`);
+  return unit;
 }
 
 // そのユニットがこの手番に使える残りAP（味方は個人APとパーティAPの少ない方）
@@ -57,13 +66,13 @@ export function deployAlly(
   character: CharacterDef,
   skill: SkillDef | undefined,
   pos: Axial,
-): void {
+): BattleState {
   if (state.phase !== 'deployment') throw new Error(`Not in deployment phase: ${state.phase}`);
   const deployable = stage.deployableTiles.some((t) => t.q === pos.q && t.r === pos.r);
   if (!deployable || unitAt(state, pos)) {
     throw new Error(`Cannot deploy at (${pos.q},${pos.r})`);
   }
-  state.units.push({
+  const unit: Unit = {
     id: `ally-${character.id}`,
     side: 'ally',
     classId: character.classId,
@@ -74,7 +83,15 @@ export function deployAlly(
     defense: character.defense,
     ap: 0,
     skill: skill,
-  });
+  };
+  return { ...state, units: [...state.units, unit] };
+}
+
+// 配置済みの味方を外す（配置のやり直し用）
+export function undeployAlly(state: BattleState, unitId: string): BattleState {
+  if (state.phase !== 'deployment') throw new Error(`Not in deployment phase: ${state.phase}`);
+  if (unitById(state, unitId).side !== 'ally') throw new Error(`Not an ally: ${unitId}`);
+  return { ...state, units: state.units.filter((u) => u.id !== unitId) };
 }
 
 // 配置を確定して戦闘を開始
@@ -82,12 +99,15 @@ export function startBattle(
   state: BattleState,
   stage: BattleStageData,
   classes: Record<string, UnitClassDef>,
-): void {
+): BattleState {
   if (state.phase !== 'deployment') throw new Error(`Not in deployment phase: ${state.phase}`);
   if (!state.units.some((u) => u.side === 'ally')) throw new Error('No allies deployed');
-  state.phase = 'player';
-  state.turn = 1;
-  refillApForTurn(state, 'ally', classes, stage.partyApPerTurn);
+  return refillApForTurn(
+    { ...state, phase: 'player', turn: 1 },
+    'ally',
+    classes,
+    stage.partyApPerTurn,
+  );
 }
 
 // 移動
@@ -109,80 +129,89 @@ export function movementRange(
 export function moveUnit(
   state: BattleState,
   stage: BattleStageData,
-  unit: Unit,
+  unitId: string,
   dest: Axial,
-): void {
+): BattleState {
+  const unit = unitById(state, unitId);
   const entry = movementRange(state, stage, unit).find(
     (t) => t.pos.q === dest.q && t.pos.r === dest.r,
   );
   if (!entry) throw new Error(`Cannot move to (${dest.q},${dest.r})`);
-  spendAp(state, unit, entry.cost);
-  unit.pos = dest;
+  const next = spendAp(state, unitId, entry.cost);
+  return {
+    ...next,
+    units: next.units.map((u) => (u.id === unitId ? { ...u, pos: dest } : u)),
+  };
 }
 
 // 通常攻撃
-// targetsは攻撃範囲内からUI側で選んだ相手。pattern型の範囲は direction（0〜5）で回転
+// targetIds は攻撃範囲内からUI側で選んだ相手。pattern型の範囲は direction（0〜5）で回転
 export function attack(
   state: BattleState,
   classes: Record<string, UnitClassDef>,
-  attacker: Unit,
-  targets: Unit[],
+  attackerId: string,
+  targetIds: string[],
   direction = 0,
-): void {
+): BattleState {
+  const attacker = unitById(state, attackerId);
   const cls = classes[attacker.classId];
   if (!cls) throw new Error(`Unknown unit class: ${attacker.classId}`);
   if (!canSpendAp(state, attacker, cls.attackCost)) throw new Error('Not enough AP');
-  if (typeof cls.attackTargets === 'number' && targets.length > cls.attackTargets) {
-    throw new Error(`Too many targets: ${targets.length} > ${cls.attackTargets}`);
+  if (typeof cls.attackTargets === 'number' && targetIds.length > cls.attackTargets) {
+    throw new Error(`Too many targets: ${targetIds.length} > ${cls.attackTargets}`);
   }
   const area = new Set(shapeTiles(attacker.pos, cls.attackRange, direction).map(axialKey));
-  for (const target of targets) {
+  for (const id of targetIds) {
+    const target = unitById(state, id);
     if (target.side === attacker.side || !area.has(axialKey(target.pos))) {
-      throw new Error(`Invalid target: ${target.id}`);
+      throw new Error(`Invalid target: ${id}`);
     }
   }
-  spendAp(state, attacker, cls.attackCost);
-  for (const target of targets) {
-    target.hp = Math.max(0, target.hp - calcDamage(attacker, target, cls.attackPower));
-  }
-  removeDead(state);
+  const next = spendAp(state, attackerId, cls.attackCost);
+  const hitIds = new Set(targetIds);
+  return removeDead({
+    ...next,
+    units: next.units.map((u) =>
+      hitIds.has(u.id) ? { ...u, hp: Math.max(0, u.hp - calcDamage(attacker, u, cls.attackPower)) } : u,
+    ),
+  });
 }
 
 // スキル
-// targetsは射程内からUI側で選んだ対象。range 0なら自分が対象
-export function castSkill(state: BattleState, user: Unit, targets: Unit[]): void {
+// targetIds は射程内からUI側で選んだ対象。range 0なら自分が対象
+export function castSkill(state: BattleState, userId: string, targetIds: string[]): BattleState {
+  const user = unitById(state, userId);
   const skill = user.skill;
-  if (!skill) throw new Error(`Unit has no skill: ${user.id}`);
+  if (!skill) throw new Error(`Unit has no skill: ${userId}`);
   if (!canSpendAp(state, user, skill.apCost)) throw new Error('Not enough AP');
+  const targets = targetIds.map((id) => unitById(state, id));
   for (const target of targets) {
     if (distance(user.pos, target.pos) > skill.range) {
       throw new Error(`Out of range: ${target.id}`);
     }
   }
-  spendAp(state, user, skill.apCost);
+  let next = spendAp(state, userId, skill.apCost);
+  // 各効果は targets のうち effect.target に合致する対象にだけ適用する
+  const matchTarget = (t: Unit, target: 'self' | 'ally' | 'enemy') =>
+    target === 'self' ? t.id === userId : (t.side === user.side) === (target === 'ally');
   for (const effect of skill.effect) {
-    switch (effect.type) {
-      case 'damage': {
-        // effect.target に合致する対象にだけダメージを与える
-        const hit = targets.filter((t) =>
-          effect.target === 'self'
-            ? t === user
-            : (t.side === user.side) === (effect.target === 'ally'),
-        );
-        for (const t of hit) {
-          t.hp = Math.max(0, t.hp - calcDamage(user, t, effect.power));
+    const hitIds = new Set(targets.filter((t) => matchTarget(t, effect.target)).map((t) => t.id));
+    next = {
+      ...next,
+      units: next.units.map((u) => {
+        if (!hitIds.has(u.id)) return u;
+        switch (effect.type) {
+          case 'damage':
+            return { ...u, hp: Math.max(0, u.hp - calcDamage(user, u, effect.power)) };
+          case 'healHp':
+            return { ...u, hp: Math.min(u.maxHp, u.hp + effect.amount) };
+          case 'grantAp':
+            return { ...u, ap: u.ap + effect.amount };
         }
-        break;
-      }
-      case 'healHp':
-        for (const t of targets) t.hp = Math.min(t.maxHp, t.hp + effect.amount);
-        break;
-      case 'grantAp':
-        for (const t of targets) t.ap += effect.amount;
-        break;
-    }
+      }),
+    };
   }
-  removeDead(state);
+  return removeDead(next);
 }
 
 // ターン進行
@@ -190,22 +219,28 @@ export function endTurn(
   state: BattleState,
   stage: BattleStageData,
   classes: Record<string, UnitClassDef>,
-): void {
+): BattleState {
   if (state.phase === 'player') {
-    state.phase = 'enemy';
-    refillApForTurn(state, 'enemy', classes, stage.partyApPerTurn);
-  } else if (state.phase === 'enemy') {
-    state.phase = 'player';
-    state.turn += 1;
-    refillApForTurn(state, 'ally', classes, stage.partyApPerTurn);
-  } else {
-    throw new Error(`Cannot end turn in phase: ${state.phase}`);
+    return refillApForTurn({ ...state, phase: 'enemy' }, 'enemy', classes, stage.partyApPerTurn);
   }
+  if (state.phase === 'enemy') {
+    return refillApForTurn(
+      { ...state, phase: 'player', turn: state.turn + 1 },
+      'ally',
+      classes,
+      stage.partyApPerTurn,
+    );
+  }
+  throw new Error(`Cannot end turn in phase: ${state.phase}`);
 }
 
 // HP0のユニットを取り除き、どちらかが全滅していれば勝敗を確定
-function removeDead(state: BattleState): void {
-  state.units = state.units.filter((u) => u.hp > 0);
-  if (!state.units.some((u) => u.side === 'enemy')) state.phase = 'victory';
-  else if (!state.units.some((u) => u.side === 'ally')) state.phase = 'defeat';
+function removeDead(state: BattleState): BattleState {
+  const units = state.units.filter((u) => u.hp > 0);
+  const phase = !units.some((u) => u.side === 'enemy')
+    ? 'victory'
+    : !units.some((u) => u.side === 'ally')
+      ? 'defeat'
+      : state.phase;
+  return { ...state, units, phase };
 }
