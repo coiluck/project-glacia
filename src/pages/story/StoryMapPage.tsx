@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type MouseEvent } from 'react'
+import { useRef, useState, type MouseEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { paths } from '../../router/paths'
 import Screen from '../../layouts/Screen'
@@ -79,18 +79,6 @@ export default function StoryMapPage() {
     dragRef.current.down = false
   }
 
-  // チャプター選択モーダルにスクロールバーがあるときだけhas-scrollbarを付与
-  const chapterBodyRef = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    const el = chapterBodyRef.current
-    if (!el) return
-    const update = () => el.classList.toggle('has-scrollbar', el.scrollHeight > el.clientHeight)
-    update()
-    const observer = new ResizeObserver(update)
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [isChapterSelectOpen])
-
   return (
     <>
       <ViewportLayer>
@@ -162,7 +150,7 @@ export default function StoryMapPage() {
             <div className="story-map-chapter-select-modal-content-header">
               <span className="story-map-chapter-select-modal-content-header-text">チャプター選択</span>
             </div>
-            <div ref={chapterBodyRef} className="story-map-chapter-select-modal-content-body">
+            <div className="story-map-chapter-select-modal-content-body">
               {chapters.map((chapter) => {
                 const status = getChapterStatus(chapter)
                 const clearRate = getChapterClearRate(chapter)

@@ -131,21 +131,20 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
   -ms-scrollbar-width: thin;
-  -ms-scrollbar-color: #8f8f8f #262626;
-  scrollbar-color: #8f8f8f #262626;
-}
-.story-map-chapter-select-modal-content-body.has-scrollbar {
-  padding-right: calc(16px * var(--scale));
+  -ms-scrollbar-color: #8f8f8f transparent;
+  scrollbar-color: #8f8f8f transparent;
 }
 .story-map-chapter-select-modal-content-body-item {
-  position: relative;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: calc(28px * var(--scale));
-  width: 100%;
-  aspect-ratio: 3 / 1;
+  position: relative;
+  width: calc(100% - (32px * var(--scale)));
+  height: calc(184px * var(--scale));
   padding: calc(16px * var(--scale)) calc(32px * var(--scale)) calc(16px * var(--scale)) calc(40px * var(--scale));
   --cut: calc(48px * var(--scale));
   clip-path: polygon(
