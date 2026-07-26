@@ -13,6 +13,7 @@ import type { Axial } from '../../features/battle/hex'
 import type { Side, SkillDef, Unit } from '../../features/battle/types'
 import HexGrid from './components/HexGrid'
 import type { HighlightKind } from './components/HexGrid'
+import ViewportLayer from '../../layouts/ViewportLayer'
 
 // i18n
 const TRANSLATION_MAPPING = Object.fromEntries(
@@ -224,134 +225,140 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     selectedUnit?.skill != null && availableAp(state, selectedUnit) >= selectedUnit.skill.apCost
 
   return (
-    <div className="page-battle">
-      {/* 上部HUD */}
-      <div className="battle-hud-top">
-        <div className="battle-hud-stage">STAGE {stageId}</div>
-        {state.phase !== 'deployment' && (
-          <>
-            <div className="battle-hud-item">
-              {t.turn} {state.turn}
-            </div>
-            <div className="battle-hud-item">
-              {t.partyAp} {state.partyAp}/{stage.partyApPerTurn}
-            </div>
-          </>
-        )}
-        {state.phase === 'enemy' && <div className="battle-hud-item enemy-turn">{t.enemyTurn}</div>}
-      </div>
-
-      {/* 盤面 */}
-      <div className="battle-board-area">
-        <HexGrid
-          tiles={stage.tiles}
-          units={state.units}
-          highlights={highlights}
-          selectedUnitId={selectedUnitId}
-          getUnitName={getUnitName}
-          onTileClick={handleTileClick}
-          onUnitClick={handleUnitClick}
-        />
-      </div>
-
-      {/* 配置フェーズ用 */}
-      {state.phase === 'deployment' && (
-        <div className="battle-deploy-panel">
-          <p className="battle-deploy-hint">{t.deployHint}</p>
-          <div className="battle-deploy-members">
-            {testParty.map((m, i) => {
-              const deployed = isDeployed(m.character.id)
-              return (
-                <button
-                  key={m.character.id}
-                  className={`battle-deploy-member${i === deployIndex ? ' is-active' : ''}${deployed ? ' is-deployed' : ''}`}
-                  disabled={deployed}
-                  onClick={() => setDeployIndex(i)}
-                >
-                  <span className="battle-deploy-member-name">{t[m.character.nameKey]}</span>
-                  <span className="battle-deploy-member-class">
-                    {t[classes[m.character.classId].nameKey]}
-                  </span>
-                </button>
-              )
-            })}
+    <>
+      <ViewportLayer>
+        {/* ターン表示 */}
+        {state.phase !== 'deployment' &&
+          <div className="battle-hud-turn" key={state.turn}>
+            Turn {state.turn}
           </div>
-          <button
-            className="battle-button battle-start-button"
-            disabled={!state.units.some((u) => u.side === 'ally')}
-            onClick={start}
-          >
-            {t.startBattle}
-          </button>
-        </div>
-      )}
+        }
 
-      {/* 選択中ユニットの情報（配置中は敵の下見にも使う） */}
-      {(state.phase === 'player' || state.phase === 'deployment') &&
-        selectedUnit &&
-        selectedClass && (
-          <div className="battle-unit-panel">
-            <div className="battle-unit-panel-name">
-              {getUnitName(selectedUnit)}
-              <span className="battle-unit-panel-class">{t[selectedClass.nameKey]}</span>
-            </div>
-            <div className="battle-unit-panel-stat">
-              HP {selectedUnit.hp}/{selectedUnit.maxHp}
-            </div>
-            <div className="battle-unit-panel-stat">
-              AP{' '}
-              {selectedUnit.side === 'ally' ? availableAp(state, selectedUnit) : selectedUnit.ap}/
-              {selectedClass.apPerTurn}
-            </div>
-            {state.phase === 'player' && selectedUnit.side === 'ally' && (
-              <div className="battle-unit-panel-actions">
-                <button
-                  className={`battle-button${action === 'attack' ? ' is-active' : ''}`}
-                  disabled={!canAttack}
-                  onClick={() => setAction(action === 'attack' ? 'move' : 'attack')}
-                >
-                  {t.attack}
-                </button>
-                {selectedUnit.skill && (
+        {/* 敵ターン中の画面 */}
+        {state.phase === 'enemy' &&
+          <div className="battle-hud-enemy-turn-overlay">
+            {t.enemyTurn}
+          </div>
+        }
+
+        {/* 背景 */}
+        <div className="battle-hud-background" />
+      </ViewportLayer>
+
+
+      <div className="page-battle">
+        {/* 盤面 */}
+        <div className="battle-board-area">
+          <HexGrid
+            tiles={stage.tiles}
+            units={state.units}
+            highlights={highlights}
+            selectedUnitId={selectedUnitId}
+            getUnitName={getUnitName}
+            onTileClick={handleTileClick}
+            onUnitClick={handleUnitClick}
+          />
+        </div>
+
+        {/* 配置フェーズ用 */}
+        {state.phase === 'deployment' && (
+          <div className="battle-deploy-panel">
+            <p className="battle-deploy-hint">{t.deployHint}</p>
+            <div className="battle-deploy-members">
+              {testParty.map((m, i) => {
+                const deployed = isDeployed(m.character.id)
+                  return (
                   <button
-                    className={`battle-button${action === 'skill' ? ' is-active' : ''}`}
-                    disabled={!canSkill}
-                    onClick={handleSkillButton}
+                    key={m.character.id}
+                    className={`battle-deploy-member${i === deployIndex ? ' is-active' : ''}${deployed ? ' is-deployed' : ''}`}
+                    disabled={deployed}
+                    onClick={() => setDeployIndex(i)}
                   >
-                    {t[selectedUnit.skill.nameKey]}
+                    <span className="battle-deploy-member-name">{t[m.character.nameKey]}</span>
+                    <span className="battle-deploy-member-class">
+                      {t[classes[m.character.classId].nameKey]}
+                    </span>
                   </button>
-                )}
-                <button className="battle-button" onClick={deselect}>
-                  {t.cancel}
-                </button>
-              </div>
-            )}
+                )
+              })}
+            </div>
+            <button
+              className="battle-button battle-start-button"
+              disabled={!state.units.some((u) => u.side === 'ally')}
+              onClick={start}
+            >
+              {t.startBattle}
+            </button>
           </div>
         )}
 
-      {/* 味方ターンの操作 */}
-      {state.phase === 'player' && (
-        <div className="battle-turn-buttons">
-          <button className="battle-button" onClick={handleUndoTurn}>
-            {t.undoTurn}
-          </button>
-          <button className="battle-button battle-end-turn-button" onClick={handleEndTurn}>
-            {t.endTurn}
-          </button>
-        </div>
-      )}
+        {/* 選択中ユニットの情報（配置中は敵の下見にも使う） */}
+        {(state.phase === 'player' || state.phase === 'deployment') &&
+          selectedUnit &&
+          selectedClass && (
+            <div className="battle-unit-panel">
+              <div className="battle-unit-panel-name">
+                {getUnitName(selectedUnit)}
+                <span className="battle-unit-panel-class">{t[selectedClass.nameKey]}</span>
+              </div>
+              <div className="battle-unit-panel-stat">
+                HP {selectedUnit.hp}/{selectedUnit.maxHp}
+              </div>
+              <div className="battle-unit-panel-stat">
+                AP{' '}
+                {selectedUnit.side === 'ally' ? availableAp(state, selectedUnit) : selectedUnit.ap}/
+                {selectedClass.apPerTurn}
+              </div>
+              {state.phase === 'player' && selectedUnit.side === 'ally' && (
+                <div className="battle-unit-panel-actions">
+                  <button
+                    className={`battle-button${action === 'attack' ? ' is-active' : ''}`}
+                    disabled={!canAttack}
+                    onClick={() => setAction(action === 'attack' ? 'move' : 'attack')}
+                  >
+                    {t.attack}
+                  </button>
+                  {selectedUnit.skill && (
+                    <button
+                      className={`battle-button${action === 'skill' ? ' is-active' : ''}`}
+                      disabled={!canSkill}
+                      onClick={handleSkillButton}
+                    >
+                      {t[selectedUnit.skill.nameKey]}
+                    </button>
+                  )}
+                  <button className="battle-button" onClick={deselect}>
+                    {t.cancel}
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
 
-      {/* 勝敗 */}
-      {(state.phase === 'victory' || state.phase === 'defeat') && (
-        <div className="battle-result">
-          <div className={`battle-result-title ${state.phase}`}>
-            {state.phase === 'victory' ? t.victory : t.defeat}
+        {/* 味方ターンの操作 */}
+        {state.phase === 'player' && (
+          <div className="battle-turn-buttons">
+            <button className="battle-button" onClick={handleUndoTurn}>
+              {t.undoTurn}
+            </button>
+            <button className="battle-button battle-end-turn-button" onClick={handleEndTurn}>
+              {t.endTurn}
+            </button>
           </div>
-          <Link className="battle-result-button" to={paths.story}>
-            {t.backToMap}
-          </Link>
-        </div>
-      )}
-    </div>
+        )}
+
+        {/* 勝敗 */}
+        {(state.phase === 'victory' || state.phase === 'defeat') && (
+          <div className="battle-result">
+            <div className={`battle-result-title ${state.phase}`}>
+              {state.phase === 'victory' ? t.victory : t.defeat}
+            </div>
+            <Link className="battle-result-button" to={paths.story}>
+              {t.backToMap}
+            </Link>
+          </div>
+        )}
+      </div>
+    </>
   )
 }

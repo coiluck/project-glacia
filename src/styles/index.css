@@ -24,7 +24,9 @@
 @import './pages/scenario/character.css';
 @import './pages/scenario/log.css';
 @import './pages/scenario/choice.css';
-@import './pages/battle.css';
+@import './pages/battle/battle.css';
+@import './pages/battle/hud.css';
+@import './pages/battle/hex.css';
 @import './pages/member.css';
 @import './pages/recruit.css';
 @import './pages/base.css';
@@ -45,4 +47,8 @@
 @font-face {
   font-family: 'CaviarDreams';
   src: url('./fonts/CaviarDreams.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'LobsterTwo-BoldItalic';
+  src: url('./fonts/LobsterTwo-BoldItalic.ttf') format('truetype');
 }

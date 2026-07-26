@@ -1,0 +1,52 @@
+/* ── 盤面 ─────────────────────────────────── */
+.battle-board-area {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hex-board {
+  position: relative;
+}
+.hex-board-svg {
+  display: block;
+}
+
+/* タイルの側面（厚み） */
+.hex-side {
+  fill: #101a24;
+}
+
+/* タイルの天面 */
+.hex-top {
+  fill: #263849;
+  stroke: #45607a;
+  stroke-width: 1.5;
+}
+.hex-top.is-deploy {
+  fill: #2c5a66;
+  stroke: #6fd8e8;
+  cursor: pointer;
+}
+.hex-top.is-move {
+  fill: #2c4a72;
+  stroke: #6fa8e8;
+  cursor: pointer;
+}
+.hex-top.is-attack {
+  fill: #6e3040;
+  stroke: #e87a8a;
+  cursor: pointer;
+}
+.hex-top.is-skill {
+  fill: #315a3c;
+  stroke: #7ee89a;
+  cursor: pointer;
+}
+.hex-top.is-deploy:hover,
+.hex-top.is-move:hover,
+.hex-top.is-attack:hover,
+.hex-top.is-skill:hover {
+  filter: brightness(1.35);
+}
