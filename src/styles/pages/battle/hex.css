@@ -14,6 +14,10 @@
 }
 
 /* タイルの側面（厚み）と天面の塗りは地形ごとに fill 属性で与える */
+/* 側面の右の影 */
+.hex-side-shade {
+  fill: rgba(0, 0, 0, 0.3);
+}
 .hex-top {
   stroke: #1b2530;
   stroke-width: 1.5;

@@ -35,6 +35,17 @@ function sidePoints(centerX: number, top: number, bottom: number): string {
   return [...upper, ...lower].join(' ');
 }
 
+// 側面のうち右側の一面
+function shadedSidePoints(centerX: number, top: number, bottom: number): string {
+  const [a, b] = [LOWER_CORNERS[0], LOWER_CORNERS[1]];
+  return [
+    `${centerX + a.x},${top + a.y}`,
+    `${centerX + b.x},${top + b.y}`,
+    `${centerX + b.x},${bottom + b.y}`,
+    `${centerX + a.x},${bottom + a.y}`,
+  ].join(' ');
+}
+
 // 各層の上端・下端のy座標。下端は全タイル共通で centerY + THICKNESS に揃える
 function layerGeometry(tile: StageTile, centerY: number) {
   let bottom = centerY + THICKNESS;
@@ -115,6 +126,11 @@ export default function HexGrid({
                       className="hex-side"
                       points={sidePoints(center.x, layer.top, layer.bottom)}
                       fill={TERRAIN_STYLES[layer.terrain].side}
+                    />
+                    {/* 右側の一面だけ陰にして立体感を出す */}
+                    <polygon
+                      className="hex-side-shade"
+                      points={shadedSidePoints(center.x, layer.top, layer.bottom)}
                     />
                     {/* 天面。操作を受けるのは一番上の層だけ */}
                     {li === layers.length - 1 ? (
