@@ -13,40 +13,43 @@
   display: block;
 }
 
-/* タイルの側面（厚み） */
-.hex-side {
-  fill: #101a24;
+/* タイルの側面（厚み）と天面の塗りは地形ごとに fill 属性で与える */
+.hex-top {
+  stroke: #1b2530;
+  stroke-width: 1.5;
+  stroke-opacity: 0.55;
 }
 
-/* タイルの天面 */
-.hex-top {
-  fill: #263849;
-  stroke: #45607a;
-  stroke-width: 1.5;
+/* ハイライトは地形テクスチャが透けるように半透明で重ねる */
+.hex-highlight {
+  pointer-events: none;
+  stroke-width: 3;
 }
-.hex-top.is-deploy {
-  fill: #2c5a66;
+.hex-tile.is-deploy,
+.hex-tile.is-move,
+.hex-tile.is-attack,
+.hex-tile.is-skill {
+  cursor: pointer;
+}
+.hex-tile.is-deploy .hex-highlight {
+  fill: rgba(111, 216, 232, 0.35);
   stroke: #6fd8e8;
-  cursor: pointer;
 }
-.hex-top.is-move {
-  fill: #2c4a72;
+.hex-tile.is-move .hex-highlight {
+  fill: rgba(111, 168, 232, 0.35);
   stroke: #6fa8e8;
-  cursor: pointer;
 }
-.hex-top.is-attack {
-  fill: #6e3040;
+.hex-tile.is-attack .hex-highlight {
+  fill: rgba(232, 122, 138, 0.35);
   stroke: #e87a8a;
-  cursor: pointer;
 }
-.hex-top.is-skill {
-  fill: #315a3c;
+.hex-tile.is-skill .hex-highlight {
+  fill: rgba(126, 232, 154, 0.35);
   stroke: #7ee89a;
-  cursor: pointer;
 }
-.hex-top.is-deploy:hover,
-.hex-top.is-move:hover,
-.hex-top.is-attack:hover,
-.hex-top.is-skill:hover {
+.hex-tile.is-deploy:hover,
+.hex-tile.is-move:hover,
+.hex-tile.is-attack:hover,
+.hex-tile.is-skill:hover {
   filter: brightness(1.35);
 }

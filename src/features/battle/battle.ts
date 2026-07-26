@@ -4,6 +4,7 @@
 import { axialKey, distance, reachable, shapeTiles } from './hex';
 import type { Axial } from './hex';
 import { canSpendAp, refillApForTurn, spendAp } from './ap';
+import { isPassable } from './terrain';
 import { calcDamage } from './damage';
 import type {
   BattleStageData,
@@ -117,7 +118,7 @@ export function movementRange(
   stage: BattleStageData,
   unit: Unit,
 ): { pos: Axial; cost: number }[] {
-  const tiles = new Set(stage.tiles.map(axialKey));
+  const tiles = new Set(stage.tiles.filter(isPassable).map((t) => axialKey(t.pos)));
   const occupied = new Set(state.units.map((u) => axialKey(u.pos)));
   return reachable(unit.pos, availableAp(state, unit), (c) => {
     const key = axialKey(c);

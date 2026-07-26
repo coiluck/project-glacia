@@ -1,4 +1,5 @@
 import type { Axial, AttackShape } from './hex';
+import type { TerrainKind } from './terrain';
 
 // 攻撃で選べる対象ユニット数。'infinity' は範囲内の全ユニット
 export type TargetCount = number | 'infinity';
@@ -60,9 +61,17 @@ export interface Unit {
 
 // ステージの静的データ
 
+// 盤面のタイル1枚
+export interface StageTile {
+  pos: Axial;
+  terrain: TerrainKind;
+  // 0 は通常の高さ。1以上は厚みが増して通行不可
+  elevation?: number;
+}
+
 // data/ 側でステージごとに定義する戦闘マップ
 export interface BattleStageData {
-  tiles: Axial[]; // マップの形（存在するタイルの座標一覧）
+  tiles: StageTile[]; // マップの形（存在するタイルの座標一覧）
   deployableTiles: Axial[]; // 味方を初期配置できるタイル（tilesの部分集合）
   partyApPerTurn: number; // 毎ターン配り直されるパーティ全体AP
   enemies: EnemySpawn[]; // 初期配置の敵

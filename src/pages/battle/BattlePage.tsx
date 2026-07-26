@@ -12,7 +12,6 @@ import { axialKey, coordsInRange, shapeTiles } from '../../features/battle/hex'
 import type { Axial } from '../../features/battle/hex'
 import type { Side, SkillDef, Unit } from '../../features/battle/types'
 import HexGrid from './components/HexGrid'
-import type { HighlightKind } from './components/HexGrid'
 import ViewportLayer from '../../layouts/ViewportLayer'
 
 // i18n
@@ -26,7 +25,6 @@ const TRANSLATION_MAPPING = Object.fromEntries(
     'deployHint',
     'startBattle',
     'endTurn',
-    'enemyTurn',
     'undoTurn',
     'attack',
     'skill',
@@ -41,6 +39,9 @@ const TRANSLATION_MAPPING = Object.fromEntries(
 
 // 選択中ユニットに対して指示できる行動
 type ActionMode = 'move' | 'attack' | 'skill'
+
+// 盤面タイルのハイライト種別
+export type HighlightKind = 'deploy' | 'move' | 'attack' | 'skill'
 
 // スキルの対象にできる陣営
 // 味方のSkillDefでのみこれを呼ぶ（表示用なので）
@@ -114,7 +115,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
       }
     }
   } else if (state.phase === 'player' && selectedUnit?.side === 'ally') {
-    const tileSet = new Set(stage.tiles.map(axialKey))
+    const tileSet = new Set(stage.tiles.map((t) => axialKey(t.pos)))
     if (action === 'move') {
       for (const { pos } of movementRange(state, stage, selectedUnit)) {
         highlights.set(axialKey(pos), 'move')
@@ -236,9 +237,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
 
         {/* 敵ターン中の画面 */}
         {state.phase === 'enemy' &&
-          <div className="battle-hud-enemy-turn-overlay">
-            {t.enemyTurn}
-          </div>
+          <div className="battle-hud-enemy-turn-overlay" />
         }
 
         {/* 背景 */}
