@@ -1,0 +1,21 @@
+{
+  "charAlma": "アルマ",
+  "charAlmaProfile": "銀髪をなびかせ、細身のレイピアで戦う剣士。一突きは軽いが、誰よりも速く、狙ったところを外さない。",
+  "charLapis": "ラピス",
+  "charLapisProfile": "旅のはじめから傍にいる銀髪の魔法使い。前に出るのは苦手だが、遠くから的確に撃ち、味方の傷を塞ぐ。",
+  "charVermilia": "ベルミリア",
+  "charVermiliaProfile": "燃えるような赤髪の剣士。身の丈ほどの大剣を振り抜き、たった一撃で戦況をひっくり返す。",
+
+  "skillAlmaPiercingThrust": "刺突",
+  "skillAlmaPiercingThrustDesc": "隣接する敵1体にダメージを与える。消費APが軽い。",
+  "skillAlmaSilverBanner": "銀旗の号令",
+  "skillAlmaSilverBannerDesc": "距離2以内の味方1体にAPを渡し、HPを回復する。",
+  "skillVermiliaHeavyCleave": "剛断",
+  "skillVermiliaHeavyCleaveDesc": "隣接する敵1体に特大のダメージを与える。消費APが重い。",
+  "skillVermiliaIronStance": "鉄の構え",
+  "skillVermiliaIronStanceDesc": "その場で身を固め、自分のHPを回復する。",
+  "skillLapisFrostBolt": "氷礫",
+  "skillLapisFrostBoltDesc": "距離3以内の敵1体にダメージを与える。",
+  "skillLapisMendingLight": "癒しの光",
+  "skillLapisMendingLightDesc": "距離2以内の味方1体のHPを回復する。"
+}

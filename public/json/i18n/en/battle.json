@@ -1,0 +1,23 @@
+{
+  "classSoldier": "Soldier",
+  "classArcher": "Archer",
+  "classMage": "Mage",
+  "classRaider": "Raider",
+  "enemyIceGrunt": "Ice Grunt",
+  "enemyIceArcher": "Ice Archer",
+  "enemyFrostRaider": "Frost Raider",
+  "skillFrostMend": "Frost Mend",
+  "deployHint": "Select a member and place them on a highlighted tile (tap a placed unit to remove)",
+  "startBattle": "Start Battle",
+  "endTurn": "End Turn",
+  "undoTurn": "Undo Turn",
+  "attack": "Attack",
+  "skill": "Skill",
+  "cancel": "Cancel",
+  "turn": "Turn",
+  "partyAp": "Party AP",
+  "victory": "Victory",
+  "defeat": "Defeat",
+  "backToMap": "Back to Map",
+  "emptyParty": "No members available to deploy"
+}

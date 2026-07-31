@@ -3,9 +3,11 @@ import { Link, useParams } from 'react-router-dom'
 import { paths } from '../../router/paths'
 import { useTranslations } from '../../i18n'
 import { battleStageRegistry } from '../../data/battleStages'
-import { characters, testParty } from '../../data/characters'
+import { characterMasters } from '../../data/characters'
 import { enemyDefs } from '../../data/enemies'
 import { unitClasses } from '../../data/unitClasses'
+import { buildParty } from '../../features/characters/build'
+import { useCharacterStore } from '../../stores/characterStore'
 import { availableAp, movementRange } from '../../features/battle/battle'
 import { useBattleStore } from '../../features/battle/battleStore'
 import { axialKey, coordsInRange, shapeTiles } from '../../features/battle/hex'
@@ -14,12 +16,17 @@ import type { Side, SkillDef, Unit } from '../../features/battle/types'
 import HexGrid from './components/HexGrid'
 import ViewportLayer from '../../layouts/ViewportLayer'
 
-// i18n
-const TRANSLATION_MAPPING = Object.fromEntries(
+// i18n。キャラ名とスキル名は characters.json、それ以外は battle.json にある
+const CHARACTER_TRANSLATION_MAPPING = Object.fromEntries(
+  [
+    ...Object.values(characterMasters).map((c) => c.nameKey),
+    ...Object.values(characterMasters).flatMap((c) => c.skills.map((s) => s.def.nameKey)),
+  ].map((k) => [k, k]),
+)
+
+const BATTLE_TRANSLATION_MAPPING = Object.fromEntries(
   [
     ...Object.values(unitClasses).map((c) => c.nameKey),
-    ...Object.values(characters).map((c) => c.nameKey),
-    ...Object.values(characters).flatMap((c) => c.skills.map((s) => s.nameKey)),
     ...Object.values(enemyDefs).map((e) => e.nameKey),
     ...Object.values(enemyDefs).flatMap((e) => (e.skill ? [e.skill.def.nameKey] : [])),
     'deployHint',
@@ -34,6 +41,7 @@ const TRANSLATION_MAPPING = Object.fromEntries(
     'victory',
     'defeat',
     'backToMap',
+    'emptyParty',
   ].map((k) => [k, k]),
 )
 
@@ -56,10 +64,19 @@ export default function BattlePage() {
 }
 
 function BattleScreen({ stageId }: { stageId: string | undefined }) {
-  const t = useTranslations('battle', TRANSLATION_MAPPING)
+  const tBattle = useTranslations('battle', BATTLE_TRANSLATION_MAPPING)
+  const tCharacter = useTranslations('characters', CHARACTER_TRANSLATION_MAPPING)
+  const t = { ...tBattle, ...tCharacter }
   const [selectedUnitId, setSelectedUnitId] = useState<string | null>(null)
   const [action, setAction] = useState<ActionMode>('move')
   const [deployIndex, setDeployIndex] = useState(0)
+
+  // 編成中のパーティをマスターデータ＋所持データから組み立てる。
+  // 戦闘中は変わらないので、この戦闘のあいだ固定する
+  const [party] = useState(() => {
+    const s = useCharacterStore.getState()
+    return buildParty(s.owned, s.party)
+  })
 
   const stage = useBattleStore((s) => s.stage)
   const state = useBattleStore((s) => s.state)
@@ -93,12 +110,28 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     )
   }
 
+  // 編成が空（ハイドレート前に入った・全員未所持など）だと1体も配置できず、
+  // 開始ボタンも押せない詰み画面になるので、マップへ戻れるようにする
+  if (party.length === 0) {
+    return (
+      <div className="page-battle">
+        <div className="battle-result">
+          <div className="battle-result-title">{t.emptyParty}</div>
+          <Link className="battle-result-button" to={paths.story}>
+            {t.backToMap}
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
   const classes = unitClasses
   const selectedUnit = state.units.find((u) => u.id === selectedUnitId) ?? null
 
   // createBattleState / deployAlly の `enemy-{i}-{defId}` / `ally-{charId}` という命名規則に依存
   const unitNameKey = (unit: Unit): string => {
-    if (unit.side === 'ally') return characters[unit.id.slice('ally-'.length)]?.nameKey ?? unit.id
+    if (unit.side === 'ally')
+      return characterMasters[unit.id.slice('ally-'.length)]?.nameKey ?? unit.id
     return enemyDefs[unit.id.split('-').slice(2).join('-')]?.nameKey ?? unit.id
   }
   const getUnitName = (unit: Unit) => t[unitNameKey(unit)] ?? ''
@@ -109,7 +142,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   const highlights = new Map<string, HighlightKind>()
   if (state.phase === 'deployment') {
     const occupied = new Set(state.units.map((u) => axialKey(u.pos)))
-    if (testParty.some((m) => !isDeployed(m.character.id))) {
+    if (party.some((m) => !isDeployed(m.character.id))) {
       for (const pos of stage.deployableTiles) {
         if (!occupied.has(axialKey(pos))) highlights.set(axialKey(pos), 'deploy')
       }
@@ -140,12 +173,12 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     const key = axialKey(pos)
     if (state.phase === 'deployment') {
       if (highlights.get(key) !== 'deploy') return
-      const member = testParty[deployIndex]
+      const member = party[deployIndex]
       if (!member || isDeployed(member.character.id)) return
       deploy(member.character, member.skill, pos)
       // 次の未配置メンバーを自動選択（配置直後の最新 state から判定する）
       const latest = useBattleStore.getState().state
-      const next = testParty.findIndex(
+      const next = party.findIndex(
         (m) => !latest?.units.some((u) => u.id === `ally-${m.character.id}`),
       )
       if (next !== -1) setDeployIndex(next)
@@ -164,7 +197,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
       if (unit.side === 'ally') {
         // 配置済みの味方をタップで配置解除し、そのメンバーを再選択
         undeploy(unit.id)
-        const index = testParty.findIndex((m) => `ally-${m.character.id}` === unit.id)
+        const index = party.findIndex((m) => `ally-${m.character.id}` === unit.id)
         if (index !== -1) setDeployIndex(index)
         setSelectedUnitId(null)
       } else {
@@ -264,7 +297,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
           <div className="battle-deploy-panel">
             <p className="battle-deploy-hint">{t.deployHint}</p>
             <div className="battle-deploy-members">
-              {testParty.map((m, i) => {
+              {party.map((m, i) => {
                 const deployed = isDeployed(m.character.id)
                   return (
                   <button

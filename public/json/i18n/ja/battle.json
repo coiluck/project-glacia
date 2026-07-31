@@ -1,0 +1,23 @@
+{
+  "classSoldier": "剣士",
+  "classArcher": "弓兵",
+  "classMage": "魔導士",
+  "classRaider": "略奪兵",
+  "enemyIceGrunt": "氷晶兵",
+  "enemyIceArcher": "氷晶射手",
+  "enemyFrostRaider": "霜の略奪長",
+  "skillFrostMend": "霜の再生",
+  "deployHint": "出撃メンバーを選んで、光っているマスに配置してください（配置済みはタップで解除）",
+  "startBattle": "戦闘開始",
+  "endTurn": "ターン終了",
+  "undoTurn": "やり直し",
+  "attack": "攻撃",
+  "skill": "スキル",
+  "cancel": "キャンセル",
+  "turn": "ターン",
+  "partyAp": "パーティAP",
+  "victory": "勝利",
+  "defeat": "敗北",
+  "backToMap": "マップへ戻る",
+  "emptyParty": "出撃できるメンバーがいません"
+}
