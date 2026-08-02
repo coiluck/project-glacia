@@ -135,6 +135,7 @@ export default function HexGrid({
                     {/* 天面。操作を受けるのは一番上の層だけ */}
                     {li === layers.length - 1 ? (
                       <HexTile
+                        pos={tile.pos}
                         points={points}
                         fill={fill}
                         highlight={highlights?.get(axialKey(tile.pos))}

@@ -7,7 +7,7 @@
   "enemyIceArcher": "氷晶射手",
   "enemyFrostRaider": "霜の略奪長",
   "skillFrostMend": "霜の再生",
-  "deployHint": "出撃メンバーを選んで、光っているマスに配置してください（配置済みはタップで解除）",
+  "deployHint": "メンバーをドラッグして、光っているマスに配置してください（配置済みはタップで解除）",
   "startBattle": "戦闘開始",
   "endTurn": "ターン終了",
   "undoTurn": "やり直し",

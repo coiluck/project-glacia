@@ -1,0 +1,179 @@
+/* HEXタイル戦闘画面。BattlePage / HexGrid / HexTile */
+
+.page-battle {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+
+/* ── ユニットレイヤー ─────────────────────── */
+.hex-units {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.battle-unit {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+.battle-unit-body {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 110px;
+  transform: translate(-50%, -72%);
+}
+.battle-unit-name {
+  font-size: 16px;
+  line-height: 1.2;
+  text-shadow: 0 1px 3px #000;
+}
+.battle-unit-token {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  font-size: 24px;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.45);
+}
+.battle-unit.ally .battle-unit-token {
+  background: linear-gradient(180deg, #4c94d8 0%, #2b5c94 100%);
+}
+.battle-unit.enemy .battle-unit-token {
+  background: linear-gradient(180deg, #d85c6a 0%, #8f2c3c 100%);
+}
+.battle-unit.is-selected .battle-unit-token {
+  border-color: #fff;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.35), 0 0 18px rgba(140, 220, 255, 0.8);
+}
+.battle-unit-hp {
+  width: 64px;
+  height: 7px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 4px;
+}
+.battle-unit-hp-fill {
+  height: 100%;
+  background: #62d97b;
+  transition: width 0.3s ease;
+}
+.battle-unit.enemy .battle-unit-hp-fill {
+  background: #e8a24a;
+}
+
+/* ── ボタン共通 ───────────────────────────── */
+.battle-button {
+  padding: 10px 28px;
+  font-size: 22px;
+  color: #e8f2fa;
+  cursor: pointer;
+  background: rgba(30, 48, 66, 0.9);
+  border: 1px solid #5a7d9c;
+  border-radius: 6px;
+}
+.battle-button:hover:not(:disabled) {
+  background: rgba(52, 78, 104, 0.95);
+}
+.battle-button:disabled {
+  cursor: default;
+  opacity: 0.35;
+}
+.battle-button.is-active {
+  background: #3c6a94;
+  border-color: #9fd4ff;
+}
+
+/* ── 味方ターンのUI ───────────────────────── */
+.battle-unit-panel {
+  position: absolute;
+  bottom: 32px;
+  left: 48px;
+  z-index: 2;
+  min-width: 340px;
+  padding: 18px 26px;
+  background: rgba(10, 18, 26, 0.85);
+  border: 1px solid #3c556e;
+  border-radius: 10px;
+}
+.battle-unit-panel-name {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+  font-size: 28px;
+}
+.battle-unit-panel-class {
+  font-size: 18px;
+  color: #9fc3e0;
+}
+.battle-unit-panel-stat {
+  font-size: 20px;
+  color: #d4e6f4;
+}
+.battle-unit-panel-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+.battle-turn-buttons {
+  position: absolute;
+  right: 48px;
+  bottom: 32px;
+  z-index: 2;
+  display: flex;
+  gap: 14px;
+  align-items: stretch;
+}
+.battle-end-turn-button {
+  padding: 14px 48px;
+  font-size: 26px;
+}
+
+/* ── 勝敗オーバーレイ ─────────────────────── */
+.battle-result {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+}
+.battle-result-title {
+  font-size: 96px;
+  letter-spacing: 12px;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.8);
+}
+.battle-result-title.victory {
+  color: #9fd4ff;
+}
+.battle-result-title.defeat {
+  color: #e87a8a;
+}
+.battle-result-button {
+  padding: 14px 56px;
+  font-size: 26px;
+  color: #e8f2fa;
+  text-decoration: none;
+  background: rgba(30, 48, 66, 0.9);
+  border: 1px solid #5a7d9c;
+  border-radius: 8px;
+}
+.battle-result-button:hover {
+  background: rgba(52, 78, 104, 0.95);
+}

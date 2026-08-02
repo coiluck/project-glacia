@@ -1,0 +1,115 @@
+/* 配置フェーズの出撃UI */
+
+/* 盤面の上に重ねる操作レイヤー。変なところ押せないようにする */
+.battle-deploy-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* 画面下の編成キャラ一覧*/
+.battle-deploy-dock {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  pointer-events: auto;
+  transform: translateX(-50%);
+}
+.battle-deploy-hint {
+  font-size: 20px;
+  color: #b8d4ea;
+  text-shadow: 0 2px 6px #000;
+}
+.battle-deploy-faces {
+  display: flex;
+  gap: 20px;
+}
+.battle-deploy-face {
+  width: 116px;
+  height: 116px;
+  overflow: hidden;
+  cursor: grab;
+  background: rgba(10, 18, 26, 0.85);
+  border: 3px solid #5a7d9c;
+  border-radius: 50%;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
+  touch-action: none;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.battle-deploy-face img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.battle-deploy-face:hover:not(:disabled) {
+  border-color: #9fd4ff;
+  transform: translateY(-6px);
+}
+.battle-deploy-face.is-holding {
+  cursor: grabbing;
+  opacity: 0.3;
+}
+.battle-deploy-face.is-deployed {
+  cursor: default;
+  opacity: 0.3;
+  filter: grayscale(1);
+}
+
+.battle-deploy-start {
+  position: absolute;
+  right: 48px;
+  bottom: 32px;
+  padding: 14px 56px;
+  font-size: 26px;
+  pointer-events: auto;
+}
+
+/* 持ち上げているキャラ */
+.battle-deploy-ghost {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2; /* 背景ありのとき .screen-safe が z-index:1 になるので、その上へ */
+  width: calc(var(--scale) * 108px);
+  height: calc(var(--scale) * 192px);
+  pointer-events: none;
+  transition: transform 0.08s linear;
+}
+/* マウスの下で左右に揺れる */
+.battle-deploy-ghost-swing {
+  height: 100%;
+  transform: translateX(-50%);
+  transform-origin: 50% 0;
+  animation: battle-deploy-sway 1.4s ease-in-out infinite;
+}
+@keyframes battle-deploy-sway {
+  0%,
+  100% {
+    transform: translateX(-50%) rotate(-6deg);
+  }
+  50% {
+    transform: translateX(-50%) rotate(6deg);
+  }
+}
+/* 揺れを止める */
+.battle-deploy-ghost.is-snapped .battle-deploy-ghost-swing {
+  transform: translateX(-50%);
+  animation: none;
+}
+.battle-deploy-ghost-body {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 calc(var(--scale) * 10px) calc(var(--scale) * 14px) rgba(0, 0, 0, 0.55));
+  transition: transform 0.12s ease-out;
+}
+.battle-deploy-ghost.is-snapped .battle-deploy-ghost-body {
+  transform: translateY(-90%);
+}

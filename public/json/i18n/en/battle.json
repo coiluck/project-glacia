@@ -7,7 +7,7 @@
   "enemyIceArcher": "Ice Archer",
   "enemyFrostRaider": "Frost Raider",
   "skillFrostMend": "Frost Mend",
-  "deployHint": "Select a member and place them on a highlighted tile (tap a placed unit to remove)",
+  "deployHint": "Drag a member onto a highlighted tile (tap a placed unit to remove)",
   "startBattle": "Start Battle",
   "endTurn": "End Turn",
   "undoTurn": "Undo Turn",

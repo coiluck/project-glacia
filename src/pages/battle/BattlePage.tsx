@@ -13,6 +13,7 @@ import { useBattleStore } from '../../features/battle/battleStore'
 import { axialKey, coordsInRange, shapeTiles } from '../../features/battle/hex'
 import type { Axial } from '../../features/battle/hex'
 import type { Side, SkillDef, Unit } from '../../features/battle/types'
+import DeployDock from './components/DeployDock'
 import HexGrid from './components/HexGrid'
 import ViewportLayer from '../../layouts/ViewportLayer'
 
@@ -69,7 +70,6 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   const t = { ...tBattle, ...tCharacter }
   const [selectedUnitId, setSelectedUnitId] = useState<string | null>(null)
   const [action, setAction] = useState<ActionMode>('move')
-  const [deployIndex, setDeployIndex] = useState(0)
 
   // 編成中のパーティをマスターデータ＋所持データから組み立てる。
   // 戦闘中は変わらないので、この戦闘のあいだ固定する
@@ -169,22 +169,10 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     setAction('move')
   }
 
+  // 配置フェーズの配置は DeployDock のドラッグが担当する
   const handleTileClick = (pos: Axial) => {
-    const key = axialKey(pos)
-    if (state.phase === 'deployment') {
-      if (highlights.get(key) !== 'deploy') return
-      const member = party[deployIndex]
-      if (!member || isDeployed(member.character.id)) return
-      deploy(member.character, member.skill, pos)
-      // 次の未配置メンバーを自動選択（配置直後の最新 state から判定する）
-      const latest = useBattleStore.getState().state
-      const next = party.findIndex(
-        (m) => !latest?.units.some((u) => u.id === `ally-${m.character.id}`),
-      )
-      if (next !== -1) setDeployIndex(next)
-      return
-    }
     if (state.phase !== 'player') return
+    const key = axialKey(pos)
     if (selectedUnit?.side === 'ally' && action === 'move' && highlights.get(key) === 'move') {
       move(selectedUnit.id, pos)
       return
@@ -195,10 +183,8 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   const handleUnitClick = (unit: Unit) => {
     if (state.phase === 'deployment') {
       if (unit.side === 'ally') {
-        // 配置済みの味方をタップで配置解除し、そのメンバーを再選択
+        // 配置済みの味方をタップで配置解除し、ドックへ戻す
         undeploy(unit.id)
-        const index = party.findIndex((m) => `ally-${m.character.id}` === unit.id)
-        if (index !== -1) setDeployIndex(index)
         setSelectedUnitId(null)
       } else {
         setSelectedUnitId(unit.id) // 敵の情報を見る
@@ -294,34 +280,15 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
 
         {/* 配置フェーズ用 */}
         {state.phase === 'deployment' && (
-          <div className="battle-deploy-panel">
-            <p className="battle-deploy-hint">{t.deployHint}</p>
-            <div className="battle-deploy-members">
-              {party.map((m, i) => {
-                const deployed = isDeployed(m.character.id)
-                  return (
-                  <button
-                    key={m.character.id}
-                    className={`battle-deploy-member${i === deployIndex ? ' is-active' : ''}${deployed ? ' is-deployed' : ''}`}
-                    disabled={deployed}
-                    onClick={() => setDeployIndex(i)}
-                  >
-                    <span className="battle-deploy-member-name">{t[m.character.nameKey]}</span>
-                    <span className="battle-deploy-member-class">
-                      {t[classes[m.character.classId].nameKey]}
-                    </span>
-                  </button>
-                )
-              })}
-            </div>
-            <button
-              className="battle-button battle-start-button"
-              disabled={!state.units.some((u) => u.side === 'ally')}
-              onClick={start}
-            >
-              {t.startBattle}
-            </button>
-          </div>
+          <DeployDock
+            party={party}
+            isDeployed={isDeployed}
+            hint={t.deployHint}
+            startLabel={t.startBattle}
+            canStart={state.units.some((u) => u.side === 'ally')}
+            onStart={start}
+            onDeploy={(member, pos) => deploy(member.character, member.skill, pos)}
+          />
         )}
 
         {/* 選択中ユニットの情報（配置中は敵の下見にも使う） */}

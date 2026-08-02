@@ -27,6 +27,7 @@
 @import './pages/battle/battle.css';
 @import './pages/battle/hud.css';
 @import './pages/battle/hex.css';
+@import './pages/battle/deploy.css';
 @import './pages/member.css';
 @import './pages/recruit.css';
 @import './pages/base.css';
