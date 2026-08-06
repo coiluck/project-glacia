@@ -58,6 +58,22 @@
   border-color: #fff;
   box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.35), 0 0 18px rgba(140, 220, 255, 0.8);
 }
+
+.battle-unit-body.has-chibi {
+  width: 108px;
+  transform: translate(-50%, calc(192px * -0.9));
+}
+.battle-unit-chibi {
+  display: block;
+  width: 108px;
+  height: 192px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.55));
+}
+.battle-unit.is-selected .battle-unit-chibi {
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 12px rgba(140, 220, 255, 0.9));
+}
+
 .battle-unit-hp {
   width: 64px;
   height: 7px;

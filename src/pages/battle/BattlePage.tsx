@@ -136,6 +136,12 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   }
   const getUnitName = (unit: Unit) => t[unitNameKey(unit)] ?? ''
 
+  // 味方は配置フェーズと同じちび絵を盤面に立てる。敵は絵がないので null（トークン表示）
+  const getUnitChibi = (unit: Unit): string | null =>
+    unit.side === 'ally'
+      ? `${import.meta.env.BASE_URL}images/character/chibi/${unit.id.slice('ally-'.length)}.png`
+      : null
+
   const isDeployed = (charId: string) => state.units.some((u) => u.id === `ally-${charId}`)
 
   // タイルのハイライトを算出
@@ -273,6 +279,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
             highlights={highlights}
             selectedUnitId={selectedUnitId}
             getUnitName={getUnitName}
+            getUnitChibi={getUnitChibi}
             onTileClick={handleTileClick}
             onUnitClick={handleUnitClick}
           />

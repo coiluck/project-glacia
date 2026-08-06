@@ -63,6 +63,7 @@ interface HexGridProps {
   highlights?: Map<string, HighlightKind>;
   selectedUnitId?: string | null;
   getUnitName: (unit: Unit) => string;
+  getUnitChibi: (unit: Unit) => string | null; // 絵がないユニットは null（トークン表示になる）
   onTileClick?: (pos: Axial) => void;
   onUnitClick?: (unit: Unit) => void;
 }
@@ -73,6 +74,7 @@ export default function HexGrid({
   highlights,
   selectedUnitId,
   getUnitName,
+  getUnitChibi,
   onTileClick,
   onUnitClick,
 }: HexGridProps) {
@@ -156,6 +158,7 @@ export default function HexGrid({
       <div className="hex-units">
         {sortedUnits.map((unit) => {
           const c = tileCenter(unit.pos);
+          const chibi = getUnitChibi(unit);
           return (
             <div
               key={unit.id}
@@ -163,8 +166,12 @@ export default function HexGrid({
               style={{ transform: `translate(${c.x - minX}px, ${c.y - minY}px)` }}
               onClick={onUnitClick ? () => onUnitClick(unit) : undefined}
             >
-              <div className="battle-unit-body">
-                <div className="battle-unit-token">{getUnitName(unit).charAt(0)}</div>
+              <div className={`battle-unit-body${chibi ? ' has-chibi' : ''}`}>
+                {chibi ? (
+                  <img className="battle-unit-chibi" src={chibi} alt="" draggable={false} />
+                ) : (
+                  <div className="battle-unit-token">{getUnitName(unit).charAt(0)}</div>
+                )}
                 <div className="battle-unit-name">{getUnitName(unit)}</div>
                 <div className="battle-unit-hp">
                   <div
