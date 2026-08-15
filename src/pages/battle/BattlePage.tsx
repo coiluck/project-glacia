@@ -75,7 +75,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   // 戦闘中は変わらないので、この戦闘のあいだ固定する
   const [party] = useState(() => {
     const s = useCharacterStore.getState()
-    return buildParty(s.owned, s.party)
+    return buildParty(s.owned, s.party[s.currentPartySlotIndex] ?? [])
   })
 
   const stage = useBattleStore((s) => s.stage)

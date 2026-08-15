@@ -1,0 +1,22 @@
+/* 編成画面 */
+.party-slots {
+  position: absolute;
+  top: 160px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+}
+
+.party-radial-gradient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0) 50%,
+    rgba(0, 0, 0, 0.1) 80%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+}

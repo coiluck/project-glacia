@@ -4,7 +4,9 @@ import type { UserCharacter } from '../data/characters/types'
 // 所持キャラと編成。マスターデータ（data/characters/）は持たず、可変分だけを保存する
 export interface CharacterState {
   owned: Record<string, UserCharacter> // キーは CharacterMaster.id
-  party: string[] // 出撃メンバーの CharacterMaster.id。並び順が出撃順
+  party: Record<number, string[]> // キーは1 ~ 4。valueはCharacterMaster.id[]
+  currentPartySlotIndex: number // 選択中の編成スロット。1〜4
+  setCurrentPartySlotIndex: (index: number) => void
   reset: () => void
 }
 
@@ -39,10 +41,17 @@ const initial = {
       skillLevels: {},
     },
   } as Record<string, UserCharacter>,
-  party: ['alma', 'lapis', 'vermilia'],
+  party: {
+    1: ['alma', 'lapis', 'vermilia'],
+    2: [],
+    3: [],
+    4: [],
+  } as Record<number, string[]>,
+  currentPartySlotIndex: 1,
 }
 
 export const useCharacterStore = create<CharacterState>((set) => ({
   ...initial,
+  setCurrentPartySlotIndex: (index) => set({ currentPartySlotIndex: index }),
   reset: () => set(initial),
 }))
