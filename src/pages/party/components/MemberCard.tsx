@@ -8,6 +8,8 @@ interface MemberCardProps {
   member: ResolvedCharacter | null // null なら空きスロット
   name: string // characters.json から引いたキャラ名
   unitClassName: string // battle.json から引いた兵科名
+  fontSize?: number
+  onClick?: () => void
 }
 
 // 兵科アイコン。バッジの枠は空きスロットでも出すので、アイコンだけを差し替える
@@ -21,11 +23,11 @@ function ClassIcon({ classId }: { classId: string }) {
   )
 }
 
-export default function MemberCard({ member, name, unitClassName }: MemberCardProps) {
+export default function MemberCard({ member, name, unitClassName, fontSize = 16, onClick }: MemberCardProps) {
   // 空きスロット。並べたときに浮かないよう、枠・斜めバンド・名前帯は埋まっているカードと揃える
   if (!member) {
     return (
-      <div className="party-member-card is-empty">
+      <div className="party-member-card is-empty" style={{ fontSize: `${fontSize}px` }} onClick={onClick}>
         <div className="party-member-card-portrait" />
         <div className="party-member-card-band" />
         <div className="party-member-card-header">
@@ -42,7 +44,7 @@ export default function MemberCard({ member, name, unitClassName }: MemberCardPr
   }
 
   return (
-    <div className={`party-member-card is-rarity-${member.master.rarity}`}>
+    <div className={`party-member-card is-rarity-${member.master.rarity}`} style={{ fontSize: `${fontSize}px` }} onClick={onClick}>
       <div className="party-member-card-portrait">
         <img
           src={`${import.meta.env.BASE_URL}images/character/full_body/${member.master.id}.png`}

@@ -8,6 +8,7 @@ export const paths = {
   scenario: (scenarioId: string) => `/scenario/${scenarioId}`, // シナリオ
   battle:   (stageId:    string) => `/battle/${stageId}`, // ゲーム
   member:  '/member',    // 人員
+  memberDetail: (characterId: string) => `/member/${characterId}`, // キャラ詳細・強化
   recruit: '/recruit',   // 召集
   base:    '/base',      // 基地
 } as const

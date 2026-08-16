@@ -9,6 +9,7 @@ import StoryMapPage from '../pages/story/StoryMapPage'
 import ScenarioPage from '../pages/scenario/ScenarioPage'
 import BattlePage from '../pages/battle/BattlePage'
 import MemberPage from '../pages/member/MemberPage'
+import MemberDetailPage from '../pages/member/MemberDetailPage'
 import RecruitPage from '../pages/recruit/RecruitPage'
 import BasePage from '../pages/base/BasePage'
 
@@ -35,6 +36,7 @@ export const router = createBrowserRouter(
         { path: 'party', element: <PartyPage /> }, // 編成
         { path: 'story', element: <StoryMapPage /> }, // ステージマップ
         { path: 'member', element: <MemberPage /> }, // 人員
+        { path: 'member/:characterId', element: <MemberDetailPage /> }, // キャラ詳細・強化
         { path: 'recruit', element: <RecruitPage /> }, // 召集
         { path: 'base', element: <BasePage /> }, // 基地
       ],

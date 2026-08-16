@@ -7,6 +7,8 @@ export interface CharacterState {
   party: Record<number, string[]> // キーは1 ~ 4。valueはCharacterMaster.id[]
   currentPartySlotIndex: number // 選択中の編成スロット。1〜4
   setCurrentPartySlotIndex: (index: number) => void
+  // 編成の characterIndex 番目を masterId に差し替える。null なら外す
+  setPartyMember: (partySlotIndex: number, characterIndex: number, masterId: string | null) => void
   reset: () => void
 }
 
@@ -53,5 +55,13 @@ const initial = {
 export const useCharacterStore = create<CharacterState>((set) => ({
   ...initial,
   setCurrentPartySlotIndex: (index) => set({ currentPartySlotIndex: index }),
+  setPartyMember: (partySlotIndex, characterIndex, masterId) =>
+    set((s) => {
+      const next = [...(s.party[partySlotIndex] ?? [])]
+      // 長さが短くなりうる配列で詰めて保存
+      if (masterId === null) next.splice(characterIndex, 1)
+      else next[Math.min(characterIndex, next.length)] = masterId
+      return { party: { ...s.party, [partySlotIndex]: next } }
+    }),
   reset: () => set(initial),
 }))

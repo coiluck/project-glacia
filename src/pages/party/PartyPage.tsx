@@ -1,3 +1,4 @@
+import { useSearchParams } from 'react-router-dom'
 import Screen from '../../layouts/Screen'
 import { useTranslations } from '../../i18n'
 import { characterMasters } from '../../data/characters'
@@ -6,6 +7,7 @@ import { resolveOwned } from '../../features/characters/resolve'
 import { useCharacterStore } from '../../stores/characterStore'
 import FormationTabs from './components/FormationTabs'
 import MemberCard from './components/MemberCard'
+import MemberSelect from './components/MemberSelect'
 
 // i18n。キャラ名は characters.json、兵科名は battle.json にある
 const CHARACTER_TRANSLATION_MAPPING = Object.fromEntries(
@@ -30,33 +32,54 @@ export default function PartyPage() {
   // 選択中の編成のメンバー。未所持・マスター未定義の ID は空き扱いになる
   const members = (party[slotIndex] ?? []).map((id) => resolveOwned(owned, id))
 
-  return (
-    <div className="page page-party">
-      <div className="party-slots">
-        {SLOTS.map((i) => {
-          const member = members[i] ?? null
-          const classNameKey = member && unitClasses[member.master.classId]?.nameKey
+  // ?member=<編成内の位置>: number が付いているあいだはキャラ選択
+  const [searchParams, setSearchParams] = useSearchParams()
+  const rawMember = searchParams.get('member')
+  const selectIndex =
+    rawMember !== null && SLOTS.includes(Number(rawMember)) ? Number(rawMember) : null
 
-          return (
-            <MemberCard
-              key={i}
-              member={member}
-              name={member ? tCharacter[member.master.nameKey] : ''}
-              unitClassName={classNameKey ? tClass[classNameKey] : ''}
-            />
-          )
-        })}
-      </div>
+  return (
+    <>
+      {selectIndex === null && (
+        <div className="page page-party">
+          <div className="party-slots">
+            {SLOTS.map((i) => {
+              const member = members[i] ?? null
+              const classNameKey = member && unitClasses[member.master.classId]?.nameKey
+
+              return (
+                <MemberCard
+                  key={i}
+                  member={member}
+                  name={member ? tCharacter[member.master.nameKey] : ''}
+                  unitClassName={classNameKey ? tClass[classNameKey] : ''}
+                  onClick={() => setSearchParams({ member: String(i) })}
+                />
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {selectIndex !== null && (
+        <MemberSelect
+          partySlotIndex={slotIndex}
+          characterIndex={selectIndex}
+          member={members[selectIndex] ?? null}
+          onClose={() => setSearchParams({}, { replace: true })}
+        />
+      )}
 
       <Screen
         background="images/start/hex-frame.jpg"
         viewport={
           <>
-            <FormationTabs />
+            {selectIndex === null && <FormationTabs />}
+
             <div className="party-radial-gradient" />
           </>
         }
       />
-    </div>
+    </>
   )
 }

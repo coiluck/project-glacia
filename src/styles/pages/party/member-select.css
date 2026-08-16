@@ -1,0 +1,168 @@
+.page-party-select {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(2, 1fr);
+  gap: 24px;
+  align-content: start;
+  justify-content: start;
+  margin-left: 560px;
+  padding: 108px 72px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* 選択中キャラの詳細 */
+.party-member-select-detail {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: calc(24px * var(--scale));
+  width: calc(560px * var(--scale));
+  padding: calc(36px * var(--scale));
+  padding-top: calc(120px * var(--scale));
+  background: #f3f3f3;
+  box-shadow: 0 0 calc(36px * var(--scale)) rgba(0, 0, 0, 0.4);
+}
+.party-member-select-rarity {
+  display: flex;
+  gap: calc(6px * var(--scale));
+}
+.party-member-select-star {
+  font-size: calc(26px * var(--scale));
+  line-height: 1;
+  color: #ffc861;
+  text-shadow: 0 0 calc(8px * var(--scale)) rgba(255, 200, 97, 0.6);
+}
+.party-member-select-star.is-off {
+  color: rgba(255, 255, 255, 0.18);
+  text-shadow: none;
+}
+
+.party-member-select-name {
+  font-size: calc(40px * var(--scale));
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-shadow: 0 calc(2px * var(--scale)) calc(10px * var(--scale)) #000;
+}
+
+.party-member-select-meta {
+  display: flex;
+  align-items: center;
+  gap: calc(20px * var(--scale));
+}
+.party-member-select-level {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: calc(28px * var(--scale));
+  line-height: 1;
+  color: #7fe0ff;
+  text-shadow: 0 0 calc(10px * var(--scale)) rgba(60, 248, 255, 0.45);
+}
+.party-member-select-class {
+  display: flex;
+  align-items: center;
+  gap: calc(8px * var(--scale));
+  font-size: calc(18px * var(--scale));
+  color: #9fb4c6;
+}
+.party-member-select-class svg {
+  width: calc(24px * var(--scale));
+  height: calc(24px * var(--scale));
+  fill: none;
+  stroke: #9fb4c6;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.party-member-select-stats {
+  width: calc(260px * var(--scale));
+  margin-top: calc(8px * var(--scale));
+  padding: calc(10px * var(--scale)) calc(14px * var(--scale));
+  background: rgba(6, 12, 18, 0.8);
+}
+.party-member-select-stats > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  height: calc(32px * var(--scale));
+  border-bottom: calc(1px * var(--scale)) solid rgba(127, 224, 255, 0.35);
+}
+.party-member-select-stats dt {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: calc(16px * var(--scale));
+  line-height: calc(32px * var(--scale));
+  letter-spacing: 0.06em;
+  color: #8ea6bb;
+}
+.party-member-select-stats dd {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: calc(24px * var(--scale));
+  line-height: calc(32px * var(--scale));
+  color: #e8f4ff;
+}
+
+.party-member-select-enhance {
+  margin-top: calc(8px * var(--scale));
+  padding: calc(10px * var(--scale)) calc(24px * var(--scale));
+  font-size: calc(18px * var(--scale));
+  color: #7fe0ff;
+  text-decoration: none;
+  background: rgba(10, 18, 26, 0.85);
+  border: calc(1px * var(--scale)) solid rgba(127, 224, 255, 0.4);
+}
+
+/* 所持キャラ一覧 */
+.party-member-select-cell {
+  position: relative;
+  min-height: 0;
+}
+
+.party-member-select-cell.is-used .party-member-card {
+  cursor: default;
+  filter: grayscale(0.9) brightness(0.5);
+}
+.party-member-select-used-label {
+  position: absolute;
+  top: 180px;
+  left: 50%;
+  font-size: 16px;
+  letter-spacing: 0.1em;
+  color: #b8d4ea;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.party-member-select-cell.is-selected::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  z-index: -1;
+  background: linear-gradient(70deg, rgb(123, 191, 255), rgb(123, 241, 196));
+}
+
+/* 決定ボタン */
+.party-member-select-decide {
+  position: absolute;
+  right: 48px;
+  bottom: 48px;
+  width: 240px;
+  height: 68px;
+  font-size: 26px;
+  letter-spacing: 0.2em;
+  color: #0a2b33;
+  background: linear-gradient(160deg, #7fe0ff 0%, #a8f0ff 55%, #b6f5ff 100%);
+  border: none;
+  cursor: pointer;
+  filter: drop-shadow(0 0 14px rgba(60, 248, 255, 0.45));
+  transition: filter 0.2s ease-out;
+}
