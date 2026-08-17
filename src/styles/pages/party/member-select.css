@@ -28,87 +28,84 @@
   flex-direction: column;
   gap: calc(24px * var(--scale));
   width: calc(560px * var(--scale));
-  padding: calc(36px * var(--scale));
+  padding: calc(36px * var(--scale)) 0; /* 左右はseparatorだけはみ出すのでそれ以外につける */
   padding-top: calc(120px * var(--scale));
   background: #f3f3f3;
   box-shadow: 0 0 calc(36px * var(--scale)) rgba(0, 0, 0, 0.4);
 }
-.party-member-select-rarity {
+
+.party-member-select-detail-header {
   display: flex;
-  gap: calc(6px * var(--scale));
-}
-.party-member-select-star {
-  font-size: calc(26px * var(--scale));
-  line-height: 1;
-  color: #ffc861;
-  text-shadow: 0 0 calc(8px * var(--scale)) rgba(255, 200, 97, 0.6);
-}
-.party-member-select-star.is-off {
-  color: rgba(255, 255, 255, 0.18);
-  text-shadow: none;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(24px * var(--scale));
+  padding: 0 calc(36px * var(--scale));
 }
 
 .party-member-select-name {
   font-size: calc(40px * var(--scale));
+  font-weight: 700;
   line-height: 1.2;
   letter-spacing: 0.06em;
-  text-shadow: 0 calc(2px * var(--scale)) calc(10px * var(--scale)) #000;
+  color: #333;
 }
 
-.party-member-select-meta {
+.party-member-select-level-container {
   display: flex;
-  align-items: center;
-  gap: calc(20px * var(--scale));
-}
-.party-member-select-level {
-  font-family: 'CaviarDreams', sans-serif;
-  font-size: calc(28px * var(--scale));
-  line-height: 1;
-  color: #7fe0ff;
-  text-shadow: 0 0 calc(10px * var(--scale)) rgba(60, 248, 255, 0.45);
-}
-.party-member-select-class {
-  display: flex;
-  align-items: center;
+  flex-direction: row;
+  align-items: flex-end;
   gap: calc(8px * var(--scale));
-  font-size: calc(18px * var(--scale));
-  color: #9fb4c6;
+  padding: 0 calc(36px * var(--scale));
+  font-family: 'CaviarDreams', sans-serif;
+  line-height: 1;
 }
-.party-member-select-class svg {
-  width: calc(24px * var(--scale));
-  height: calc(24px * var(--scale));
-  fill: none;
-  stroke: #9fb4c6;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.party-member-select-level-current {
+  font-size: calc(48px * var(--scale));
+  font-weight: 600;
+  color: #7fe0ff;
+}
+.party-member-select-level-separator,
+.party-member-select-level-max {
+  font-size: calc(36px * var(--scale));
+  font-weight: 600;
+  color: #555;
+  text-shadow: 0 0 calc(10px * var(--scale)) rgba(51, 72, 73, 0.5);
 }
 
-.party-member-select-stats {
-  width: calc(260px * var(--scale));
-  margin-top: calc(8px * var(--scale));
-  padding: calc(10px * var(--scale)) calc(14px * var(--scale));
-  background: rgba(6, 12, 18, 0.8);
-}
-.party-member-select-stats > div {
+.party-member-select-stats-container {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  height: calc(32px * var(--scale));
-  border-bottom: calc(1px * var(--scale)) solid rgba(127, 224, 255, 0.35);
+  flex-direction: row;
+  gap: calc(10px * var(--scale));
+  margin: 0 calc(36px * var(--scale));
+  padding: calc(10px * var(--scale)) 0;
+  border: calc(1px * var(--scale)) solid rgba(5, 10, 20, 0.5);
 }
-.party-member-select-stats dt {
-  font-family: 'CaviarDreams', sans-serif;
-  font-size: calc(16px * var(--scale));
-  line-height: calc(32px * var(--scale));
-  letter-spacing: 0.06em;
-  color: #8ea6bb;
+
+.party-member-select-stats-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(84px * var(--scale));
+  border-right: calc(1px * var(--scale)) solid rgba(15, 74, 201, 0.35);
+  &:last-child {
+    border-right: none;
+  }
 }
-.party-member-select-stats dd {
+.party-member-select-stats-container dt {
   font-family: 'CaviarDreams', sans-serif;
   font-size: calc(24px * var(--scale));
-  line-height: calc(32px * var(--scale));
-  color: #e8f4ff;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #768491;
+}
+.party-member-select-stats-container dd {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: calc(24px * var(--scale));
+  font-weight: 800;
+  color: #080808;
 }
 
 .party-member-select-enhance {
@@ -119,6 +116,141 @@
   text-decoration: none;
   background: rgba(10, 18, 26, 0.85);
   border: calc(1px * var(--scale)) solid rgba(127, 224, 255, 0.4);
+}
+
+.party-member-select-detail-separator {
+  position: relative;
+  width: 100%;
+  height: calc(36px * var(--scale));
+  --rarity: #8fb8d6;
+  background: rgba(from var(--rarity) r g b / 0.6);
+}
+.party-member-select-detail-separator.is-rarity-2 {
+  --rarity: #c58cff;
+}
+.party-member-select-detail-separator.is-rarity-3 {
+  --rarity: #ffc861;
+}
+.party-member-select-detail-separator::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  aspect-ratio: 2 / 1;
+  height: 100%;
+  background: rgba(from var(--rarity) r g b / 1);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+.party-member-select-detail-separator::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  aspect-ratio: 2 / 1;
+  height: 100%;
+  background: rgba(from var(--rarity) r g b / 1);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+/* スキル */
+.party-member-select-detail-skills-container {
+  display: flex;
+  flex-direction: column;
+  gap: calc(16px * var(--scale));
+  margin: 0 calc(36px * var(--scale));
+}
+
+.party-member-select-skill-item {
+  display: flex;
+  flex-direction: row;
+  gap: calc(16px * var(--scale));
+  position: relative;
+  height: calc(144px * var(--scale));
+  padding: calc(12px * var(--scale)) calc(16px * var(--scale));
+  background: rgba(6, 12, 18, 0.8);
+}
+.party-member-select-skill-item.is-clickable {
+  cursor: pointer;
+}
+.party-member-select-skill-item.is-selected::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  z-index: -1;
+  background: linear-gradient(70deg, rgb(123, 191, 255), rgb(123, 241, 196));
+}
+
+.party-member-select-skill-side {
+  width: calc(120px * var(--scale));
+  padding-right: calc(14px * var(--scale));
+  border-right: calc(1px * var(--scale)) solid rgba(171, 234, 255, 0.35);
+}
+
+.party-member-select-skill-cost {
+  position: absolute;
+  bottom: 0;
+  left: calc(36px * var(--scale));
+  transform: translateY(50%);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: calc(4px * var(--scale));
+  padding: calc(4px * var(--scale)) calc(16px * var(--scale));
+  background: rgba(0, 0, 0, 0.7);
+  clip-path: polygon(
+    calc(8px * var(--scale)) 0,
+    calc(100% - 8px * var(--scale)) 0,
+    100% 50%,
+    calc(100% - 8px * var(--scale)) 100%,
+    calc(8px * var(--scale)) 100%,
+    0 50%
+  );
+}
+.party-member-select-skill-cost span {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: calc(16px * var(--scale));
+  font-weight: 600;
+  line-height: 1;
+}
+
+.party-member-select-skill-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(8px * var(--scale));
+}
+
+.party-member-select-skill-head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.party-member-select-skill-name {
+  overflow: hidden;
+  font-size: calc(24px * var(--scale));
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.party-member-select-skill-level {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: calc(22px * var(--scale));
+  font-weight: 600;
+  color: #7fe0ff;
+}
+
+.party-member-select-skill-description {
+  flex: 1;
+  overflow: hidden;
+  font-size: calc(18px * var(--scale));
+  line-height: 1.2;
+  color: #b8d4ea;
 }
 
 /* 所持キャラ一覧 */

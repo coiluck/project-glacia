@@ -1,15 +1,11 @@
-import { useContext, useState } from 'react'
-import { createPortal } from 'react-dom'
-import { Link } from 'react-router-dom'
-import { ScreenViewportContext } from '../../../layouts/ScreenFrame'
-import { paths } from '../../../router/paths'
+import { useState } from 'react'
 import { useTranslations } from '../../../i18n'
 import { characterMasters } from '../../../data/characters'
 import { unitClasses } from '../../../data/unitClasses'
-import { classIcons } from '../../../data/characters/classIcons'
 import { resolveOwned, type ResolvedCharacter } from '../../../features/characters/resolve'
 import { useCharacterStore } from '../../../stores/characterStore'
 import MemberCard from './MemberCard'
+import MemberSelectDetail from './MemberSelectDetail'
 
 // i18n。キャラ名は characters.json、兵科名は battle.json にある
 const CHARACTER_TRANSLATION_MAPPING = Object.fromEntries(
@@ -19,8 +15,6 @@ const CHARACTER_TRANSLATION_MAPPING = Object.fromEntries(
 const CLASS_TRANSLATION_MAPPING = Object.fromEntries(
   Object.values(unitClasses).map((c) => [c.nameKey, c.nameKey]),
 )
-
-const MAX_RARITY = 3
 
 interface MemberSelectProps {
   partySlotIndex: number // 編集中の編成。1〜4
@@ -38,9 +32,6 @@ export default function MemberSelect({
   const tCharacter = useTranslations('characters', CHARACTER_TRANSLATION_MAPPING)
   const tClass = useTranslations('battle', CLASS_TRANSLATION_MAPPING)
 
-  // 詳細パネルはセーフエリア外（実画面の高さいっぱい）に出すのでビューポートへPortalする
-  const viewportEl = useContext(ScreenViewportContext)
-
   const owned = useCharacterStore((s) => s.owned)
   const party = useCharacterStore((s) => s.party)
   const setPartyMember = useCharacterStore((s) => s.setPartyMember)
@@ -55,7 +46,6 @@ export default function MemberSelect({
   const usedIds = new Set((party[partySlotIndex] ?? []).filter((_, i) => i !== characterIndex))
 
   const selected = candidates.find((c) => c.master.id === selectedId) ?? null
-  const selectedClassKey = selected && unitClasses[selected.master.classId]?.nameKey
 
   const decide = () => {
     setPartyMember(partySlotIndex, characterIndex, selectedId ?? null)
@@ -64,7 +54,7 @@ export default function MemberSelect({
 
   return (
     <>
-      <div className="page page-party-select">
+      <div className="page page-party-select fade-in">
         {candidates.map((c) => {
           const classKey = unitClasses[c.master.classId]?.nameKey
           const isUsed = usedIds.has(c.master.id)
@@ -102,60 +92,7 @@ export default function MemberSelect({
         </button>
       </div>
 
-      {viewportEl &&
-        createPortal(
-          <div className="party-member-select-detail">
-              <div className="party-member-select-rarity">
-                {Array.from({ length: MAX_RARITY }, (_, i) => (
-                  <span
-                    key={i}
-                    className={`party-member-select-star${
-                      i < (selected?.master.rarity ?? 0) ? '' : ' is-off'
-                    }`}
-                  >
-                    ★
-                  </span>
-                ))}
-              </div>
-
-              <p className="party-member-select-name">
-                {selected ? tCharacter[selected.master.nameKey] : '選択してください'}
-              </p>
-
-              <div className="party-member-select-meta">
-                <span className="party-member-select-level">Lv.{selected?.level ?? ' ---'}</span>
-                <span className="party-member-select-class">
-                  <svg viewBox="0 0 24 24" aria-hidden>
-                    <path d={classIcons[selected?.master.classId ?? '']} />
-                  </svg>
-                  {selectedClassKey ? tClass[selectedClassKey] : ''}
-                </span>
-              </div>
-
-              <dl className="party-member-select-stats">
-                <div>
-                  <dt>HP</dt>
-                  <dd>{selected?.status.hp ?? '---'}</dd>
-                </div>
-                <div>
-                  <dt>ATK</dt>
-                  <dd>{selected?.status.attack ?? '---'}</dd>
-                </div>
-                <div>
-                  <dt>DEF</dt>
-                  <dd>{selected?.status.defense ?? '---'}</dd>
-                </div>
-              </dl>
-
-              <Link
-                className="party-member-select-enhance"
-                to={paths.memberDetail(selected?.master.id ?? '')}
-              >
-                強化する →
-              </Link>
-          </div>,
-          viewportEl,
-        )}
+      <MemberSelectDetail selected={selected} />
     </>
   )
 }

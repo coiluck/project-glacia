@@ -62,7 +62,9 @@ export interface DupeBonus {
 // キャラが持つスキル1つ分のデータ
 export interface CharacterSkillMaster {
   def: SkillDef; // Lv1 時点の性能
-  descriptionKey: string; // 効果の説明文の i18n キー
+  // 効果の説明文の効果量は文中では {0} {1} … で空けておき、
+  // features/characters/describe.ts が def.effect の同じ添字の値で埋める
+  descriptionKey: string;
   // スキルレベル+1 あたりの上昇量。def.effect と同じ長さで、各効果の power / amount への加算量
   // 伸ばさない効果は 0
   effectGrowth: number[];

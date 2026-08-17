@@ -7,15 +7,15 @@
   "charVermiliaProfile": "A swordfighter with burning red hair. She swings a greatsword as tall as she is, and a single blow can turn a battle around.",
 
   "skillAlmaPiercingThrust": "Piercing Thrust",
-  "skillAlmaPiercingThrustDesc": "Deals damage to one adjacent enemy for a low AP cost.",
+  "skillAlmaPiercingThrustDesc": "Deals damage with {0} power to one adjacent enemy.",
   "skillAlmaSilverBanner": "Silver Banner",
-  "skillAlmaSilverBannerDesc": "Grants AP to one ally within 2 tiles and restores their HP.",
+  "skillAlmaSilverBannerDesc": "Grants {0} AP to one ally within 2 tiles and restores {1} HP.",
   "skillVermiliaHeavyCleave": "Heavy Cleave",
-  "skillVermiliaHeavyCleaveDesc": "Deals massive damage to one adjacent enemy at a high AP cost.",
+  "skillVermiliaHeavyCleaveDesc": "Deals damage with {0} power to one adjacent enemy.",
   "skillVermiliaIronStance": "Iron Stance",
-  "skillVermiliaIronStanceDesc": "Braces in place and restores her own HP.",
+  "skillVermiliaIronStanceDesc": "Braces in place and restores {0} of her own HP.",
   "skillLapisFrostBolt": "Frost Bolt",
-  "skillLapisFrostBoltDesc": "Deals damage to one enemy within 3 tiles.",
+  "skillLapisFrostBoltDesc": "Deals damage with {0} power to one enemy within 3 tiles.",
   "skillLapisMendingLight": "Mending Light",
-  "skillLapisMendingLightDesc": "Restores HP to one ally within 2 tiles."
+  "skillLapisMendingLightDesc": "Restores {0} HP to one ally within 2 tiles."
 }

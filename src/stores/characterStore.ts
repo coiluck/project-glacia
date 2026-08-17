@@ -9,6 +9,8 @@ export interface CharacterState {
   setCurrentPartySlotIndex: (index: number) => void
   // 編成の characterIndex 番目を masterId に差し替える。null なら外す
   setPartyMember: (partySlotIndex: number, characterIndex: number, masterId: string | null) => void
+  // 出撃時に使うスキルを差し替える。skillId は CharacterMaster.skills のいずれかの def.id
+  setSelectedSkill: (masterId: string, skillId: string) => void
   reset: () => void
 }
 
@@ -62,6 +64,12 @@ export const useCharacterStore = create<CharacterState>((set) => ({
       if (masterId === null) next.splice(characterIndex, 1)
       else next[Math.min(characterIndex, next.length)] = masterId
       return { party: { ...s.party, [partySlotIndex]: next } }
+    }),
+  setSelectedSkill: (masterId, skillId) =>
+    set((s) => {
+      const character = s.owned[masterId]
+      if (!character) return s
+      return { owned: { ...s.owned, [masterId]: { ...character, selectedSkillId: skillId } } }
     }),
   reset: () => set(initial),
 }))
