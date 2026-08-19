@@ -34,7 +34,7 @@ interface BattleStore {
   start: () => void;
   move: (unitId: string, dest: Axial) => void;
   doAttack: (attackerId: string, targetIds: string[]) => void;
-  doSkill: (userId: string, targetIds: string[]) => void;
+  doSkill: (userId: string, aim: Axial) => void;
   undoTurn: () => void;
   endPlayerTurn: () => Promise<void>;
 }
@@ -64,8 +64,7 @@ export const useBattleStore = create<BattleStore>((set, get) => ({
   doAttack: (attackerId, targetIds) =>
     set((s) => ({ state: attack(s.state!, unitClasses, attackerId, targetIds) })),
 
-  doSkill: (userId, targetIds) =>
-    set((s) => ({ state: castSkill(s.state!, userId, targetIds) })),
+  doSkill: (userId, aim) => set((s) => ({ state: castSkill(s.state!, s.stage!, userId, aim) })),
 
   start: () =>
     set((s) => {

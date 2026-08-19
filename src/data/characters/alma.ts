@@ -12,15 +12,21 @@ const alma: CharacterMaster = {
   base: { hp: 340, attack: 34, defense: 22 },
   growth: { hp: 11, attack: 1.3, defense: 0.8 },
   skills: [
-    // 刺突: 隣接1体へ2APで撃てる。1発の威力より回数で削るのがアルマの持ち味
+    // 刺突: 正面2マスを貫く直線。2APで撃てる。1発の威力より回数で削るのがアルマの持ち味
     {
       def: {
         id: 'almaPiercingThrust',
         nameKey: 'skillAlmaPiercingThrust',
         apCost: 2,
-        range: 1,
+        range: { kind: 'range', max: 1 },
         effect: [
-          { type: 'damage', power: 85, shape: { kind: 'range', max: 1 }, target: 'enemy', targets: 1 },
+          {
+            type: 'damage',
+            power: 85,
+            target: 'enemy',
+            // 狙ったマスと、その1つ奥（術者から見て真っ直ぐ）を貫く
+            area: { kind: 'pattern', offsets: [{ q: 0, r: 0 }, { q: 1, r: 0 }] },
+          },
         ],
       },
       descriptionKey: 'skillAlmaPiercingThrustDesc',
@@ -40,7 +46,7 @@ const alma: CharacterMaster = {
         id: 'almaSilverBanner',
         nameKey: 'skillAlmaSilverBanner',
         apCost: 3,
-        range: 2,
+        range: { kind: 'range', max: 2 },
         effect: [
           { type: 'grantAp', amount: 2, target: 'ally' },
           { type: 'healHp', amount: 90, target: 'ally' },

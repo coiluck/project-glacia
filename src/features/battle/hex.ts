@@ -128,3 +128,51 @@ export function shapeTiles(origin: Axial, shape: AttackShape, direction = 0): Ax
     return { q: origin.q + rotated.q, r: origin.r + rotated.r };
   });
 }
+
+// 6角形なのでね
+export const DIRECTION_STEPS: readonly number[] = [0, 1, 2, 3, 4, 5];
+
+// 狙えるマスと、そこを狙ったときに効果の area を回す向き
+export interface AimTile {
+  pos: Axial;
+  direction: number;
+}
+
+// どれかの向きに回せば届くマスの一覧（重複なし）と、そのときの向き
+// range 型は向きを持たない形なので、術者から見た方位を雑に計算
+export function shapeAimsAnyDirection(origin: Axial, shape: AttackShape): AimTile[] {
+  if (shape.kind === 'range') {
+    return shapeTiles(origin, shape).map((pos) => ({ pos, direction: directionOf(origin, pos) }));
+  }
+  const seen = new Set<string>();
+  const result: AimTile[] = [];
+  for (const direction of DIRECTION_STEPS) {
+    for (const pos of shapeTiles(origin, shape, direction)) {
+      const key = axialKey(pos);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      result.push({ pos, direction });
+    }
+  }
+  return result;
+}
+
+// from から to へ向かう方位（0〜5）
+// 隣接なら DIRECTIONS の添字と一致、同じマスなら0
+// 2方位のちょうど中間のマス（HEXならありうるよね）は必ず反時計回り側を返す
+function directionOf(from: Axial, to: Axial): number {
+  const d = hexToPixel({ q: to.q - from.q, r: to.r - from.r }, 1);
+  if (d.x === 0 && d.y === 0) return 0;
+  // hexToPixel は画面座標（y下向き）なので、反時計回りにするためyを反転する
+  const angle = Math.atan2(-d.y, d.x);
+  return ((Math.round(angle / (Math.PI / 3)) % 6) + 6) % 6;
+}
+
+// 効果が当たるマス。area 省略時は狙ったマスだけ
+export function effectTiles(
+  aim: Axial,
+  area: AttackShape | undefined,
+  direction: number,
+): Axial[] {
+  return area ? shapeTiles(aim, area, direction) : [aim];
+}

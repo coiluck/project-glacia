@@ -1,5 +1,6 @@
 // 兵科の定義。味方キャラ・敵の両方が classId で参照する。
-// 味方が使う兵科は range 型のみ（方向選択UIが未実装のため）。pattern 型は敵専用。
+// 味方が使う兵科は range 型のみ（通常攻撃には向きを決める手段が無いため）。pattern 型は敵専用。
+// スキル（SkillDef.range）は狙えるマスと一緒に向きを持ち回るので、味方でも pattern 型を使える。
 import type { UnitClassDef } from '../features/battle/types';
 
 export const unitClasses: Record<string, UnitClassDef> = {

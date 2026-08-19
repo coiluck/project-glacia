@@ -4,8 +4,11 @@ import { Link } from 'react-router-dom'
 import { ScreenViewportContext } from '../../../layouts/ScreenFrame'
 import { paths } from '../../../router/paths'
 import { useTranslations } from '../../../i18n'
+import AttackRangeHex from '../../../components/common/AttackRangeHex'
 import { characterMasters } from '../../../data/characters'
 import { formatSkillDescription } from '../../../features/characters/describe'
+import { skillReach } from '../../../features/battle/battle'
+import type { Axial } from '../../../features/battle/hex'
 import type { ResolvedCharacter } from '../../../features/characters/resolve'
 import { useCharacterStore } from '../../../stores/characterStore'
 
@@ -23,9 +26,13 @@ const CHARACTER_TRANSLATION_MAPPING = Object.fromEntries(
 // ★1はスキルが1つだけだが、枠の数で高さが変わらないよう常にこの数だけ並べる
 const SKILL_SLOT_COUNT = 2
 
+// このパネルはセーフエリア外なので、実寸は CSS 側（--scale 込み）で枠いっぱいに伸ばす。
+// ここで効くのは viewBox の基準、つまり隙間と枠線の太さの比率だけ
+const RANGE_HEX_SIZE = 20
+
 interface SkillRowProps {
   cost: string
-  range: string // TODO: 攻撃範囲svgを描くのに使う。今は受け取るだけ
+  reach: Axial[] | null // 効果が及びうるマス。null なら空き枠なので描かない
   name: string
   level: string
   description: string
@@ -36,13 +43,13 @@ interface SkillRowProps {
 // キャラ未選択、または★1で2つ目のスキルが無い枠。文字を入れて高さを揃える
 const EMPTY_SKILL_ROW: SkillRowProps = {
   cost: '--',
-  range: '--',
+  reach: null,
   name: 'No Data',
   level: '--',
   description: '',
 }
 
-function SkillRow({ cost, name, level, description, isSelected, onClick }: SkillRowProps) {
+function SkillRow({ cost, reach, name, level, description, isSelected, onClick }: SkillRowProps) {
   return (
     <div
       className={`party-member-select-skill-item${onClick ? ' is-clickable' : ''}${
@@ -51,7 +58,7 @@ function SkillRow({ cost, name, level, description, isSelected, onClick }: Skill
       onClick={onClick}
     >
       <div className="party-member-select-skill-side">
-          {/* 攻撃範囲svg */}
+        {reach !== null && <AttackRangeHex tiles={reach} size={RANGE_HEX_SIZE} />}
       </div>
 
       <div className="party-member-select-skill-cost">
@@ -130,7 +137,7 @@ export default function MemberSelectDetail({ selected }: MemberSelectDetailProps
             <SkillRow
               key={skill.def.id}
               cost={String(skill.def.apCost)}
-              range={String(skill.def.range)}
+              reach={skillReach(skill.def)}
               name={tCharacter[skill.def.nameKey] ?? ''}
               level={String(skill.level)}
               description={formatSkillDescription(tCharacter[skill.descriptionKey] ?? '', skill)}

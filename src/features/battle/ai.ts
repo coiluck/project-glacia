@@ -2,19 +2,21 @@
 // 移動先ごとに「移動後の残りAPで攻撃したとき倒せる数・削れる総HP」をスコアにし、
 // スコアが最大・同点ならAP消費が最小の位置へ移動してから攻撃する。
 // スキルは nターン周期 / HPしきい値 のルールに従って発動する
-import { attack, availableAp, castSkill, moveUnit, movementRange, unitById } from './battle';
+import {
+  aimableTilesOnBoard,
+  attack,
+  availableAp,
+  castSkill,
+  moveUnit,
+  movementRange,
+  skillHitsByEffect,
+  unitById,
+} from './battle';
 import { canSpendAp } from './ap';
 import { calcDamage } from './damage';
-import { axialKey, distance, shapeTiles } from './hex';
+import { DIRECTION_STEPS, axialKey, distance, shapeTiles } from './hex';
 import type { Axial } from './hex';
-import type {
-  BattleStageData,
-  BattleState,
-  SkillEffect,
-  TargetCount,
-  Unit,
-  UnitClassDef,
-} from './types';
+import type { BattleStageData, BattleState, TargetCount, Unit, UnitClassDef } from './types';
 
 // 敵1体分の行動。行動後の state を返す（すでに倒されていれば state をそのまま返す）
 // UI側で1体ずつ間を置いて見せる
@@ -84,58 +86,66 @@ function trySkill(state: BattleState, stage: BattleStageData, unitId: string): B
   if (ap < skill.apCost) return state;
   const hpPercentBefore = (unit.hp / unit.maxHp) * 100;
 
-  const damageEffects = skill.effect.filter(
-    (e): e is Extract<SkillEffect, { type: 'damage' }> => e.type === 'damage',
-  );
+  const hasDamage = skill.effect.some((e) => e.type === 'damage');
 
-  // 攻撃系でないスキルならいまでも使える
-  if (damageEffects.length === 0) {
-    const next = castSkill(state, unitId, [unitId]);
+  // 攻撃系でないスキルならいまでも使える（自分のマスを狙う）
+  if (!hasDamage) {
+    const next = castSkill(state, stage, unitId, unit.pos);
     return markSkillUsed(next, unitId, hpPercentBefore);
   }
 
-  const allies = state.units.filter((u) => u.side === 'ally');
-  if (allies.length === 0) return state;
-  const dmg = (t: Unit) =>
-    damageEffects.reduce((sum, e) => sum + calcDamage(unit, t, e.power), 0);
+  if (!state.units.some((u) => u.side === 'ally')) return state;
 
-  // 移動先ごとの戦果で最良の位置と対象を選ぶ
+  // 移動先ごと・狙うマスごとの戦果で最良の組み合わせを選ぶ
   const candidates = [
     { pos: unit.pos, cost: 0 },
     ...movementRange(state, stage, unit).filter((t) => t.cost <= ap - skill.apCost),
   ];
-  let best:
-    | { dest: Axial; cost: number; targets: Unit[]; kills: number; damage: number }
-    | undefined;
+  const unitsById = new Map(state.units.map((u) => [u.id, u] as const));
+  let best: { dest: Axial; cost: number; aim: Axial; kills: number; damage: number } | undefined;
   for (const cand of candidates) {
-    const inRange = allies.filter((a) => distance(cand.pos, a.pos) <= skill.range);
-    if (inRange.length === 0) continue;
-    const targets = selectTargets(
-      inRange,
-      countOf(damageEffects[0].targets, inRange.length),
-      dmg,
-      (t) => t.hp,
-    );
-    let kills = 0;
-    let damage = 0;
-    for (const t of targets) {
-      const d = Math.min(dmg(t), t.hp); // 過剰ダメージは戦果に数えない
-      damage += d;
-      if (d >= t.hp) kills += 1;
-    }
-    if (
-      !best ||
-      kills > best.kills ||
-      (kills === best.kills &&
-        (damage > best.damage || (damage === best.damage && cand.cost < best.cost)))
-    ) {
-      best = { dest: cand.pos, cost: cand.cost, targets, kills, damage };
+    // 移動してから撃つので、自分だけ移動先に立たせた盤面で判定する。
+    // 味方や自分に効く効果があると、術者がどのマスに居るかで当たる相手が変わる
+    const board =
+      cand.cost === 0
+        ? state
+        : {
+            ...state,
+            units: state.units.map((u) => (u.id === unit.id ? { ...u, pos: cand.pos } : u)),
+          };
+    for (const aim of aimableTilesOnBoard(stage, cand.pos, skill)) {
+      // 同じ相手に複数の効果が乗ることがあるので、ユニットごとに合算してから採点する
+      const damageByUnit = new Map<string, number>();
+      for (const { effect, unitIds } of skillHitsByEffect(board, unit, skill, aim)) {
+        if (effect.type !== 'damage') continue;
+        for (const id of unitIds) {
+          const target = unitsById.get(id)!;
+          const sum = (damageByUnit.get(id) ?? 0) + calcDamage(unit, target, effect.power);
+          damageByUnit.set(id, sum);
+        }
+      }
+      if (damageByUnit.size === 0) continue;
+      let kills = 0;
+      let damage = 0;
+      for (const [id, d] of damageByUnit) {
+        const target = unitsById.get(id)!;
+        damage += Math.min(d, target.hp); // 過剰ダメージは戦果に数えない
+        if (d >= target.hp) kills += 1;
+      }
+      if (
+        !best ||
+        kills > best.kills ||
+        (kills === best.kills &&
+          (damage > best.damage || (damage === best.damage && cand.cost < best.cost)))
+      ) {
+        best = { dest: cand.pos, cost: cand.cost, aim: aim.pos, kills, damage };
+      }
     }
   }
   if (!best) return state;
   let next = state;
   if (best.cost > 0) next = moveUnit(next, stage, unitId, best.dest);
-  next = castSkill(next, unitId, best.targets.map((t) => t.id));
+  next = castSkill(next, stage, unitId, best.aim);
   return markSkillUsed(next, unitId, hpPercentBefore);
 }
 
@@ -220,7 +230,7 @@ function bestAttackFrom(
   allies: Unit[],
   hpOf: (t: Unit) => number,
 ): AttackChoice | undefined {
-  const directions = cls.attackRange.kind === 'pattern' ? [0, 1, 2, 3, 4, 5] : [0];
+  const directions = cls.attackRange.kind === 'pattern' ? DIRECTION_STEPS : [0];
   let best: AttackChoice | undefined;
   for (const direction of directions) {
     const area = new Set(shapeTiles(pos, cls.attackRange, direction).map(axialKey));

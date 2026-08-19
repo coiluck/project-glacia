@@ -185,6 +185,11 @@
   padding-right: calc(14px * var(--scale));
   border-right: calc(1px * var(--scale)) solid rgba(171, 234, 255, 0.35);
 }
+/* 射程ごとにグリッドの大きさが変わるので、枠いっぱいに収まるよう伸縮させる */
+.party-member-select-skill-side .attack-range-hex {
+  width: 100%;
+  height: 100%;
+}
 
 .party-member-select-skill-cost {
   position: absolute;

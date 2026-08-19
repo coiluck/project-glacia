@@ -1,8 +1,8 @@
 // 戦闘の初期化・アクション実行（移動/通常攻撃/スキル）・ターン進行・勝敗判定
 // すべて純粋関数。state は変更せず新しい state を返す。
 // ユニットの参照は id で受ける（更新のたびにオブジェクトが作り直されるため）
-import { axialKey, distance, reachable, shapeTiles } from './hex';
-import type { Axial } from './hex';
+import { axialKey, effectTiles, reachable, shapeAimsAnyDirection, shapeTiles } from './hex';
+import type { AimTile, Axial } from './hex';
 import { canSpendAp, refillApForTurn, spendAp } from './ap';
 import { isPassable } from './terrain';
 import { calcDamage } from './damage';
@@ -12,6 +12,7 @@ import type {
   CharacterDef,
   EnemyDef,
   SkillDef,
+  SkillEffect,
   Unit,
   UnitClassDef,
 } from './types';
@@ -179,24 +180,105 @@ export function attack(
 }
 
 // スキル
-// targetIds は射程内からUI側で選んだ対象。range 0なら自分が対象
-export function castSkill(state: BattleState, userId: string, targetIds: string[]): BattleState {
+
+// 狙えるマスと、そこを狙ったときの効果の向き
+// 自分のマスは射程の形に関わらず常に狙える。誰に当たるかは効果の target と area が決めるので、
+// 「自分を狙う意味があるか」をここで判定しない（自分中心の範囲攻撃も target は enemy になる）
+export function aimableTiles(from: Axial, skill: SkillDef): AimTile[] {
+  const aims = shapeAimsAnyDirection(from, skill.range);
+  // 射程の形がすでに自分のマスを含むなら、その向きを活かして二重に足さない
+  const fromKey = axialKey(from);
+  if (aims.some((a) => axialKey(a.pos) === fromKey)) return aims;
+  return [{ pos: from, direction: 0 }, ...aims];
+}
+
+// 盤面に存在するマスだけに絞った狙えるマス。
+// UI・AI・castSkill の検証がこれを共通で使う
+export function aimableTilesOnBoard(
+  stage: BattleStageData,
+  from: Axial,
+  skill: SkillDef,
+): AimTile[] {
+  const tiles = new Set(stage.tiles.map((t) => axialKey(t.pos)));
+  return aimableTiles(from, skill).filter((a) => tiles.has(axialKey(a.pos)));
+}
+
+// スキルが影響しうるマスすべてのマス
+// 編成画面のプレビューが使う
+export function skillReach(skill: SkillDef): Axial[] {
+  const origin: Axial = { q: 0, r: 0 };
+  const seen = new Set<string>();
+  const result: Axial[] = [];
+  for (const aim of aimableTiles(origin, skill)) {
+    for (const effect of skill.effect) {
+      for (const c of effectTiles(aim.pos, effect.area, aim.direction)) {
+        const key = axialKey(c);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        result.push(c);
+      }
+    }
+  }
+  return result;
+}
+
+// aim へ撃ったとき、効果ごとに当たるユニットID
+// state を引数で受けるのは、AIが移動後の盤面を仮定して評価するため
+export function skillHitsByEffect(
+  state: BattleState,
+  user: Unit,
+  skill: SkillDef,
+  aim: AimTile,
+): { effect: SkillEffect; unitIds: string[] }[] {
+  const matchTarget = (t: Unit, target: 'self' | 'ally' | 'enemy') =>
+    target === 'self' ? t.id === user.id : (t.side === user.side) === (target === 'ally');
+  return skill.effect.map((effect) => {
+    const area = new Set(effectTiles(aim.pos, effect.area, aim.direction).map(axialKey));
+    return {
+      effect,
+      unitIds: state.units
+        .filter((u) => area.has(axialKey(u.pos)) && matchTarget(u, effect.target))
+        .map((u) => u.id),
+    };
+  });
+}
+
+// 1体でも当たるか。空振りにAPを払わせないための判定を1か所にまとめる
+export function skillHitsAnyone(
+  state: BattleState,
+  user: Unit,
+  skill: SkillDef,
+  aim: AimTile,
+): boolean {
+  return skillHitsByEffect(state, user, skill, aim).some((h) => h.unitIds.length > 0);
+}
+
+// aim は射程内からUI側で選んだ狙うマス。
+// 誰にも当たらないマスを狙ったときは何も起きない（APも減らない）
+export function castSkill(
+  state: BattleState,
+  stage: BattleStageData,
+  userId: string,
+  aim: Axial,
+): BattleState {
   const user = unitById(state, userId);
   const skill = user.skill;
   if (!skill) throw new Error(`Unit has no skill: ${userId}`);
   if (!canSpendAp(state, user, skill.apCost)) throw new Error('Not enough AP');
-  const targets = targetIds.map((id) => unitById(state, id));
-  for (const target of targets) {
-    if (distance(user.pos, target.pos) > skill.range) {
-      throw new Error(`Out of range: ${target.id}`);
-    }
-  }
+  const aimKey = axialKey(aim);
+  const target = aimableTilesOnBoard(stage, user.pos, skill).find(
+    (a) => axialKey(a.pos) === aimKey,
+  );
+  if (!target) throw new Error(`Out of range: (${aim.q},${aim.r})`);
+
+  // 効果を順に適用しても当たる相手は変わらないので、先にまとめて出す
+  const hits = skillHitsByEffect(state, user, skill, target);
+  if (!hits.some((h) => h.unitIds.length > 0)) return state;
+
   let next = spendAp(state, userId, skill.apCost);
-  // 各効果は targets のうち effect.target に合致する対象にだけ適用する
-  const matchTarget = (t: Unit, target: 'self' | 'ally' | 'enemy') =>
-    target === 'self' ? t.id === userId : (t.side === user.side) === (target === 'ally');
-  for (const effect of skill.effect) {
-    const hitIds = new Set(targets.filter((t) => matchTarget(t, effect.target)).map((t) => t.id));
+  const dead = new Set<string>(); // 効果の並び順で死体が回復・強化されないよう外していく
+  for (const { effect, unitIds } of hits) {
+    const hitIds = new Set(unitIds.filter((id) => !dead.has(id)));
     next = {
       ...next,
       units: next.units.map((u) => {
@@ -211,6 +293,9 @@ export function castSkill(state: BattleState, userId: string, targetIds: string[
         }
       }),
     };
+    for (const u of next.units) {
+      if (u.hp <= 0) dead.add(u.id);
+    }
   }
   return removeDead(next);
 }

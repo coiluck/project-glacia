@@ -19,15 +19,15 @@ export interface UnitClassDef {
 // いろいろなスキル効果があると思うのでこれらを組み合わせて定義する
 // なるべく固有のスキル効果を定義しない
 export type SkillEffect =
-  | { type: 'damage'; power: number; shape: AttackShape; target: 'self' | 'ally' | 'enemy'; targets: TargetCount }
-  | { type: 'healHp'; amount: number; target: 'self' | 'ally' }
-  | { type: 'grantAp'; amount: number; target: 'self' | 'ally' };
+  | { type: 'damage'; power: number; target: 'self' | 'ally' | 'enemy'; area?: AttackShape }
+  | { type: 'healHp'; amount: number; target: 'self' | 'ally'; area?: AttackShape }
+  | { type: 'grantAp'; amount: number; target: 'self' | 'ally'; area?: AttackShape };
 
 export interface SkillDef {
   id: string;
   nameKey: string; // i18n キー
   apCost: number; // 使用者の個人APとパーティAPの両方からこの値を消費する
-  range: number; // 射程（HEX距離）・0 は自分対象
+  range: AttackShape; // 狙えるマス。自分のマスは形に関わらず常に狙える（max:0 なら自分だけ）
   effect: SkillEffect[];
 }
 

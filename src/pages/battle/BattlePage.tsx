@@ -8,11 +8,16 @@ import { enemyDefs } from '../../data/enemies'
 import { unitClasses } from '../../data/unitClasses'
 import { buildParty } from '../../features/characters/build'
 import { useCharacterStore } from '../../stores/characterStore'
-import { availableAp, movementRange } from '../../features/battle/battle'
+import {
+  aimableTilesOnBoard,
+  availableAp,
+  movementRange,
+  skillHitsAnyone,
+} from '../../features/battle/battle'
 import { useBattleStore } from '../../features/battle/battleStore'
-import { axialKey, coordsInRange, shapeTiles } from '../../features/battle/hex'
-import type { Axial } from '../../features/battle/hex'
-import type { Side, SkillDef, Unit } from '../../features/battle/types'
+import { axialKey, shapeTiles } from '../../features/battle/hex'
+import type { AimTile, Axial } from '../../features/battle/hex'
+import type { Unit } from '../../features/battle/types'
 import DeployDock from './components/DeployDock'
 import HexGrid from './components/HexGrid'
 import ViewportLayer from '../../layouts/ViewportLayer'
@@ -51,13 +56,6 @@ type ActionMode = 'move' | 'attack' | 'skill'
 
 // 盤面タイルのハイライト種別
 export type HighlightKind = 'deploy' | 'move' | 'attack' | 'skill'
-
-// スキルの対象にできる陣営
-// 味方のSkillDefでのみこれを呼ぶ（表示用なので）
-function skillTargetSide(skill: SkillDef): Side {
-  const damage = skill.effect.find((e) => e.type === 'damage')
-  return damage && damage.target === 'enemy' ? 'enemy' : 'ally'
-}
 
 export default function BattlePage() {
   const { stageId } = useParams<{ stageId: string }>()
@@ -146,6 +144,8 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
 
   // タイルのハイライトを算出
   const highlights = new Map<string, HighlightKind>()
+  // スキルで狙えるマス。撃つときに効果の向きが要るので AimTile ごと持っておく
+  const skillAims = new Map<string, AimTile>()
   if (state.phase === 'deployment') {
     const occupied = new Set(state.units.map((u) => axialKey(u.pos)))
     if (party.some((m) => !isDeployed(m.character.id))) {
@@ -164,8 +164,10 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
         if (tileSet.has(axialKey(pos))) highlights.set(axialKey(pos), 'attack')
       }
     } else if (action === 'skill' && selectedUnit.skill) {
-      for (const pos of coordsInRange(selectedUnit.pos, selectedUnit.skill.range)) {
-        if (tileSet.has(axialKey(pos))) highlights.set(axialKey(pos), 'skill')
+      for (const aim of aimableTilesOnBoard(stage, selectedUnit.pos, selectedUnit.skill)) {
+        const key = axialKey(aim.pos)
+        skillAims.set(key, aim)
+        highlights.set(key, 'skill')
       }
     }
   }
@@ -175,6 +177,16 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     setAction('move')
   }
 
+  // 狙ったマスへスキルを撃つ。誰にも当たらないならAPを捨てないよう撃たずに false を返す
+  const castSkillAt = (user: Unit, pos: Axial): boolean => {
+    const aim = skillAims.get(axialKey(pos))
+    if (!user.skill || !aim) return false
+    if (!skillHitsAnyone(state, user, user.skill, aim)) return false
+    doSkill(user.id, pos)
+    setAction('move')
+    return true
+  }
+
   // 配置フェーズの配置は DeployDock のドラッグが担当する
   const handleTileClick = (pos: Axial) => {
     if (state.phase !== 'player') return
@@ -182,6 +194,10 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     if (selectedUnit?.side === 'ally' && action === 'move' && highlights.get(key) === 'move') {
       move(selectedUnit.id, pos)
       return
+    }
+    // 範囲攻撃は誰も立っていないマスを狙点にすることもある
+    if (selectedUnit?.side === 'ally' && action === 'skill' && highlights.get(key) === 'skill') {
+      if (castSkillAt(selectedUnit, pos)) return
     }
     deselect() // 関係ないタイル -> 選択解除
   }
@@ -205,15 +221,9 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
         setAction('move')
         return
       }
-      if (
-        action === 'skill' &&
-        selectedUnit.skill &&
-        highlights.get(key) === 'skill' &&
-        unit.side === skillTargetSide(selectedUnit.skill)
-      ) {
-        doSkill(selectedUnit.id, [unit.id])
-        setAction('move')
-        return
+      // 効果の当たり判定が対象の適否を兼ねるので、陣営の判定はここでは要らない
+      if (action === 'skill' && highlights.get(key) === 'skill') {
+        if (castSkillAt(selectedUnit, unit.pos)) return
       }
     }
     // 選択の切り替えのみ
@@ -223,9 +233,11 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
 
   const handleSkillButton = () => {
     if (!selectedUnit?.skill) return
-    // 射程0は自分が対象
-    if (selectedUnit.skill.range === 0) {
-      doSkill(selectedUnit.id, [selectedUnit.id])
+    // 選ぶ余地が無い（＝自分のマスしか狙えない）スキルは選ばせずそのまま撃つ。
+    // 自分のマスは常に狙えるので、候補が1つならそれは自分のマス
+    const aims = aimableTilesOnBoard(stage, selectedUnit.pos, selectedUnit.skill)
+    if (aims.length === 1) {
+      doSkill(selectedUnit.id, aims[0].pos)
       setAction('move')
     } else {
       setAction(action === 'skill' ? 'move' : 'skill')

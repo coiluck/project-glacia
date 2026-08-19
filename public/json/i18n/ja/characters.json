@@ -7,15 +7,15 @@
   "charVermiliaProfile": "燃えるような赤髪の剣士。身の丈ほどの大剣を振り抜き、たった一撃で戦況をひっくり返す。",
 
   "skillAlmaPiercingThrust": "刺突",
-  "skillAlmaPiercingThrustDesc": "隣接する敵1体に威力{0}のダメージを与える。",
+  "skillAlmaPiercingThrustDesc": "正面2マスの敵を貫き、威力{0}のダメージを与える。",
   "skillAlmaSilverBanner": "銀旗の号令",
   "skillAlmaSilverBannerDesc": "距離2以内の味方1体にAPを{0}渡し、HPを{1}回復する。",
   "skillVermiliaHeavyCleave": "剛断",
-  "skillVermiliaHeavyCleaveDesc": "隣接する敵1体に威力{0}のダメージを与える。",
+  "skillVermiliaHeavyCleaveDesc": "前方3マスの敵をまとめて薙ぎ払い、威力{0}のダメージを与える。",
   "skillVermiliaIronStance": "鉄の構え",
   "skillVermiliaIronStanceDesc": "その場で身を固め、自分のHPを{0}回復する。",
   "skillLapisFrostBolt": "氷礫",
-  "skillLapisFrostBoltDesc": "距離3以内の敵1体に威力{0}のダメージを与える。",
+  "skillLapisFrostBoltDesc": "距離2〜3の敵1体に威力{0}のダメージを与える。",
   "skillLapisMendingLight": "癒しの光",
   "skillLapisMendingLightDesc": "距離2以内の味方1体のHPを{0}回復する。"
 }

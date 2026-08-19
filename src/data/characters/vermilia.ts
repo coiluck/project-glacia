@@ -1,7 +1,7 @@
 import type { CharacterMaster } from './types';
 
 // ベルミリア（★3・剣士）。赤髪、身の丈ほどの大剣使い。
-// 1ターンぶんのAPを丸ごと使う重い一撃が主軸。硬くて鈍い、殴り合い向きのアタッカー。
+// 1ターンぶんのAPを丸ごと使う重い薙ぎ払いが主軸。硬くて鈍い、殴り合い向きのアタッカー。
 // itemId は仮。アイテムデータを作ったら差し替える
 const vermilia: CharacterMaster = {
   id: 'vermilia',
@@ -12,15 +12,24 @@ const vermilia: CharacterMaster = {
   base: { hp: 480, attack: 36, defense: 28 },
   growth: { hp: 16, attack: 1.5, defense: 1.1 },
   skills: [
-    // 剛断: 隣接1体への特大ダメージ。4AP（個人APの上限）なので、撃つターンは移動できない
+    // 剛断: 前方3マスの扇形を大剣で薙ぎ払う。4AP（個人APの上限）なので、撃つターンは移動できない
     {
       def: {
         id: 'vermiliaHeavyCleave',
         nameKey: 'skillVermiliaHeavyCleave',
         apCost: 4,
-        range: 1,
+        range: { kind: 'range', max: 1 },
         effect: [
-          { type: 'damage', power: 160, shape: { kind: 'range', max: 1 }, target: 'enemy', targets: 1 },
+          {
+            type: 'damage',
+            power: 160,
+            target: 'enemy',
+            // 狙ったマスと、術者から見たその左右（＝隣接3マスの扇形）
+            area: {
+              kind: 'pattern',
+              offsets: [{ q: 0, r: 0 }, { q: 0, r: -1 }, { q: -1, r: 1 }],
+            },
+          },
         ],
       },
       descriptionKey: 'skillVermiliaHeavyCleaveDesc',
@@ -40,7 +49,7 @@ const vermilia: CharacterMaster = {
         id: 'vermiliaIronStance',
         nameKey: 'skillVermiliaIronStance',
         apCost: 2,
-        range: 0,
+        range: { kind: 'range', max: 0 }, // 対象マスを持たない = 自分対象
         effect: [{ type: 'healHp', amount: 110, target: 'self' }],
       },
       descriptionKey: 'skillVermiliaIronStanceDesc',

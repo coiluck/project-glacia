@@ -37,6 +37,7 @@
 
 /* 共通コンポーネント */
 @import './components/member-card.css';
+@import './components/attack-range-hex.css';
 
 
 /* font */

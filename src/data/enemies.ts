@@ -36,7 +36,7 @@ export const enemyDefs: Record<string, EnemyDef> = {
         id: 'frostMend',
         nameKey: 'skillFrostMend',
         apCost: 2,
-        range: 0,
+        range: { kind: 'range', max: 0 }, // 対象マスを持たない = 自分対象
         effect: [{ type: 'healHp', amount: 200, target: 'self' }],
       },
       hpTriggers: [50],
