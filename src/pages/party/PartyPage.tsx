@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import Screen from '../../layouts/Screen'
 import { useTranslations } from '../../i18n'
 import { characterMasters } from '../../data/characters'
@@ -38,6 +38,13 @@ export default function PartyPage() {
   const selectIndex =
     rawMember !== null && SLOTS.includes(Number(rawMember)) ? Number(rawMember) : null
 
+  // replace だと同じ /party が履歴に積もるから消す
+  // key === 'default' はこのURLが履歴の先頭にいる場合で、戻り先が無い
+  const navigate = useNavigate()
+  const location = useLocation()
+  const closeSelect = () =>
+    location.key === 'default' ? setSearchParams({}, { replace: true }) : navigate(-1)
+
   return (
     <>
       {selectIndex === null && (
@@ -66,7 +73,7 @@ export default function PartyPage() {
           partySlotIndex={slotIndex}
           characterIndex={selectIndex}
           member={members[selectIndex] ?? null}
-          onClose={() => setSearchParams({}, { replace: true })}
+          onClose={closeSelect}
         />
       )}
 
