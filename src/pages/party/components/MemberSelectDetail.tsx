@@ -96,12 +96,14 @@ export default function MemberSelectDetail({ selected }: MemberSelectDetailProps
           {selected ? tCharacter[selected.master.nameKey] : '選択してください'}
         </p>
 
-        <Link
-          className="party-member-select-enhance"
-          to={paths.memberDetail(selected?.master.id ?? '')}
-        >
-          強化する
-        </Link>
+        {selected && (
+          <Link
+            className="party-member-select-enhance"
+            to={paths.memberDetail(selected.master.id)}
+          >
+            強化する
+          </Link>
+        )}
       </div>
 
       <div className="party-member-select-level-container">

@@ -264,7 +264,7 @@
   min-height: 0;
 }
 
-.party-member-select-cell.is-used .party-member-card {
+.party-member-select-cell.is-used .member-card {
   cursor: default;
   filter: grayscale(0.9) brightness(0.5);
 }

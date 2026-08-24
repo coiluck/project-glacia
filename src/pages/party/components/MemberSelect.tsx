@@ -4,7 +4,7 @@ import { characterMasters } from '../../../data/characters'
 import { unitClasses } from '../../../data/unitClasses'
 import { resolveOwned, type ResolvedCharacter } from '../../../features/characters/resolve'
 import { useCharacterStore } from '../../../stores/characterStore'
-import MemberCard from './MemberCard'
+import MemberCard from '../../../components/common/MemberCard'
 import MemberSelectDetail from './MemberSelectDetail'
 
 // i18n。キャラ名は characters.json、兵科名は battle.json にある

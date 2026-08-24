@@ -1,5 +1,5 @@
-import { classIcons } from '../../../data/characters/classIcons'
-import type { ResolvedCharacter } from '../../../features/characters/resolve'
+import { classIcons } from '../../data/characters/classIcons'
+import type { ResolvedCharacter } from '../../features/characters/resolve'
 
 // ★の最大数。data/characters/types.ts の Rarity = 1 | 2 | 3 に対応する
 const MAX_RARITY = 3
@@ -27,43 +27,43 @@ export default function MemberCard({ member, name, unitClassName, fontSize = 16,
   // 空きスロット。並べたときに浮かないよう、枠・斜めバンド・名前帯は埋まっているカードと揃える
   if (!member) {
     return (
-      <div className="party-member-card is-empty" style={{ fontSize: `${fontSize}px` }} onClick={onClick}>
-        <div className="party-member-card-portrait" />
-        <div className="party-member-card-band" />
-        <div className="party-member-card-header">
-          <span className="party-member-card-class-badge" />
+      <div className="member-card is-empty" style={{ fontSize: `${fontSize}px` }} onClick={onClick}>
+        <div className="member-card-portrait" />
+        <div className="member-card-band" />
+        <div className="member-card-header">
+          <span className="member-card-class-badge" />
         </div>
-        <span className="party-member-card-add">＋</span>
-        <div className="party-member-card-info-container">
+        <span className="member-card-add">＋</span>
+        <div className="member-card-info-container">
           {/* 高さそろえ用 */}
-          <div className="party-member-card-level" />
-          <p className="party-member-card-name">空き</p>
+          <div className="member-card-level" />
+          <p className="member-card-name">空き</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className={`party-member-card is-rarity-${member.master.rarity}`} style={{ fontSize: `${fontSize}px` }} onClick={onClick}>
-      <div className="party-member-card-portrait">
+    <div className={`member-card is-rarity-${member.master.rarity}`} style={{ fontSize: `${fontSize}px` }} onClick={onClick}>
+      <div className="member-card-portrait">
         <img
           src={`${import.meta.env.BASE_URL}images/character/full_body/${member.master.id}.png`}
           alt={name}
         />
       </div>
 
-      <div className="party-member-card-band" />
+      <div className="member-card-band" />
 
-      <div className="party-member-card-header">
-        <span className="party-member-card-class-badge">
+      <div className="member-card-header">
+        <span className="member-card-class-badge">
           <ClassIcon classId={member.master.classId} />
         </span>
 
-        <div className="party-member-card-rarity">
+        <div className="member-card-rarity">
           {Array.from({ length: MAX_RARITY }, (_, i) => (
             <span
               key={i}
-              className={`party-member-card-star${i < member.master.rarity ? '' : ' is-off'}`}
+              className={`member-card-star${i < member.master.rarity ? '' : ' is-off'}`}
             >
               ★
             </span>
@@ -71,15 +71,15 @@ export default function MemberCard({ member, name, unitClassName, fontSize = 16,
         </div>
       </div>
 
-      <div className="party-member-card-info-container">
-        <div className="party-member-card-level">
-          <span className="party-member-card-level-value">Lv.{member.level}</span>
-          <span className="party-member-card-class">{unitClassName}</span>
+      <div className="member-card-info-container">
+        <div className="member-card-level">
+          <span className="member-card-level-value">Lv.{member.level}</span>
+          <span className="member-card-class">{unitClassName}</span>
         </div>
 
-        <p className="party-member-card-name">{name}</p>
+        <p className="member-card-name">{name}</p>
 
-        <dl className="party-member-card-stats">
+        <dl className="member-card-stats">
           <div>
             <dt>HP</dt>
             <dd>{member.status.hp}</dd>
