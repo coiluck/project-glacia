@@ -2,6 +2,7 @@ import { type ReactNode } from 'react'
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { paths } from '../../router/paths'
+import { runBackHandler } from '../../hooks/useBackHandler'
 import { useResourceStore } from '../../stores/resourceStore'
 import { useRankStore } from '../../stores/rankStore'
 import { formatCompact } from '../../utils/format'
@@ -36,6 +37,8 @@ export default function ResourceBar() {
 
   const backButton = () => {
     setIsMenuOpen(false);
+    // ページが戻りを自前で処理したなら履歴は動かさない
+    if (runBackHandler()) return;
     navigate(-1);
   }
 

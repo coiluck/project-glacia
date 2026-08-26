@@ -5,6 +5,7 @@ import { characterMasters } from '../../data/characters'
 import { unitClasses } from '../../data/unitClasses'
 import { resolveOwned } from '../../features/characters/resolve'
 import { useCharacterStore } from '../../stores/characterStore'
+import { useBackHandler } from '../../hooks/useBackHandler'
 import MemberCard from '../../components/common/MemberCard'
 import FormationTabs from './components/FormationTabs'
 import MemberSelect from './components/MemberSelect'
@@ -44,6 +45,13 @@ export default function PartyPage() {
   const location = useLocation()
   const closeSelect = () =>
     location.key === 'default' ? setSearchParams({}, { replace: true }) : navigate(-1)
+
+  // リソースバーの戻るボタン変更
+  useBackHandler(() => {
+    if (selectIndex === null) return false
+    closeSelect()
+    return true
+  })
 
   return (
     <>
