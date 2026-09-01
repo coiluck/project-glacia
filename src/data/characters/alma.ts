@@ -6,7 +6,6 @@ import type { CharacterMaster } from './types';
 const alma: CharacterMaster = {
   id: 'alma',
   nameKey: 'charAlma',
-  profileKey: 'charAlmaProfile',
   rarity: 3,
   classId: 'soldier',
   base: { hp: 340, attack: 34, defense: 22 },

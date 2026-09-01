@@ -1,10 +1,7 @@
 {
   "charAlma": "アルマ",
-  "charAlmaProfile": "銀髪をなびかせ、細身のレイピアで戦う剣士。一突きは軽いが、誰よりも速く、狙ったところを外さない。",
   "charLapis": "ラピス",
-  "charLapisProfile": "旅のはじめから傍にいる銀髪の魔法使い。前に出るのは苦手だが、遠くから的確に撃ち、味方の傷を塞ぐ。",
   "charVermilia": "ベルミリア",
-  "charVermiliaProfile": "燃えるような赤髪の剣士。身の丈ほどの大剣を振り抜き、たった一撃で戦況をひっくり返す。",
 
   "skillAlmaPiercingThrust": "刺突",
   "skillAlmaPiercingThrustDesc": "正面2マスの敵を貫き、威力{0}のダメージを与える。",

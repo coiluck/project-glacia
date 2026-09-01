@@ -6,7 +6,6 @@ import type { CharacterMaster } from './types';
 const vermilia: CharacterMaster = {
   id: 'vermilia',
   nameKey: 'charVermilia',
-  profileKey: 'charVermiliaProfile',
   rarity: 3,
   classId: 'soldier',
   base: { hp: 480, attack: 36, defense: 28 },

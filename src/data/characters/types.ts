@@ -76,7 +76,6 @@ export interface CharacterSkillMaster {
 export interface CharacterMaster {
   id: string;
   nameKey: string; // i18n キー（characters.json）
-  profileKey: string; // 図鑑用の説明文
   rarity: Rarity;
   classId: string; // unitClasses への参照
   base: Status; // Lv1 のステータス

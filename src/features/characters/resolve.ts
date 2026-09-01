@@ -29,7 +29,7 @@ export interface ResolvedSkill {
 
 // キャラ1体の解決結果。編成・メンバー詳細・強化・図鑑・戦闘が共通で参照する
 export interface ResolvedCharacter {
-  master: CharacterMaster // rarity / nameKey / profileKey はここから引く
+  master: CharacterMaster // rarity / nameKey はここから引く
   user: UserCharacter
   level: number // 上限で丸めた実効レベル
   maxLevel: number // 今の上限解放で到達できるレベル

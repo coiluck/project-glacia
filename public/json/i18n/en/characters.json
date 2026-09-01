@@ -1,10 +1,7 @@
 {
   "charAlma": "Alma",
-  "charAlmaProfile": "A silver-haired swordfighter who fights with a slender rapier. Each thrust is light, but faster than anyone else's, and never off the mark.",
   "charLapis": "Lapis",
-  "charLapisProfile": "A silver-haired mage who has been at your side since the journey began. She would rather not stand at the front, but she strikes precisely from afar and closes her allies' wounds.",
   "charVermilia": "Vermilia",
-  "charVermiliaProfile": "A swordfighter with burning red hair. She swings a greatsword as tall as she is, and a single blow can turn a battle around.",
 
   "skillAlmaPiercingThrust": "Piercing Thrust",
   "skillAlmaPiercingThrustDesc": "Runs through the two tiles ahead, dealing damage with {0} power.",
