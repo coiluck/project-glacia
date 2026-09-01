@@ -1,0 +1,22 @@
+
+/* ─ レベルパネル ─ */
+
+/* 見出しだけで1行使い、状態・ボタン・素材は次の行に並べて折り返す */
+.member-detail-levelup,
+.member-detail-limit-break {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 28px;
+  background: var(--fill);
+}
+.member-detail-levelup > .member-detail-section-title,
+.member-detail-limit-break > .member-detail-section-title {
+  flex-basis: 100%;
+}
+.member-detail-limit-break-state {
+  font-size: 18px;
+  color: var(--ink-dim);
+}

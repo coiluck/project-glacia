@@ -1,0 +1,86 @@
+
+/* ─ スキルパネル ─ */
+/* スキルカードは詳細パネルの「出撃スキル」でも使う */
+
+.member-detail-skills {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.member-detail-skill {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  padding: 20px 28px;
+  background: var(--fill);
+  border-left: 2px solid transparent;
+}
+/* 一覧の中で今どれを出撃させているかだけ、左端の線で示す */
+.member-detail-skill.is-selected {
+  background: rgba(127, 224, 255, 0.07);
+  border-left-color: var(--accent);
+}
+
+.member-detail-skill-range {
+  flex-shrink: 0;
+  align-self: center;
+  width: 108px;
+}
+/* 射程ごとにグリッドの大きさが変わるので、枠の幅に合わせて伸縮させる */
+.member-detail-skill-range .attack-range-hex {
+  width: 100%;
+  height: auto;
+}
+
+.member-detail-skill-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.member-detail-skill-head {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 16px;
+}
+.member-detail-skill-name {
+  font-size: 25px;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+}
+.member-detail-skill-level {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent);
+}
+.member-detail-skill-cost {
+  margin-left: auto;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: var(--ink-dim);
+}
+.member-detail-skill-description {
+  font-size: 17px;
+  line-height: 1.7;
+  color: #a8b6c2;
+}
+.member-detail-skill-actions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-top: auto;
+  padding-top: 6px;
+}
+/* 出撃中のスキルはボタンを押せないが、無効化した見た目にはしない */
+.member-detail-skill.is-selected .member-detail-skill-equip:disabled {
+  color: #070c12;
+  background: var(--accent);
+}
