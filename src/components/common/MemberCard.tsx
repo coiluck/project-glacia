@@ -1,8 +1,6 @@
 import { classIcons } from '../../data/characters/classIcons'
+import { RARITIES } from '../../data/characters/const'
 import type { ResolvedCharacter } from '../../features/characters/resolve'
-
-// ★の最大数。data/characters/types.ts の Rarity = 1 | 2 | 3 に対応する
-const MAX_RARITY = 3
 
 interface MemberCardProps {
   member: ResolvedCharacter | null // null なら空きスロット
@@ -60,10 +58,10 @@ export default function MemberCard({ member, name, unitClassName, fontSize = 16,
         </span>
 
         <div className="member-card-rarity">
-          {Array.from({ length: MAX_RARITY }, (_, i) => (
+          {RARITIES.map((rarity) => (
             <span
-              key={i}
-              className={`member-card-star${i < member.master.rarity ? '' : ' is-off'}`}
+              key={rarity}
+              className={`member-card-star${rarity <= member.master.rarity ? '' : ' is-off'}`}
             >
               ★
             </span>

@@ -1,4 +1,4 @@
-import type { CharacterMaster } from './types';
+import type { CharacterMaster } from '../types';
 
 // ベルミリア（★3・剣士）。赤髪、身の丈ほどの大剣使い。
 // 1ターンぶんのAPを丸ごと使う重い薙ぎ払いが主軸。硬くて鈍い、殴り合い向きのアタッカー。

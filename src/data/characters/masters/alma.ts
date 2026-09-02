@@ -1,4 +1,4 @@
-import type { CharacterMaster } from './types';
+import type { CharacterMaster } from '../types';
 
 // アルマ（★3・剣士）。銀髪、細身のレイピア使い。
 // 低コストの刺突で手数を稼ぎつつ、味方に手番を渡して前線を組み立てる支援寄りのアタッカー。

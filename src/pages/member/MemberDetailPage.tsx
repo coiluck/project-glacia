@@ -9,6 +9,7 @@ import MemberLevelPanel from './components/MemberLevelPanel'
 import MemberSkillPanel from './components/MemberSkillPanel'
 import { characterMasters } from '../../data/characters'
 import { classIcons } from '../../data/characters/classIcons'
+import { RARITIES } from '../../data/characters/const'
 import { unitClasses } from '../../data/unitClasses'
 import { MAX_DUPE, MAX_SKILL_LEVEL, type DupeBonus } from '../../data/characters/types'
 import { skillReach } from '../../features/battle/battle'
@@ -16,9 +17,6 @@ import { shapeTiles, type Axial } from '../../features/battle/hex'
 import { formatSkillDescription } from '../../features/characters/describe'
 import { resolveOwned } from '../../features/characters/resolve'
 import { useCharacterStore } from '../../stores/characterStore'
-
-// ★の最大数。data/characters/types.ts の Rarity = 1 | 2 | 3 に対応する
-const MAX_RARITY = 3
 
 // 射程プレビューの viewBox 基準。実寸は CSS 側で決める
 const RANGE_HEX_SIZE = 20
@@ -168,8 +166,11 @@ export default function MemberDetailPage() {
             </div>
 
             <div className="member-detail-rarity">
-              {Array.from({ length: MAX_RARITY }, (_, i) => (
-                <span key={i} className={`member-detail-star${i < master.rarity ? '' : ' is-off'}`}>
+              {RARITIES.map((rarity) => (
+                <span
+                  key={rarity}
+                  className={`member-detail-star${rarity <= master.rarity ? '' : ' is-off'}`}
+                >
                   ★
                 </span>
               ))}

@@ -1,4 +1,4 @@
-import type { CharacterMaster } from './types';
+import type { CharacterMaster } from '../types';
 
 // ラピス（★2・魔導士）。銀髪の魔法役で、ゲーム開始時からユーザーが所持している。
 // 遠距離の攻撃と回復を1人で持つ、最初のパーティを成立させるための構成。
