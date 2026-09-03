@@ -34,7 +34,8 @@
 @import './pages/member/detail.css';
 @import './pages/member/level.css';
 @import './pages/member/skill.css';
-@import './pages/recruit.css';
+@import './pages/recruit/recruit.css';
+@import './pages/recruit/result.css';
 @import './pages/base.css';
 
 /* 共通コンポーネント */

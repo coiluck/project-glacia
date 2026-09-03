@@ -1,0 +1,377 @@
+/* 召集結果 */
+.recruit-result {
+  /* 六角形 */
+  --hex: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  --ink: #e6eef6;
+  --ink-dim: #74838f;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  padding-top: 116px; /* リソースバーのぶん */
+}
+.recruit-result-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(80% 60% at 22% 46%, #10202c 0%, rgba(16, 32, 44, 0) 68%),
+    radial-gradient(120% 90% at 50% 0%, #0b1620 0%, #02050a 62%);
+}
+
+/* レアリティ色 */
+.recruit-result .is-rarity-1 {
+  --rarity: #8fb8d6;
+}
+.recruit-result .is-rarity-2 {
+  --rarity: #c58cff;
+}
+.recruit-result .is-rarity-3 {
+  --rarity: #ffc861;
+}
+
+.recruit-result-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.recruit-comb-grid {
+  position: absolute;
+  top: 27px;
+  left: 96px;
+  -webkit-mask-image: radial-gradient(58% 66% at 38% 50%, #000 34%, transparent 100%);
+  mask-image: radial-gradient(58% 66% at 38% 50%, #000 34%, transparent 100%);
+  animation: recruit-comb-grid 0.8s ease-out both;
+}
+.recruit-comb-grid polygon {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.07);
+  stroke-width: 1.5;
+}
+@keyframes recruit-comb-grid {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.recruit-comb {
+  position: absolute;
+  top: 27px;
+  left: 96px;
+}
+
+/* セル1枚 */
+.recruit-cell {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 208px;
+  height: 240px;
+  opacity: 0;
+  animation: recruit-cell 0.46s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+  animation-delay: calc(var(--i) * 0.075s + 0.2s);
+}
+@keyframes recruit-cell {
+  0% {
+    opacity: 0;
+    transform: scale(0.62);
+  }
+  62% {
+    opacity: 1;
+    transform: scale(1.07);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 衝撃波 */
+.recruit-cell-ring {
+  position: absolute;
+  inset: -14px;
+  z-index: 0;
+  background: var(--rarity);
+  clip-path: var(--hex);
+  opacity: 0;
+  animation: recruit-cell-ring 0.62s ease-out forwards;
+  animation-delay: calc(var(--i) * 0.075s + 0.2s);
+}
+@keyframes recruit-cell-ring {
+  from {
+    opacity: 0.5;
+    transform: scale(0.78);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.4);
+  }
+}
+
+.recruit-cell-rim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--rarity);
+  clip-path: var(--hex);
+  filter: drop-shadow(0 0 14px color-mix(in srgb, var(--rarity) 45%, transparent));
+}
+
+.recruit-cell.is-rarity-3 .recruit-cell-rim {
+  animation: recruit-cell-rim 2.8s ease-in-out infinite;
+}
+@keyframes recruit-cell-rim {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 12px color-mix(in srgb, var(--rarity) 40%, transparent));
+  }
+  50% {
+    filter: drop-shadow(0 0 28px color-mix(in srgb, var(--rarity) 85%, transparent));
+  }
+}
+
+/* 顔 */
+.recruit-cell-face {
+  position: absolute;
+  inset: 3px;
+  z-index: 2;
+  background: #070c12;
+  clip-path: var(--hex);
+}
+.recruit-cell-face img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 26%;
+}
+
+.recruit-cell-veil {
+  position: absolute;
+  inset: 3px;
+  z-index: 3;
+  clip-path: var(--hex);
+  background:
+    linear-gradient(180deg, rgba(4, 8, 13, 0.88) 0%, rgba(4, 8, 13, 0) 24%),
+    linear-gradient(180deg, rgba(4, 8, 13, 0) 46%, rgba(4, 8, 13, 0.86) 74%, #04070b 100%);
+}
+
+.recruit-cell-badge {
+  position: absolute;
+  top: 32px;
+  left: 50%;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 19px;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.recruit-cell.is-new .recruit-cell-badge {
+  font-size: 21px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow:
+    0 0 16px color-mix(in srgb, var(--rarity) 80%, transparent),
+    0 2px 8px rgba(0, 0, 0, 0.7);
+}
+.recruit-cell.is-dupe .recruit-cell-badge,
+.recruit-cell.is-convert .recruit-cell-badge {
+  color: rgba(230, 238, 246, 0.72);
+}
+
+.recruit-cell-dupe-mark {
+  width: 11px;
+  height: 13px;
+  background: #face68;
+  clip-path: var(--hex);
+}
+
+.recruit-cell-bill {
+  position: relative;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  filter:
+    drop-shadow(0 0 5px rgba(95, 211, 255, 0.55))
+    drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
+}
+.recruit-cell-bill-back,
+.recruit-cell-bill-front {
+  position: absolute;
+  inset: 0;
+  background-color: currentColor;
+  -webkit-mask: url('/project-glacia/images/component/resource-bar/bill.svg') no-repeat center / contain;
+  mask: url('/project-glacia/images/component/resource-bar/bill.svg') no-repeat center / contain;
+}
+.recruit-cell-bill-back {
+  transform: translate(-2px, -2px);
+  opacity: 0.5;
+}
+.recruit-cell-bill-front {
+  transform: translate(2px, 2px);
+  opacity: 0.9;
+}
+
+.recruit-cell-stars {
+  position: absolute;
+  right: 0;
+  bottom: 54px;
+  left: 0;
+  z-index: 4;
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+}
+.recruit-cell-star {
+  font-size: 15px;
+  line-height: 1;
+  color: var(--rarity);
+  text-shadow: 0 0 8px color-mix(in srgb, var(--rarity) 65%, transparent);
+}
+.recruit-cell-star.is-off {
+  color: rgba(255, 255, 255, 0.15);
+  text-shadow: none;
+}
+
+
+/* 最高レア1体のとこ */
+.recruit-hero {
+  position: absolute;
+  right: 56px;
+  bottom: 0;
+  width: 460px;
+  height: 86%;
+  animation: recruit-hero 0.7s ease-out both;
+  animation-delay: 0.1s;
+}
+@keyframes recruit-hero {
+  from {
+    opacity: 0;
+    transform: translateX(6%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.recruit-hero-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    46% 40% at 50% 44%,
+    color-mix(in srgb, var(--rarity) 30%, transparent) 0%,
+    transparent 72%
+  );
+}
+
+.recruit-hero-mark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  height: 577px;
+  background: color-mix(in srgb, var(--rarity) 14%, transparent);
+  clip-path: var(--hex);
+  transform: translate(-50%, -52%);
+}
+.recruit-hero-mark::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: #05090e;
+  clip-path: var(--hex);
+}
+
+.recruit-hero-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+  filter: drop-shadow(0 0 40px rgba(0, 0, 0, 0.6));
+}
+
+.recruit-hero-plate {
+  position: absolute;
+  top: 34px;
+  left: 0;
+  padding-left: 22px;
+  text-align: left;
+  border-left: 3px solid var(--rarity);
+}
+.recruit-hero-plate-stars {
+  display: flex;
+  gap: 5px;
+  font-size: 20px;
+  line-height: 1;
+}
+.recruit-hero-plate-star {
+  color: var(--rarity);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--rarity) 60%, transparent);
+}
+.recruit-hero-plate-star.is-off {
+  color: rgba(255, 255, 255, 0.16);
+  text-shadow: none;
+}
+.recruit-hero-plate-name {
+  margin-top: 8px;
+  font-size: 46px;
+  line-height: 1.2;
+  letter-spacing: 0.1rem;
+  text-shadow: 10px 10px 36px rgba(0, 0, 0, 0.8);
+}
+
+/* button */
+.recruit-result-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 40px;
+  height: 116px;
+  padding: 0 60px;
+  animation: recruit-result-bar 0.4s ease-out both;
+  animation-delay: calc(var(--n) * 0.075s + 0.5s);
+}
+@keyframes recruit-result-bar {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.recruit-result-close {
+  min-width: 280px;
+  height: 64px;
+  padding: 0 40px;
+  font-family: inherit;
+  font-size: 24px;
+  letter-spacing: 0.24em;
+  color: #0a2b33;
+  background: linear-gradient(160deg, #b6f5ff 0%, #7fe0ff 55%, #6ccbe8 100%);
+  border: none;
+  cursor: pointer;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  filter: drop-shadow(0 0 16px rgba(60, 248, 255, 0.4));
+  transition: filter 0.2s ease-out;
+}
+.recruit-result-close:hover {
+  filter: drop-shadow(0 0 22px rgba(60, 248, 255, 0.6)) brightness(1.08);
+}
