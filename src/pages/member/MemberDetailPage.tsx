@@ -1,8 +1,9 @@
-import { useState, type PointerEvent } from 'react'
+import { useEffect, useState, type PointerEvent } from 'react'
 import { Navigate, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import Screen from '../../layouts/Screen'
 import { paths } from '../../router/paths'
 import { useTranslations } from '../../i18n'
+import { saveParty } from '../../api/actions/party'
 import { useBackHandler } from '../../hooks/useBackHandler'
 import AttackRangeHex from '../../components/common/AttackRangeHex'
 import MemberLevelPanel from './components/MemberLevelPanel'
@@ -49,8 +50,7 @@ const CLASS_TRANSLATION_MAPPING = Object.fromEntries(
   Object.values(unitClasses).map((c) => [c.nameKey, c.nameKey]),
 )
 
-// 凸1つ分の効果。DupeBonus は数値の加算しか持たないのでここで文にする。
-// 表示は1行1項目なので、繋げずに配列のまま返す
+// 凸1つ分の効果はここで文にする
 function describeDupeBonus(bonus: DupeBonus): string[] {
   const parts: string[] = []
   if (bonus.status?.hp) parts.push(`HP +${bonus.status.hp}`)
@@ -60,7 +60,7 @@ function describeDupeBonus(bonus: DupeBonus): string[] {
   return parts
 }
 
-// 兵科アイコン。MemberCard と同じ六角バッジに収める
+// 兵科アイコン
 function ClassIcon({ classId }: { classId: string }) {
   const path = classIcons[classId]
   if (!path) return null
@@ -88,17 +88,15 @@ export default function MemberDetailPage() {
   const tClass = useTranslations('battle', CLASS_TRANSLATION_MAPPING)
   const owned = useCharacterStore((s) => s.owned)
 
-  // ?panel=<パネル名>: 立ち絵とヘッダは動かさず、右側だけを差し替える
+  useEffect(() => () => void saveParty(), [])
+
   const [searchParams, setSearchParams] = useSearchParams()
   const raw = searchParams.get('panel')
   const panel = PANELS.find((p) => p === raw) ?? 'detail'
 
-  // 詳細に戻るスライドの間もサブ枠を空にしないよう、直前の1枚を覚えておく
   const [sub, setSub] = useState<SubPanelId>('level')
   if (panel !== 'detail' && panel !== sub) setSub(panel)
 
-  // ツールチップを出している凸。スマホには hover の解除が無いので、
-  // 「離れたら閉じる」ではなく「他所に触れたら閉じる」で畳む
   const [tip, setTip] = useState<number | null>(null)
   const closeTip = (e: PointerEvent<HTMLDivElement>) => {
     if (!(e.target as HTMLElement).closest('.member-detail-dupe-item')) setTip(null)
@@ -107,21 +105,19 @@ export default function MemberDetailPage() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  // 詳細から強化パネルへ入るときだけ履歴を積む。強化パネル同士の移動では積まないので、
-  // どのパネルからでも戻る1回で詳細に返る
+  // 詳細から強化パネルへ入るときだけ履歴を積む。強化パネル同士の移動では積まない
   const goPanel = (next: PanelId) => {
     if (next === panel) return
     if (next !== 'detail') {
       setSearchParams({ panel: next }, { replace: panel !== 'detail' })
       return
     }
-    // key === 'default' はこのURLが履歴の先頭にいる場合で、戻り先が無い
+    // このURLが履歴の先頭にいて戻り先が無い
     if (location.key === 'default') setSearchParams({}, { replace: true })
     else navigate(-1)
   }
 
-  // リソースバーの戻るボタン。履歴があるなら pop に任せればよく、
-  // 戻り先が無いときだけ横取りして詳細に返す
+  // リソースバーの戻るボタン
   useBackHandler(() => {
     if (panel === 'detail' || location.key !== 'default') return false
     setSearchParams({}, { replace: true })

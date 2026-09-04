@@ -2,19 +2,19 @@ import { useState } from 'react'
 import Screen from '../../layouts/Screen'
 import { useTranslations } from '../../i18n'
 import { useBackHandler } from '../../hooks/useBackHandler'
-import RecruitResult, { type PullOutcome } from './components/RecruitResult'
+import RecruitResult from './components/RecruitResult'
+import { pullGacha } from '../../api/actions/gacha'
 import { characterMasters } from '../../data/characters'
 import { RARITIES } from '../../data/characters/const'
 import {
   CEILING_PULLS,
-  DUPE_CONVERT_CURRENCY,
   MULTI_PULL_COUNT,
   PICK_UP_IDS,
   PULL_COST_MULTI,
   PULL_COST_SINGLE,
 } from '../../data/gacha'
-import { rarityRates, rollPulls } from '../../features/gacha/roll'
-import { useCharacterStore } from '../../stores/characterStore'
+import { rarityRates } from '../../features/gacha/roll'
+import type { PullOutcome } from '../../features/gacha/types'
 import { useGachaStore } from '../../stores/gachaStore'
 import { useResourceStore } from '../../stores/resourceStore'
 import { formatCompact } from '../../utils/format'
@@ -30,14 +30,12 @@ export default function RecruitPage() {
   const tCharacter = useTranslations('characters', CHARACTER_TRANSLATION_MAPPING)
 
   const gems = useResourceStore((s) => s.gems)
-  const spendGems = useResourceStore((s) => s.spendGems)
-  const addCurrency = useResourceStore((s) => s.addCurrency)
-  const acquire = useCharacterStore((s) => s.acquire)
   const pity = useGachaStore((s) => s.pity)
-  const setPity = useGachaStore((s) => s.setPity)
 
   // 結果表示中は引けない。nullなら引ける
   const [outcomes, setOutcomes] = useState<PullOutcome[] | null>(null)
+  const [pending, setPending] = useState(false) // 応答待ち。二重に引かせない
+  const [error, setError] = useState<string | null>(null)
 
   // 結果を出しているあいだは閉じるだけ
   useBackHandler(() => {
@@ -49,27 +47,20 @@ export default function RecruitPage() {
   const rates = rarityRates()
   const pickUp = characterMasters[PICK_UP_IDS[0]] ?? null
 
-  const pull = (count: number, cost: number) => {
-    if (outcomes !== null || gems < cost) return
+  // costはボタンの表示と押せるかどうかの判定のみ
+  const pull = async (count: number, cost: number) => {
+    if (pending || outcomes !== null || gems < cost) return
 
-    spendGems(cost)
-    const rolled = rollPulls(count, pity)
-    setPity(rolled.pity)
-
-    // 所持データへの反映
-    const results = rolled.pulls.map((p) => {
-      const kind = acquire(p.masterId)
-      return {
-        ...p,
-        kind,
-        currency: kind === 'convert' ? DUPE_CONVERT_CURRENCY[p.rarity] : 0,
-      }
-    })
-
-    const converted = results.reduce((sum, r) => sum + r.currency, 0)
-    if (converted > 0) addCurrency(converted)
-
-    setOutcomes(results)
+    setPending(true)
+    setError(null)
+    try {
+      setOutcomes(await pullGacha(count))
+    } catch (e) {
+      console.error(e)
+      setError('召集に失敗')
+    } finally {
+      setPending(false)
+    }
   }
 
   return (
@@ -130,8 +121,8 @@ export default function RecruitPage() {
               <button
                 type="button"
                 className="recruit-action"
-                disabled={gems < PULL_COST_SINGLE}
-                onClick={() => pull(1, PULL_COST_SINGLE)}
+                disabled={pending || gems < PULL_COST_SINGLE}
+                onClick={() => void pull(1, PULL_COST_SINGLE)}
               >
                 <span className="recruit-action-label">単発</span>
                 <span className="recruit-action-cost">
@@ -143,8 +134,8 @@ export default function RecruitPage() {
               <button
                 type="button"
                 className="recruit-action is-multi"
-                disabled={gems < PULL_COST_MULTI}
-                onClick={() => pull(MULTI_PULL_COUNT, PULL_COST_MULTI)}
+                disabled={pending || gems < PULL_COST_MULTI}
+                onClick={() => void pull(MULTI_PULL_COUNT, PULL_COST_MULTI)}
               >
                 <span className="recruit-action-label">{MULTI_PULL_COUNT}連</span>
                 <span className="recruit-action-cost">
@@ -154,7 +145,10 @@ export default function RecruitPage() {
               </button>
             </div>
 
-            {gems < PULL_COST_SINGLE && <p className="recruit-shortage">ジェムが足りない</p>}
+            {error && <p className="recruit-shortage">{error}</p>}
+            {!error && gems < PULL_COST_SINGLE && (
+              <p className="recruit-shortage">ジェムが足りない</p>
+            )}
           </div>
         </div>
       ) : (

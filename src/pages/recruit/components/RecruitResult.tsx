@@ -2,8 +2,7 @@ import type { CSSProperties } from 'react'
 import { useTranslations } from '../../../i18n'
 import { characterMasters } from '../../../data/characters'
 import { RARITIES } from '../../../data/characters/const'
-import type { Rarity } from '../../../data/characters/types'
-import type { AcquireResult } from '../../../stores/characterStore'
+import type { PullOutcome } from '../../../features/gacha/types'
 import { formatCompact } from '../../../utils/format'
 import ViewportLayer from '../../../layouts/ViewportLayer'
 
@@ -71,14 +70,6 @@ const hexPoints = ({ x, y }: Point) =>
   ]
     .map(([px, py]) => `${px},${py}`)
     .join(' ')
-
-// 引いた1体ぶんの結果
-export interface PullOutcome {
-  masterId: string
-  rarity: Rarity
-  kind: AcquireResult
-  currency: number // 凸上限で変換して得た通貨。kind が convert 以外なら0
-}
 
 interface RecruitResultProps {
   outcomes: PullOutcome[]

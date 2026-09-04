@@ -37,6 +37,26 @@ export function expToNextLevel(level: number, levelCap: number): number | null {
   return exp
 }
 
+// 経験値を足してレベルアップを解決する。上限に達したら余りは切り捨て
+export function gainExp(
+  master: CharacterMaster,
+  user: UserCharacter,
+  amount: number,
+): UserCharacter {
+  const cap = maxLevel(master.rarity, user.limitBreak)
+  let level = effectiveLevel(master, user)
+  let exp = user.exp + amount
+
+  for (;;) {
+    const need = expToNextLevel(level, cap)
+    if (need === null) return { ...user, level, exp: 0 }
+    if (exp < need) break
+    exp -= need
+    level += 1
+  }
+  return { ...user, level, exp }
+}
+
 // 次の上限解放ができるか。壁のレベルに達していて、まだ回数が残っていること
 export function canLimitBreak(master: CharacterMaster, user: UserCharacter): boolean {
   const walls = LIMIT_BREAK_LEVELS[master.rarity]

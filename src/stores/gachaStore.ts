@@ -1,9 +1,10 @@
 import { create } from 'zustand'
+import type { UserRow } from '../api/types'
 
 // 天井
 export interface GachaState {
   pity: number
-  setPity: (pity: number) => void
+  hydrate: (row: UserRow) => void
   reset: () => void
 }
 
@@ -13,6 +14,6 @@ const initial = {
 
 export const useGachaStore = create<GachaState>((set) => ({
   ...initial,
-  setPity: (pity) => set({ pity }),
+  hydrate: (row) => set({ pity: row.pity }),
   reset: () => set(initial),
 }))

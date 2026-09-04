@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { paths } from '../../router/paths'
 import { useTranslations } from '../../i18n'
+import { sendBattleResult } from '../../api/actions/battle'
 import { battleStageRegistry } from '../../data/battleStages'
 import { characterMasters } from '../../data/characters'
 import { enemyDefs } from '../../data/enemies'
@@ -75,6 +76,8 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     const s = useCharacterStore.getState()
     return buildParty(s.owned, s.party[s.currentPartySlotIndex] ?? [])
   })
+  // 結果を送るときに使う。どの編成で出撃したかは戦闘中変わらない
+  const [partySlot] = useState(() => useCharacterStore.getState().currentPartySlotIndex)
 
   const stage = useBattleStore((s) => s.stage)
   const state = useBattleStore((s) => s.state)
@@ -92,6 +95,17 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   useEffect(() => {
     init(stageId)
   }, [stageId, init])
+
+  // 決着したら結果を1回だけ送る。スタミナもここで引かれる
+  const sentRef = useRef(false)
+  const phase = state?.phase
+  useEffect(() => {
+    if (!stageId || sentRef.current) return
+    if (phase !== 'victory' && phase !== 'defeat') return
+    sentRef.current = true
+    // TODO: 報酬の表示。失敗時のリトライ
+    void sendBattleResult(stageId, phase, partySlot).catch((e) => console.error(e))
+  }, [phase, stageId, partySlot])
 
   if (!stage || !state) {
     // init 前の1フレームは何も描かない。レジストリに無いステージだけ NO DATA を出す

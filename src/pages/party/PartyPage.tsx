@@ -1,6 +1,8 @@
+import { useEffect } from 'react'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import Screen from '../../layouts/Screen'
 import { useTranslations } from '../../i18n'
+import { saveParty } from '../../api/actions/party'
 import { characterMasters } from '../../data/characters'
 import { unitClasses } from '../../data/unitClasses'
 import { resolveOwned } from '../../features/characters/resolve'
@@ -30,17 +32,18 @@ export default function PartyPage() {
   const party = useCharacterStore((s) => s.party)
   const slotIndex = useCharacterStore((s) => s.currentPartySlotIndex)
 
-  // 選択中の編成のメンバー。未所持・マスター未定義の ID は空き扱いになる
+  // 画面を出るときにまとめて保存
+  useEffect(() => () => void saveParty(), [])
+
+  // 選択中の編成のメンバー
   const members = (party[slotIndex] ?? []).map((id) => resolveOwned(owned, id))
 
-  // ?member=<編成内の位置>: number が付いているあいだはキャラ選択
+  // ?member=<編成内の位置>: numberが付いているあいだはキャラ選択
   const [searchParams, setSearchParams] = useSearchParams()
   const rawMember = searchParams.get('member')
   const selectIndex =
     rawMember !== null && SLOTS.includes(Number(rawMember)) ? Number(rawMember) : null
 
-  // replace だと同じ /party が履歴に積もるから消す
-  // key === 'default' はこのURLが履歴の先頭にいる場合で、戻り先が無い
   const navigate = useNavigate()
   const location = useLocation()
   const closeSelect = () =>

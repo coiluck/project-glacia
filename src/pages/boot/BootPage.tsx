@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from 'react-router-dom'
 import { paths } from '../../router/paths'
+import { syncUserData } from '../../api/sync'
 import "../../styles/pages/boot.css";
 
 // 定数
@@ -18,6 +19,9 @@ export default function BootPage() {
   }, []);
 
   useEffect(() => {
+    // TODO: 取得に失敗したときのエラー画面
+    const loading = syncUserData().catch((e) => console.error(e))
+
     const startTimer = setTimeout(() => {
       setShowText(true);
 
@@ -30,7 +34,7 @@ export default function BootPage() {
       // アニメーション完了後の処理
       const navTimer = setTimeout(() => {
         // ここで遷移
-        navigate(paths.start, { replace: true })
+        void loading.then(() => navigate(paths.start, { replace: true }))
       }, totalWaitTimeMs);
 
       return () => clearTimeout(navTimer);
