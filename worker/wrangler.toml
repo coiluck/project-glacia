@@ -1,0 +1,21 @@
+name = "project-glacia-api"
+main = "src/index.ts"
+compatibility_date = "2025-09-01"
+
+# wrangler d1 create project-glacia で作り、出てきた database_id を貼る
+[[d1_databases]]
+binding = "DB"
+database_name = "project-glacia"
+database_id = "f8009b8c-9014-48f5-8bae-cfc19b48bf8d"
+
+# vite.config.ts の proxy 先と揃える。空いていなければ起動時に失敗させる
+[dev]
+port = 8787
+
+# CORS の許可元。デプロイ時は GitHub Pages の origin に変える
+[vars]
+ALLOWED_ORIGIN = "http://localhost:5173"
+
+# secret（ここには書かない）
+#   PASSWORD_PEPPER … パスワードハッシュの鍵。`npx wrangler secret put PASSWORD_PEPPER`
+#                     ローカルは worker/.dev.vars。失うと全ユーザーがログイン不能になる
