@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { useTranslations } from '../../i18n'
-import credits from './terms.md?raw'
+import credits from './credit.md?raw'
 import terms from './terms.md?raw'
 
 interface StartActionsProps {
@@ -8,8 +8,8 @@ interface StartActionsProps {
   onClick: () => void
 }
 
-// TODO: package.jsonのに変える
-const APP_VERSION = 'ver 0.0.0'
+// package.json の version（vite の define 経由でビルド時に埋め込まれる）
+const APP_VERSION = `ver ${__APP_VERSION__}`
 
 const LANGS = [
   { code: 'ja', label: '日本語' },
@@ -22,7 +22,6 @@ export default function StartActions({ buttonText, onClick }: StartActionsProps)
   const [termsOpen, setTermsOpen] = useState(false)
   // 表示のみの選択状態（実際の言語切り替えは未実装）
   const [selectedLang, setSelectedLang] = useState<typeof LANGS[number]['code']>('ja')
-  // 言語ポップオーバーの表示位置（言語ボタンの上に出す）
   const langBtnRef = useRef<HTMLButtonElement>(null)
   const [langPos, setLangPos] = useState({ left: 0, bottom: 0 })
 
@@ -47,9 +46,11 @@ export default function StartActions({ buttonText, onClick }: StartActionsProps)
     <>
       <div className="start-actions-container">
         <div className="start-actions-container-left">
-          <button type="button" className="start-actions-button" onClick={onClick}>
-            {buttonText}
-          </button>
+          {onClick && (
+            <button type="button" className="start-actions-button" onClick={onClick}>
+              {buttonText}
+            </button>
+          )}
         </div>
 
         <div className="start-actions-container-right">

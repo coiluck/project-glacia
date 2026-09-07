@@ -33,7 +33,6 @@
   font-size: 12rem;
   text-shadow: 0 0 0.5rem rgba(255, 255, 255, 0.8);
   letter-spacing: 6rem;
-  /* letter-spacing は末尾にも余白を付けるため相殺 */
   margin-right: -6rem;
 }
 
@@ -175,7 +174,7 @@
   opacity: 0.6;
 }
 
-/* 言語切り替えポップオーバー */
+/* 言語切り替え */
 .start-actions-lang-overlay {
   position: fixed;
   inset: 0;
@@ -261,28 +260,14 @@
 }
 
 .start-actions-close {
-  font: inherit;
-  color: var(--text-h);
-  padding: 8px 24px;
-  border: 1px solid var(--accent-border);
-  border-radius: 8px;
-  background: var(--accent-bg);
-  cursor: pointer;
-}
-
-.start-login {
+  margin-top: 1rem;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-
-.start-login button {
+  justify-self: center;
   font: inherit;
-  color: var(--text-h);
-  padding: 10px 28px;
-  border: 1px solid var(--accent-border);
-  border-radius: 8px;
-  background: var(--accent-bg);
+  color: #ddd;
+  padding: 4px 24px;
+  border: 1px solid #bbb;
+  background: #333;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.6);
   cursor: pointer;
 }

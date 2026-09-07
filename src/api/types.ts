@@ -15,6 +15,7 @@ export interface UserRow {
   // --- stamina（staminaStore）---
   stamina: number
   stamina_max: number
+  stamina_updated_at: number
   stamina_recovering_seconds: number
   stamina_recovering_seconds_max: number
 
@@ -45,7 +46,12 @@ export interface CommandResponse<T> {
   result: T // そのコマンド固有の結果
 }
 
-// PUT /party のリクエスト。編成画面を出るときにまとめて送る
+// /auth/register と /auth/login の result。
+export interface AuthResult {
+  token: string
+}
+
+// POST /party のリクエスト
 export interface PartyPayload {
   party: Record<number, string[]>
   selectedSkills: Record<string, string> // CharacterMaster.id -> SkillDef.id

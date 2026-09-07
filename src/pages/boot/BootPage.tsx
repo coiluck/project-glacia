@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from 'react-router-dom'
 import { paths } from '../../router/paths'
 import { syncUserData } from '../../api/sync'
-import "../../styles/pages/boot.css";
+import { hasToken } from '../../api/session'
 
 // 定数
 const textTop = "KOKONE";
@@ -19,8 +19,10 @@ export default function BootPage() {
   }, []);
 
   useEffect(() => {
-    // TODO: 取得に失敗したときのエラー画面
-    const loading = syncUserData().catch((e) => console.error(e))
+    // 未ログインなら取りに行かない
+    const loading = hasToken()
+      ? syncUserData().catch((e) => console.error(e))
+      : Promise.resolve()
 
     const startTimer = setTimeout(() => {
       setShowText(true);

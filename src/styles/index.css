@@ -10,7 +10,9 @@
 
 /* ページ */
 @import './pages/boot.css';
-@import './pages/start.css';
+@import './pages/start/start.css';
+@import './pages/start/login.css';
+@import './pages/start/account.css';
 @import './pages/top/top.css';
 @import './pages/top/character-stage.css';
 @import './pages/top/event-banner.css';

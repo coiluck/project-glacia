@@ -1,0 +1,90 @@
+/* ログインフォーム。セーフエリア外（実画面）に出るので寸法は --scale を掛ける。
+   中央寄せは .start-actions-overlay の flex に任せる */
+.start-login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(2rem * var(--scale));
+  width: calc(800px * var(--scale));
+  min-height: calc(440px * var(--scale));
+  padding: calc(3rem * var(--scale));
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid #666;
+  backdrop-filter: blur(5px);
+}
+
+.start-login-field {
+  display: flex;
+  flex-direction: column;
+  gap: calc(0.8rem * var(--scale));
+  width: 100%;
+  color: #ddd;
+  font-size: calc(1.1rem * var(--scale));
+  letter-spacing: calc(0.2rem * var(--scale));
+}
+
+.start-login-field input {
+  font: inherit;
+  padding: calc(12px * var(--scale)) calc(16px * var(--scale));
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid #888;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.start-login-field input:focus {
+  border-color: #ddd;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.start-login-error {
+  color: #e87a8a;
+  font-size: calc(1.6rem * var(--scale));
+}
+
+.start-login-submit {
+  position: relative;
+  width: 70%;
+  padding: calc(10px * var(--scale)) calc(32px * var(--scale));
+  font: inherit;
+  font-size: calc(1.2rem * var(--scale));
+  letter-spacing: calc(0.4rem * var(--scale));
+  color: #fff;
+  background: #333;
+  border: 1px solid #bbb;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.start-login-submit::before {
+  content: '';
+  position: absolute;
+  inset: calc(-6px * var(--scale));
+  border: 1px solid rgba(255, 255, 255, 0);
+  pointer-events: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.start-login-submit:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+@media (hover: hover) {
+  .start-login-submit:not(:disabled):hover {
+    background: #555;
+  }
+  .start-login-submit:not(:disabled):hover::before {
+    border: 1px solid rgba(255, 255, 255, 1);
+  }
+}
+
+.start-login-switch {
+  font: inherit;
+  font-size: calc(1.2rem * var(--scale));
+  color: #bbb;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #bbb;
+  cursor: pointer;
+}

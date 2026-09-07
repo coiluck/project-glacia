@@ -4,6 +4,7 @@ import { characterMasters } from '../../data/characters'
 import { expToNextRank, staminaMaxFor } from '../../data/rank'
 import { chapters } from '../../data/stages'
 import { gainExp } from '../characters/growth'
+import { refreshStamina, spendStamina } from '../stamina/stamina'
 
 export type BattleResult = 'victory' | 'defeat'
 
@@ -23,12 +24,12 @@ export function resolveBattleResult(
   stageId: string,
   result: BattleResult,
   partySlot: number,
+  now: number,
 ): { me: MeResponse; reward: BattleReward } {
   const stage = findStage(stageId)
   if (!stage) throw new Error(`ステージが無い: ${stageId}`)
-  if (me.user.stamina < stage.stamina) throw new Error('スタミナが足りない')
 
-  const user = { ...me.user, stamina: me.user.stamina - stage.stamina }
+  const user = spendStamina(me.user, stage.stamina, now)
 
   // 負けたらスタミナだけ引く
   if (result === 'defeat') return { me: { ...me, user }, reward: NO_REWARD }
@@ -59,5 +60,6 @@ export function resolveBattleResult(
     deployed.has(c.masterId) ? gainExp(characterMasters[c.masterId], c, reward.characterExp) : c,
   )
 
-  return { me: { ...me, user, characters }, reward }
+  // ランクアップでstamina_maxが変わりうるので
+  return { me: { ...me, user: refreshStamina(user, now), characters }, reward }
 }
