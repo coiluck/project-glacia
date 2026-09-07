@@ -1,5 +1,4 @@
 import { apiGet } from './client'
-import { USE_MOCK, mockMe } from './mock'
 import type { MeResponse } from './types'
 import { useAccountStore } from '../stores/accountStore'
 import { useRankStore } from '../stores/rankStore'
@@ -9,6 +8,13 @@ import { useProgressStore } from '../stores/progressStore'
 import { useTutorialStore } from '../stores/tutorialStore'
 import { useCharacterStore } from '../stores/characterStore'
 import { useGachaStore } from '../stores/gachaStore'
+
+// ユーザーデータを取得し、全ストアへ反映する
+export async function syncUserData(): Promise<MeResponse> {
+  const me = await apiGet<MeResponse>('/me')
+  distribute(me)
+  return me
+}
 
 // データを各ストアへ配る。
 export function distribute(me: MeResponse) {
@@ -32,11 +38,4 @@ export function resetAll() {
   useTutorialStore.getState().reset()
   useGachaStore.getState().reset()
   useCharacterStore.getState().reset()
-}
-
-// ユーザーデータを取得し、全ストアへ反映する
-export async function syncUserData(): Promise<MeResponse> {
-  const me = USE_MOCK ? await mockMe() : await apiGet<MeResponse>('/me')
-  distribute(me)
-  return me
 }
