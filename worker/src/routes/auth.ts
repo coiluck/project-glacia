@@ -1,5 +1,6 @@
 import type { AuthResult } from '../../../src/api/types'
 import {
+  AUTH_ERROR,
   equalsConstantTime,
   hashPassword,
   randomHex,
@@ -15,7 +16,8 @@ interface Credentials {
   password: string
 }
 
-const REJECT = 'ユーザー名またはパスワードが違います'
+// ユーザー名とパスワードのどちらが違うかは返さない
+const REJECT = AUTH_ERROR.badCredentials
 
 // ログイン成功時のレスポンス
 async function issue(ctx: Context, userId: string): Promise<Response> {
@@ -37,7 +39,7 @@ export async function register(request: Request, ctx: Context): Promise<Response
     await createUser(ctx.db, { id, name, passwordHash, passwordSalt: salt }, ctx.now)
   } catch {
     // usernameがUNIQUEなので
-    return error('そのユーザー名は使われています', 409)
+    return error(AUTH_ERROR.nameTaken, 409)
   }
 
   return issue(ctx, id)

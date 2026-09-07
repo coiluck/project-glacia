@@ -4,5 +4,20 @@
   "tapToStart": "TAP TO START",
   "language": "Language",
   "credit": "Credits",
-  "terms": "Terms"
+  "terms": "Terms",
+  "login": "Log in",
+  "register": "Sign up",
+  "name": "Username",
+  "nameOrCode": "Username or transfer code",
+  "password": "Password",
+  "toRegister": "Create an account",
+  "toLogin": "Back to login",
+  "transferCode": "Transfer code",
+  "transferNote": "To continue on another device, log in with your username or transfer code and password. Do not show the transfer code to others.",
+  "logout": "Log out",
+  "errorNameLength": "Username must be {0}-{1} characters",
+  "errorPasswordLength": "Password must be {0}-{1} characters",
+  "errorNameTaken": "That username is already taken",
+  "errorBadCredentials": "Incorrect username or password",
+  "errorUnknown": "Connection failed"
 }

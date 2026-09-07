@@ -4,5 +4,20 @@
   "tapToStart": "TAP TO START",
   "language": "言語",
   "credit": "クレジット",
-  "terms": "利用規約"
+  "terms": "利用規約",
+  "login": "ログイン",
+  "register": "新規登録",
+  "name": "ユーザー名",
+  "nameOrCode": "ユーザー名または引き継ぎコード",
+  "password": "パスワード",
+  "toRegister": "アカウントを作る",
+  "toLogin": "ログインに戻る",
+  "transferCode": "引き継ぎコード",
+  "transferNote": "別の端末で続きから遊ぶには、ユーザー名か引き継ぎコードとパスワードでログインしてください。引き継ぎコードは他人に見せてはいけません。",
+  "logout": "ログアウト",
+  "errorNameLength": "ユーザー名は{0}〜{1}文字にしてください",
+  "errorPasswordLength": "パスワードは{0}〜{1}文字にしてください",
+  "errorNameTaken": "そのユーザー名は使われています",
+  "errorBadCredentials": "ユーザー名またはパスワードが違います",
+  "errorUnknown": "通信に失敗しました"
 }
