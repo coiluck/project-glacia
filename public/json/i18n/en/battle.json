@@ -18,6 +18,12 @@
   "partyAp": "Party AP",
   "victory": "Victory",
   "defeat": "Defeat",
+  "gained": "Gained",
+  "rank": "Rank",
+  "currency": "Funds",
+  "noGain": "Nothing gained",
+  "resultFailed": "Could not record the result",
+  "retry": "Retry",
   "backToMap": "Back to Map",
   "emptyParty": "No members available to deploy"
 }

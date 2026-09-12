@@ -75,7 +75,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 2; /* 背景ありのとき .screen-safe が z-index:1 になるので、その上へ */
+  z-index: 2; /* .screen-safe が z-index:1 なので、その上へ */
   width: calc(var(--scale) * 108px);
   height: calc(var(--scale) * 192px);
   pointer-events: none;

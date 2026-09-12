@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { paths } from '../../router/paths'
 import { useTranslations } from '../../i18n'
-import { sendBattleResult } from '../../api/actions/battle'
 import { battleStageRegistry } from '../../data/battleStages'
 import { characterMasters } from '../../data/characters'
 import { enemyDefs } from '../../data/enemies'
@@ -19,6 +18,7 @@ import { useBattleStore } from '../../features/battle/battleStore'
 import { axialKey, shapeTiles } from '../../features/battle/hex'
 import type { AimTile, Axial } from '../../features/battle/hex'
 import type { Unit } from '../../features/battle/types'
+import BattleResult from './components/BattleResult'
 import DeployDock from './components/DeployDock'
 import HexGrid from './components/HexGrid'
 import ViewportLayer from '../../layouts/ViewportLayer'
@@ -45,8 +45,6 @@ const BATTLE_TRANSLATION_MAPPING = Object.fromEntries(
     'cancel',
     'turn',
     'partyAp',
-    'victory',
-    'defeat',
     'backToMap',
     'emptyParty',
   ].map((k) => [k, k]),
@@ -76,9 +74,6 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     const s = useCharacterStore.getState()
     return buildParty(s.owned, s.party[s.currentPartySlotIndex] ?? [])
   })
-  // 結果を送るときに使う。どの編成で出撃したかは戦闘中変わらない
-  const [partySlot] = useState(() => useCharacterStore.getState().currentPartySlotIndex)
-
   const stage = useBattleStore((s) => s.stage)
   const state = useBattleStore((s) => s.state)
   const init = useBattleStore((s) => s.init)
@@ -96,25 +91,14 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     init(stageId)
   }, [stageId, init])
 
-  // 決着したら結果を1回だけ送る。スタミナもここで引かれる
-  const sentRef = useRef(false)
-  const phase = state?.phase
-  useEffect(() => {
-    if (!stageId || sentRef.current) return
-    if (phase !== 'victory' && phase !== 'defeat') return
-    sentRef.current = true
-    // TODO: 報酬の表示。失敗時のリトライ
-    void sendBattleResult(stageId, phase, partySlot).catch((e) => console.error(e))
-  }, [phase, stageId, partySlot])
-
   if (!stage || !state) {
     // init 前の1フレームは何も描かない。レジストリに無いステージだけ NO DATA を出す
     if (stageId && battleStageRegistry[stageId]) return null
     return (
       <div className="page-battle">
-        <div className="battle-result">
-          <div className="battle-result-title">STAGE {stageId} — NO DATA</div>
-          <Link className="battle-result-button" to={paths.story}>
+        <div className="battle-notice">
+          <div className="battle-notice-title">STAGE {stageId} — NO DATA</div>
+          <Link className="battle-notice-button" to={paths.story} replace>
             {t.backToMap}
           </Link>
         </div>
@@ -127,9 +111,9 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   if (party.length === 0) {
     return (
       <div className="page-battle">
-        <div className="battle-result">
-          <div className="battle-result-title">{t.emptyParty}</div>
-          <Link className="battle-result-button" to={paths.story}>
+        <div className="battle-notice">
+          <div className="battle-notice-title">{t.emptyParty}</div>
+          <Link className="battle-notice-button" to={paths.story} replace>
             {t.backToMap}
           </Link>
         </div>
@@ -279,8 +263,8 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   return (
     <>
       <ViewportLayer>
-        {/* ターン表示 */}
-        {state.phase !== 'deployment' &&
+        {/* ターン表示。決着後はリザルトの外に残るので出さない */}
+        {(state.phase === 'player' || state.phase === 'enemy') &&
           <div className="battle-hud-turn" key={state.turn}>
             Turn {state.turn}
           </div>
@@ -297,19 +281,21 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
 
 
       <div className="page-battle">
-        {/* 盤面 */}
-        <div className="battle-board-area">
-          <HexGrid
-            tiles={stage.tiles}
-            units={state.units}
-            highlights={highlights}
-            selectedUnitId={selectedUnitId}
-            getUnitName={getUnitName}
-            getUnitChibi={getUnitChibi}
-            onTileClick={handleTileClick}
-            onUnitClick={handleUnitClick}
-          />
-        </div>
+        {/* 盤面。リザルトの暗幕はセーフエリアの下（ビューポート層）にあり盤面を覆えないので、決着後は描かない */}
+        {state.phase !== 'victory' && state.phase !== 'defeat' && (
+          <div className="battle-board-area">
+            <HexGrid
+              tiles={stage.tiles}
+              units={state.units}
+              highlights={highlights}
+              selectedUnitId={selectedUnitId}
+              getUnitName={getUnitName}
+              getUnitChibi={getUnitChibi}
+              onTileClick={handleTileClick}
+              onUnitClick={handleUnitClick}
+            />
+          </div>
+        )}
 
         {/* 配置フェーズ用 */}
         {state.phase === 'deployment' && (
@@ -379,16 +365,9 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
           </div>
         )}
 
-        {/* 勝敗 */}
-        {(state.phase === 'victory' || state.phase === 'defeat') && (
-          <div className="battle-result">
-            <div className={`battle-result-title ${state.phase}`}>
-              {state.phase === 'victory' ? t.victory : t.defeat}
-            </div>
-            <Link className="battle-result-button" to={paths.story}>
-              {t.backToMap}
-            </Link>
-          </div>
+        {/* 勝敗。結果の送信と報酬の表示は BattleResult が持つ */}
+        {stageId && (state.phase === 'victory' || state.phase === 'defeat') && (
+          <BattleResult stageId={stageId} result={state.phase} />
         )}
       </div>
     </>

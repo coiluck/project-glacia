@@ -18,6 +18,12 @@
   "partyAp": "パーティAP",
   "victory": "勝利",
   "defeat": "敗北",
+  "gained": "獲得",
+  "rank": "ランク",
+  "currency": "資金",
+  "noGain": "獲得なし",
+  "resultFailed": "結果を記録できませんでした",
+  "retry": "再送信",
   "backToMap": "マップへ戻る",
   "emptyParty": "出撃できるメンバーがいません"
 }

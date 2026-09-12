@@ -3,6 +3,7 @@
   position: absolute;
   top: calc(var(--scale) * 24px);
   right: calc(var(--scale) * 48px);
+  z-index: 2; /* 盤面（.screen-safe）より上 */
   font-family: 'LobsterTwo-BoldItalic';
   font-size: calc(var(--scale) * 48px);
   letter-spacing: calc(var(--scale) * 4px);
@@ -26,6 +27,7 @@
 .battle-hud-enemy-turn-overlay {
   position: absolute;
   inset: 0;
+  z-index: 2; /* 盤面（.screen-safe）より上 */
   animation: battle-hud-enemy-turn-glow 1.6s ease-in-out infinite;
 }
 @keyframes battle-hud-enemy-turn-glow {

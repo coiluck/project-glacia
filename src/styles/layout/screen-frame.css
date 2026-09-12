@@ -13,6 +13,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
+  z-index: 1; /* ビューポート層の基準。0以下=セーフエリアの後ろ、2以上=前 */
   width: var(--design-w);
   height: var(--design-h);
   transform: translate(-50%, -50%) scale(var(--scale));
@@ -36,6 +37,5 @@
 
 /* 背景があるときはセーフエリアの塗りを透かし、背景を全面に見せる。 */
 .screen-viewport.has-bg .screen-safe {
-  z-index: 1;
   background: transparent;
 }

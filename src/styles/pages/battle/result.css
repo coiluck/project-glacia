@@ -1,0 +1,401 @@
+.battle-result {
+  --hex: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  --line: rgba(255, 255, 255, 0.25);
+  --fill: rgba(255, 255, 255, 0.05);
+  --ink: #e6eef6;
+  --ink-dim: #74838f;
+  --accent: #7fe0ff;
+  --gold: #face68;
+  --exp: linear-gradient(180deg, #fff6a0 0%, rgb(238, 144, 21) 50%, rgb(241, 228, 33) 100%);
+  --tone: var(--accent); /* 勝敗の色 */
+
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: row;
+  text-align: left;
+}
+.battle-result.is-defeat {
+  --tone: #e87a8a;
+}
+
+.battle-result-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0; /* セーフエリアの下、盤面背景(-1)の上 */
+  background:
+    radial-gradient(58% 62% at 26% 50%, rgba(9, 18, 27, 0.8) 0%, rgba(3, 6, 10, 0.93) 76%),
+    rgba(2, 5, 8, 0.84);
+}
+
+
+/* 勝敗 */
+.battle-result-side {
+  flex: 0 0 620px;
+  display: flex;
+  align-items: center;
+  padding-left: 120px;
+}
+.battle-result-head {
+  padding-left: 30px;
+  border-left: 3px solid var(--tone);
+  animation: battle-result-head 0.55s ease-out both;
+}
+.battle-result-stage {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.3em;
+  color: var(--ink-dim);
+}
+.battle-result-title {
+  margin-top: 18px;
+  font-family: 'SoukouMincho', serif;
+  font-size: 112px;
+  line-height: 1.1;
+  letter-spacing: 0.16em;
+  color: var(--tone);
+  text-shadow: 0 0 56px color-mix(in srgb, var(--tone) 35%, transparent);
+}
+@keyframes battle-result-head {
+  from {
+    opacity: 0;
+    transform: translateX(-28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+
+/* 右 */
+.battle-result-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0 120px 0 90px;
+  border-left: 1px solid var(--line);
+}
+.battle-result-sections {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.battle-result-section {
+  padding: 100px 0;
+}
+.battle-result-section + .battle-result-section {
+  border-top: 1px solid var(--line);
+}
+
+.battle-result-section-title {
+  font-size: 16px;
+  line-height: 1;
+  letter-spacing: 0.24em;
+  color: #6b7986;
+}
+
+
+.battle-result-item-list {
+  display: flex;
+  flex-direction: row;
+  gap: 26px;
+  margin-top: 26px;
+  list-style: none;
+}
+.battle-result-item {
+  --tint: var(--line);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  animation: battle-result-item 0.42s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+  animation-delay: calc(var(--i) * 0.07s + 0.25s);
+}
+.battle-result-item.is-rare {
+  --tint: var(--gold);
+}
+
+.battle-result-item-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 130px;
+  height: 150px; /* この比率のとき clip-path が正六角形になる */
+  background: var(--tint);
+  clip-path: var(--hex);
+}
+.battle-result-item-cell::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: #0a121a;
+  clip-path: var(--hex);
+}
+.battle-result-item-cell > * {
+  position: relative;
+  z-index: 1;
+}
+.battle-result-item-cell svg {
+  width: 44px;
+  height: 44px;
+  fill: none;
+  stroke: var(--tint);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* 資金 */
+.battle-result-bill {
+  position: relative;
+  width: 44px;
+  height: 40px;
+}
+.battle-result-bill span {
+  position: absolute;
+  inset: 0;
+  background-color: var(--tint);
+  -webkit-mask: url('/project-glacia/images/component/resource-bar/bill.svg') no-repeat center / contain;
+  mask: url('/project-glacia/images/component/resource-bar/bill.svg') no-repeat center / contain;
+}
+.battle-result-bill span:first-child {
+  opacity: 0.45;
+  transform: translate(-4px, -4px);
+}
+.battle-result-bill span:last-child {
+  opacity: 1;
+  transform: translate(4px, 4px);
+}
+
+.battle-result-item-count {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ink);
+}
+.battle-result-item.is-rare .battle-result-item-count {
+  color: var(--gold);
+}
+.battle-result-item-name {
+  font-size: 15px;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: var(--ink-dim);
+}
+
+@keyframes battle-result-item {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  62% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+/* ランク */
+.battle-result-rank {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 36px;
+  margin-top: 22px;
+}
+.battle-result-rank-value {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  font-family: 'CaviarDreams', sans-serif;
+}
+.battle-result-rank-label {
+  font-size: 17px;
+  line-height: 1;
+  letter-spacing: 0.22em;
+  color: var(--ink-dim);
+}
+.battle-result-rank-current {
+  font-size: 54px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ink);
+}
+.battle-result-rank-current.is-up {
+  animation: battle-result-rank-pop 0.5s ease-out;
+}
+@keyframes battle-result-rank-pop {
+  0% {
+    color: var(--ink);
+    transform: scale(1);
+  }
+  35% {
+    color: #fff6a0;
+    text-shadow: 0 0 26px rgba(250, 200, 90, 0.9);
+    transform: scale(1.35);
+  }
+  100% {
+    color: var(--ink);
+    transform: scale(1);
+  }
+}
+
+.battle-result-rank-exp {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 18px;
+}
+.battle-result-rank-bar {
+  flex: 1;
+  min-width: 0;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+}
+.battle-result-rank-bar-fill {
+  display: block;
+  height: 100%;
+  width: var(--to);
+  background: var(--exp);
+  box-shadow: 0 0 12px rgba(238, 144, 21, 0.6);
+  animation: battle-result-rank-fill 1.1s ease-out 0.5s both;
+}
+@keyframes battle-result-rank-fill {
+  from {
+    width: var(--from);
+  }
+  to {
+    width: var(--to);
+  }
+}
+/* ランクアップ */
+.battle-result-rank.is-rankup .battle-result-rank-bar-fill {
+  animation: battle-result-rank-refill 1.7s ease-out 0.5s both;
+}
+@keyframes battle-result-rank-refill {
+  0% {
+    width: var(--from);
+  }
+  52% {
+    width: 100%;
+  }
+  53% {
+    width: 0;
+  }
+  100% {
+    width: var(--to);
+  }
+}
+
+.battle-result-rank-exp-text {
+  flex-shrink: 0;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 15px;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  color: var(--ink-dim);
+}
+.battle-result-rank-gain {
+  flex-shrink: 0;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1;
+  color: #f5c85e;
+}
+
+.battle-result-none {
+  margin-top: 26px;
+  font-size: 20px;
+  letter-spacing: 0.1em;
+  color: #5a666f;
+}
+.battle-result-none.is-pending {
+  color: #3d4a55;
+}
+
+
+.battle-result-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  height: 116px;
+  animation: battle-result-rise 0.4s ease-out 0.5s both;
+}
+
+.battle-result-button {
+  min-width: 280px;
+  height: 64px;
+  padding: 0 40px;
+  font-family: inherit;
+  font-size: 24px;
+  line-height: 64px;
+  text-align: center;
+  text-decoration: none;
+  letter-spacing: 0.24em;
+  color: #0a2b33;
+  background: linear-gradient(160deg, #b6f5ff 0%, #7fe0ff 55%, #6ccbe8 100%);
+  border: none;
+  cursor: pointer;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  filter: drop-shadow(0 0 16px rgba(60, 248, 255, 0.4));
+  transition: filter 0.2s ease-out;
+}
+.battle-result-button:hover {
+  filter: drop-shadow(0 0 22px rgba(60, 248, 255, 0.6)) brightness(1.08);
+}
+
+/* 送信失敗 */
+.battle-result-failed {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  font-size: 18px;
+  letter-spacing: 0.08em;
+  color: #e87a8a;
+}
+.battle-result-retry {
+  padding: 8px 26px;
+  font-family: inherit;
+  font-size: 17px;
+  letter-spacing: 0.14em;
+  color: var(--ink);
+  background: none;
+  border: 1px solid var(--line);
+  cursor: pointer;
+  transition: color 0.15s ease-out, border-color 0.15s ease-out;
+}
+.battle-result-retry:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+@keyframes battle-result-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

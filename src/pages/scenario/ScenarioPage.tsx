@@ -109,10 +109,10 @@ function ScenarioRunner({ scenarioId }: { scenarioId: string }) {
 
   const isTyping = !!snapshot.text && displayedText.length < snapshot.text.length
 
-  // シナリオおしまい。セーブを消して対応するステージの戦闘へ
+  // シナリオおしまい -> 戦闘へ
   const finishScenario = () => {
     useProgressStore.getState().clearScenario()
-    navigate(paths.battle(scenarioId))
+    navigate(paths.battle(scenarioId), { replace: true })
   }
 
   const handleClick = async () => {

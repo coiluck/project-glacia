@@ -5,7 +5,7 @@ import Screen from '../../layouts/Screen'
 import ViewportLayer from '../../layouts/ViewportLayer'
 import StageNode from './components/StageNode'
 import { useProgressStore } from '../../stores/progressStore'
-import { chapters, type Chapter, type ChapterStatus, type Stage, type StageStatus } from '../../data/stages'
+import { chapters, isStageUnlocked, type Chapter, type ChapterStatus, type Stage, type StageStatus } from '../../data/stages'
 
 // マップ描画用にstatusを付与
 export type StageNodeData = Stage & { status: StageStatus }
@@ -28,10 +28,7 @@ export default function StoryMapPage() {
   const clearedSet = new Set(cleared.map((s) => s.id))
   const getStatus = (stage: Stage): StageStatus => {
     if (clearedSet.has(stage.id)) return 'cleared'
-    // 前提ステージは複数も可能
-    const prereqs = current.stages.filter((s) => s.next?.includes(stage.id))
-    const unlocked = prereqs.length === 0 || prereqs.every((s) => clearedSet.has(s.id))
-    return unlocked ? 'next' : 'locked'
+    return isStageUnlocked(stage, current.stages, clearedStageIds) ? 'next' : 'locked'
   }
   const nodes: StageNodeData[] = current.stages.map((s) => ({ ...s, status: getStatus(s) }))
 
@@ -223,7 +220,7 @@ export default function StoryMapPage() {
                 {selectedNode.status === 'locked' ? (
                   <div className="story-map-stage-info-button locked">未解放</div>
                 ) : (
-                  <Link className="story-map-stage-info-button sortie" to={paths.scenario(selectedNode.id)}>
+                  <Link className="story-map-stage-info-button sortie" to={paths.scenario(selectedNode.id)} replace>
                     出撃
                   </Link>
                 )}

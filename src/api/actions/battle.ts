@@ -8,12 +8,10 @@ import type { BattleResult, BattleReward } from '../../features/battle/resolveRe
 export async function sendBattleResult(
   stageId: string,
   result: BattleResult,
-  partySlot: number,
 ): Promise<BattleReward> {
   const res = await apiPost<CommandResponse<BattleReward>>('/battle/result', {
     stageId,
     result,
-    partySlot,
   })
   distribute(res.me)
   return res.result

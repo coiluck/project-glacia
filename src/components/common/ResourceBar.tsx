@@ -6,7 +6,6 @@ import { runBackHandler } from '../../hooks/useBackHandler'
 import { useResourceStore } from '../../stores/resourceStore'
 import { useRankStore } from '../../stores/rankStore'
 import { formatCompact } from '../../utils/format'
-import '../../styles/components/resource-bar.css'
 import MenuMap from './MenuMap'
 
 const billIcon = (
