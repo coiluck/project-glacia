@@ -1,0 +1,28 @@
+{
+  "itemIceCrystal": "Ice Shard",
+  "itemSteelScrap": "Steel Scrap",
+  "itemFlint": "Flint",
+  "itemBrokenGear": "Broken Gear",
+  "itemBeastFang": "Beast Fang",
+  "itemToughHide": "Tough Pelt",
+  "itemHerbBundle": "Herb Bundle",
+  "itemMagicDust": "Magic Dust",
+
+  "itemAwakenStone": "Awakening Stone",
+  "itemRefinedSteel": "Refined Steel",
+  "itemBeastStone": "Beast Stone",
+  "itemTemperedLeather": "Tempered Leather",
+  "itemElixirDrop": "Elixir Drop",
+
+  "itemRadiantStone": "Radiant Awakening Stone",
+  "itemArcaneCore": "Arcane Core",
+  "itemHeroRelic": "Hero's Relic",
+
+  "itemSkillBookSmall": "Basic Skill Manual",
+  "itemSkillBookMedium": "Intermediate Skill Manual",
+  "itemSkillBookLarge": "Advanced Skill Manual",
+
+  "itemTrainingRecordSmall": "Basic Training Log",
+  "itemTrainingRecordMedium": "Intermediate Training Log",
+  "itemTrainingRecordLarge": "Advanced Training Log"
+}

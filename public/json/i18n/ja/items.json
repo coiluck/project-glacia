@@ -1,0 +1,28 @@
+{
+  "itemIceCrystal": "氷晶片",
+  "itemSteelScrap": "鋼の欠片",
+  "itemFlint": "火打石",
+  "itemBrokenGear": "壊れた歯車",
+  "itemBeastFang": "獣の牙",
+  "itemToughHide": "丈夫な毛皮",
+  "itemHerbBundle": "薬草の束",
+  "itemMagicDust": "魔石の粉",
+
+  "itemAwakenStone": "覚醒石",
+  "itemRefinedSteel": "精錬鋼",
+  "itemBeastStone": "魔獣石",
+  "itemTemperedLeather": "強化皮革",
+  "itemElixirDrop": "霊薬の雫",
+
+  "itemRadiantStone": "覚醒輝石",
+  "itemArcaneCore": "魔導核",
+  "itemHeroRelic": "英雄の遺物",
+
+  "itemSkillBookSmall": "初級強化書",
+  "itemSkillBookMedium": "中級強化書",
+  "itemSkillBookLarge": "上級強化書",
+
+  "itemTrainingRecordSmall": "初級訓練記録",
+  "itemTrainingRecordMedium": "中級訓練記録",
+  "itemTrainingRecordLarge": "上級訓練記録"
+}
