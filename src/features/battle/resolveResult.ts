@@ -1,8 +1,11 @@
 // 戦闘終了時のサーバー側の処理
 import type { MeResponse } from '../../api/types'
+import type { MaterialCost } from '../../data/characters/types'
+import { dropTables } from '../../data/drops'
 import { expToNextRank, staminaMaxFor } from '../../data/rank'
 import { chapters } from '../../data/stages'
 import { refreshStamina, spendStamina } from '../stamina/stamina'
+import { rollDrops } from './drops'
 
 export type BattleResult = 'victory' | 'defeat'
 
@@ -10,9 +13,10 @@ export type BattleResult = 'victory' | 'defeat'
 export interface BattleReward {
   currency: number
   rankExp: number
+  drops: MaterialCost[]
 }
 
-const NO_REWARD: BattleReward = { currency: 0, rankExp: 0 }
+const NO_REWARD: BattleReward = { currency: 0, rankExp: 0, drops: [] }
 
 const findStage = (stageId: string) =>
   chapters.flatMap((c) => c.stages).find((s) => s.id === stageId)
@@ -31,7 +35,7 @@ export function resolveBattleResult(
   // 負けたらスタミナだけ引く
   if (result === 'defeat') return { me: { ...me, user }, reward: NO_REWARD }
 
-  const reward = stage.reward
+  const reward: BattleReward = { ...stage.reward, drops: rollDrops(dropTables[stageId]) }
   user.currency += reward.currency
 
   // ランク経験値

@@ -4,7 +4,8 @@ export type StageStatus = 'cleared' | 'next' | 'locked'
 
 export type ChapterStatus = 'current' | 'unlocked' | 'locked'
 
-// クリア報酬。何度クリアしても同じ量が入る（初回ボーナスは未実装）
+// クリア報酬
+// ドロップは data/drops.ts
 export interface StageReward {
   currency: number
   rankExp: number

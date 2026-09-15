@@ -7,6 +7,7 @@ import type { BattleResult as ResultKind, BattleReward } from '../../../features
 import { useRankStore } from '../../../stores/rankStore'
 import { formatCompact } from '../../../utils/format'
 import ViewportLayer from '../../../layouts/ViewportLayer'
+import { items } from '../../../data/items'
 
 const TRANSLATION_MAPPING = Object.fromEntries(
   [
@@ -22,38 +23,19 @@ const TRANSLATION_MAPPING = Object.fromEntries(
   ].map((k) => [k, k]),
 )
 
+// i18n。アイテム名は items.json にある
+const ITEM_TRANSLATION_MAPPING = Object.fromEntries(
+  Object.values(items).map((i) => [i.nameKey, i.nameKey]),
+)
+
 // icon が無いものは資金として紙幣アイコンを出す
 interface ResultItem {
+  key: string
   name: string
   count: number
   icon?: string
   rare?: boolean
 }
-
-// 仮置き。data/items.ts もステージごとのドロップ定義もまだ無い
-const PLACEHOLDER_DROPS: ResultItem[] = [
-  {
-    name: '氷晶片',
-    count: 4,
-    icon: 'M12 3v18M4.2 7.5l15.6 9M19.8 7.5l-15.6 9M12 7.6l3-2.6M12 7.6l-3-2.6M12 16.4l3 2.6M12 16.4l-3-2.6',
-  },
-  {
-    name: '鋼の欠片',
-    count: 2,
-    icon: 'M6.5 4.2 17 6.4l3 8.6-8.6 5.4L4 14.2Z M6.5 4.2 11.4 20.4 M20 15 4 14.2',
-  },
-  {
-    name: '初級強化書',
-    count: 3,
-    icon: 'M4 5c2.6-1.4 5.4-1.4 8 0 2.6-1.4 5.4-1.4 8 0v13c-2.6-1.4-5.4-1.4-8 0-2.6-1.4-5.4-1.4-8 0Z M12 5v13',
-  },
-  {
-    name: '記憶の断片',
-    count: 1,
-    rare: true,
-    icon: 'M12 2.4 20 9.2 12 21.6 4 9.2Z M4 9.2h16 M12 2.4 8.6 9.2 12 21.6 M12 2.4l3.4 6.8-3.4 12.4',
-  },
-]
 
 // バーが満ちきる時刻。result.css の battle-result-rank-refill と揃える
 const RANK_UP_SWAP_MS = 500 + 1700 * 0.52
@@ -69,6 +51,7 @@ interface BattleResultProps {
 
 export default function BattleResult({ stageId, result }: BattleResultProps) {
   const t = useTranslations('battle', TRANSLATION_MAPPING)
+  const tItem = useTranslations('items', ITEM_TRANSLATION_MAPPING)
   const [reward, setReward] = useState<BattleReward | null>(null)
   const [failed, setFailed] = useState(false)
 
@@ -109,8 +92,24 @@ export default function BattleResult({ stageId, result }: BattleResultProps) {
     return () => clearTimeout(id)
   }, [isRankUp])
 
-  const items: ResultItem[] = reward
-    ? [{ name: t.currency, count: reward.currency }, ...PLACEHOLDER_DROPS]
+  // 資金を先頭にドロップを並べる
+  const resultItems: ResultItem[] = reward
+    ? [
+        { key: 'currency', name: t.currency, count: reward.currency },
+        ...reward.drops.flatMap((drop): ResultItem[] => {
+          const item = items[drop.itemId]
+          if (!item) return []
+          return [
+            {
+              key: drop.itemId,
+              name: tItem[item.nameKey],
+              count: drop.count,
+              icon: item.icon,
+              rare: item.rarity === 3,
+            },
+          ]
+        }),
+      ]
     : []
 
   const rankRow = (
@@ -167,9 +166,9 @@ export default function BattleResult({ stageId, result }: BattleResultProps) {
               <div className="battle-result-none">{t.noGain}</div>
             ) : (
               <ul className="battle-result-item-list">
-                {items.map((item, i) => (
+                {resultItems.map((item, i) => (
                   <li
-                    key={item.name}
+                    key={item.key}
                     className={`battle-result-item${item.rare ? ' is-rare' : ''}`}
                     style={{ '--i': i } as CSSProperties}
                   >
