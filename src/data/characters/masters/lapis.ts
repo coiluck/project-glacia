@@ -1,8 +1,7 @@
 import type { CharacterMaster } from '../types';
 
-// ラピス（★2・魔導士）。銀髪の魔法役で、ゲーム開始時からユーザーが所持している。
-// 遠距離の攻撃と回復を1人で持つ、最初のパーティを成立させるための構成。
-// itemId は仮。アイテムデータを作ったら差し替える
+// ラピス（★2・魔導士）
+// ゲーム開始時からユーザーが所持している
 const lapis: CharacterMaster = {
   id: 'lapis',
   nameKey: 'charLapis',
@@ -28,7 +27,7 @@ const lapis: CharacterMaster = {
         [{ itemId: 'skillBookSmall', count: 5 }, { itemId: 'iceCrystal', count: 2 }],
         [{ itemId: 'skillBookSmall', count: 8 }, { itemId: 'iceCrystal', count: 3 }],
         [{ itemId: 'skillBookLarge', count: 3 }, { itemId: 'iceCrystal', count: 5 }],
-        [{ itemId: 'skillBookLarge', count: 5 }, { itemId: 'lapisMemory', count: 1 }],
+        [{ itemId: 'skillBookLarge', count: 5 }, { itemId: 'arcaneCore', count: 1 }],
       ],
     },
     // 癒しの光: 距離2以内の味方1体を回復する。序盤の生命線
@@ -48,7 +47,7 @@ const lapis: CharacterMaster = {
         [{ itemId: 'skillBookSmall', count: 5 }, { itemId: 'iceCrystal', count: 2 }],
         [{ itemId: 'skillBookSmall', count: 8 }, { itemId: 'iceCrystal', count: 3 }],
         [{ itemId: 'skillBookLarge', count: 3 }, { itemId: 'iceCrystal', count: 5 }],
-        [{ itemId: 'skillBookLarge', count: 5 }, { itemId: 'lapisMemory', count: 1 }],
+        [{ itemId: 'skillBookLarge', count: 5 }, { itemId: 'arcaneCore', count: 1 }],
       ],
     },
   ],
@@ -56,7 +55,6 @@ const lapis: CharacterMaster = {
     // Lv30 の壁。★2なので壁は1回だけ
     [{ itemId: 'awakenStone', count: 4 }, { itemId: 'iceCrystal', count: 8 }],
   ],
-  // 初期配布で凸が進みやすいぶん、1凸ごとの伸びは控えめ。3凸でAP消費が軽くなる
   dupeBonuses: [
     { status: { attack: 8 } },
     { status: { hp: 40, defense: 4 } },

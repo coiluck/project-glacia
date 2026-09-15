@@ -1,8 +1,6 @@
 import type { CharacterMaster } from '../types';
 
-// ベルミリア（★3・剣士）。赤髪、身の丈ほどの大剣使い。
-// 1ターンぶんのAPを丸ごと使う重い薙ぎ払いが主軸。硬くて鈍い、殴り合い向きのアタッカー。
-// itemId は仮。アイテムデータを作ったら差し替える
+// ベルミリア（★3・剣士）
 const vermilia: CharacterMaster = {
   id: 'vermilia',
   nameKey: 'charVermilia',
@@ -39,7 +37,7 @@ const vermilia: CharacterMaster = {
         [{ itemId: 'skillBookSmall', count: 6 }, { itemId: 'iceCrystal', count: 2 }],
         [{ itemId: 'skillBookLarge', count: 2 }, { itemId: 'iceCrystal', count: 4 }],
         [{ itemId: 'skillBookLarge', count: 4 }, { itemId: 'iceCrystal', count: 6 }],
-        [{ itemId: 'skillBookLarge', count: 6 }, { itemId: 'vermiliaMemory', count: 1 }],
+        [{ itemId: 'skillBookLarge', count: 6 }, { itemId: 'arcaneCore', count: 1 }],
       ],
     },
     // 鉄の構え: 大剣を地に突き立てて耐える自己回復。range 0 なので自分が対象
@@ -59,7 +57,7 @@ const vermilia: CharacterMaster = {
         [{ itemId: 'skillBookSmall', count: 6 }, { itemId: 'iceCrystal', count: 2 }],
         [{ itemId: 'skillBookLarge', count: 2 }, { itemId: 'iceCrystal', count: 4 }],
         [{ itemId: 'skillBookLarge', count: 4 }, { itemId: 'iceCrystal', count: 6 }],
-        [{ itemId: 'skillBookLarge', count: 6 }, { itemId: 'vermiliaMemory', count: 1 }],
+        [{ itemId: 'skillBookLarge', count: 6 }, { itemId: 'arcaneCore', count: 1 }],
       ],
     },
   ],
@@ -67,9 +65,8 @@ const vermilia: CharacterMaster = {
     // Lv30 の壁
     [{ itemId: 'awakenStone', count: 5 }, { itemId: 'iceCrystal', count: 10 }],
     // Lv45 の壁
-    [{ itemId: 'awakenStone', count: 15 }, { itemId: 'vermiliaMemory', count: 3 }],
+    [{ itemId: 'awakenStone', count: 15 }, { itemId: 'radiantStone', count: 3 }],
   ],
-  // 一撃特化なので攻撃力の伸びが大きい。剛断が3APで撃てるようになる4凸が到達点
   dupeBonuses: [
     { status: { attack: 12 } },
     { status: { hp: 80 } },

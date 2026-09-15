@@ -1,8 +1,6 @@
 import type { CharacterMaster } from '../types';
 
-// アルマ（★3・剣士）。銀髪、細身のレイピア使い。
-// 低コストの刺突で手数を稼ぎつつ、味方に手番を渡して前線を組み立てる支援寄りのアタッカー。
-// itemId は仮。アイテムデータを作ったら差し替える
+// アルマ（★3・剣士）
 const alma: CharacterMaster = {
   id: 'alma',
   nameKey: 'charAlma',
@@ -36,7 +34,7 @@ const alma: CharacterMaster = {
         [{ itemId: 'skillBookSmall', count: 6 }, { itemId: 'iceCrystal', count: 2 }],
         [{ itemId: 'skillBookLarge', count: 2 }, { itemId: 'iceCrystal', count: 4 }],
         [{ itemId: 'skillBookLarge', count: 4 }, { itemId: 'iceCrystal', count: 6 }],
-        [{ itemId: 'skillBookLarge', count: 6 }, { itemId: 'almaMemory', count: 1 }],
+        [{ itemId: 'skillBookLarge', count: 6 }, { itemId: 'arcaneCore', count: 1 }],
       ],
     },
     // 銀旗の号令: 距離2以内の味方1体にAPを渡しつつHPも回復する。AP付与量はレベルで伸ばさない
@@ -59,7 +57,7 @@ const alma: CharacterMaster = {
         [{ itemId: 'skillBookSmall', count: 6 }, { itemId: 'iceCrystal', count: 2 }],
         [{ itemId: 'skillBookLarge', count: 2 }, { itemId: 'iceCrystal', count: 4 }],
         [{ itemId: 'skillBookLarge', count: 4 }, { itemId: 'iceCrystal', count: 6 }],
-        [{ itemId: 'skillBookLarge', count: 6 }, { itemId: 'almaMemory', count: 1 }],
+        [{ itemId: 'skillBookLarge', count: 6 }, { itemId: 'arcaneCore', count: 1 }],
       ],
     },
   ],
@@ -67,9 +65,8 @@ const alma: CharacterMaster = {
     // Lv30 の壁
     [{ itemId: 'awakenStone', count: 5 }, { itemId: 'iceCrystal', count: 10 }],
     // Lv45 の壁
-    [{ itemId: 'awakenStone', count: 15 }, { itemId: 'almaMemory', count: 3 }],
+    [{ itemId: 'awakenStone', count: 15 }, { itemId: 'radiantStone', count: 3 }],
   ],
-  // 手数型なので、AP消費の軽減を早い段階（2凸）に置くのがアルマの凸の特徴
   dupeBonuses: [
     { status: { attack: 8 } },
     { skillApCost: -1 },
