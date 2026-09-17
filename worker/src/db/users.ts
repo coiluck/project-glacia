@@ -5,10 +5,15 @@ import type { Context } from '../context'
 
 type UserTableRow = Omit<
   UserRow,
-  'cleared_stage_ids' | 'tutorial_steps' | 'stamina_recovering_seconds' | 'stamina_recovering_seconds_max'
+  | 'cleared_stage_ids'
+  | 'tutorial_steps'
+  | 'items'
+  | 'stamina_recovering_seconds'
+  | 'stamina_recovering_seconds_max'
 > & {
   cleared_stage_ids: string
   tutorial_steps: string
+  items: string
 }
 
 interface CharacterTableRow {
@@ -82,6 +87,7 @@ export async function loadMe({ db, userId, now }: Context): Promise<MeResponse> 
         ...user,
         cleared_stage_ids: JSON.parse(user.cleared_stage_ids),
         tutorial_steps: JSON.parse(user.tutorial_steps),
+        items: JSON.parse(user.items),
         stamina_recovering_seconds: 0,
         stamina_recovering_seconds_max: 0,
       },
@@ -117,7 +123,8 @@ export async function saveMe(
            username = ?, "rank" = ?, total_exp = ?, exp_in_rank = ?, exp_to_next = ?,
            stamina = ?, stamina_max = ?, stamina_updated_at = ?,
            currency = ?, gems = ?, pity = ?,
-           chapter = ?, current_chapter = ?, cleared_stage_ids = ?, tutorial_steps = ?
+           chapter = ?, current_chapter = ?, cleared_stage_ids = ?, tutorial_steps = ?,
+           items = ?
          WHERE id = ?`,
       )
       .bind(
@@ -136,6 +143,7 @@ export async function saveMe(
         u.current_chapter,
         JSON.stringify(u.cleared_stage_ids),
         JSON.stringify(u.tutorial_steps),
+        JSON.stringify(u.items),
         u.id,
       ),
   ]

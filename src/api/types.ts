@@ -33,6 +33,9 @@ export interface UserRow {
 
   // --- tutorial（tutorialStore）---
   tutorial_steps: string[] // 完了済みステップID
+
+  // --- inventory（inventoryStore）---
+  items: Record<string, number> // itemId -> 個数。0個になったキーは残さない
 }
 
 export interface MeResponse {

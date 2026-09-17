@@ -444,6 +444,13 @@
   font-weight: 600;
   color: var(--ink);
 }
+/* 所持数が足りない行 */
+.member-detail-cost-item.is-short .member-detail-cost-icon {
+  stroke: #c98d93;
+}
+.member-detail-cost-item.is-short .member-detail-cost-count {
+  color: #e2707a;
+}
 .member-detail-cost-empty {
   font-size: 16px;
   letter-spacing: 0.1em;

@@ -4,6 +4,7 @@ import type { MaterialCost } from '../../data/characters/types'
 import { dropTables } from '../../data/drops'
 import { expToNextRank, staminaMaxFor } from '../../data/rank'
 import { chapters } from '../../data/stages'
+import { addItems } from '../inventory/inventory'
 import { refreshStamina, spendStamina } from '../stamina/stamina'
 import { rollDrops } from './drops'
 
@@ -37,6 +38,7 @@ export function resolveBattleResult(
 
   const reward: BattleReward = { ...stage.reward, drops: rollDrops(dropTables[stageId]) }
   user.currency += reward.currency
+  user.items = addItems(user.items, reward.drops)
 
   // ランク経験値
   user.total_exp += reward.rankExp

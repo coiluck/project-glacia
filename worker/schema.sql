@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS users (
   chapter                        INTEGER NOT NULL DEFAULT 1,
   current_chapter                INTEGER NOT NULL DEFAULT 1,
   cleared_stage_ids              TEXT    NOT NULL DEFAULT '[]',
-  tutorial_steps                 TEXT    NOT NULL DEFAULT '[]'
+  tutorial_steps                 TEXT    NOT NULL DEFAULT '[]',
+  items                          TEXT    NOT NULL DEFAULT '{}'
 );
 
 -- 所持キャラ
