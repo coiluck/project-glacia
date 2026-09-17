@@ -199,6 +199,9 @@ export const items: Record<string, ItemDef> = {
     kind: 'book',
     rarity: 2,
     icon: ICONS.book,
+    recipe: [
+      { itemId: 'skillBookSmall', count: 3 },
+    ],
   },
   skillBookLarge: {
     id: 'skillBookLarge',
@@ -206,6 +209,9 @@ export const items: Record<string, ItemDef> = {
     kind: 'book',
     rarity: 3,
     icon: ICONS.book,
+    recipe: [
+      { itemId: 'skillBookMedium', count: 3 },
+    ],
   },
 
   // 経験値
