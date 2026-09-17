@@ -37,17 +37,18 @@ export const LIMIT_BREAK_LEVELS: Record<Rarity, number[]> = {
 // 次のレベルに上がるのに必要な経験値。レベル帯ごとに定義する（レアリティ共通）
 // fromLevel 以上・次の要素の fromLevel 未満でいる間、1レベルぶんの必要経験値が exp
 export const EXP_TO_NEXT_LEVEL: { fromLevel: number; exp: number }[] = [
-  { fromLevel: 1, exp: 100 },
-  { fromLevel: 6, exp: 250 },
-  { fromLevel: 11, exp: 400 },
-  { fromLevel: 16, exp: 575 },
-  { fromLevel: 21, exp: 750 },
-  { fromLevel: 26, exp: 950 },
-  { fromLevel: 31, exp: 1200 },
-  { fromLevel: 36, exp: 1500 },
-  { fromLevel: 41, exp: 1800 },
-  { fromLevel: 46, exp: 2100 },
-  { fromLevel: 51, exp: 2400 },
+  { fromLevel: 1,  exp: 100 },
+  { fromLevel: 6,  exp: 200 },
+  { fromLevel: 11, exp: 300 },
+  { fromLevel: 16, exp: 400 },
+  { fromLevel: 21, exp: 500 },
+  { fromLevel: 26, exp: 750 },
+  { fromLevel: 31, exp: 1250 },
+  { fromLevel: 36, exp: 2000 },
+  { fromLevel: 41, exp: 3000 },
+  { fromLevel: 46, exp: 3500 },
+  { fromLevel: 51, exp: 4000 },
+  { fromLevel: 56, exp: 5000 },
 ]
 
 // 強化に必要な素材。itemId は将来のアイテムデータへの参照

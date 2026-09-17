@@ -51,9 +51,8 @@ export function levelUp(me: MeResponse, masterId: string, use: MaterialCost[]): 
     exp += def.exp * u.count
   }
 
-  const room = expToCap(master, user)
-  if (room === 0) throw new Error('レベル上限に達している')
-  if (exp > room) throw new Error('レベル上限を超える')
+  // 上限を超えたぶんは切り捨てる
+  if (expToCap(master, user) === 0) throw new Error('レベル上限に達している')
 
   return apply(me, gainExp(master, user, exp), use, exp * CURRENCY_PER_EXP)
 }

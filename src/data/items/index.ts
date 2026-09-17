@@ -229,7 +229,7 @@ export const items: Record<string, ItemDef> = {
     kind: 'exp',
     rarity: 2,
     icon: ICONS.record,
-    exp: 1000,
+    exp: 1500,
   },
   trainingRecordLarge: {
     id: 'trainingRecordLarge',
@@ -237,6 +237,6 @@ export const items: Record<string, ItemDef> = {
     kind: 'exp',
     rarity: 3,
     icon: ICONS.record,
-    exp: 1500,
+    exp: 2500,
   },
 };

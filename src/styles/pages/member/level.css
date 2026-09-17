@@ -1,22 +1,431 @@
-
-/* ─ レベルパネル ─ */
-
-/* 見出しだけで1行使い、状態・ボタン・素材は次の行に並べて折り返す */
+/* レベルパネル*/
+.member-detail-rail,
 .member-detail-levelup,
 .member-detail-limit-break {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 16px;
-  padding: 24px 28px;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px 28px;
   background: var(--fill);
 }
-.member-detail-levelup > .member-detail-section-title,
-.member-detail-limit-break > .member-detail-section-title {
-  flex-basis: 100%;
+.member-detail-level-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
 }
-.member-detail-limit-break-state {
-  font-size: 18px;
+.member-detail-level-note {
+  font-size: 16px;
+  line-height: 1.5;
   color: var(--ink-dim);
+}
+
+/* → */
+.member-detail-arrow {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+
+.member-detail-rail-track {
+  position: relative;
+  padding: 30px 0 82px;
+}
+.member-detail-rail-cells {
+  display: flex;
+  gap: 3px;
+  height: 22px;
+}
+.member-detail-rail-cell {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.08);
+  transition: background 0.2s ease-out;
+}
+.member-detail-rail-cell.is-reached {
+  background: var(--accent);
+}
+.member-detail-rail-cell.is-preview {
+  background: rgba(127, 224, 255, 0.4);
+}
+.member-detail-rail-cell.is-locked {
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.07) 0 3px,
+    transparent 3px 6px
+  );
+}
+.member-detail-rail-cell.is-none {
+  background: none;
+}
+
+.member-detail-rail-mark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  color: var(--accent);
+}
+.member-detail-rail-mark-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  padding-right: 8px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+.member-detail-rail-mark-preview {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: rgba(127, 224, 255, 0.75);
+}
+.member-detail-rail-mark-preview .member-detail-arrow {
+  width: 16px;
+  height: 16px;
+}
+
+/* レールの下の壁ノードと両端のレベル */
+.member-detail-rail-gate {
+  position: absolute;
+  top: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transform: translateX(-50%);
+}
+.member-detail-rail-gate::before {
+  content: '';
+  width: 2px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.25);
+}
+.member-detail-rail-gate-caption {
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  color: var(--ink-dim);
+}
+.member-detail-rail-end {
+  position: absolute;
+  top: 66px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.1em;
+  color: var(--ink-dim);
+  transform: translateX(-50%);
+}
+
+/* 壁ノード。凸のノードと同じ六角形で、色だけ accent。
+   灰 = まだ / 縁だけ（明滅）= 解放できる / 塗り = 解放済み */
+.member-detail-gate {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 52px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1;
+  color: #8a97a3;
+  background: rgba(255, 255, 255, 0.16);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+.member-detail-gate > span {
+  position: relative;
+}
+.member-detail-gate.is-open {
+  color: #070c12;
+  background: var(--accent);
+}
+.member-detail-gate.is-ready {
+  color: var(--accent);
+  background: var(--accent);
+  animation: member-detail-gate-pulse 1.4s ease-in-out infinite;
+}
+/* 内側を地の色で抜いて縁だけ残す */
+.member-detail-gate.is-ready::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  background: #0d151d;
+  clip-path: inherit;
+}
+.member-detail-gate.is-large {
+  width: 62px;
+  height: 70px;
+  font-size: 24px;
+}
+@keyframes member-detail-gate-pulse {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.6);
+  }
+}
+
+
+/* 上限 */
+.member-detail-level-capped {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 24px;
+}
+.member-detail-level-capped-lv {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 30px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--ink-dim);
+}
+
+/* 育成記録 */
+.member-detail-record-rows {
+  display: flex;
+  flex-direction: column;
+}
+.member-detail-record {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+}
+.member-detail-record:last-child {
+  border-bottom: none;
+}
+.member-detail-record-icon {
+  width: 36px;
+  height: 36px;
+  fill: none;
+  stroke: #8fb8d6;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.member-detail-record-icon.is-rarity-2 {
+  stroke: #c58cff;
+}
+.member-detail-record-icon.is-rarity-3 {
+  stroke: #ffc861;
+}
+.member-detail-record-name {
+  width: 140px;
+  font-size: 16px;
+  color: var(--ink);
+}
+.member-detail-record-exp {
+  width: 96px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+}
+.member-detail-record-owned {
+  flex: 1;
+  font-size: 14px;
+  color: var(--ink-dim);
+}
+.member-detail-record-owned b {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+}
+/* 1つも持っていない */
+.member-detail-record.is-empty .member-detail-record-icon {
+  stroke: #3d4750;
+}
+.member-detail-record.is-empty .member-detail-record-name,
+.member-detail-record.is-empty .member-detail-record-exp {
+  color: #4a555f;
+}
+
+/* −/＋ */
+.member-detail-stepper {
+  display: flex;
+  align-items: center;
+}
+.member-detail-stepper button {
+  width: 40px;
+  height: 36px;
+  font-family: inherit;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  cursor: pointer;
+}
+.member-detail-stepper button:hover:not(:disabled) {
+  background: rgba(127, 224, 255, 0.25);
+}
+.member-detail-stepper button:disabled {
+  color: #3d4750;
+  cursor: default;
+}
+.member-detail-stepper > span {
+  width: 52px;
+  height: 36px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 36px;
+  text-align: center;
+  color: #4a555f;
+  background: rgba(0, 0, 0, 0.35);
+}
+.member-detail-stepper.is-active > span {
+  color: var(--accent);
+}
+
+/* レベルアップの消費通貨 */
+.member-detail-level-cost {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  margin: 0 auto;
+  font-size: 16px;
+  color: var(--ink-dim);
+}
+.member-detail-level-cost b {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.member-detail-level-cost-owned {
+  margin-left: 14px;
+}
+/* 通貨が足りない */
+.member-detail-level-cost.is-short > b,
+.member-detail-level-cost.is-short .member-detail-bill {
+  color: #e2707a;
+}
+
+/* 紙幣 */
+.member-detail-bill {
+  position: relative;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  color: var(--ink);
+}
+.member-detail-bill span {
+  position: absolute;
+  inset: 0;
+  background-color: currentColor;
+  -webkit-mask: url('/project-glacia/images/component/resource-bar/bill.svg') no-repeat center / contain;
+  mask: url('/project-glacia/images/component/resource-bar/bill.svg') no-repeat center / contain;
+}
+.member-detail-bill span:first-child {
+  opacity: 0.5;
+  transform: translate(-2px, -2px);
+}
+.member-detail-bill span:last-child {
+  opacity: 0.9;
+  transform: translate(2px, 2px);
+}
+
+/* 上限まで / クリア / レベルアップ */
+.member-detail-levelup-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.member-detail-levelup-actions .member-detail-levelup-button {
+  margin-left: auto;
+}
+.member-detail-levelup-preset {
+  padding: 10px 22px;
+  font-family: inherit;
+  font-size: 18px;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  color: var(--ink);
+  background: none;
+  border: 1px solid var(--line);
+  cursor: pointer;
+  transition: color 0.15s ease-out, border-color 0.15s ease-out;
+}
+.member-detail-levelup-preset:hover:not(:disabled) {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.member-detail-levelup-preset:disabled {
+  color: #5a666f;
+  border-color: rgba(255, 255, 255, 0.1);
+  cursor: default;
+}
+
+
+/* 上限解放 */
+.member-detail-gate-head {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.member-detail-gate-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.member-detail-gate-title {
+  font-size: 22px;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+}
+
+/* 上限の前後 */
+.member-detail-cap-jump {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: 'CaviarDreams', sans-serif;
+}
+.member-detail-cap-jump-label {
+  font-size: 15px;
+  letter-spacing: 0.22em;
+  color: var(--ink-dim);
+}
+.member-detail-cap-jump b {
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ink);
+}
+.member-detail-cap-jump b.is-accent {
+  color: var(--accent);
+}
+.member-detail-cap-jump .member-detail-arrow {
+  width: 18px;
+  height: 18px;
+  align-self: center;
+  color: var(--ink-dim);
+}
+
+.member-detail-limit-break-state {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-dim);
+}
+.member-detail-limit-break-state.is-ok {
+  color: var(--accent);
 }
