@@ -1,4 +1,4 @@
-import type { UserCharacter } from '../data/characters/types'
+import type { MaterialCost, UserCharacter } from '../data/characters/types'
 
 // Cloudflare Workers (D1) が返すユーザーデータ
 export interface UserRow {
@@ -59,3 +59,9 @@ export interface PartyPayload {
   party: Record<number, string[]>
   selectedSkills: Record<string, string> // CharacterMaster.id -> SkillDef.id
 }
+
+// POST /characters/enhance のリクエスト
+export type EnhancePayload =
+  | { kind: 'level'; masterId: string; use: MaterialCost[] } // use は消費する育成記録
+  | { kind: 'limitBreak'; masterId: string }
+  | { kind: 'skill'; masterId: string; skillId: string }

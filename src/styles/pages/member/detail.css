@@ -457,6 +457,12 @@
   color: #5a666f;
 }
 
+/* 育成が失敗したとき（通信エラーや、押した瞬間に在庫が変わったとき） */
+.member-detail-enhance-error {
+  font-size: 15px;
+  color: #e2707a;
+}
+
 
 /* ─ 詳細パネル ─ */
 

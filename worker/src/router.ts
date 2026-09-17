@@ -4,6 +4,7 @@ import { loadMe, saveMe } from './db/users'
 import { error, json } from './http'
 import * as auth from './routes/auth'
 import * as battle from './routes/battle'
+import * as characters from './routes/characters'
 import * as gacha from './routes/gacha'
 import * as party from './routes/party'
 import type { Command } from './routes/types'
@@ -13,6 +14,7 @@ const COMMANDS: Record<string, Command<unknown>> = {
   '/gacha/pull': gacha.pull,
   '/battle/result': battle.result,
   '/party': party.save,
+  '/characters/enhance': characters.enhance,
 }
 
 export async function route(request: Request, env: Env, path: string): Promise<Response> {

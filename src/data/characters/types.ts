@@ -16,6 +16,9 @@ export const MAX_DUPE = 5;
 // スキルレベルの上限
 export const MAX_SKILL_LEVEL = 7;
 
+// レベルアップで取る通貨。消費した経験値1あたり
+export const CURRENCY_PER_EXP = 1;
+
 // レアリティごとのレベル上限
 export const MAX_LEVEL: Record<Rarity, number> = {
   1: 40,
