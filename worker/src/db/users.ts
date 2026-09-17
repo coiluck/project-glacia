@@ -175,6 +175,17 @@ export async function saveMe(
     )
   }
 
+  // after から消えたキャラは行ごと消す。通常のコマンドでは起きない（/debug/set で戻したとき用）
+  const afterCharacters = new Set(after.characters.map((c) => c.masterId))
+  for (const c of before.characters) {
+    if (afterCharacters.has(c.masterId)) continue
+    statements.push(
+      db
+        .prepare('DELETE FROM user_characters WHERE user_id = ? AND master_id = ?')
+        .bind(u.id, c.masterId),
+    )
+  }
+
   for (const slot of PARTY_SLOTS) {
     const next = JSON.stringify(after.party[slot] ?? [])
     if (JSON.stringify(before.party[slot] ?? []) === next) continue

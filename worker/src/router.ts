@@ -5,6 +5,7 @@ import { error, json } from './http'
 import * as auth from './routes/auth'
 import * as battle from './routes/battle'
 import * as characters from './routes/characters'
+import * as debug from './routes/debug'
 import * as gacha from './routes/gacha'
 import * as party from './routes/party'
 import type { Command } from './routes/types'
@@ -15,6 +16,7 @@ const COMMANDS: Record<string, Command<unknown>> = {
   '/battle/result': battle.result,
   '/party': party.save,
   '/characters/enhance': characters.enhance,
+  '/debug/set': debug.set,
 }
 
 export async function route(request: Request, env: Env, path: string): Promise<Response> {
@@ -43,6 +45,9 @@ export async function route(request: Request, env: Env, path: string): Promise<R
     if (request.method !== 'GET') return error('method not allowed', 405)
     return json(await loadMe(ctx))
   }
+
+  // デバッグ用のコマンド
+  if (path.startsWith('/debug/') && env.DEBUG !== '1') return error(`not found: ${path}`, 404)
 
   const command = COMMANDS[path]
   if (!command) return error(`not found: ${path}`, 404)

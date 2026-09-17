@@ -5,6 +5,9 @@ import { router } from './router'
 import ScreenFrame from './layouts/ScreenFrame'
 import './styles/index.css'
 
+// 開発チート
+if (import.meta.env.DEV) void import('./debug')
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ScreenFrame>

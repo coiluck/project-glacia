@@ -3,6 +3,7 @@ export interface Env {
   DB: D1Database
   ALLOWED_ORIGIN: string
   PASSWORD_PEPPER: string // wrangler secret put で入れる。ローカルは .dev.vars
+  DEBUG?: string          // '1' のとき /debug/* が開く。ローカルの .dev.vars にだけ書く
 }
 
 export interface Context {
