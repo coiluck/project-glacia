@@ -384,7 +384,6 @@
 /* 強化系のボタン */
 .member-detail-levelup-button,
 .member-detail-limit-break-button,
-.member-detail-skill-equip,
 .member-detail-skill-levelup {
   padding: 10px 32px;
   font-family: inherit;
@@ -398,13 +397,11 @@
 }
 .member-detail-levelup-button:hover:not(:disabled),
 .member-detail-limit-break-button:hover:not(:disabled),
-.member-detail-skill-equip:hover:not(:disabled),
 .member-detail-skill-levelup:hover:not(:disabled) {
   filter: brightness(1.12);
 }
 .member-detail-levelup-button:disabled,
 .member-detail-limit-break-button:disabled,
-.member-detail-skill-equip:disabled,
 .member-detail-skill-levelup:disabled {
   color: #5a666f;
   background: var(--fill);

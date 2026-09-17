@@ -61,7 +61,10 @@ export default function MemberSkillPanel({ character }: { character: ResolvedCha
               <AttackRangeHex tiles={skillReach(skill.def)} size={RANGE_HEX_SIZE} />
             </div>
 
-            <div className="member-detail-skill-main">
+            <div
+              className="member-detail-skill-main"
+              onClick={() => setSelectedSkill(character.master.id, skill.def.id)}
+            >
               <div className="member-detail-skill-head">
                 <span className="member-detail-skill-name">{tSkill[skill.def.nameKey]}</span>
                 <span className="member-detail-skill-level">
@@ -74,17 +77,10 @@ export default function MemberSkillPanel({ character }: { character: ResolvedCha
                 {formatSkillDescription(tSkill[skill.descriptionKey] ?? '', skill)}
               </p>
 
-              <div className="member-detail-skill-actions">
-                {/* 出撃時に使うスキル。★1は1つしか無いので切り替える意味が無い */}
-                <button
-                  type="button"
-                  className="member-detail-skill-equip"
-                  disabled={isSelected || character.skills.length < 2}
-                  onClick={() => setSelectedSkill(character.master.id, skill.def.id)}
-                >
-                  {isSelected ? '出撃スキル' : '出撃スキルにする'}
-                </button>
-
+              <div
+                className="member-detail-skill-actions"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <button
                   type="button"
                   className="member-detail-skill-levelup"
