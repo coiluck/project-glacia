@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { paths } from '../../router/paths'
 import { useTranslations } from '../../i18n'
 import { hasToken } from '../../api/session'
+import { useUserData } from '../../hooks/useUserData'
 import Screen from '../../layouts/Screen'
 import StartActions from './StartActions'
 import AccountPanel from './components/AccountPanel'
@@ -14,6 +15,13 @@ const BOOTED_KEY = 'glacia:booted' // セッション中に起動フローを通
 const BACKGROUND = 'images/start/background.png'
 
 export default function StartPage() {
+  const ready = useUserData()
+
+  if (!ready) return null
+  return <StartScreen />
+}
+
+function StartScreen() {
   const navigate = useNavigate()
   const [loggedIn, setLoggedIn] = useState(hasToken)
   const [showLoginForm, setShowLoginForm] = useState(false)
