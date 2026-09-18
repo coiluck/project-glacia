@@ -198,29 +198,12 @@
 }
 
 .recruit-cell-bill {
-  position: relative;
   flex-shrink: 0;
   width: 18px;
   height: 18px;
   filter:
     drop-shadow(0 0 5px rgba(95, 211, 255, 0.55))
     drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
-}
-.recruit-cell-bill-back,
-.recruit-cell-bill-front {
-  position: absolute;
-  inset: 0;
-  background-color: currentColor;
-  -webkit-mask: url('/project-glacia/images/component/resource-bar/bill.svg') no-repeat center / contain;
-  mask: url('/project-glacia/images/component/resource-bar/bill.svg') no-repeat center / contain;
-}
-.recruit-cell-bill-back {
-  transform: translate(-2px, -2px);
-  opacity: 0.5;
-}
-.recruit-cell-bill-front {
-  transform: translate(2px, 2px);
-  opacity: 0.9;
 }
 
 .recruit-cell-stars {

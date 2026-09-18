@@ -7,6 +7,7 @@ import type { BattleResult as ResultKind, BattleReward } from '../../../features
 import { useRankStore } from '../../../stores/rankStore'
 import { formatCompact } from '../../../utils/format'
 import ViewportLayer from '../../../layouts/ViewportLayer'
+import BillIcon from '../../../components/common/BillIcon'
 import { items } from '../../../data/items'
 
 const TRANSLATION_MAPPING = Object.fromEntries(
@@ -178,10 +179,7 @@ export default function BattleResult({ stageId, result }: BattleResultProps) {
                           <path d={item.icon} />
                         </svg>
                       ) : (
-                        <span className="battle-result-bill">
-                          <span />
-                          <span />
-                        </span>
+                        <BillIcon className="battle-result-bill" />
                       )}
                       <span className="battle-result-item-count">×{formatCompact(item.count)}</span>
                     </span>

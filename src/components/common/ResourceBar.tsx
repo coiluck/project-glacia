@@ -7,13 +7,9 @@ import { useResourceStore } from '../../stores/resourceStore'
 import { useRankStore } from '../../stores/rankStore'
 import { formatCompact } from '../../utils/format'
 import MenuMap from './MenuMap'
+import BillIcon from './BillIcon'
 
-const billIcon = (
-  <span className="resource-bar-icon resource-bar-icon-bill">
-    <span className="resource-bar-icon-bill-back" />
-    <span className="resource-bar-icon-bill-front" />
-  </span>
-)
+const billIcon = <BillIcon className="resource-bar-icon resource-bar-icon-bill" />
 
 const gemIcon = (
   <span className="resource-bar-icon resource-bar-icon-gem">
@@ -66,9 +62,9 @@ export default function ResourceBar() {
   }
 
   // リソースアイテム
-  const resouceItem = (icon: ReactNode, text: string) => {
+  const resouceItem = (kind: 'bill' | 'gem', icon: ReactNode, text: string) => {
     return (
-      <div className="resource-bar-resource-item">
+      <div className={`resource-bar-resource-item resource-bar-resource-item-${kind}`}>
         {icon}
         <span className="resource-bar-resource-item-value">{text}</span>
       </div>
@@ -85,7 +81,6 @@ export default function ResourceBar() {
          </div>
          :
          <div className="resource-bar-user-container fade-in">
-           {/* ビットマップ.svg をインライン展開し、rank/exp を差し込む */}
            <svg
              className="resource-bar-user-svg"
              viewBox="0 0 400 99.49749"
@@ -129,8 +124,8 @@ export default function ResourceBar() {
         }
       </div>
       <div className="resource-bar-component-container-right">
-        {resouceItem(billIcon, formatCompact(currency))}
-        {resouceItem(gemIcon, formatCompact(gems))}
+        {resouceItem('bill', billIcon, formatCompact(currency))}
+        {resouceItem('gem', gemIcon, formatCompact(gems))}
       </div>
 
       {isMenuOpen && (

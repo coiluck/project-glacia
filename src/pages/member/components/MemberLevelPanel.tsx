@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useTranslations } from '../../../i18n'
 import MaterialCostList from './MaterialCostList'
+import BillIcon from '../../../components/common/BillIcon'
 import { enhanceCharacter } from '../../../api/actions/characters'
 import type { EnhancePayload } from '../../../api/types'
 import { LIMIT_BREAK_LEVELS, MAX_LEVEL } from '../../../data/characters/types'
@@ -28,12 +29,7 @@ const arrow = (
 )
 
 // 通貨
-const bill = (
-  <span className="member-detail-bill">
-    <span />
-    <span />
-  </span>
-)
+const bill = <BillIcon className="member-detail-bill" />
 
 type GateState = 'open' | 'ready' | 'locked'
 

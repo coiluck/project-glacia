@@ -157,24 +157,9 @@
 
 /* 資金 */
 .battle-result-bill {
-  position: relative;
   width: 44px;
   height: 40px;
-}
-.battle-result-bill span {
-  position: absolute;
-  inset: 0;
-  background-color: var(--tint);
-  -webkit-mask: url('/project-glacia/images/component/resource-bar/bill.svg') no-repeat center / contain;
-  mask: url('/project-glacia/images/component/resource-bar/bill.svg') no-repeat center / contain;
-}
-.battle-result-bill span:first-child {
-  opacity: 0.45;
-  transform: translate(-4px, -4px);
-}
-.battle-result-bill span:last-child {
-  opacity: 1;
-  transform: translate(4px, 4px);
+  color: var(--tint);
 }
 
 .battle-result-item-count {

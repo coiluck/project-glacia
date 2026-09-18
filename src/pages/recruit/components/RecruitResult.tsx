@@ -5,6 +5,7 @@ import { RARITIES } from '../../../data/characters/const'
 import type { PullOutcome } from '../../../features/gacha/types'
 import { formatCompact } from '../../../utils/format'
 import ViewportLayer from '../../../layouts/ViewportLayer'
+import BillIcon from '../../../components/common/BillIcon'
 
 // i18n。キャラ名は characters.json にある
 const CHARACTER_TRANSLATION_MAPPING = Object.fromEntries(
@@ -165,11 +166,7 @@ export default function RecruitResult({ outcomes, onClose }: RecruitResultProps)
                   )}
                   {outcome.kind === 'convert' && (
                     <>
-                      {/* ResourceBar の紙幣アイコンと同じ、2枚ずらし重ね */}
-                      <span className="recruit-cell-bill">
-                        <span className="recruit-cell-bill-back" />
-                        <span className="recruit-cell-bill-front" />
-                      </span>
+                      <BillIcon className="recruit-cell-bill" />
                       +{formatCompact(outcome.currency)}
                     </>
                   )}

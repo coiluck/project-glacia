@@ -1,0 +1,19 @@
+.bill-icon {
+  position: relative;
+  display: inline-block;
+}
+.bill-icon span {
+  position: absolute;
+  inset: 0;
+  background-color: currentColor;
+  -webkit-mask: url('/project-glacia/images/component/resource-bar/bill.svg') no-repeat center / contain;
+  mask: url('/project-glacia/images/component/resource-bar/bill.svg') no-repeat center / contain;
+}
+.bill-icon span:first-child {
+  opacity: 0.5;
+  transform: translate(-10%, -10%);
+}
+.bill-icon span:last-child {
+  opacity: 0.9;
+  transform: translate(10%, 10%);
+}
