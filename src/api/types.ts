@@ -26,7 +26,6 @@ export interface UserRow {
 
   // --- progress（progressStore）---
   chapter: number
-  current_chapter: number
   cleared_stage_ids: string[]
 
   // --- tutorial（tutorialStore）---

@@ -120,7 +120,7 @@ export async function saveMe(
            username = ?, "rank" = ?, total_exp = ?, exp_in_rank = ?, exp_to_next = ?,
            stamina = ?, stamina_max = ?, stamina_updated_at = ?,
            currency = ?, gems = ?, pity = ?,
-           chapter = ?, current_chapter = ?, cleared_stage_ids = ?, tutorial_steps = ?,
+           chapter = ?, cleared_stage_ids = ?, tutorial_steps = ?,
            items = ?
          WHERE id = ?`,
       )
@@ -137,7 +137,6 @@ export async function saveMe(
         u.gems,
         u.pity,
         u.chapter,
-        u.current_chapter,
         JSON.stringify(u.cleared_stage_ids),
         JSON.stringify(u.tutorial_steps),
         JSON.stringify(u.items),

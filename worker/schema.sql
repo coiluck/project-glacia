@@ -15,7 +15,6 @@ CREATE TABLE IF NOT EXISTS users (
   gems                           INTEGER NOT NULL DEFAULT 3000,
   pity                           INTEGER NOT NULL DEFAULT 0,
   chapter                        INTEGER NOT NULL DEFAULT 1,
-  current_chapter                INTEGER NOT NULL DEFAULT 1,
   cleared_stage_ids              TEXT    NOT NULL DEFAULT '[]',
   tutorial_steps                 TEXT    NOT NULL DEFAULT '[]',
   items                          TEXT    NOT NULL DEFAULT '{}'

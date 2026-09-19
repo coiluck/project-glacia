@@ -31,6 +31,6 @@ export const useProgressStore = create<ProgressState>((set) => ({
   setCurrentChapter: (chapter: number) => set({ currentChapter: chapter }), // これのみcurrentChapterをフロント側で変更できるようにする
   saveScenario: (id, state) => set({ scenarioId: id, scenarioState: state }),
   clearScenario: () => set({ scenarioId: null, scenarioState: null }),
-  hydrate: (row) => set({ chapter: row.chapter, currentChapter: row.current_chapter, clearedStageIds: row.cleared_stage_ids }),
+  hydrate: (row) => set({ chapter: row.chapter, clearedStageIds: row.cleared_stage_ids }),
   reset: () => set(initial),
 }))
