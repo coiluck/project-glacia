@@ -1,0 +1,207 @@
+.page-warehouse {
+  --line: rgba(255, 255, 255, 0.2);
+  --line-strong: rgba(255, 255, 255, 0.3);
+  --tile: #1a1e22;
+  --tile-hover: #22272c;
+  --panel: rgba(10, 13, 16, 0.86);
+  --ink: #e4e7ea;
+  --ink-dim: #8a9299;
+  --ink-mute: #5c646b;
+  --select: #d9dee2;
+  --short: #c96b6b;
+  --paper-ink: #282828;
+  --paper-ink-dim: #6b7986;
+  --paper-line: rgba(0, 0, 0, 0.18);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 24px;
+  padding: 108px 72px 64px;
+  text-align: left;
+}
+
+.page-warehouse .is-rarity-1 {
+  --rarity: #7d868e;
+}
+.page-warehouse .is-rarity-2 {
+  --rarity: #7f9fb3;
+}
+.page-warehouse .is-rarity-3 {
+  --rarity: #c9a860;
+}
+
+
+.warehouse-sections {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+  animation: warehouse-rise 0.4s ease-out both;
+}
+.warehouse-section {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 見出し */
+.warehouse-section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  height: 28px;
+}
+.warehouse-section-head::after {
+  content: '';
+  flex: 1;
+  align-self: center;
+  height: 1px;
+  background: var(--paper-line);
+}
+.warehouse-section-label {
+  font-size: 19px;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  color: var(--paper-ink);
+}
+.warehouse-section-caption {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.3em;
+  color: var(--paper-ink-dim);
+}
+.warehouse-section-count {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 14px;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  color: var(--paper-ink-dim);
+}
+.warehouse-section-empty {
+  padding: 18px 0;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  color: var(--paper-ink-dim);
+}
+
+
+/* タイル */
+.warehouse-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 12px;
+  list-style: none;
+}
+.warehouse-cell {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  font-family: inherit;
+  background: var(--tile);
+  border: none;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+  cursor: pointer;
+  transition: background 0.12s ease-out, box-shadow 0.12s ease-out;
+  animation: warehouse-rise 0.3s ease-out backwards;
+  animation-delay: calc(var(--i) * 0.05s);
+}
+.warehouse-cell:hover:not(.is-active) {
+  background: var(--tile-hover);
+}
+/* 選択中 */
+.warehouse-cell.is-active {
+  background: var(--tile-hover);
+  box-shadow: inset 0 0 0 3px var(--tile-hover), inset 0 0 0 4px var(--select);
+  cursor: default;
+}
+.warehouse-cell.is-active::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-top: 12px solid var(--select);
+  border-left: 12px solid transparent;
+}
+.warehouse-cell::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--rarity);
+}
+
+.warehouse-cell-icon {
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  width: 56px;
+  height: 56px;
+  fill: none;
+  stroke: #cfd6dc;
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transform: translateX(-50%);
+}
+.warehouse-cell-rarity {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: var(--rarity);
+}
+.warehouse-cell-name {
+  position: absolute;
+  right: 10px;
+  bottom: 30px;
+  left: 10px;
+  font-size: 13px;
+  line-height: 1.2;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--ink-dim);
+}
+.warehouse-cell-count {
+  position: absolute;
+  right: 16px;
+  bottom: 9px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ink);
+}
+.warehouse-cell-count::before {
+  content: '×';
+  margin-right: 2px;
+  font-size: 12px;
+  color: var(--ink-mute);
+}
+
+@keyframes warehouse-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

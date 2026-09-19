@@ -39,6 +39,8 @@
 @import './pages/recruit/recruit.css';
 @import './pages/recruit/result.css';
 @import './pages/base.css';
+@import './pages/warehouse/warehouse.css';
+@import './pages/warehouse/detail.css';
 
 /* 共通コンポーネント */
 @import './components/member-card.css';

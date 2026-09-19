@@ -55,7 +55,7 @@ export default function MenuButtons() {
           <span>基地</span>
           <div className="top-menu-button-base-icon" />
         </Link>
-        <Link to={paths.base} className="top-menu-button-store">倉庫</Link>
+        <Link to={paths.warehouse} className="top-menu-button-store">倉庫</Link>
       </div>
     </nav>
   )

@@ -24,5 +24,12 @@
 
   "itemTrainingRecordSmall": "初級訓練記録",
   "itemTrainingRecordMedium": "中級訓練記録",
-  "itemTrainingRecordLarge": "上級訓練記録"
+  "itemTrainingRecordLarge": "上級訓練記録",
+
+  "kindMaterial": "素材",
+  "kindBook": "強化書",
+  "kindExp": "育成記録",
+  "kindMaterialDesc": "上限解放やスキル強化に使う素材。★2以上は下位の素材から合成できる。",
+  "kindBookDesc": "スキルのレベル上げに使う。",
+  "kindExpDesc": "キャラクターに使うと経験値が入る。"
 }

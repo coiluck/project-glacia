@@ -11,4 +11,5 @@ export const paths = {
   memberDetail: (characterId: string) => `/member/${characterId}`, // キャラ詳細・強化
   recruit: '/recruit',   // 召集
   base:    '/base',      // 基地
+  warehouse: '/warehouse', // 倉庫
 } as const

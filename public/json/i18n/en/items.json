@@ -24,5 +24,12 @@
 
   "itemTrainingRecordSmall": "Basic Training Log",
   "itemTrainingRecordMedium": "Intermediate Training Log",
-  "itemTrainingRecordLarge": "Advanced Training Log"
+  "itemTrainingRecordLarge": "Advanced Training Log",
+
+  "kindMaterial": "Material",
+  "kindBook": "Skill Manual",
+  "kindExp": "Training Log",
+  "kindMaterialDesc": "Used for limit breaks and skill upgrades. ★2 and above can be crafted from lower materials.",
+  "kindBookDesc": "Used to level up skills.",
+  "kindExpDesc": "Grants experience when used on a character."
 }

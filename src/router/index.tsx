@@ -12,6 +12,7 @@ import MemberPage from '../pages/member/MemberPage'
 import MemberDetailPage from '../pages/member/MemberDetailPage'
 import RecruitPage from '../pages/recruit/RecruitPage'
 import BasePage from '../pages/base/BasePage'
+import WarehousePage from '../pages/warehouse/WarehousePage'
 
 // 起動フロー（ロゴ→スタート）を通過済みかどうかでホーム表示を出し分ける。
 // 同一セッションでホームへ戻ったときに毎回ロゴへ戻らないよう sessionStorage で判定する。
@@ -39,6 +40,7 @@ export const router = createBrowserRouter(
         { path: 'member/:characterId', element: <MemberDetailPage /> }, // キャラ詳細・強化
         { path: 'recruit', element: <RecruitPage /> }, // 召集
         { path: 'base', element: <BasePage /> }, // 基地
+        { path: 'warehouse', element: <WarehousePage /> }, // 倉庫
       ],
     },
     { path: 'battle/:stageId', element: <BattlePage /> }, // 戦闘
