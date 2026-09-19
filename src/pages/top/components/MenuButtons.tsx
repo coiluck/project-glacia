@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom'
 import { paths } from '../../../router/paths'
-import { useStaminaStore } from '../../../stores/staminaStore'
+import { selectStamina, useStaminaStore } from '../../../stores/staminaStore'
 
 // Top画面下部のメインメニュー
 export default function MenuButtons() {
-  const stamina = useStaminaStore((s) => s.stamina)
-  const staminaMax = useStaminaStore((s) => s.staminaMax)
+  const stamina = useStaminaStore((s) => selectStamina(s).stamina)
+  const staminaMax = useStaminaStore((s) => s.base.stamina_max)
 
   return (
     <nav className="top-menu-buttons">

@@ -12,7 +12,6 @@ export default function RootLayout() {
   const location = useLocation()
   const ready = useUserData()
 
-  // スタミナの残り秒を1秒ずつ進める
   useEffect(() => {
     const tick = useStaminaStore.getState().tick
     const timer = setInterval(tick, 1000)

@@ -3,10 +3,11 @@ import type { UserRow } from '../../api/types'
 // スタミナ1回復にかかる秒数
 export const REGEN_INTERVAL_SECONDS = 300
 
-export const nowSeconds = () => Math.floor(Date.now() / 1000)
+// 回復計算の基準になる値。これと now だけで現在のスタミナが決まる
+export type StaminaBase = Pick<UserRow, 'stamina' | 'stamina_max' | 'stamina_updated_at'>
 
 // 経過時間ぶん回復させる
-function regenerate(user: UserRow, now: number): { stamina: number; updatedAt: number } {
+function regenerate(user: StaminaBase, now: number): { stamina: number; updatedAt: number } {
   // 満タンの間は回復しない
   // 減った瞬間から数え始められるよう時刻だけ進めておく
   if (user.stamina >= user.stamina_max) {
@@ -26,22 +27,27 @@ function regenerate(user: UserRow, now: number): { stamina: number; updatedAt: n
   }
 }
 
-export function refreshStamina(user: UserRow, now: number): UserRow {
-  const { stamina, updatedAt } = regenerate(user, now)
-  const full = stamina >= user.stamina_max
+// 基準値を now まで進めた現在値。サーバーもフロントの表示もこれを使う
+export function currentStamina(base: StaminaBase, now: number) {
+  const { stamina, updatedAt } = regenerate(base, now)
+  const full = stamina >= base.stamina_max
 
   const toNext = full
     ? 0
     : REGEN_INTERVAL_SECONDS - ((now - updatedAt) % REGEN_INTERVAL_SECONDS)
-  const toFull = full ? 0 : (user.stamina_max - stamina - 1) * REGEN_INTERVAL_SECONDS + toNext
+  const toFull = full ? 0 : (base.stamina_max - stamina - 1) * REGEN_INTERVAL_SECONDS + toNext
 
   return {
-    ...user,
     stamina,
     stamina_updated_at: updatedAt,
     stamina_recovering_seconds: toNext,
     stamina_recovering_seconds_max: toFull,
   }
+}
+
+export function refreshStamina(user: UserRow, now: number): UserRow {
+  const { stamina, stamina_updated_at } = currentStamina(user, now)
+  return { ...user, stamina, stamina_updated_at }
 }
 
 // costを消費

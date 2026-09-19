@@ -8,8 +8,6 @@ type UserTableRow = Omit<
   | 'cleared_stage_ids'
   | 'tutorial_steps'
   | 'items'
-  | 'stamina_recovering_seconds'
-  | 'stamina_recovering_seconds_max'
 > & {
   cleared_stage_ids: string
   tutorial_steps: string
@@ -88,8 +86,6 @@ export async function loadMe({ db, userId, now }: Context): Promise<MeResponse> 
         cleared_stage_ids: JSON.parse(user.cleared_stage_ids),
         tutorial_steps: JSON.parse(user.tutorial_steps),
         items: JSON.parse(user.items),
-        stamina_recovering_seconds: 0,
-        stamina_recovering_seconds_max: 0,
       },
       now,
     ),
@@ -103,6 +99,7 @@ export async function loadMe({ db, userId, now }: Context): Promise<MeResponse> 
       skillLevels: JSON.parse(r.skill_levels),
     })),
     party,
+    now,
   }
 }
 

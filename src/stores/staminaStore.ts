@@ -1,52 +1,39 @@
 import { create } from 'zustand'
-import type { UserRow } from '../api/types'
-import { REGEN_INTERVAL_SECONDS } from '../features/stamina/stamina'
+import type { MeResponse } from '../api/types'
+import { currentStamina, type StaminaBase } from '../features/stamina/stamina'
+
+const nowSeconds = () => Math.floor(Date.now() / 1000)
 
 // スタミナ
 export interface StaminaState {
-  stamina: number
-  staminaMax: number // rankに連動する
-  staminaRecoveringSeconds: number // +1までの残り秒。満タンなら0
-  staminaRecoveringSecondsMax: number // 全回復までの残り秒。満タンなら0
-  tick: () => void // 表示を1秒進める
-  hydrate: (row: UserRow) => void
+  base: StaminaBase
+  now: number // サーバー時刻に揃えた現在のUnix秒
+  offset: number // サーバー時刻 - 端末時刻。端末の時計がずれていてもサーバー基準で表示する
+  tick: () => void // now を進める。飛んだ分は次の1回で追いつく
+  hydrate: (me: MeResponse) => void
   reset: () => void
 }
 
 const initial = {
-  stamina: 0,
-  staminaMax: 0,
-  staminaRecoveringSeconds: 0,
-  staminaRecoveringSecondsMax: 0,
+  base: { stamina: 0, stamina_max: 0, stamina_updated_at: 0 },
+  now: 0,
+  offset: 0,
 }
 
 export const useStaminaStore = create<StaminaState>((set) => ({
   ...initial,
-  tick: () =>
-    set((s) => {
-      if (s.staminaRecoveringSeconds <= 0) return s // 満タン
-
-      const toFull = Math.max(0, s.staminaRecoveringSecondsMax - 1)
-      const toNext = s.staminaRecoveringSeconds - 1
-      if (toNext > 0) {
-        return { staminaRecoveringSeconds: toNext, staminaRecoveringSecondsMax: toFull }
-      }
-
-      // 1回復ぶん経った
-      const stamina = Math.min(s.staminaMax, s.stamina + 1)
-      const full = stamina >= s.staminaMax
-      return {
-        stamina,
-        staminaRecoveringSeconds: full ? 0 : REGEN_INTERVAL_SECONDS,
-        staminaRecoveringSecondsMax: full ? 0 : toFull,
-      }
-    }),
-  hydrate: (row) =>
+  tick: () => set((s) => ({ now: nowSeconds() + s.offset })),
+  hydrate: ({ user, now }) =>
     set({
-      stamina: row.stamina,
-      staminaMax: row.stamina_max,
-      staminaRecoveringSeconds: row.stamina_recovering_seconds,
-      staminaRecoveringSecondsMax: row.stamina_recovering_seconds_max,
+      base: {
+        stamina: user.stamina,
+        stamina_max: user.stamina_max,
+        stamina_updated_at: user.stamina_updated_at,
+      },
+      now,
+      offset: now - nowSeconds(),
     }),
   reset: () => set(initial),
 }))
+
+export const selectStamina = (s: StaminaState) => currentStamina(s.base, s.now)

@@ -16,8 +16,6 @@ export interface UserRow {
   stamina: number
   stamina_max: number
   stamina_updated_at: number
-  stamina_recovering_seconds: number
-  stamina_recovering_seconds_max: number
 
   // --- resources（resourceStore）---
   currency: number
@@ -42,6 +40,7 @@ export interface MeResponse {
   user: UserRow
   characters: UserCharacter[]
   party: Record<number, string[]> // キーは1 ~ 4。valueはCharacterMaster.id[]
+  now: number // サーバーのUnix秒。フロントはこれを基準にスタミナの回復を表示する
 }
 
 export interface CommandResponse<T> {

@@ -21,7 +21,7 @@ export async function syncUserData(): Promise<MeResponse> {
 export function distribute(me: MeResponse) {
   useAccountStore.getState().hydrate(me.user)
   useRankStore.getState().hydrate(me.user)
-  useStaminaStore.getState().hydrate(me.user)
+  useStaminaStore.getState().hydrate(me)
   useResourceStore.getState().hydrate(me.user)
   useProgressStore.getState().hydrate(me.user)
   useTutorialStore.getState().hydrate(me.user)
