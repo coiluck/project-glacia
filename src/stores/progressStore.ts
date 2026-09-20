@@ -19,7 +19,7 @@ export interface ProgressState {
 }
 
 const initial = {
-  chapter: 2,
+  chapter: 1,
   currentChapter: 1,
   clearedStageIds: [] as string[],
   scenarioId: null as string | null,

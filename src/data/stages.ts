@@ -50,3 +50,8 @@ export function isStageUnlocked(stage: Stage, stages: Stage[], clearedIds: strin
   const prereqs = stages.filter((s) => s.next?.includes(stage.id))
   return prereqs.every((s) => clearedIds.includes(s.id))
 }
+
+// next を持たないステージを全部クリアしていれば章クリア
+export function isChapterCleared(chapter: Chapter, clearedIds: string[]): boolean {
+  return chapter.stages.filter((s) => !s.next?.length).every((s) => clearedIds.includes(s.id))
+}

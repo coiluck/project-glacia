@@ -3,7 +3,7 @@ import type { MeResponse } from '../../api/types'
 import type { MaterialCost } from '../../data/characters/types'
 import { dropTables } from '../../data/drops'
 import { expToNextRank, staminaMaxFor } from '../../data/rank'
-import { chapters } from '../../data/stages'
+import { chapters, isChapterCleared } from '../../data/stages'
 import { addItems } from '../inventory/inventory'
 import { refreshStamina, spendStamina } from '../stamina/stamina'
 import { rollDrops } from './drops'
@@ -55,6 +55,11 @@ export function resolveBattleResult(
 
   if (!user.cleared_stage_ids.includes(stageId)) {
     user.cleared_stage_ids = [...user.cleared_stage_ids, stageId]
+    // 章の末尾ステージを全部クリアしたら次の章を解放
+    const chapter = chapters.find((c) => c.stages.includes(stage))!
+    if (isChapterCleared(chapter, user.cleared_stage_ids)) {
+      user.chapter = Math.max(user.chapter, chapter.id + 1)
+    }
   }
 
   // ランクアップでstamina_maxが変わりうるので
