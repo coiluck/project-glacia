@@ -5,7 +5,7 @@ import { RARITIES } from '../../../data/characters/const'
 import { useTranslations } from '../../../i18n'
 import { useProgressStore } from '../../../stores/progressStore'
 import { chapterOf, dropSources } from '../dropSources'
-import ItemIcon from './ItemIcon'
+import ItemIcon from '../../../components/common/ItemIcon'
 
 const KIND_KEYS: Record<ItemKind, { label: string; desc: string }> = {
   material: { label: 'kindMaterial', desc: 'kindMaterialDesc' },

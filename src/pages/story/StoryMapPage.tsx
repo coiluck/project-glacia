@@ -4,7 +4,9 @@ import { paths } from '../../router/paths'
 import Screen from '../../layouts/Screen'
 import ViewportLayer from '../../layouts/ViewportLayer'
 import StageNode from './components/StageNode'
+import StageDrops from './components/StageDrops'
 import { useProgressStore } from '../../stores/progressStore'
+import { selectStamina, useStaminaStore } from '../../stores/staminaStore'
 import { chapters, isStageUnlocked, type Chapter, type ChapterStatus, type Stage, type StageStatus } from '../../data/stages'
 
 // マップ描画用にstatusを付与
@@ -17,6 +19,7 @@ export default function StoryMapPage() {
   const currentChapter = useProgressStore((s) => s.currentChapter)
   const clearedStageIds = useProgressStore((s) => s.clearedStageIds)
   const setCurrentChapter = useProgressStore((s) => s.setCurrentChapter)
+  const stamina = useStaminaStore((s) => selectStamina(s).stamina)
   const current = chapters.find((c) => c.id === currentChapter)
 
   if (!current) return
@@ -211,17 +214,23 @@ export default function StoryMapPage() {
                   <p>敵はここに書きます。</p>
                 </section>
                 <section className="story-map-stage-info-item">
-                  <div className="story-map-stage-info-item-title">報酬</div>
-                  <p>報酬はここに書きます。</p>
+                  <div className="story-map-stage-info-item-title">ドロップ</div>
+                  <StageDrops stageId={selectedNode.id} />
                 </section>
               </div>
 
               <div className="story-map-stage-info-button-container">
                 {selectedNode.status === 'locked' ? (
                   <div className="story-map-stage-info-button locked">未解放</div>
+                ) : stamina < selectedNode.stamina ? (
+                  <div className="story-map-stage-info-button sortie is-short">
+                    出撃
+                    <StaminaCost current={stamina} cost={selectedNode.stamina} />
+                  </div>
                 ) : (
                   <Link className="story-map-stage-info-button sortie" to={paths.scenario(selectedNode.id)} replace>
                     出撃
+                    <StaminaCost current={stamina} cost={selectedNode.stamina} />
                   </Link>
                 )}
               </div>
@@ -232,5 +241,24 @@ export default function StoryMapPage() {
 
       <Screen background="images/story/1.png" />
     </>
+  )
+}
+
+// 出撃ボタン右下のスタミナ表示
+function StaminaCost({ current, cost }: { current: number; cost: number }) {
+  return (
+    <span className={`story-map-stage-info-cost${current < cost ? ' is-short' : ''}`}>
+      <span className="story-map-stage-info-cost-item">
+        現在
+        <i className="story-map-stage-info-cost-bolt" />
+        <span className="story-map-stage-info-cost-value">{current}</span>
+      </span>
+      <span className="story-map-stage-info-cost-separator">/</span>
+      <span className="story-map-stage-info-cost-item">
+        消費
+        <i className="story-map-stage-info-cost-bolt" />
+        {cost}
+      </span>
+    </span>
   )
 }

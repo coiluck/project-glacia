@@ -3,7 +3,7 @@ import Screen from '../../layouts/Screen'
 import { useTranslations } from '../../i18n'
 import { items, type ItemKind } from '../../data/items'
 import { useInventoryStore } from '../../stores/inventoryStore'
-import ItemIcon from './components/ItemIcon'
+import ItemIcon from '../../components/common/ItemIcon'
 import ItemDetail from './components/ItemDetail'
 
 const KINDS: { kind: ItemKind; labelKey: string; caption: string }[] = [

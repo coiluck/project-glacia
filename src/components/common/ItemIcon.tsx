@@ -1,4 +1,4 @@
-import type { ItemDef } from '../../../data/items'
+import type { ItemDef } from '../../data/items'
 
 export default function ItemIcon({ item, className }: { item: ItemDef; className?: string }) {
   return (
