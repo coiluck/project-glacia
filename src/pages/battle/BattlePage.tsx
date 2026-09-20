@@ -13,14 +13,21 @@ import {
   availableAp,
   movementRange,
   skillHitsAnyone,
+  skillHitsByEffect,
+  unitById,
 } from '../../features/battle/battle'
 import { useBattleStore } from '../../features/battle/battleStore'
-import { axialKey, shapeTiles } from '../../features/battle/hex'
+import { calcDamage } from '../../features/battle/damage'
+import { axialKey, effectTiles, shapeAimsAnyDirection, shapeTiles } from '../../features/battle/hex'
 import type { AimTile, Axial } from '../../features/battle/hex'
 import type { Unit } from '../../features/battle/types'
+import ActionDock from './components/ActionDock'
+import BattleHud from './components/BattleHud'
 import BattleResult from './components/BattleResult'
 import DeployDock from './components/DeployDock'
 import HexGrid from './components/HexGrid'
+import PhaseBanner from './components/PhaseBanner'
+import UnitPanel from './components/UnitPanel'
 import ViewportLayer from '../../layouts/ViewportLayer'
 
 // i18n。キャラ名とスキル名は characters.json、それ以外は battle.json にある
@@ -37,24 +44,40 @@ const BATTLE_TRANSLATION_MAPPING = Object.fromEntries(
     ...Object.values(enemyDefs).map((e) => e.nameKey),
     ...Object.values(enemyDefs).flatMap((e) => (e.skill ? [e.skill.def.nameKey] : [])),
     'deployHint',
+    'deployed',
     'startBattle',
     'endTurn',
     'undoTurn',
     'attack',
-    'skill',
-    'cancel',
-    'turn',
-    'partyAp',
+    'deselect',
+    'normalAttack',
+    'power',
+    'skillTriggerHp',
+    'skillTriggerTurns',
     'backToMap',
     'emptyParty',
   ].map((k) => [k, k]),
 )
 
 // 選択中ユニットに対して指示できる行動
-type ActionMode = 'move' | 'attack' | 'skill'
+export type ActionMode = 'move' | 'attack' | 'skill'
 
 // 盤面タイルのハイライト種別
-export type HighlightKind = 'deploy' | 'move' | 'attack' | 'skill'
+export type HighlightKind = 'deploy' | 'move' | 'attack' | 'skill' | 'area' | 'area-miss' | 'threat'
+
+// タイルの上に重ねる印
+export type MarkKind = 'selected' | 'selected-enemy' | 'target' | 'aim'
+
+// 行動の予告値
+export interface UnitChip {
+  kind: 'damage' | 'heal' | 'ap'
+  value: number
+  lethal?: boolean // このダメージで倒せる
+}
+
+// i18n の {0} {1} … を埋める
+const fill = (template: string, ...values: (string | number)[]) =>
+  template.replace(/\{(\d+)\}/g, (match, index: string) => String(values[Number(index)] ?? match))
 
 export default function BattlePage() {
   const { stageId } = useParams<{ stageId: string }>()
@@ -67,6 +90,10 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   const t = { ...tBattle, ...tCharacter }
   const [selectedUnitId, setSelectedUnitId] = useState<string | null>(null)
   const [action, setAction] = useState<ActionMode>('move')
+  const [hoverKey, setHoverKey] = useState<string | null>(null)
+  const [hoverButton, setHoverButton] = useState<'attack' | 'skill' | null>(null)
+  const [previewKey, setPreviewKey] = useState<string | null>(null)
+  const [twoTap] = useState(() => window.matchMedia('(hover: none)').matches)
 
   // 編成中のパーティをマスターデータ＋所持データから組み立てる。
   // 戦闘中は変わらないので、この戦闘のあいだ固定する
@@ -123,6 +150,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
 
   const classes = unitClasses
   const selectedUnit = state.units.find((u) => u.id === selectedUnitId) ?? null
+  const selectedClass = selectedUnit ? classes[selectedUnit.classId] : null
 
   // createBattleState / deployAlly の `enemy-{i}-{defId}` / `ally-{charId}` という命名規則に依存
   const unitNameKey = (unit: Unit): string => {
@@ -141,9 +169,11 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   const isDeployed = (charId: string) => state.units.some((u) => u.id === `ally-${charId}`)
 
   // タイルのハイライトを算出
+  const tileSet = new Set(stage.tiles.map((tile) => axialKey(tile.pos)))
   const highlights = new Map<string, HighlightKind>()
   // スキルで狙えるマス。撃つときに効果の向きが要るので AimTile ごと持っておく
   const skillAims = new Map<string, AimTile>()
+  const moveCosts = new Map<string, number>()
   if (state.phase === 'deployment') {
     const occupied = new Set(state.units.map((u) => axialKey(u.pos)))
     if (party.some((m) => !isDeployed(m.character.id))) {
@@ -152,10 +182,10 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
       }
     }
   } else if (state.phase === 'player' && selectedUnit?.side === 'ally') {
-    const tileSet = new Set(stage.tiles.map((t) => axialKey(t.pos)))
     if (action === 'move') {
-      for (const { pos } of movementRange(state, stage, selectedUnit)) {
+      for (const { pos, cost } of movementRange(state, stage, selectedUnit)) {
         highlights.set(axialKey(pos), 'move')
+        moveCosts.set(axialKey(pos), cost)
       }
     } else if (action === 'attack') {
       for (const pos of shapeTiles(selectedUnit.pos, classes[selectedUnit.classId].attackRange)) {
@@ -169,19 +199,107 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
       }
     }
   }
+  if (selectedUnit?.side === 'enemy' && selectedClass) {
+    for (const aim of shapeAimsAnyDirection(selectedUnit.pos, selectedClass.attackRange)) {
+      const key = axialKey(aim.pos)
+      if (tileSet.has(key) && !highlights.has(key)) highlights.set(key, 'threat')
+    }
+  }
+
+  const focusKey = hoverKey ?? previewKey
+  const marks = new Map<string, MarkKind>()
+  const chips = new Map<string, UnitChip>()
+  let previewCost = 0
+  if (selectedUnit) {
+    marks.set(axialKey(selectedUnit.pos), selectedUnit.side === 'ally' ? 'selected' : 'selected-enemy')
+  }
+  if (state.phase === 'player' && selectedUnit?.side === 'ally' && selectedClass) {
+    const skill = selectedUnit.skill
+    if (hoverButton === 'attack') previewCost = selectedClass.attackCost
+    else if (hoverButton === 'skill' && skill) previewCost = skill.apCost
+    else if (action === 'move') previewCost = focusKey ? (moveCosts.get(focusKey) ?? 0) : 0
+    else if (action === 'attack') previewCost = selectedClass.attackCost
+    else if (action === 'skill' && skill) previewCost = skill.apCost
+
+    if (action === 'attack' && focusKey && highlights.get(focusKey) === 'attack') {
+      const target = state.units.find((u) => axialKey(u.pos) === focusKey)
+      if (target?.side === 'enemy') {
+        const damage = calcDamage(selectedUnit, target, selectedClass.attackPower)
+        chips.set(target.id, { kind: 'damage', value: damage, lethal: damage >= target.hp })
+      }
+    }
+    const aim = action === 'skill' && focusKey ? skillAims.get(focusKey) : undefined
+    if (skill && aim) {
+      const hits = skillHitsByEffect(state, selectedUnit, skill, aim)
+      const anyone = hits.some((h) => h.unitIds.length > 0)
+      for (const effect of skill.effect) {
+        for (const pos of effectTiles(aim.pos, effect.area, aim.direction)) {
+          const key = axialKey(pos)
+          if (tileSet.has(key)) highlights.set(key, anyone ? 'area' : 'area-miss')
+        }
+      }
+      for (const { effect, unitIds } of hits) {
+        for (const id of unitIds) {
+          const target = unitById(state, id)
+          switch (effect.type) {
+            case 'damage': {
+              const damage = calcDamage(selectedUnit, target, effect.power)
+              chips.set(id, { kind: 'damage', value: damage, lethal: damage >= target.hp })
+              break
+            }
+            case 'healHp':
+              chips.set(id, { kind: 'heal', value: Math.min(effect.amount, target.maxHp - target.hp) })
+              break
+            case 'grantAp':
+              chips.set(id, { kind: 'ap', value: effect.amount })
+              break
+          }
+        }
+      }
+      marks.set(axialKey(aim.pos), 'aim')
+    }
+    // 当たる相手の印は狙っているマスの印より優先
+    for (const id of chips.keys()) marks.set(axialKey(unitById(state, id).pos), 'target')
+  }
+
+  // このターンもう動けない味方
+  const actedIds = new Set(
+    state.phase === 'player'
+      ? state.units.filter((u) => u.side === 'ally' && availableAp(state, u) === 0).map((u) => u.id)
+      : [],
+  )
 
   const deselect = () => {
     setSelectedUnitId(null)
     setAction('move')
+    setPreviewKey(null)
+    setHoverButton(null)
+  }
+
+  // 行動を終えて移動モードへ
+  const finishAction = () => {
+    setAction('move')
+    setPreviewKey(null)
+    setHoverButton(null)
+  }
+
+  const confirmOrPreview = (key: string): boolean => {
+    if (twoTap && previewKey !== key) {
+      setPreviewKey(key)
+      return false
+    }
+    return true
   }
 
   // 狙ったマスへスキルを撃つ。誰にも当たらないならAPを捨てないよう撃たずに false を返す
   const castSkillAt = (user: Unit, pos: Axial): boolean => {
-    const aim = skillAims.get(axialKey(pos))
+    const key = axialKey(pos)
+    const aim = skillAims.get(key)
     if (!user.skill || !aim) return false
     if (!skillHitsAnyone(state, user, user.skill, aim)) return false
+    if (!confirmOrPreview(key)) return true // 予告を出しただけ。モードは維持
     doSkill(user.id, pos)
-    setAction('move')
+    finishAction()
     return true
   }
 
@@ -189,13 +307,16 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   const handleTileClick = (pos: Axial) => {
     if (state.phase !== 'player') return
     const key = axialKey(pos)
-    if (selectedUnit?.side === 'ally' && action === 'move' && highlights.get(key) === 'move') {
+    if (selectedUnit?.side === 'ally' && action === 'move' && moveCosts.has(key)) {
+      if (!confirmOrPreview(key)) return
       move(selectedUnit.id, pos)
+      setPreviewKey(null)
       return
     }
     // 範囲攻撃は誰も立っていないマスを狙点にすることもある
-    if (selectedUnit?.side === 'ally' && action === 'skill' && highlights.get(key) === 'skill') {
-      if (castSkillAt(selectedUnit, pos)) return
+    if (selectedUnit?.side === 'ally' && action === 'skill' && skillAims.has(key)) {
+      castSkillAt(selectedUnit, pos)
+      return
     }
     deselect() // 関係ないタイル -> 選択解除
   }
@@ -215,18 +336,23 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     const key = axialKey(unit.pos)
     if (selectedUnit?.side === 'ally') {
       if (action === 'attack' && unit.side === 'enemy' && highlights.get(key) === 'attack') {
+        if (!confirmOrPreview(key)) return
         doAttack(selectedUnit.id, [unit.id])
-        setAction('move')
+        finishAction()
         return
       }
       // 効果の当たり判定が対象の適否を兼ねるので、陣営の判定はここでは要らない
-      if (action === 'skill' && highlights.get(key) === 'skill') {
-        if (castSkillAt(selectedUnit, unit.pos)) return
-      }
+      if (action === 'skill' && castSkillAt(selectedUnit, unit.pos)) return
     }
     // 選択の切り替えのみ
     setSelectedUnitId(unit.id)
     setAction('move')
+    setPreviewKey(null)
+  }
+
+  const handleAttackButton = () => {
+    setAction(action === 'attack' ? 'move' : 'attack')
+    setPreviewKey(null)
   }
 
   const handleSkillButton = () => {
@@ -236,9 +362,10 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     const aims = aimableTilesOnBoard(stage, selectedUnit.pos, selectedUnit.skill)
     if (aims.length === 1) {
       doSkill(selectedUnit.id, aims[0].pos)
-      setAction('move')
+      finishAction()
     } else {
       setAction(action === 'skill' ? 'move' : 'skill')
+      setPreviewKey(null)
     }
   }
 
@@ -252,7 +379,6 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     undoTurn()
   }
 
-  const selectedClass = selectedUnit ? classes[selectedUnit.classId] : null
   const canAttack =
     selectedUnit && selectedClass
       ? availableAp(state, selectedUnit) >= selectedClass.attackCost
@@ -260,16 +386,29 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   const canSkill =
     selectedUnit?.skill != null && availableAp(state, selectedUnit) >= selectedUnit.skill.apCost
 
+  // 敵の補足（通常攻撃の威力と消費AP、スキルの発動条件）
+  const enemyNotes = (unit: Unit): string[] => {
+    const cls = classes[unit.classId]
+    const range =
+      cls.attackRange.kind === 'range' ? ` · RANGE ${cls.attackRange.min ?? 1}–${cls.attackRange.max}` : ''
+    const notes = [`${t.normalAttack} ${t.power} ${cls.attackPower} · ${cls.attackCost} AP${range}`]
+    if (unit.skill) {
+      const trigger =
+        unit.skillHpTriggers && unit.skillHpTriggers.length > 0
+          ? fill(t.skillTriggerHp, Math.max(...unit.skillHpTriggers))
+          : unit.skillEveryNTurns !== undefined
+            ? fill(t.skillTriggerTurns, unit.skillEveryNTurns)
+            : ''
+      notes.push(`${t[unit.skill.nameKey]} ${trigger}`.trim())
+    }
+    return notes
+  }
+
+  const inBattle = state.phase !== 'victory' && state.phase !== 'defeat'
+
   return (
     <>
       <ViewportLayer>
-        {/* ターン表示。決着後はリザルトの外に残るので出さない */}
-        {(state.phase === 'player' || state.phase === 'enemy') &&
-          <div className="battle-hud-turn" key={state.turn}>
-            Turn {state.turn}
-          </div>
-        }
-
         {/* 敵ターン中の画面 */}
         {state.phase === 'enemy' &&
           <div className="battle-hud-enemy-turn-overlay" />
@@ -282,19 +421,36 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
 
       <div className="page-battle">
         {/* 盤面。リザルトの暗幕はセーフエリアの下（ビューポート層）にあり盤面を覆えないので、決着後は描かない */}
-        {state.phase !== 'victory' && state.phase !== 'defeat' && (
+        {inBattle && (
           <div className="battle-board-area">
             <HexGrid
               tiles={stage.tiles}
               units={state.units}
               highlights={highlights}
+              marks={marks}
+              costs={moveCosts}
+              chips={chips}
+              hoverKey={focusKey}
               selectedUnitId={selectedUnitId}
+              actedIds={actedIds}
               getUnitName={getUnitName}
               getUnitChibi={getUnitChibi}
               onTileClick={handleTileClick}
               onUnitClick={handleUnitClick}
+              onHover={setHoverKey}
             />
           </div>
+        )}
+
+        {/* ターン・フェーズ・パーティAP */}
+        {inBattle && (
+          <BattleHud
+            phase={state.phase}
+            turn={state.turn}
+            partyAp={state.partyAp}
+            partyApMax={stage.partyApPerTurn}
+            spend={previewCost}
+          />
         )}
 
         {/* 配置フェーズ用 */}
@@ -302,7 +458,9 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
           <DeployDock
             party={party}
             isDeployed={isDeployed}
+            getName={(charId) => t[characterMasters[charId]?.nameKey ?? ''] ?? ''}
             hint={t.deployHint}
+            deployedLabel={t.deployed}
             startLabel={t.startBattle}
             canStart={state.units.some((u) => u.side === 'ally')}
             onStart={start}
@@ -314,55 +472,50 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
         {(state.phase === 'player' || state.phase === 'deployment') &&
           selectedUnit &&
           selectedClass && (
-            <div className="battle-unit-panel">
-              <div className="battle-unit-panel-name">
-                {getUnitName(selectedUnit)}
-                <span className="battle-unit-panel-class">{t[selectedClass.nameKey]}</span>
-              </div>
-              <div className="battle-unit-panel-stat">
-                HP {selectedUnit.hp}/{selectedUnit.maxHp}
-              </div>
-              <div className="battle-unit-panel-stat">
-                AP{' '}
-                {selectedUnit.side === 'ally' ? availableAp(state, selectedUnit) : selectedUnit.ap}/
-                {selectedClass.apPerTurn}
-              </div>
-              {state.phase === 'player' && selectedUnit.side === 'ally' && (
-                <div className="battle-unit-panel-actions">
-                  <button
-                    className={`battle-button${action === 'attack' ? ' is-active' : ''}`}
-                    disabled={!canAttack}
-                    onClick={() => setAction(action === 'attack' ? 'move' : 'attack')}
-                  >
-                    {t.attack}
-                  </button>
-                  {selectedUnit.skill && (
-                    <button
-                      className={`battle-button${action === 'skill' ? ' is-active' : ''}`}
-                      disabled={!canSkill}
-                      onClick={handleSkillButton}
-                    >
-                      {t[selectedUnit.skill.nameKey]}
-                    </button>
-                  )}
-                  <button className="battle-button" onClick={deselect}>
-                    {t.cancel}
-                  </button>
-                </div>
-              )}
-            </div>
+            <UnitPanel
+              unit={selectedUnit}
+              name={getUnitName(selectedUnit)}
+              unitClass={selectedClass}
+              className={t[selectedClass.nameKey]}
+              ap={selectedUnit.side === 'ally' ? availableAp(state, selectedUnit) : selectedClass.apPerTurn}
+              spend={selectedUnit.side === 'ally' ? previewCost : 0}
+              notes={selectedUnit.side === 'enemy' ? enemyNotes(selectedUnit) : undefined}
+            />
           )}
+
+        {/* 味方の行動 */}
+        {state.phase === 'player' && selectedUnit?.side === 'ally' && selectedClass && (
+          <ActionDock
+            unitClass={selectedClass}
+            skill={selectedUnit.skill}
+            skillName={selectedUnit.skill ? t[selectedUnit.skill.nameKey] : ''}
+            attackLabel={t.attack}
+            deselectLabel={t.deselect}
+            action={action}
+            canAttack={canAttack}
+            canSkill={canSkill}
+            onAttack={handleAttackButton}
+            onSkill={handleSkillButton}
+            onDeselect={deselect}
+            onHover={setHoverButton}
+          />
+        )}
 
         {/* 味方ターンの操作 */}
         {state.phase === 'player' && (
-          <div className="battle-turn-buttons">
-            <button className="battle-button" onClick={handleUndoTurn}>
+          <div className="battle-turn-controls">
+            <button className="battle-button-ghost" onClick={handleUndoTurn}>
               {t.undoTurn}
             </button>
-            <button className="battle-button battle-end-turn-button" onClick={handleEndTurn}>
+            <button className="battle-button-primary" onClick={handleEndTurn}>
               {t.endTurn}
             </button>
           </div>
+        )}
+
+        {/* フェーズの切り替わり */}
+        {(state.phase === 'player' || state.phase === 'enemy') && (
+          <PhaseBanner key={`${state.phase}-${state.turn}`} phase={state.phase} turn={state.turn} />
         )}
 
         {/* 勝敗。結果の送信と報酬の表示は BattleResult が持つ */}

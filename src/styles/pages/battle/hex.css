@@ -1,10 +1,11 @@
-/* ── 盤面 ─────────────────────────────────── */
+/* 盤面 */
 .battle-board-area {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-bottom: 80px;
 }
 .hex-board {
   position: relative;
@@ -13,8 +14,7 @@
   display: block;
 }
 
-/* タイルの側面（厚み）と天面の塗りは地形ごとに fill 属性で与える */
-/* 側面の右の影 */
+/* タイルの側面と天面 */
 .hex-side-shade {
   fill: rgba(0, 0, 0, 0.3);
 }
@@ -24,7 +24,8 @@
   stroke-opacity: 0.55;
 }
 
-/* ハイライトは地形テクスチャが透けるように半透明で重ねる */
+
+/* ハイライト */
 .hex-highlight {
   pointer-events: none;
   stroke-width: 3;
@@ -35,25 +36,111 @@
 .hex-tile.is-skill {
   cursor: pointer;
 }
+/* 配置できるマス */
 .hex-tile.is-deploy .hex-highlight {
-  fill: rgba(111, 216, 232, 0.35);
-  stroke: #6fd8e8;
+  fill: rgba(127, 224, 255, 0.22);
+  stroke: var(--accent);
+  animation: hex-pulse 1.6s ease-in-out infinite;
 }
+/* 移動先 */
 .hex-tile.is-move .hex-highlight {
-  fill: rgba(111, 168, 232, 0.35);
-  stroke: #6fa8e8;
+  fill: rgba(127, 224, 255, 0.24);
+  stroke: rgba(127, 224, 255, 0.9);
 }
+/* 通常攻撃の届くマス */
 .hex-tile.is-attack .hex-highlight {
-  fill: rgba(232, 122, 138, 0.35);
-  stroke: #e87a8a;
+  fill: rgba(255, 107, 122, 0.22);
+  stroke: rgba(255, 107, 122, 0.95);
 }
+/* スキルで狙えるマス。効果範囲と区別するため点線 */
 .hex-tile.is-skill .hex-highlight {
-  fill: rgba(126, 232, 154, 0.35);
-  stroke: #7ee89a;
+  fill: rgba(250, 206, 104, 0.12);
+  stroke: rgba(250, 206, 104, 0.85);
+  stroke-dasharray: 10 6;
 }
-.hex-tile.is-deploy:hover,
-.hex-tile.is-move:hover,
-.hex-tile.is-attack:hover,
-.hex-tile.is-skill:hover {
+/* スキルの効果が及ぶマス。狙えるマスより強く塗る */
+.hex-tile.is-area .hex-highlight {
+  fill: rgba(250, 206, 104, 0.5);
+  stroke: #fff2c2;
+}
+/* 効果は及ぶが誰にも当たらない */
+.hex-tile.is-area-miss .hex-highlight {
+  fill: rgba(250, 206, 104, 0.14);
+  stroke: rgba(250, 206, 104, 0.5);
+  stroke-dasharray: 4 6;
+}
+/* 選択中の敵の通常攻撃が届くマス */
+.hex-tile.is-threat .hex-highlight {
+  fill: rgba(255, 107, 122, 0.14);
+  stroke: rgba(255, 107, 122, 0.55);
+  stroke-dasharray: 6 8;
+}
+.hex-tile.is-hover .hex-highlight {
   filter: brightness(1.35);
+}
+.hex-tile.is-move.is-hover .hex-highlight {
+  fill: rgba(127, 224, 255, 0.46);
+  stroke: #fff;
+}
+
+
+/* 印 */
+.hex-mark {
+  pointer-events: none;
+  fill: none;
+  stroke-width: 4;
+  stroke-linejoin: round;
+}
+.hex-tile.is-selected .hex-mark {
+  stroke: var(--ally);
+  filter: drop-shadow(0 0 8px rgba(127, 224, 255, 0.8));
+  animation: hex-pulse 1.4s ease-in-out infinite;
+}
+.hex-tile.is-selected-enemy .hex-mark {
+  stroke: var(--enemy);
+  filter: drop-shadow(0 0 8px rgba(255, 107, 122, 0.8));
+}
+/* 効果が当たる相手 */
+.hex-tile.is-target .hex-mark {
+  stroke: #fff;
+  stroke-dasharray: 26 14;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.9));
+  animation: hex-spin 1.2s linear infinite;
+}
+/* 狙っているマス */
+.hex-tile.is-aim .hex-mark {
+  stroke: #fff2c2;
+  stroke-width: 3;
+}
+@keyframes hex-spin {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+@keyframes hex-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+
+/* 移動に要するAP */
+.hex-cost {
+  pointer-events: none;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 26px;
+  font-weight: 600;
+  fill: rgba(255, 255, 255, 0.85);
+  text-anchor: middle;
+  dominant-baseline: central;
+  paint-order: stroke;
+  stroke: rgba(4, 10, 16, 0.85);
+  stroke-width: 4;
+}
+.hex-tile.is-hover .hex-cost {
+  font-size: 32px;
+  fill: #fff;
 }

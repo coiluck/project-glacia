@@ -1,0 +1,371 @@
+/* ユニットカード */
+.battle-unit-panel {
+  --tone: var(--ally);
+  position: absolute;
+  bottom: 40px;
+  left: 48px;
+  z-index: 2;
+  display: flex;
+  gap: 24px;
+  width: 620px;
+  padding: 22px 28px 24px 22px;
+  text-align: left;
+  animation: battle-panel-in 0.22s ease-out;
+}
+.battle-unit-panel.is-enemy {
+  --tone: var(--enemy);
+}
+@keyframes battle-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 顔。絵のない敵は兵科アイコン */
+.battle-unit-panel-portrait {
+  position: relative;
+  flex-shrink: 0;
+  width: 132px;
+  height: 132px;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 30%, #2c4256 0%, #101820 70%);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%);
+}
+.battle-unit-panel.is-enemy .battle-unit-panel-portrait {
+  background: radial-gradient(circle at 50% 30%, #3a1420 0%, #150810 70%);
+}
+.battle-unit-panel-portrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.battle-unit-panel-portrait svg {
+  width: 100%;
+  height: 100%;
+  padding: 34px;
+  fill: none;
+  stroke: var(--tone);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.battle-unit-panel-portrait::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--tone);
+}
+
+.battle-unit-panel-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.battle-unit-panel-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.battle-unit-panel-name {
+  font-size: 30px;
+  line-height: 1.1;
+  letter-spacing: 0.06em;
+  color: #fff;
+}
+/* 兵科バッジ */
+.battle-unit-panel-class {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 26px;
+  padding: 0 12px 0 8px;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+  background: var(--fill);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+.battle-unit-panel-class svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: var(--tone);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.battle-unit-panel-side {
+  margin-left: auto;
+  color: var(--tone);
+}
+
+.battle-unit-panel-hp {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.battle-unit-panel-hp-bar {
+  flex: 1;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  clip-path: polygon(3px 0, 100% 0, calc(100% - 3px) 100%, 0 100%);
+}
+.battle-unit-panel-hp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--tone) 70%, #fff) 0%, var(--tone) 100%);
+  transition: width 0.3s ease;
+}
+.battle-unit-panel-hp-fill.is-low {
+  background: linear-gradient(90deg, #ffd58a 0%, var(--spend) 100%);
+}
+.battle-unit-panel-hp .battle-num {
+  min-width: 130px;
+  font-size: 22px;
+  text-align: right;
+}
+.battle-unit-panel-hp .battle-num small {
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--ink-dim);
+}
+
+.battle-unit-panel-row {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+.battle-unit-panel-ap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: auto;
+}
+.battle-unit-panel-ap .battle-num {
+  font-size: 22px;
+}
+.battle-unit-panel-ap .battle-num small {
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--ink-dim);
+}
+.battle-unit-panel.is-enemy .battle-pips i.is-on {
+  background: var(--tone);
+  box-shadow: 0 0 10px rgba(255, 107, 122, 0.5);
+}
+.battle-unit-panel-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.battle-unit-panel-stat .battle-num {
+  font-size: 22px;
+}
+
+/* 敵の補足（通常攻撃・スキル） */
+.battle-unit-panel-note {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+}
+
+
+/* 行動ボタン */
+.battle-action-dock {
+  position: absolute;
+  right: 48px;
+  bottom: 132px; /* ターン操作の上 */
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  animation: battle-panel-in 0.22s ease-out;
+}
+.battle-action-row {
+  display: flex;
+  gap: 12px;
+}
+.battle-action-button {
+  --tone: var(--rose);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  width: 250px;
+  height: 118px;
+  padding: 14px 18px 14px 20px;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: var(--panel);
+  border: none;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%);
+  transition: background 0.15s ease-out;
+}
+.battle-action-button.is-skill {
+  --tone: var(--gold);
+}
+.battle-action-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 1px solid var(--line);
+  clip-path: inherit;
+  transition: border-color 0.15s ease-out;
+}
+/* 左端の色帯 */
+.battle-action-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--tone);
+  opacity: 0.6;
+}
+.battle-action-button:hover:not(:disabled) {
+  background: rgba(20, 30, 40, 0.92);
+}
+.battle-action-button:hover:not(:disabled)::before {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.battle-action-button.is-active {
+  background: color-mix(in srgb, var(--tone) 14%, var(--panel));
+}
+.battle-action-button.is-active::before {
+  border-color: var(--tone);
+  box-shadow: inset 0 0 24px color-mix(in srgb, var(--tone) 25%, transparent);
+}
+.battle-action-button.is-active::after {
+  opacity: 1;
+}
+/* AP不足 */
+.battle-action-button:disabled {
+  cursor: default;
+}
+.battle-action-button:disabled > * {
+  opacity: 0.4;
+}
+.battle-action-button:disabled .battle-action-cost {
+  color: var(--rose);
+  opacity: 1;
+}
+.battle-action-button:disabled .battle-action-cost .battle-pips i.is-on {
+  background: rgba(255, 107, 122, 0.5);
+  box-shadow: none;
+}
+
+.battle-action-kind {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  color: var(--tone);
+}
+.battle-action-name {
+  font-size: 26px;
+  line-height: 1.1;
+  letter-spacing: 0.06em;
+  color: #fff;
+}
+.battle-action-foot {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  margin-top: auto;
+}
+.battle-action-cost {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ink);
+}
+.battle-action-cost .battle-pips {
+  gap: 3px;
+}
+.battle-action-cost .battle-pips i {
+  width: 14px;
+  height: 8px;
+}
+.battle-action-cost .battle-pips i.is-on {
+  box-shadow: none;
+}
+.battle-action-range {
+  margin-left: auto;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--ink-dim);
+}
+/* スキルの形 */
+.battle-action-shape {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.battle-action-shape .attack-range-hex {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+}
+.battle-action-shape .attack-range-hex-origin {
+  fill: var(--ink);
+}
+.battle-action-shape .attack-range-hex-tile {
+  fill: color-mix(in srgb, var(--tone) 45%, transparent);
+  stroke: var(--tone);
+}
+
+.battle-action-deselect {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 36px;
+  padding: 0 16px;
+  font-family: inherit;
+  font-size: 15px;
+  letter-spacing: 0.14em;
+  color: var(--ink-dim);
+  cursor: pointer;
+  background: none;
+  border: 1px solid var(--line);
+  transition: color 0.15s ease-out, border-color 0.15s ease-out;
+}
+.battle-action-deselect::before {
+  content: '×';
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 18px;
+}
+.battle-action-deselect:hover {
+  color: var(--ink);
+  border-color: rgba(255, 255, 255, 0.5);
+}

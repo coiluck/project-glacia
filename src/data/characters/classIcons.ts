@@ -6,5 +6,7 @@ export const classIcons: Record<string, string> = {
   // 弓兵
   archer: 'M7.5 3.2 A 13 13 0 0 1 7.5 20.8 M7.5 3.2 V20.8 M4 12 H20 M17 9 L20 12 L17 15',
   // 魔導士
-  mage: 'M11.5 22 V10.5 M7.5 6.5 L11.5 2.5 L15.5 6.5 L11.5 10.5 Z'
+  mage: 'M11.5 22 V10.5 M7.5 6.5 L11.5 2.5 L15.5 6.5 L11.5 10.5 Z',
+  // 略奪兵（敵専用）
+  raider: 'M4 20 L13 11 M10 8 L15 3 L21 9 L16 14 Z M13 11 L16 14',
 }

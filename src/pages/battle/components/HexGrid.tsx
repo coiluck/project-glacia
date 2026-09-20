@@ -1,8 +1,11 @@
+import { classIcons } from '../../../data/characters/classIcons';
+import { unitClasses } from '../../../data/unitClasses';
 import { axialKey, hexCorners, hexToPixel } from '../../../features/battle/hex';
 import type { Axial, Pixel } from '../../../features/battle/hex';
 import type { StageTile, Unit } from '../../../features/battle/types';
-import type { HighlightKind } from '../BattlePage';
+import type { HighlightKind, MarkKind, UnitChip } from '../BattlePage';
 import { TERRAIN_STYLES, terrainFill, tileHeight, tileLayers } from '../terrainStyles';
+import ApPips from './ApPips';
 import HexTile from './HexTile';
 import TerrainDefs from './TerrainDefs';
 
@@ -11,6 +14,9 @@ const SIZE = 90; // 六角形の中心から頂点までの距離
 const SQUASH = 0.7; // 俯瞰に見せるための縦圧縮
 const THICKNESS = 30; // 通常のタイル1枚分の厚み
 const PADDING = 24; // 盤面外周の余白
+
+// HPバーがこの割合以下で色を変える
+const LOW_HP_RATIO = 0.3;
 
 // 全タイル共通の頂点座標（縦圧縮込み）
 const CORNERS = hexCorners(SIZE).map((c) => ({ x: c.x, y: c.y * SQUASH }));
@@ -57,26 +63,55 @@ function layerGeometry(tile: StageTile, centerY: number) {
   });
 }
 
+// 予告値の文字。ダメージは倒せるなら KILL を添える
+function chipText(chip: UnitChip) {
+  switch (chip.kind) {
+    case 'damage':
+      return (
+        <>
+          −{chip.value}
+          {chip.lethal && <small>KILL</small>}
+        </>
+      );
+    case 'heal':
+      return <>+{chip.value}</>;
+    case 'ap':
+      return <>+{chip.value} AP</>;
+  }
+}
+
 interface HexGridProps {
   tiles: StageTile[];
   units: Unit[];
   highlights?: Map<string, HighlightKind>;
+  marks?: Map<string, MarkKind>;
+  costs?: Map<string, number>; // 移動先ごとの消費AP
+  chips?: Map<string, UnitChip>; // ユニットIDごとの予告値
+  hoverKey?: string | null; // ポインタが乗っている（タッチでは予告中の）マス
   selectedUnitId?: string | null;
+  actedIds?: Set<string>; // このターンもう動けない味方
   getUnitName: (unit: Unit) => string;
   getUnitChibi: (unit: Unit) => string | null; // 絵がないユニットは null（トークン表示になる）
   onTileClick?: (pos: Axial) => void;
   onUnitClick?: (unit: Unit) => void;
+  onHover?: (key: string | null) => void; // マス・ユニットにポインタが乗った / 離れた
 }
 
 export default function HexGrid({
   tiles,
   units,
   highlights,
+  marks,
+  costs,
+  chips,
+  hoverKey,
   selectedUnitId,
+  actedIds,
   getUnitName,
   getUnitChibi,
   onTileClick,
   onUnitClick,
+  onHover,
 }: HexGridProps) {
   // 盤面全体をPADDING内に
   const centers = tiles.map((t) => tileCenter(t.pos));
@@ -113,11 +148,13 @@ export default function HexGrid({
         {drawOrder.map((i) => {
           const tile = tiles[i];
           const center = centers[i];
+          const key = axialKey(tile.pos);
           const layers = layerGeometry(tile, center.y);
           return (
-            <g key={axialKey(tile.pos)}>
+            <g key={key}>
               {layers.map((layer, li) => {
-                const points = tilePoints({ x: center.x, y: layer.top });
+                const layerCenter = { x: center.x, y: layer.top };
+                const points = tilePoints(layerCenter);
                 const fill = terrainFill(layer.terrain);
                 // opacity は層ごとにまとめてかける
                 // 個別にかけると側面・天面で二重になるので
@@ -139,9 +176,14 @@ export default function HexGrid({
                       <HexTile
                         pos={tile.pos}
                         points={points}
+                        center={layerCenter}
                         fill={fill}
-                        highlight={highlights?.get(axialKey(tile.pos))}
+                        highlight={highlights?.get(key)}
+                        mark={marks?.get(key)}
+                        cost={costs?.get(key)}
+                        hovered={hoverKey === key && highlights?.has(key)}
                         onClick={onTileClick ? () => onTileClick(tile.pos) : undefined}
+                        onHover={onHover ? (hovered) => onHover(hovered ? key : null) : undefined}
                       />
                     ) : (
                       <polygon className="hex-top" points={points} fill={fill} />
@@ -159,25 +201,52 @@ export default function HexGrid({
         {sortedUnits.map((unit) => {
           const c = tileCenter(unit.pos);
           const chibi = getUnitChibi(unit);
+          const chip = chips?.get(unit.id);
+          const className = [
+            'battle-unit',
+            unit.side,
+            unit.id === selectedUnitId && 'is-selected',
+            actedIds?.has(unit.id) && 'is-acted',
+          ]
+            .filter(Boolean)
+            .join(' ');
           return (
             <div
               key={unit.id}
-              className={`battle-unit ${unit.side}${unit.id === selectedUnitId ? ' is-selected' : ''}`}
+              className={className}
               style={{ transform: `translate(${c.x - minX}px, ${c.y - minY}px)` }}
               onClick={onUnitClick ? () => onUnitClick(unit) : undefined}
+              onPointerEnter={onHover ? () => onHover(axialKey(unit.pos)) : undefined}
+              onPointerLeave={onHover ? () => onHover(null) : undefined}
             >
-              <div className={`battle-unit-body${chibi ? ' has-chibi' : ''}`}>
+              <div className="battle-unit-body">
+                {chip && (
+                  <div
+                    className={`battle-unit-chip is-${chip.kind}${chip.lethal ? ' is-lethal' : ''}`}
+                  >
+                    {chipText(chip)}
+                  </div>
+                )}
                 {chibi ? (
                   <img className="battle-unit-chibi" src={chibi} alt="" draggable={false} />
                 ) : (
-                  <div className="battle-unit-token">{getUnitName(unit).charAt(0)}</div>
+                  <div className="battle-unit-token">
+                    <svg viewBox="0 0 24 24" aria-hidden>
+                      <path d={classIcons[unit.classId]} />
+                    </svg>
+                  </div>
                 )}
-                <div className="battle-unit-name">{getUnitName(unit)}</div>
-                <div className="battle-unit-hp">
-                  <div
-                    className="battle-unit-hp-fill"
-                    style={{ width: `${(unit.hp / unit.maxHp) * 100}%` }}
-                  />
+                <div className="battle-unit-plate">
+                  <div className="battle-unit-hp">
+                    <div
+                      className={`battle-unit-hp-fill${unit.hp / unit.maxHp <= LOW_HP_RATIO ? ' is-low' : ''}`}
+                      style={{ width: `${(unit.hp / unit.maxHp) * 100}%` }}
+                    />
+                  </div>
+                  {unit.side === 'ally' && (
+                    <ApPips max={unitClasses[unit.classId].apPerTurn} current={unit.ap} size="tiny" />
+                  )}
+                  <div className="battle-unit-name">{getUnitName(unit)}</div>
                 </div>
               </div>
             </div>

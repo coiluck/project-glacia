@@ -31,6 +31,7 @@
 @import './pages/battle/hud.css';
 @import './pages/battle/hex.css';
 @import './pages/battle/deploy.css';
+@import './pages/battle/panel.css';
 @import './pages/battle/result.css';
 @import './pages/member/member.css';
 @import './pages/member/detail.css';

@@ -1,24 +1,151 @@
-/* ターン表示 */
-.battle-hud-turn {
+/* 左上：ターン・フェーズ・パーティAP */
+.battle-hud {
   position: absolute;
-  top: calc(var(--scale) * 24px);
-  right: calc(var(--scale) * 48px);
-  z-index: 2; /* 盤面（.screen-safe）より上 */
-  font-family: 'LobsterTwo-BoldItalic';
-  font-size: calc(var(--scale) * 48px);
-  letter-spacing: calc(var(--scale) * 4px);
-  color: #e8f2fa;
-  text-shadow: calc(var(--scale) * 4px) calc(var(--scale) * 4px) calc(var(--scale) * 8px) rgba(255, 255, 255, 0.5);
-  animation: battle-hud-turn-slide-in-right .3s linear;
+  top: 36px;
+  left: 48px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  text-align: left;
 }
-@keyframes battle-hud-turn-slide-in-right {
-  from {
+.battle-hud-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 22px;
+}
+.battle-hud-turn {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.battle-hud-turn .battle-num {
+  font-size: 66px;
+}
+/* フェーズのタグ */
+.battle-hud-phase {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 30px;
+  margin-bottom: 10px;
+  padding: 0 16px 0 12px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: #08121c;
+  background: var(--accent);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+}
+.battle-hud-phase::before {
+  content: '';
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 8px solid #08121c;
+}
+.battle-hud-phase.is-enemy {
+  background: var(--rose);
+}
+.battle-hud-phase.is-deployment {
+  background: var(--ink);
+}
+
+.battle-hud-ap {
+  --cut: 12px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 22px 12px 18px;
+}
+.battle-hud-ap .battle-num {
+  font-size: 30px;
+}
+.battle-hud-ap .battle-num small {
+  font-family: inherit;
+  font-size: 16px;
+  color: var(--ink-dim);
+}
+
+
+/* フェーズ告知 */
+.battle-phase-banner {
+  --tone: var(--accent);
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 26px 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent 0%, rgba(4, 10, 16, 0.85) 20%, rgba(4, 10, 16, 0.85) 80%, transparent 100%);
+  transform: translateY(-50%);
+  animation: battle-phase-banner 1.5s ease-out both; /* PhaseBanner.tsx の BANNER_MS と揃える */
+}
+.battle-phase-banner.is-enemy {
+  --tone: var(--rose);
+}
+.battle-phase-banner::before,
+.battle-phase-banner::after {
+  content: '';
+  position: absolute;
+  right: 20%;
+  left: 20%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--tone), transparent);
+}
+.battle-phase-banner::before {
+  top: 0;
+}
+.battle-phase-banner::after {
+  bottom: 0;
+}
+.battle-phase-banner-title {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 84px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.3em;
+  color: var(--tone);
+  text-shadow: 0 0 40px color-mix(in srgb, var(--tone) 50%, transparent);
+  animation: battle-phase-banner-title 1.5s ease-out both;
+}
+.battle-phase-banner-sub {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  color: var(--ink);
+}
+@keyframes battle-phase-banner {
+  0% {
     opacity: 0;
-    transform: translateX(calc(200% + var(--scale) * 48px));
+    clip-path: inset(0 50% 0 50%);
+  }
+  18% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes battle-phase-banner-title {
+  from {
+    letter-spacing: 0.6em;
   }
   to {
-    opacity: 1;
-    transform: translateX(0);
+    letter-spacing: 0.3em;
   }
 }
 
@@ -27,7 +154,7 @@
 .battle-hud-enemy-turn-overlay {
   position: absolute;
   inset: 0;
-  z-index: 2; /* 盤面（.screen-safe）より上 */
+  z-index: 2; /* 盤面（.screen-safe）より上。敵の手番中は盤面への操作も遮る */
   animation: battle-hud-enemy-turn-glow 1.6s ease-in-out infinite;
 }
 @keyframes battle-hud-enemy-turn-glow {
@@ -43,6 +170,8 @@
 .battle-hud-background {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 50% 30%, rgba(22, 34, 46, 0.8) 0%, rgba(10, 18, 26, 0.8) 70%);
   z-index: -1;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(22, 34, 46, 0.8) 0%, rgba(10, 18, 26, 0.8) 70%),
+    #07101a;
 }

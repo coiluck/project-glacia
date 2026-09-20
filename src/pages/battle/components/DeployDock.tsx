@@ -20,7 +20,9 @@ interface DragState {
 interface DeployDockProps {
   party: PartyMember[]
   isDeployed: (charId: string) => boolean
+  getName: (charId: string) => string
   hint: string
+  deployedLabel: string
   startLabel: string
   canStart: boolean
   onStart: () => void
@@ -32,7 +34,9 @@ interface DeployDockProps {
 export default function DeployDock({
   party,
   isDeployed,
+  getName,
   hint,
+  deployedLabel,
   startLabel,
   canStart,
   onStart,
@@ -100,7 +104,7 @@ export default function DeployDock({
 
   return (
     <div className="battle-deploy-layer">
-      <div className="battle-deploy-dock">
+      <div className="battle-deploy-dock battle-panel">
         <p className="battle-deploy-hint">{hint}</p>
         <div className="battle-deploy-faces">
           {party.map((m, i) => {
@@ -116,18 +120,22 @@ export default function DeployDock({
                 onPointerUp={handleUp}
                 onPointerCancel={handleCancel}
               >
-                <img
-                  src={`${import.meta.env.BASE_URL}images/character/face/${m.character.id}.png`}
-                  alt=""
-                  draggable={false}
-                />
+                <span className="battle-deploy-face-img">
+                  <img
+                    src={`${import.meta.env.BASE_URL}images/character/face/${m.character.id}.png`}
+                    alt=""
+                    draggable={false}
+                  />
+                </span>
+                <span className="battle-deploy-face-name">{getName(m.character.id)}</span>
+                <span className="battle-deploy-face-done">{deployedLabel}</span>
               </button>
             )
           })}
         </div>
       </div>
 
-      <button className="battle-button battle-deploy-start" disabled={!canStart} onClick={onStart}>
+      <button className="battle-button-primary battle-deploy-start" disabled={!canStart} onClick={onStart}>
         {startLabel}
       </button>
 
