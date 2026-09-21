@@ -42,6 +42,9 @@
 @import './pages/base.css';
 @import './pages/warehouse/warehouse.css';
 @import './pages/warehouse/detail.css';
+@import './pages/exchange/exchange.css';
+@import './pages/exchange/shop.css';
+@import './pages/exchange/supply.css';
 
 /* 共通コンポーネント */
 @import './components/member-card.css';

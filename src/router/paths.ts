@@ -12,4 +12,5 @@ export const paths = {
   recruit: '/recruit',   // 召集
   base:    '/base',      // 基地
   warehouse: '/warehouse', // 倉庫
+  exchange: '/exchange', // 取引所
 } as const

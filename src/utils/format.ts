@@ -18,3 +18,11 @@ export function formatCompact(n: number): string {
   }
   return n.toLocaleString('en-US')
 }
+
+// 秒数を HH:MM:SS にする
+export function formatHms(seconds: number): string {
+  const s = Math.max(0, seconds)
+  return [s / 3600, (s % 3600) / 60, s % 60]
+    .map((v) => String(Math.floor(v)).padStart(2, '0'))
+    .join(':')
+}

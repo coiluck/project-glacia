@@ -33,6 +33,12 @@ export interface UserRow {
 
   // --- inventory（inventoryStore）---
   items: Record<string, number> // itemId -> 個数。0個になったキーは残さない
+
+  // --- exchange（exchangeStore）---
+  exchange_tokens: number // 交換材料
+  exchange_claimed_day: number // 本日分の交換材料を受け取った日（features/daily/day.ts の dayIndex）
+  exchange_bought_day: number // exchange_bought がどの日のものか
+  exchange_bought: number[] // その日に交換済みの枠（lineupFor の添字）
 }
 
 export interface MeResponse {
@@ -63,3 +69,9 @@ export type EnhancePayload =
   | { kind: 'level'; masterId: string; use: MaterialCost[] } // use は消費する育成記録
   | { kind: 'limitBreak'; masterId: string }
   | { kind: 'skill'; masterId: string; skillId: string }
+
+// POST /exchange のリクエスト
+export type ExchangePayload =
+  | { kind: 'claim' } // 本日分の交換材料を受け取る
+  | { kind: 'buyTokens'; count: number } // 紙幣で交換材料を買う
+  | { kind: 'trade'; slot: number } // 今日のラインナップの枠を交換する

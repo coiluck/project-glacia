@@ -1,0 +1,324 @@
+/* 取引所 */
+.page-exchange {
+  --line: rgba(255, 255, 255, 0.2);
+  --line-strong: rgba(255, 255, 255, 0.3);
+  --tile: #1a1e22;
+  --tile-hover: #22272c;
+  --ink: #e4e7ea;
+  --ink-dim: #8a9299;
+  --ink-mute: #5c646b;
+  --select: #d9dee2;
+  --short: #c96b6b;
+  --token: #d9c48a;
+  --token-paper: #a98a3c;
+  --paper-ink: #282828;
+  --paper-ink-dim: #6b7986;
+  --paper-line: rgba(0, 0, 0, 0.18);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 108px 72px 64px;
+  text-align: left;
+}
+.page-exchange .is-rarity-1 {
+  --rarity: #7d868e;
+}
+.page-exchange .is-rarity-2 {
+  --rarity: #7f9fb3;
+}
+.page-exchange .is-rarity-3 {
+  --rarity: #c9a860;
+}
+
+/* 交換材料のアイコン */
+.page-exchange .token-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.12em;
+  fill: none;
+  stroke: var(--token);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+.page-exchange .exchange-bill {
+  width: 20px;
+  height: 20px;
+}
+
+
+/* 残高とカウントダウン */
+.exchange-head {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  animation: exchange-rise 0.4s ease-out both;
+}
+.exchange-wallet {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.exchange-wallet .token-icon {
+  font-size: 30px;
+  stroke: var(--token-paper);
+  stroke-width: 2;
+}
+.exchange-wallet b {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--paper-ink);
+}
+
+/* 紙幣で購入を開くボタン */
+.exchange-wallet-toggle {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  margin-left: 6px;
+  background: transparent;
+  border: 1px solid var(--paper-ink);
+  cursor: pointer;
+  transition: background 0.12s ease-out;
+}
+.exchange-wallet-toggle::before,
+.exchange-wallet-toggle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 1.5px;
+  background: var(--paper-ink);
+  transform: translate(-50%, -50%);
+  transition: transform 0.25s ease-out, background 0.12s ease-out;
+}
+.exchange-wallet-toggle::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+.exchange-wallet-toggle:hover {
+  background: var(--paper-ink);
+}
+.exchange-wallet-toggle:hover::before,
+.exchange-wallet-toggle:hover::after {
+  background: #fff;
+}
+.exchange-wallet-toggle.is-open::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.exchange-wallet-toggle.is-open::after {
+  transform: translate(-50%, -50%) rotate(135deg);
+}
+
+.exchange-head-reset {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  color: var(--paper-ink-dim);
+}
+.exchange-head-reset b {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--paper-ink);
+}
+
+
+/* 本日のラインナップ */
+.exchange-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
+  list-style: none;
+}
+.exchange-offer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 26px 22px 22px;
+  background: var(--tile);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+  animation: exchange-rise 0.3s ease-out backwards;
+  animation-delay: calc(var(--i) * 0.05s);
+}
+.exchange-offer::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--rarity);
+}
+.exchange-offer-rarity {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: var(--rarity);
+}
+.exchange-offer-kind {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0.3em;
+  color: var(--ink-mute);
+}
+.exchange-offer-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.exchange-offer-figure {
+  position: relative;
+}
+.exchange-offer-icon {
+  display: block;
+  width: 104px;
+  height: 104px;
+  fill: none;
+  stroke: #cfd6dc;
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.exchange-offer-name {
+  margin-top: 16px;
+  font-size: 21px;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  color: #fff;
+  white-space: nowrap;
+}
+.exchange-offer-owned {
+  margin-top: 6px;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  color: var(--ink-dim);
+}
+.exchange-offer-owned b {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.exchange-offer-price {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding-top: 18px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1;
+}
+.exchange-offer-price b {
+  font-weight: 600;
+  color: var(--token);
+}
+.exchange-offer-price .token-icon {
+  font-size: 26px;
+  stroke-width: 1.8;
+}
+.exchange-offer.is-short .exchange-offer-price b {
+  color: var(--short);
+}
+.exchange-offer.is-short .exchange-offer-price .token-icon {
+  stroke: var(--short);
+}
+
+.exchange-offer-button {
+  width: 100%;
+  height: 48px;
+  margin-top: 16px;
+  font-family: inherit;
+  font-size: 15px;
+  letter-spacing: 0.24em;
+  text-indent: 0.24em;
+  color: #111;
+  background: var(--select);
+  border: none;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+  cursor: pointer;
+  transition: background 0.12s ease-out;
+}
+.exchange-offer-button:hover:not(:disabled) {
+  background: #fff;
+}
+.exchange-offer-button:disabled {
+  color: var(--ink-mute);
+  background: #2a3036;
+  cursor: default;
+}
+
+/* 交換済み */
+.exchange-offer.is-sold {
+  background: #14171a;
+}
+.exchange-offer.is-sold::before {
+  background: var(--ink-mute);
+}
+.exchange-offer.is-sold .exchange-offer-rarity,
+.exchange-offer.is-sold .exchange-offer-kind,
+.exchange-offer.is-sold .exchange-offer-icon,
+.exchange-offer.is-sold .exchange-offer-name,
+.exchange-offer.is-sold .exchange-offer-owned,
+.exchange-offer.is-sold .exchange-offer-price {
+  opacity: 0.28;
+}
+.exchange-offer-stamp {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  padding: 6px 22px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  text-indent: 0.4em;
+  color: var(--ink-dim);
+  border: 2px solid var(--ink-mute);
+  white-space: nowrap;
+  transform: translate(-50%, -50%) rotate(-12deg);
+}
+
+@keyframes exchange-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes exchange-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

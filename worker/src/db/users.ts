@@ -8,10 +8,12 @@ type UserTableRow = Omit<
   | 'cleared_stage_ids'
   | 'tutorial_steps'
   | 'items'
+  | 'exchange_bought'
 > & {
   cleared_stage_ids: string
   tutorial_steps: string
   items: string
+  exchange_bought: string
 }
 
 interface CharacterTableRow {
@@ -86,6 +88,7 @@ export async function loadMe({ db, userId, now }: Context): Promise<MeResponse> 
         cleared_stage_ids: JSON.parse(user.cleared_stage_ids),
         tutorial_steps: JSON.parse(user.tutorial_steps),
         items: JSON.parse(user.items),
+        exchange_bought: JSON.parse(user.exchange_bought),
       },
       now,
     ),
@@ -121,7 +124,8 @@ export async function saveMe(
            stamina = ?, stamina_max = ?, stamina_updated_at = ?,
            currency = ?, gems = ?, pity = ?,
            chapter = ?, cleared_stage_ids = ?, tutorial_steps = ?,
-           items = ?
+           items = ?,
+           exchange_tokens = ?, exchange_claimed_day = ?, exchange_bought_day = ?, exchange_bought = ?
          WHERE id = ?`,
       )
       .bind(
@@ -140,6 +144,10 @@ export async function saveMe(
         JSON.stringify(u.cleared_stage_ids),
         JSON.stringify(u.tutorial_steps),
         JSON.stringify(u.items),
+        u.exchange_tokens,
+        u.exchange_claimed_day,
+        u.exchange_bought_day,
+        JSON.stringify(u.exchange_bought),
         u.id,
       ),
   ]

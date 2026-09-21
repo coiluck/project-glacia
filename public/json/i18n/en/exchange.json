@@ -1,0 +1,12 @@
+{
+  "reset": "Resets in",
+  "owned": "Owned",
+  "trade": "Exchange",
+  "traded": "Exchanged",
+  "short": "Not enough material",
+  "purchase": "Buy with bills",
+  "cost": "Bills needed",
+  "buy": "Buy",
+  "supply": "Today's exchange material",
+  "tapToClose": "Tap to close"
+}
