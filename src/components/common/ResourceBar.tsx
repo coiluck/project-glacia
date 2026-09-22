@@ -5,6 +5,7 @@ import { paths } from '../../router/paths'
 import { runBackHandler } from '../../hooks/useBackHandler'
 import { useResourceStore } from '../../stores/resourceStore'
 import { useRankStore } from '../../stores/rankStore'
+import { useCharacterStore } from '../../stores/characterStore'
 import { formatCompact } from '../../utils/format'
 import MenuMap from './MenuMap'
 import BillIcon from './BillIcon'
@@ -23,6 +24,7 @@ export default function ResourceBar() {
   const currency = useResourceStore((s) => s.currency)
   const gems = useResourceStore((s) => s.gems)
   const isTopPage = useLocation().pathname === paths.top;
+  const favoriteCharacterId = useCharacterStore((s) => s.favoriteCharacterId)
   const rank = useRankStore((s) => s.rank)
   const expInRank = useRankStore((s) => s.expInRank)
   const expToNext = useRankStore((s) => s.expToNext)
@@ -96,8 +98,20 @@ export default function ResourceBar() {
              </defs>
              {/* 背景パネル */}
              <path fill="#060827" fillOpacity={0.386792} d="M 0,0 V 70 H 320 L 400,0 Z" />
-             {/* ユーザーアイコン枠（画像未実装） */}
+             {/* ユーザーアイコン */}
              <rect fill="#060827" width={70} height={70} x={35.355347} y={-34.644653} transform="rotate(45)" />
+             <clipPath id="resource-bar-user-icon-clip">
+               <rect width={70} height={70} x={35.355347} y={-34.644653} transform="rotate(45)" />
+             </clipPath>
+             <image
+               clipPath="url(#resource-bar-user-icon-clip)"
+               href={`${import.meta.env.BASE_URL}images/character/face/${favoriteCharacterId}.png`}
+               x={0}
+               y={0.5}
+               width={99}
+               height={99}
+               preserveAspectRatio="xMidYMid slice"
+             />
              {/* 経験値バーの下地 */}
              <path fill="#060827" d="m 90,32 6,6 h 224 v -6 z" />
              {/* 経験値バー */}

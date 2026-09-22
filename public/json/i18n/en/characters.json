@@ -3,6 +3,10 @@
   "charLapis": "Lapis",
   "charVermilia": "Vermilia",
 
+  "topLineAlma": "The ranks are in order. We can move out whenever you are ready.",
+  "topLineLapis": "I am all set. Where are we headed today?",
+  "topLineVermilia": "My blade is sharpened. Just point me at something worth cutting.",
+
   "skillAlmaPiercingThrust": "Piercing Thrust",
   "skillAlmaPiercingThrustDesc": "Runs through the two tiles ahead, dealing damage with {0} power.",
   "skillAlmaSilverBanner": "Silver Banner",

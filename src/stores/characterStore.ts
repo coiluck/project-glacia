@@ -2,9 +2,13 @@ import { create } from 'zustand'
 import type { MeResponse } from '../api/types'
 import type { UserCharacter } from '../data/characters/types'
 
-// 所持キャラと編成
+// お気に入りキャラの初期値
+const DEFAULT_FAVORITE_CHARACTER_ID = 'lapis'
+
+// 所持キャラ・編成・お気に入りキャラ
 export interface CharacterState {
   owned: Record<string, UserCharacter> // キーは CharacterMaster.id
+  favoriteCharacterId: string // トップとリソースバーに出すキャラ。空にはならない
   party: Record<number, string[]> // キーは1 ~ 4。valueはCharacterMaster.id[]
   currentPartySlotIndex: number // 1〜4。画面の選択状態なので保存しない
   dirty: boolean // 未保存の編成・スキル変更があるか。api/actions/party.ts が見る
@@ -17,6 +21,7 @@ export interface CharacterState {
 
 const initial = {
   owned: {} as Record<string, UserCharacter>,
+  favoriteCharacterId: DEFAULT_FAVORITE_CHARACTER_ID,
   party: {
     1: [],
     2: [],
@@ -50,6 +55,7 @@ export const useCharacterStore = create<CharacterState>((set) => ({
   hydrate: (me) =>
     set({
       owned: Object.fromEntries(me.characters.map((c) => [c.masterId, c])),
+      favoriteCharacterId: me.user.favorite_character_id,
       party: me.party,
       dirty: false,
     }),

@@ -1,13 +1,32 @@
-// 中央のキャラ立ち絵
+import { characterMasters } from '../../../data/characters'
+import { useTranslations } from '../../../i18n'
+import { useCharacterStore } from '../../../stores/characterStore'
+
+const TRANSLATION_MAPPING = Object.fromEntries(
+  Object.values(characterMasters).flatMap((c): [string, string][] => [
+    [c.nameKey, c.nameKey],
+    [c.topLineKey, c.topLineKey],
+  ]),
+)
+
 export default function CharacterStage() {
+  const master = characterMasters[useCharacterStore((s) => s.favoriteCharacterId)]
+  const t = useTranslations('characters', TRANSLATION_MAPPING)
+  const name = t[master.nameKey]
+
   return (
     <div className="top-character">
-      <div className="top-character-text-container">
-        <p className="top-character-name">ココネ</p>
-        <p className="top-character-line">さあ、出発だよ！</p>
-      </div>
+      {name && (
+        <div className="top-character-text-container">
+          <p className="top-character-name">{name}</p>
+          <p className="top-character-line">{t[master.topLineKey]}</p>
+        </div>
+      )}
       <div className="top-character-art" aria-hidden>
-        <img src="/project-glacia/images/top/a.png" alt="ココネ" />
+        <img
+          src={`${import.meta.env.BASE_URL}images/character/full_body/${master.id}.png`}
+          alt={name}
+        />
       </div>
     </div>
   )

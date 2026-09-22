@@ -3,7 +3,7 @@
   position: absolute;
   left: calc(2rem * var(--scale));
   bottom: 0;
-  height: calc(720px * var(--scale));
+  height: calc(960px * var(--scale));
   width: calc(1200px * var(--scale));
 }
 .top-character-art img {

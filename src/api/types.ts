@@ -43,6 +43,9 @@ export interface UserRow {
   // --- loginBonus（loginBonusStore）---
   login_claimed_day: number // 最後にログインボーナスを受け取った日（dayIndex）
   login_count: number // その日の月に受け取った回数
+
+  // --- お気に入りキャラ（characterStore）---
+  favorite_character_id: string // CharacterMaster.id
 }
 
 export interface MeResponse {

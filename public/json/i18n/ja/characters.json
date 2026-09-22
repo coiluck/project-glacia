@@ -3,6 +3,10 @@
   "charLapis": "ラピス",
   "charVermilia": "ベルミリア",
 
+  "topLineAlma": "隊列は整っています。いつでも出られますよ、指揮官",
+  "topLineLapis": "準備はできてます。今日はどこへ行きますか？",
+  "topLineVermilia": "刃は研いである。獲物のところへ案内しろ",
+
   "skillAlmaPiercingThrust": "刺突",
   "skillAlmaPiercingThrustDesc": "正面2マスの敵を貫き、威力{0}のダメージを与える。",
   "skillAlmaSilverBanner": "銀旗の号令",

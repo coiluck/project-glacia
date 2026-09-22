@@ -5,6 +5,7 @@ import type { CharacterMaster } from '../types';
 const lapis: CharacterMaster = {
   id: 'lapis',
   nameKey: 'charLapis',
+  topLineKey: 'topLineLapis',
   rarity: 2,
   classId: 'mage',
   base: { hp: 250, attack: 30, defense: 13 },
