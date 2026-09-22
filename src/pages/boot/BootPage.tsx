@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
 import { paths } from '../../router/paths'
 import { syncUserData } from '../../api/sync'
@@ -13,10 +13,10 @@ export default function BootPage() {
   const navigate = useNavigate();
   const [showText, setShowText] = useState(false);
 
-  const animationType = useMemo(() => {
+  const [animationType] = useState(() => {
     const logoAnimationArray = ['bounce', 'scale', 'jump'];
     return logoAnimationArray[Math.floor(Math.random() * logoAnimationArray.length)];
-  }, []);
+  });
 
   useEffect(() => {
     // 未ログインなら取りに行かない

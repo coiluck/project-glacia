@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ScenarioEngine, type AdvanceResult } from './ScenarioEngine';
 import { executeTransients } from './CommandExecutor';
 import { scenarioRegistry } from '../../data/scenarios';
@@ -31,10 +32,12 @@ export function resetGameEngine(initial: GameState): void {
 }
 
 export function useGameEngine(initial: GameState) {
-  if (!sharedEngine) {
-    sharedEngine = new ScenarioEngine(initial, scenarioRegistry);
-  }
-  const engine = sharedEngine;
+  const [engine] = useState(() => {
+    if (!sharedEngine) {
+      sharedEngine = new ScenarioEngine(initial, scenarioRegistry);
+    }
+    return sharedEngine;
+  });
 
   const setSnapshot = useGameStore((s) => s.setSnapshot);
   const fireMotion = useGameStore((s) => s.fireMotion);

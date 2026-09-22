@@ -1,6 +1,6 @@
 import { useContext, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
-import { ScreenViewportContext } from './ScreenFrame'
+import { ScreenViewportContext } from './ScreenViewportContext'
 
 // 子要素をセーフエリア外へ出す
 export default function ViewportLayer({ children }: { children: ReactNode }) {

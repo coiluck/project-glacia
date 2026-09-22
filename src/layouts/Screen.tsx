@@ -1,6 +1,6 @@
 import { useContext, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
-import { ScreenViewportContext } from './ScreenFrame'
+import { ScreenViewportContext } from './ScreenViewportContext'
 import { useViewportBackground } from './useViewportBackground'
 
 // ページの3レイヤーを受け取る

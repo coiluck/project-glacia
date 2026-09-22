@@ -20,6 +20,10 @@ export default function StoryMapPage() {
   const clearedStageIds = useProgressStore((s) => s.clearedStageIds)
   const setCurrentChapter = useProgressStore((s) => s.setCurrentChapter)
   const stamina = useStaminaStore((s) => selectStamina(s).stamina)
+  // クリック&ドラッグで横スクロール
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const dragRef = useRef({ down: false, startX: 0, scrollLeft: 0 })
+  const draggedRef = useRef(false)
   const current = chapters.find((c) => c.id === currentChapter)
 
   if (!current) return
@@ -54,11 +58,6 @@ export default function StoryMapPage() {
     setSelectedNode((prev) => (node && prev?.id === node.id ? null : node))
     setIsChapterSelectOpen(false)
   }
-
-  // クリック&ドラッグで横スクロール
-  const scrollRef = useRef<HTMLDivElement>(null)
-  const dragRef = useRef({ down: false, startX: 0, scrollLeft: 0 })
-  const draggedRef = useRef(false)
 
   const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
     const el = scrollRef.current

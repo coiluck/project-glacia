@@ -27,7 +27,7 @@ function SpriteImage({ id, pose }: { id: string; pose: string }) {
     el.classList.remove('fade-in', 'appear-bounce', 'bounce');
     void el.offsetWidth; // リフローを強制してアニメーションを再start
     el.classList.add('bounce');
-  }, [bounce?.id]);
+  }, [bounce, id]);
 
   return (
     <img

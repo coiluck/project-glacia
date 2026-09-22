@@ -27,7 +27,6 @@ const TRANSFORM_MAP: Record<BgDirection, [string, string]> = {
 export function Background({ bg, motion }: Props) {
   const imgRef = useRef<HTMLImageElement>(null);
 
-  // motion発火: motion.idが変わったときだけ動く
   useEffect(() => {
     if (!motion) return;
     const img = imgRef.current;
@@ -50,7 +49,7 @@ export function Background({ bg, motion }: Props) {
     else img.addEventListener('load', start, { once: true });
 
     return () => img.removeEventListener('load', start);
-  }, [motion?.id]); // ← idだけ見る。motionオブジェクト全体は見ない
+  }, [motion]);
 
   if (!bg.file) return <div className="scenario-bg-layer" />;
 

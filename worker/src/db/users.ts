@@ -14,6 +14,9 @@ type UserTableRow = Omit<
   tutorial_steps: string
   items: string
   exchange_bought: string
+  // SELECT * で一緒に来るが、レスポンスには含めない
+  password_hash: string
+  password_salt: string
 }
 
 interface CharacterTableRow {
@@ -61,11 +64,14 @@ export async function createUser(
 }
 
 export async function loadMe({ db, userId, now }: Context): Promise<MeResponse> {
-  const user = await db
+  const row = await db
     .prepare('SELECT * FROM users WHERE id = ?')
     .bind(userId)
     .first<UserTableRow>()
-  if (!user) throw new Error(`ユーザーが見つからない: ${userId}`)
+  if (!row) throw new Error(`ユーザーが見つからない: ${userId}`)
+
+  // パスワード系の列はサーバーの外に出さない
+  const { password_hash, password_salt, ...user } = row
 
   const characters = await db
     .prepare('SELECT * FROM user_characters WHERE user_id = ?')

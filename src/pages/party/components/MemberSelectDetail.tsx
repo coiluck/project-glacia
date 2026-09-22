@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
-import { ScreenViewportContext } from '../../../layouts/ScreenFrame'
+import { ScreenViewportContext } from '../../../layouts/ScreenViewportContext'
 import { paths } from '../../../router/paths'
 import { useTranslations } from '../../../i18n'
 import AttackRangeHex from '../../../components/common/AttackRangeHex'
