@@ -131,16 +131,6 @@
   opacity: 0.2;
 }
 
-.top-menu-button-mission-icon {
-  width: calc(72px * var(--scale));
-  height: calc(72px * var(--scale));
-  mask-image: url('/project-glacia/images/top/menu-main/mission.svg');
-  mask-repeat: no-repeat;
-  mask-position: center;
-  mask-size: contain;
-  background-color: #282828;
-  opacity: 0.2;
-}
 .top-menu-button-exchange-icon {
   width: calc(72px * var(--scale));
   height: calc(72px * var(--scale));
@@ -179,7 +169,7 @@
 
 .top-menu-buttons a.top-menu-button-store {
   width: fit-content;
-  padding: 0 calc(24px * var(--scale));
+  padding: 0 calc(36px * var(--scale));
   text-wrap: nowrap;
   font-size: calc(2rem * var(--scale));
   background-color: #282828;
