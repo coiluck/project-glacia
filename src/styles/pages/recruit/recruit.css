@@ -89,7 +89,7 @@
 }
 .recruit-lead {
   margin-top: 10px;
-  font-size: 18px;
+  font-size: 24px;
   line-height: 1.5;
   color: var(--ink-dim);
 }
@@ -116,13 +116,13 @@
 .recruit-rate-row dt {
   display: flex;
   gap: 2px;
-  font-size: 22px;
+  font-size: 26px;
   color: var(--rarity);
   text-shadow: 0 0 8px color-mix(in srgb, var(--rarity) 55%, transparent);
 }
 .recruit-rate-row dd {
   font-family: 'CaviarDreams', sans-serif;
-  font-size: 24px;
+  font-size: 28px;
   color: var(--ink);
 }
 
@@ -138,13 +138,13 @@
   justify-content: space-between;
 }
 .recruit-pity-label {
-  font-size: 18px;
+  font-size: 22px;
   letter-spacing: 0.08em;
   color: var(--ink-dim);
 }
 .recruit-pity-count {
   font-family: 'CaviarDreams', sans-serif;
-  font-size: 22px;
+  font-size: 26px;
   color: var(--accent);
 }
 .recruit-pity-bar {
@@ -202,7 +202,7 @@
   align-items: center;
   gap: 8px;
   font-family: 'CaviarDreams', sans-serif;
-  font-size: 22px;
+  font-size: 24px;
   color: inherit;
 }
 .recruit-action-gem {
@@ -214,7 +214,7 @@
 }
 
 .recruit-shortage {
-  font-size: 18px;
+  font-size: 22px;
   text-align: center;
   color: #ff9c9c;
 }

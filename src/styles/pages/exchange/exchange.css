@@ -121,13 +121,13 @@
   display: flex;
   align-items: baseline;
   gap: 10px;
-  font-size: 13px;
+  font-size: 18px;
   letter-spacing: 0.12em;
   color: var(--paper-ink-dim);
 }
 .exchange-head-reset b {
   font-family: 'CaviarDreams', sans-serif;
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 600;
   letter-spacing: 0.06em;
   color: var(--paper-ink);
@@ -168,7 +168,7 @@
   position: absolute;
   top: 10px;
   left: 14px;
-  font-size: 12px;
+  font-size: 15px;
   line-height: 1;
   letter-spacing: 0.08em;
   color: var(--rarity);
@@ -178,7 +178,7 @@
   top: 10px;
   right: 14px;
   font-family: 'CaviarDreams', sans-serif;
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1;
   letter-spacing: 0.3em;
   color: var(--ink-mute);
@@ -206,7 +206,7 @@
 }
 .exchange-offer-name {
   margin-top: 16px;
-  font-size: 21px;
+  font-size: 26px;
   line-height: 1.2;
   letter-spacing: 0.06em;
   color: #fff;
@@ -214,13 +214,13 @@
 }
 .exchange-offer-owned {
   margin-top: 6px;
-  font-size: 13px;
+  font-size: 18px;
   letter-spacing: 0.1em;
   color: var(--ink-dim);
 }
 .exchange-offer-owned b {
   font-family: 'CaviarDreams', sans-serif;
-  font-size: 15px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--ink);
 }
@@ -254,7 +254,7 @@
   height: 48px;
   margin-top: 16px;
   font-family: inherit;
-  font-size: 15px;
+  font-size: 20px;
   letter-spacing: 0.24em;
   text-indent: 0.24em;
   color: #111;
@@ -294,7 +294,7 @@
   left: 50%;
   padding: 6px 22px;
   font-family: 'CaviarDreams', sans-serif;
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 600;
   letter-spacing: 0.4em;
   text-indent: 0.4em;
