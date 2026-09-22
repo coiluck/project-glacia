@@ -125,7 +125,8 @@ export async function saveMe(
            currency = ?, gems = ?, pity = ?,
            chapter = ?, cleared_stage_ids = ?, tutorial_steps = ?,
            items = ?,
-           exchange_tokens = ?, exchange_claimed_day = ?, exchange_bought_day = ?, exchange_bought = ?
+           exchange_tokens = ?, exchange_claimed_day = ?, exchange_bought_day = ?, exchange_bought = ?,
+           login_claimed_day = ?, login_count = ?
          WHERE id = ?`,
       )
       .bind(
@@ -148,6 +149,8 @@ export async function saveMe(
         u.exchange_claimed_day,
         u.exchange_bought_day,
         JSON.stringify(u.exchange_bought),
+        u.login_claimed_day,
+        u.login_count,
         u.id,
       ),
   ]

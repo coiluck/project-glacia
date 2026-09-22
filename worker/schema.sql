@@ -21,7 +21,9 @@ CREATE TABLE IF NOT EXISTS users (
   exchange_tokens                INTEGER NOT NULL DEFAULT 0,
   exchange_claimed_day           INTEGER NOT NULL DEFAULT 0,
   exchange_bought_day            INTEGER NOT NULL DEFAULT 0,
-  exchange_bought                TEXT    NOT NULL DEFAULT '[]'
+  exchange_bought                TEXT    NOT NULL DEFAULT '[]',
+  login_claimed_day              INTEGER NOT NULL DEFAULT 0,
+  login_count                    INTEGER NOT NULL DEFAULT 0
 );
 
 -- 所持キャラ

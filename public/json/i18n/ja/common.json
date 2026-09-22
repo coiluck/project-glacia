@@ -2,5 +2,10 @@
   "back": "もどる",
   "close": "とじる",
   "ok": "決定",
-  "cancel": "キャンセル"
+  "cancel": "キャンセル",
+  "gems": "ジェム",
+  "currency": "紙幣",
+  "year": "年",
+  "month": "月",
+  "loginBonus": "ログインボーナス"
 }

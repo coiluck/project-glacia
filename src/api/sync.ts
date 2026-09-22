@@ -10,6 +10,7 @@ import { useCharacterStore } from '../stores/characterStore'
 import { useGachaStore } from '../stores/gachaStore'
 import { useInventoryStore } from '../stores/inventoryStore'
 import { useExchangeStore } from '../stores/exchangeStore'
+import { useLoginBonusStore } from '../stores/loginBonusStore'
 
 // ユーザーデータを取得し、全ストアへ反映する
 export async function syncUserData(): Promise<MeResponse> {
@@ -29,6 +30,7 @@ export function distribute(me: MeResponse) {
   useGachaStore.getState().hydrate(me.user)
   useInventoryStore.getState().hydrate(me.user)
   useExchangeStore.getState().hydrate(me.user)
+  useLoginBonusStore.getState().hydrate(me.user)
   useCharacterStore.getState().hydrate(me)
 }
 
@@ -43,5 +45,6 @@ export function resetAll() {
   useGachaStore.getState().reset()
   useInventoryStore.getState().reset()
   useExchangeStore.getState().reset()
+  useLoginBonusStore.getState().reset()
   useCharacterStore.getState().reset()
 }

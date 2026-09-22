@@ -39,6 +39,10 @@ export interface UserRow {
   exchange_claimed_day: number // 本日分の交換材料を受け取った日（features/daily/day.ts の dayIndex）
   exchange_bought_day: number // exchange_bought がどの日のものか
   exchange_bought: number[] // その日に交換済みの枠（lineupFor の添字）
+
+  // --- loginBonus（loginBonusStore）---
+  login_claimed_day: number // 最後にログインボーナスを受け取った日（dayIndex）
+  login_count: number // その日の月に受け取った回数
 }
 
 export interface MeResponse {
@@ -69,6 +73,11 @@ export type EnhancePayload =
   | { kind: 'level'; masterId: string; use: MaterialCost[] } // use は消費する育成記録
   | { kind: 'limitBreak'; masterId: string }
   | { kind: 'skill'; masterId: string; skillId: string }
+
+// POST /login-bonus の result
+export interface LoginBonusResult {
+  count: number // 今月何回目か
+}
 
 // POST /exchange のリクエスト
 export type ExchangePayload =

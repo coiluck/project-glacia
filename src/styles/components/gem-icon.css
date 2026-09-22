@@ -1,0 +1,11 @@
+.gem-icon {
+  position: relative;
+  display: inline-block;
+}
+.gem-icon span {
+  position: absolute;
+  inset: 0;
+  background-color: currentColor;
+  -webkit-mask: url('/project-glacia/images/component/resource-bar/gem.svg') no-repeat center / contain;
+  mask: url('/project-glacia/images/component/resource-bar/gem.svg') no-repeat center / contain;
+}

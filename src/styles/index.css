@@ -17,6 +17,7 @@
 @import './pages/top/event-banner.css';
 @import './pages/top/system-menu.css';
 @import './pages/top/menu-buttons.css';
+@import './pages/top/login-bonus.css';
 @import './pages/party/party.css';
 @import './pages/party/formation-tabs.css';
 @import './pages/party/member-select.css';
@@ -51,6 +52,7 @@
 @import './components/attack-range-hex.css';
 @import './components/resource-bar.css';
 @import './components/bill-icon.css';
+@import './components/gem-icon.css';
 
 
 /* font */

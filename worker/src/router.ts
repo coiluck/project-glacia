@@ -8,6 +8,7 @@ import * as characters from './routes/characters'
 import * as debug from './routes/debug'
 import * as exchange from './routes/exchange'
 import * as gacha from './routes/gacha'
+import * as loginBonus from './routes/loginBonus'
 import * as party from './routes/party'
 import type { Command } from './routes/types'
 
@@ -18,6 +19,7 @@ const COMMANDS: Record<string, Command<unknown>> = {
   '/party': party.save,
   '/characters/enhance': characters.enhance,
   '/exchange': exchange.run,
+  '/login-bonus': loginBonus.claim,
   '/debug/set': debug.set,
 }
 
