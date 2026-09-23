@@ -74,8 +74,10 @@ export function deployAlly(
   if (!deployable || unitAt(state, pos)) {
     throw new Error(`Cannot deploy at (${pos.q},${pos.r})`);
   }
+  const id = `ally-${character.id}`;
+  if (state.units.some((u) => u.id === id)) throw new Error(`Already deployed: ${character.id}`);
   const unit: Unit = {
-    id: `ally-${character.id}`,
+    id,
     side: 'ally',
     classId: character.classId,
     pos,

@@ -196,14 +196,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 120px;
+  width: 150px;
   transform: translate(-50%, -100%);
 }
 .battle-unit-chibi {
   display: block;
-  width: 108px;
-  height: 192px;
-  margin-bottom: calc(192px * -0.1 - 6px); /* 足元 = 画像の top 90%。deploy.css の FOOT_RATIO とそろえる */
+  width: 136px;
+  height: 136px;
   object-fit: contain;
   filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.55));
 }
@@ -256,6 +255,10 @@
   align-items: center;
   gap: 3px;
   transform: translateY(4px);
+}
+.battle-unit-chibi + .battle-unit-plate {
+  position: absolute;
+  top: 100%;
 }
 .battle-unit-hp {
   width: 76px;

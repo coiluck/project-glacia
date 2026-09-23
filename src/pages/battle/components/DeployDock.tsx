@@ -6,7 +6,7 @@ import ViewportLayer from '../../../layouts/ViewportLayer'
 
 // ちび絵の足元が画像の top 何%の位置にあるか
 // deploy.css の .is-snapped の translateY とそろえる
-const FOOT_RATIO = 0.9
+const FOOT_RATIO = 1
 
 // 持ち上げ中の状態。x/y はクライアント座標でのゴーストの吊り下げ位置
 interface DragState {
@@ -77,8 +77,8 @@ export default function DeployDock({
   }
 
   const handleDown = (index: number) => (e: ReactPointerEvent<HTMLElement>) => {
-    // 右クリック等の主ボタン以外と、掴んでいる最中の2本目の指は無視する
-    if (e.button !== 0 || drag) return
+    // 右クリック等の主ボタン以外と、掴んでいる最中の2本目の指と、配置済みのキャラは無視する
+    if (e.button !== 0 || drag || isDeployed(party[index].character.id)) return
 
     e.currentTarget.setPointerCapture(e.pointerId)
     setDrag({ ...track(index, e.clientX, e.clientY), pointerId: e.pointerId, target: null })

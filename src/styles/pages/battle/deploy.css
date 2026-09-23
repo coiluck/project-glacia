@@ -134,8 +134,8 @@
   top: 0;
   left: 0;
   z-index: 2; /* .screen-safe が z-index:1 なので、その上へ */
-  width: calc(var(--scale) * 108px);
-  height: calc(var(--scale) * 192px);
+  width: calc(var(--scale) * 136px);
+  height: calc(var(--scale) * 136px);
   pointer-events: none;
   transition: transform 0.08s linear;
 }
@@ -169,5 +169,5 @@
   transition: transform 0.12s ease-out;
 }
 .battle-deploy-ghost.is-snapped .battle-deploy-ghost-body {
-  transform: translateY(-90%);
+  transform: translateY(-100%);
 }
