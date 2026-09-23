@@ -9,6 +9,7 @@ import { enemyDefs } from '../../data/enemies'
 import { unitClasses } from '../../data/unitClasses'
 import { buildParty } from '../../features/characters/build'
 import { useCharacterStore } from '../../stores/characterStore'
+import { useProgressStore } from '../../stores/progressStore'
 import {
   aimableTilesOnBoard,
   availableAp,
@@ -106,8 +107,12 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   const [previewKey, setPreviewKey] = useState<string | null>(null)
   const [twoTap] = useState(() => window.matchMedia('(hover: none)').matches)
 
-  // チュートリアルのガイド。登録のあるステージでだけ出る
-  const guideDef = stageId ? battleGuideRegistry[stageId] : undefined
+  // チュートリアルは登録があり、まだクリアしていないステージでだけ出る
+  const [guideDef] = useState(() => {
+    if (!stageId) return undefined
+    if (useProgressStore.getState().clearedStageIds.includes(stageId)) return undefined
+    return battleGuideRegistry[stageId]
+  })
 
   // 編成中のパーティをマスターデータ＋所持データから組み立てる。
   // 戦闘中は変わらないので、この戦闘のあいだ固定する

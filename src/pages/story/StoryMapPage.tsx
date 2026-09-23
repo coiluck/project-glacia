@@ -227,7 +227,12 @@ export default function StoryMapPage() {
                     <StaminaCost current={stamina} cost={selectedNode.stamina} />
                   </div>
                 ) : (
-                  <Link className="story-map-stage-info-button sortie" to={paths.scenario(selectedNode.id)} replace>
+                  // クリア済みならシナリオを飛ばしてそのまま戦闘へ
+                  <Link
+                    className="story-map-stage-info-button sortie"
+                    to={selectedNode.status === 'cleared' ? paths.battle(selectedNode.id) : paths.scenario(selectedNode.id)}
+                    replace
+                  >
                     出撃
                     <StaminaCost current={stamina} cost={selectedNode.stamina} />
                   </Link>
