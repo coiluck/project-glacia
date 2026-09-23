@@ -77,6 +77,11 @@ export type EnhancePayload =
   | { kind: 'limitBreak'; masterId: string }
   | { kind: 'skill'; masterId: string; skillId: string }
 
+// POST /favorite のリクエスト
+export interface FavoritePayload {
+  masterId: string // CharacterMaster.id
+}
+
 // POST /login-bonus の result
 export interface LoginBonusResult {
   count: number // 今月何回目か

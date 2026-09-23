@@ -1,4 +1,4 @@
-/* ===== 左中央：キャラ立ち絵 ===== */
+/* キャラ立ち絵 */
 .top-character-art {
   position: absolute;
   left: calc(2rem * var(--scale));
@@ -20,12 +20,21 @@
   background: linear-gradient(to right, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.2));
   z-index: 1;
 }
-.top-character-name {
+
+.top-character-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: calc(24px * var(--scale));
   position: absolute;
   top: 0;
   left: calc(36px * var(--scale));
   transform: translateY(-50%);
   width: fit-content;
+}
+
+.top-character-name {
   padding: 0 calc(24px * var(--scale));
   font-size: calc(1.2rem * var(--scale));
   letter-spacing: 0.1rem;
@@ -41,6 +50,118 @@
     0 50%
   );
 }
+
+/* お気に入りキャラの変更ボタン */
+.top-character-change {
+  position: relative;
+  z-index: 2;
+}
+
+.top-character-change-button {
+  position: relative;
+  width: calc(36px * var(--scale));
+  height: calc(36px * var(--scale));
+  background-color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+/* 入れ替えアイコンとバツは開閉で入れ替える */
+.top-character-change-icon,
+.top-character-change-close {
+  position: absolute;
+  inset: calc(7px * var(--scale));
+  transition: opacity 0.2s ease-out;
+}
+.top-character-change-icon {
+  mask-image: url('/project-glacia/images/top/change.svg');
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  background-color: #333;
+}
+.top-character-change-close {
+  opacity: 0;
+}
+.top-character-change-close::before,
+.top-character-change-close::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: calc(3px * var(--scale));
+  background-color: #333;
+}
+.top-character-change-close::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.top-character-change-close::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+.top-character-change-button.is-open .top-character-change-icon {
+  opacity: 0;
+}
+.top-character-change-button.is-open .top-character-change-close {
+  opacity: 1;
+}
+
+/* ボタンの下に開くパネル */
+.top-character-change-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: calc(560px * var(--scale));
+  max-height: 0;
+  margin-top: calc(10px * var(--scale));
+  overflow: hidden;
+  background: rgba(20, 20, 24, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  visibility: hidden;
+  transition: max-height 0.3s ease-out, visibility 0s linear 0.3s;
+}
+.top-character-change-panel.is-open {
+  max-height: calc(300px * var(--scale));
+  visibility: visible;
+  transition: max-height 0.3s ease-out;
+}
+.top-character-change-panel-inner {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: calc(12px * var(--scale));
+  max-height: calc(296px * var(--scale));
+  padding: calc(16px * var(--scale));
+  overflow-y: auto;
+}
+
+.top-character-change-item {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.top-character-change-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.top-character-change-item.is-selected {
+  border: 1px solid rgb(107, 191, 252);
+}
+.top-character-change-item.is-selected::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(48px * var(--scale));
+  height: calc(48px * var(--scale));
+  background: linear-gradient(45deg, rgb(107, 191, 252), rgb(102, 255, 255));
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
 .top-character-line {
   padding-top: calc(12px * var(--scale));
   min-width: calc(480px * var(--scale));
