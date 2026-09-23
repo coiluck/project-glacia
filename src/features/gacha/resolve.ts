@@ -1,7 +1,8 @@
 // 召集1回ぶんのサーバー側の処理」
 import type { MeResponse } from '../../api/types'
 import { characterMasters } from '../../data/characters'
-import { MAX_DUPE, type UserCharacter } from '../../data/characters/types'
+import { MAX_DUPE } from '../../data/characters/const'
+import type { UserCharacter } from '../../data/characters/types'
 import {
   DUPE_CONVERT_CURRENCY,
   MULTI_PULL_COUNT,

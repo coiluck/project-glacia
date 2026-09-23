@@ -1,6 +1,6 @@
 import type { MeResponse } from '../../api/types'
 import { characterMasters } from '../../data/characters'
-import { CURRENCY_PER_EXP, MAX_SKILL_LEVEL } from '../../data/characters/types'
+import { CURRENCY_PER_EXP, MAX_SKILL_LEVEL } from '../../data/characters/const'
 import type { CharacterMaster, MaterialCost, UserCharacter } from '../../data/characters/types'
 import { items as itemDefs } from '../../data/items'
 import { hasItems, spendItems } from '../inventory/inventory'

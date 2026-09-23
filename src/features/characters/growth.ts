@@ -3,7 +3,7 @@ import {
   LIMIT_BREAK_LEVELS,
   MAX_LEVEL,
   MAX_SKILL_LEVEL,
-} from '../../data/characters/types'
+} from '../../data/characters/const'
 import type { CharacterMaster, Rarity, UserCharacter } from '../../data/characters/types'
 
 // 上限解放の回数 -> レベル上限
