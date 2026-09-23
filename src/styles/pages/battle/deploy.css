@@ -133,7 +133,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 2; /* .screen-safe が z-index:1 なので、その上へ */
+  z-index: 4; /* .screen-safe（z-index:1）とチュートリアル（z-index:3）の上へ */
   width: calc(var(--scale) * 136px);
   height: calc(var(--scale) * 136px);
   pointer-events: none;

@@ -28,7 +28,7 @@ export default function BattleHud({ phase, turn, partyAp, partyApMax, spend }: B
         </div>
         <div className={`battle-hud-phase is-${phase}`}>{PHASE_LABEL[phase]}</div>
       </div>
-      <div className="battle-hud-ap battle-panel">
+      <div className="battle-hud-ap battle-panel" data-guide="party-ap">
         <span className="battle-label">PARTY AP</span>
         <ApPips max={partyApMax} current={partyAp} spend={spend} />
         <span className="battle-num">

@@ -214,6 +214,7 @@ export default function HexGrid({
             <div
               key={unit.id}
               className={className}
+              data-unit-id={unit.id}
               style={{ transform: `translate(${c.x - minX}px, ${c.y - minY}px)` }}
               onClick={onUnitClick ? () => onUnitClick(unit) : undefined}
               onPointerEnter={onHover ? () => onHover(axialKey(unit.pos)) : undefined}

@@ -91,7 +91,9 @@ export default function DeployDock({
 
   const handleUp = (e: ReactPointerEvent<HTMLElement>) => {
     if (drag?.pointerId !== e.pointerId) return
-    if (drag.target) onDeploy(party[drag.index], drag.target)
+    // 直前の pointermove の setDrag がまだ描画に反映されていないことがあるので、離した位置で判定し直す
+    const { target } = track(drag.index, e.clientX, e.clientY)
+    if (target) onDeploy(party[drag.index], target)
     setDrag(null)
   }
 
@@ -115,6 +117,7 @@ export default function DeployDock({
                 type="button"
                 className={`battle-deploy-face${deployed ? ' is-deployed' : ''}${drag?.index === i ? ' is-holding' : ''}`}
                 disabled={deployed}
+                data-guide={`deploy-${m.character.id}`}
                 onPointerDown={handleDown(i)}
                 onPointerMove={handleMove(i)}
                 onPointerUp={handleUp}
@@ -135,7 +138,12 @@ export default function DeployDock({
         </div>
       </div>
 
-      <button className="battle-button-primary battle-deploy-start" disabled={!canStart} onClick={onStart}>
+      <button
+        className="battle-button-primary battle-deploy-start"
+        data-guide="start"
+        disabled={!canStart}
+        onClick={onStart}
+      >
         {startLabel}
       </button>
 

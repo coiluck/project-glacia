@@ -12,6 +12,16 @@ export const enemyDefs: Record<string, EnemyDef> = {
     hp: 300,
     maxHp: 300,
   },
+  // チュートリアル（1-1）用に弱くした氷晶兵。ラピス1人で勝てる強さにしてある
+  iceGruntWeak: {
+    id: 'iceGruntWeak',
+    nameKey: 'enemyIceGrunt',
+    classId: 'soldier',
+    attack: 12,
+    defense: 15,
+    hp: 240,
+    maxHp: 240,
+  },
   // 氷晶射手: 遠距離の雑魚
   iceArcher: {
     id: 'iceArcher',

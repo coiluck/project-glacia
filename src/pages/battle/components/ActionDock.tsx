@@ -67,6 +67,7 @@ export default function ActionDock({
           <button
             type="button"
             className={`battle-action-button is-skill${action === 'skill' ? ' is-active' : ''}`}
+            data-guide="skill"
             disabled={!canSkill}
             onClick={onSkill}
             onPointerEnter={() => onHover('skill')}

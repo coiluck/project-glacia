@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { paths } from '../../router/paths'
 import { useTranslations } from '../../i18n'
+import { battleGuideRegistry } from '../../data/battleGuides'
 import { battleStageRegistry } from '../../data/battleStages'
 import { characterMasters } from '../../data/characters'
 import { enemyDefs } from '../../data/enemies'
@@ -21,7 +22,9 @@ import { calcDamage } from '../../features/battle/damage'
 import { axialKey, effectTiles, shapeAimsAnyDirection, shapeTiles } from '../../features/battle/hex'
 import type { AimTile, Axial } from '../../features/battle/hex'
 import type { Unit } from '../../features/battle/types'
+import { useBattleGuide } from './useBattleGuide'
 import ActionDock from './components/ActionDock'
+import BattleGuide from './components/BattleGuide'
 import BattleHud from './components/BattleHud'
 import BattleResult from './components/BattleResult'
 import DeployDock from './components/DeployDock'
@@ -59,6 +62,13 @@ const BATTLE_TRANSLATION_MAPPING = Object.fromEntries(
   ].map((k) => [k, k]),
 )
 
+// チュートリアルの台詞は tutorial.json にある
+const TUTORIAL_TRANSLATION_MAPPING = Object.fromEntries(
+  Object.values(battleGuideRegistry)
+    .flatMap((g) => g.steps.map((s) => s.textKey))
+    .map((k) => [k, k]),
+)
+
 // 選択中ユニットに対して指示できる行動
 export type ActionMode = 'move' | 'attack' | 'skill'
 
@@ -87,6 +97,7 @@ export default function BattlePage() {
 function BattleScreen({ stageId }: { stageId: string | undefined }) {
   const tBattle = useTranslations('battle', BATTLE_TRANSLATION_MAPPING)
   const tCharacter = useTranslations('characters', CHARACTER_TRANSLATION_MAPPING)
+  const tTutorial = useTranslations('tutorial', TUTORIAL_TRANSLATION_MAPPING)
   const t = { ...tBattle, ...tCharacter }
   const [selectedUnitId, setSelectedUnitId] = useState<string | null>(null)
   const [action, setAction] = useState<ActionMode>('move')
@@ -95,9 +106,16 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   const [previewKey, setPreviewKey] = useState<string | null>(null)
   const [twoTap] = useState(() => window.matchMedia('(hover: none)').matches)
 
+  // チュートリアルのガイド。登録のあるステージでだけ出る
+  const guideDef = stageId ? battleGuideRegistry[stageId] : undefined
+
   // 編成中のパーティをマスターデータ＋所持データから組み立てる。
   // 戦闘中は変わらないので、この戦闘のあいだ固定する
   const [party] = useState(() => {
+    if (guideDef) {
+      const owned = Object.fromEntries(guideDef.party.map((c) => [c.masterId, c]))
+      return buildParty(owned, guideDef.party.map((c) => c.masterId))
+    }
     const s = useCharacterStore.getState()
     return buildParty(s.owned, s.party[s.currentPartySlotIndex] ?? [])
   })
@@ -112,6 +130,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   const doSkill = useBattleStore((s) => s.doSkill)
   const undoTurn = useBattleStore((s) => s.undoTurn)
   const endPlayerTurn = useBattleStore((s) => s.endPlayerTurn)
+  const guide = useBattleGuide(guideDef, state?.phase)
 
   // マウント時に戦闘状態を作り直す
   useEffect(() => {
@@ -298,8 +317,10 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     if (!user.skill || !aim) return false
     if (!skillHitsAnyone(state, user, user.skill, aim)) return false
     if (!confirmOrPreview(key)) return true // 予告を出しただけ。モードは維持
-    doSkill(user.id, pos)
-    finishAction()
+    guide.act({ type: 'skill', aim: pos }, () => {
+      doSkill(user.id, pos)
+      finishAction()
+    })
     return true
   }
 
@@ -309,8 +330,10 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     const key = axialKey(pos)
     if (selectedUnit?.side === 'ally' && action === 'move' && moveCosts.has(key)) {
       if (!confirmOrPreview(key)) return
-      move(selectedUnit.id, pos)
-      setPreviewKey(null)
+      guide.act({ type: 'move', unitId: selectedUnit.id, to: pos }, () => {
+        move(selectedUnit.id, pos)
+        setPreviewKey(null)
+      })
       return
     }
     // 範囲攻撃は誰も立っていないマスを狙点にすることもある
@@ -318,17 +341,19 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
       castSkillAt(selectedUnit, pos)
       return
     }
-    deselect() // 関係ないタイル -> 選択解除
+    guide.act({ type: 'deselect' }, deselect) // 関係ないタイル -> 選択解除
   }
 
   const handleUnitClick = (unit: Unit) => {
     if (state.phase === 'deployment') {
       if (unit.side === 'ally') {
         // 配置済みの味方をタップで配置解除し、ドックへ戻す
-        undeploy(unit.id)
-        setSelectedUnitId(null)
+        guide.act({ type: 'undeploy', unitId: unit.id }, () => {
+          undeploy(unit.id)
+          setSelectedUnitId(null)
+        })
       } else {
-        setSelectedUnitId(unit.id) // 敵の情報を見る
+        guide.act({ type: 'select', unitId: unit.id }, () => setSelectedUnitId(unit.id)) // 敵の情報を見る
       }
       return
     }
@@ -337,22 +362,28 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     if (selectedUnit?.side === 'ally') {
       if (action === 'attack' && unit.side === 'enemy' && highlights.get(key) === 'attack') {
         if (!confirmOrPreview(key)) return
-        doAttack(selectedUnit.id, [unit.id])
-        finishAction()
+        guide.act({ type: 'attack', targetId: unit.id }, () => {
+          doAttack(selectedUnit.id, [unit.id])
+          finishAction()
+        })
         return
       }
       // 効果の当たり判定が対象の適否を兼ねるので、陣営の判定はここでは要らない
       if (action === 'skill' && castSkillAt(selectedUnit, unit.pos)) return
     }
     // 選択の切り替えのみ
-    setSelectedUnitId(unit.id)
-    setAction('move')
-    setPreviewKey(null)
+    guide.act({ type: 'select', unitId: unit.id }, () => {
+      setSelectedUnitId(unit.id)
+      setAction('move')
+      setPreviewKey(null)
+    })
   }
 
   const handleAttackButton = () => {
-    setAction(action === 'attack' ? 'move' : 'attack')
-    setPreviewKey(null)
+    guide.act({ type: 'attackMode' }, () => {
+      setAction(action === 'attack' ? 'move' : 'attack')
+      setPreviewKey(null)
+    })
   }
 
   const handleSkillButton = () => {
@@ -361,22 +392,30 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     // 自分のマスは常に狙えるので、候補が1つならそれは自分のマス
     const aims = aimableTilesOnBoard(stage, selectedUnit.pos, selectedUnit.skill)
     if (aims.length === 1) {
-      doSkill(selectedUnit.id, aims[0].pos)
-      finishAction()
+      guide.act({ type: 'skill', aim: aims[0].pos }, () => {
+        doSkill(selectedUnit.id, aims[0].pos)
+        finishAction()
+      })
     } else {
-      setAction(action === 'skill' ? 'move' : 'skill')
-      setPreviewKey(null)
+      guide.act({ type: 'skillMode' }, () => {
+        setAction(action === 'skill' ? 'move' : 'skill')
+        setPreviewKey(null)
+      })
     }
   }
 
   const handleEndTurn = () => {
-    deselect()
-    void endPlayerTurn() // 敵の逐次行動は非同期で進む
+    guide.act({ type: 'endTurn' }, () => {
+      deselect()
+      void endPlayerTurn() // 敵の逐次行動は非同期で進む
+    })
   }
 
   const handleUndoTurn = () => {
-    deselect()
-    undoTurn()
+    guide.act({ type: 'undo' }, () => {
+      deselect()
+      undoTurn()
+    })
   }
 
   const canAttack =
@@ -463,8 +502,12 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
             deployedLabel={t.deployed}
             startLabel={t.startBattle}
             canStart={state.units.some((u) => u.side === 'ally')}
-            onStart={start}
-            onDeploy={(member, pos) => deploy(member.character, member.skill, pos)}
+            onStart={() => guide.act({ type: 'startBattle' }, start)}
+            onDeploy={(member, pos) =>
+              guide.act({ type: 'deploy', charId: member.character.id, pos }, () =>
+                deploy(member.character, member.skill, pos),
+              )
+            }
           />
         )}
 
@@ -496,7 +539,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
             canSkill={canSkill}
             onAttack={handleAttackButton}
             onSkill={handleSkillButton}
-            onDeselect={deselect}
+            onDeselect={() => guide.act({ type: 'deselect' }, deselect)}
             onHover={setHoverButton}
           />
         )}
@@ -507,7 +550,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
             <button className="battle-button-ghost" onClick={handleUndoTurn}>
               {t.undoTurn}
             </button>
-            <button className="battle-button-primary" onClick={handleEndTurn}>
+            <button className="battle-button-primary" data-guide="end-turn" onClick={handleEndTurn}>
               {t.endTurn}
             </button>
           </div>
@@ -516,6 +559,23 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
         {/* フェーズの切り替わり */}
         {(state.phase === 'player' || state.phase === 'enemy') && (
           <PhaseBanner key={`${state.phase}-${state.turn}`} phase={state.phase} turn={state.turn} />
+        )}
+
+        {/* チュートリアルのガイド */}
+        {inBattle && guideDef && guide.step && (
+          <BattleGuide
+            step={guide.step}
+            index={guide.index}
+            total={guide.total}
+            text={tTutorial[guide.step.textKey] ?? ''}
+            speakerId={guide.step.speaker}
+            speakerName={
+              guide.step.speaker ? (t[characterMasters[guide.step.speaker]?.nameKey ?? ''] ?? '') : 'System'
+            }
+            nudge={guide.nudge}
+            unitPos={(id) => state.units.find((u) => u.id === id)?.pos}
+            onNext={guide.next}
+          />
         )}
 
         {/* 勝敗。結果の送信と報酬の表示は BattleResult が持つ */}
