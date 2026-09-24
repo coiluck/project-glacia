@@ -19,7 +19,7 @@ export interface UnitClassDef {
 // いろいろなスキル効果があると思うのでこれらを組み合わせて定義する
 // なるべく固有のスキル効果を定義しない
 export type SkillEffect =
-  | { type: 'damage'; power: number; target: 'self' | 'ally' | 'enemy'; area?: AttackShape }
+  | { type: 'damage'; power: number; target: 'self' | 'ally' | 'enemy'; area?: AttackShape; drain?: number }
   | { type: 'healHp'; amount: number; target: 'self' | 'ally'; area?: AttackShape }
   | { type: 'grantAp'; amount: number; target: 'self' | 'ally'; area?: AttackShape };
 

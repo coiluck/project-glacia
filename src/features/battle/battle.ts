@@ -281,13 +281,17 @@ export function castSkill(
   const dead = new Set<string>(); // 効果の並び順で死体が回復・強化されないよう外していく
   for (const { effect, unitIds } of hits) {
     const hitIds = new Set(unitIds.filter((id) => !dead.has(id)));
+    let dealt = 0; // 実際に削ったHPの合計。吸収の計算に使う
     next = {
       ...next,
       units: next.units.map((u) => {
         if (!hitIds.has(u.id)) return u;
         switch (effect.type) {
-          case 'damage':
-            return { ...u, hp: Math.max(0, u.hp - calcDamage(user, u, effect.power)) };
+          case 'damage': {
+            const hp = Math.max(0, u.hp - calcDamage(user, u, effect.power));
+            dealt += u.hp - hp;
+            return { ...u, hp };
+          }
           case 'healHp':
             return { ...u, hp: Math.min(u.maxHp, u.hp + effect.amount) };
           case 'grantAp':
@@ -295,6 +299,15 @@ export function castSkill(
         }
       }),
     };
+    if (effect.type === 'damage' && effect.drain) {
+      const heal = Math.floor((dealt * effect.drain) / 100);
+      next = {
+        ...next,
+        units: next.units.map((u) =>
+          u.id === user.id ? { ...u, hp: Math.min(u.maxHp, u.hp + heal) } : u,
+        ),
+      };
+    }
     for (const u of next.units) {
       if (u.hp <= 0) dead.add(u.id);
     }

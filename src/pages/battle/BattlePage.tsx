@@ -262,6 +262,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
           if (tileSet.has(key)) highlights.set(key, anyone ? 'area' : 'area-miss')
         }
       }
+      let drained = 0 // 吸収で回復する量。castSkill と同じく実際に削れるHPから出す
       for (const { effect, unitIds } of hits) {
         for (const id of unitIds) {
           const target = unitById(state, id)
@@ -269,6 +270,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
             case 'damage': {
               const damage = calcDamage(selectedUnit, target, effect.power)
               chips.set(id, { kind: 'damage', value: damage, lethal: damage >= target.hp })
+              if (effect.drain) drained += (Math.min(damage, target.hp) * effect.drain) / 100
               break
             }
             case 'healHp':
@@ -279,6 +281,12 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
               break
           }
         }
+      }
+      if (drained > 0) {
+        chips.set(selectedUnit.id, {
+          kind: 'heal',
+          value: Math.min(Math.floor(drained), selectedUnit.maxHp - selectedUnit.hp),
+        })
       }
       marks.set(axialKey(aim.pos), 'aim')
     }

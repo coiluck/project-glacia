@@ -70,7 +70,7 @@ const alma: CharacterMaster = {
   ],
   dupeBonuses: [
     { status: { attack: 8 } },
-    { skillApCost: -1 },
+    { status: { hp: 40, defense: 4 } },
     { status: { hp: 60, defense: 6 } },
     { status: { attack: 14, defense: 4 } },
     { status: { hp: 120, attack: 22, defense: 10 } },

@@ -59,7 +59,7 @@ const lapis: CharacterMaster = {
   dupeBonuses: [
     { status: { attack: 8 } },
     { status: { hp: 40, defense: 4 } },
-    { skillApCost: -1 },
+    { status: { attack: 10 } },
     { status: { attack: 12 } },
     { status: { hp: 80, attack: 18, defense: 8 } },
   ],

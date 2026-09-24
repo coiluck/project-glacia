@@ -46,12 +46,12 @@ const vermilia: CharacterMaster = {
       def: {
         id: 'vermiliaIronStance',
         nameKey: 'skillVermiliaIronStance',
-        apCost: 2,
+        apCost: 3,
         range: { kind: 'range', max: 0 }, // 対象マスを持たない = 自分対象
-        effect: [{ type: 'healHp', amount: 110, target: 'self' }],
+        effect: [{ type: 'healHp', amount: 160, target: 'self' }],
       },
       descriptionKey: 'skillVermiliaIronStanceDesc',
-      effectGrowth: [22],
+      effectGrowth: [32],
       levelUpCosts: [
         [{ itemId: 'skillBookSmall', count: 2 }],
         [{ itemId: 'skillBookSmall', count: 4 }],
