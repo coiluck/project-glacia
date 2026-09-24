@@ -5,6 +5,7 @@ export const paths = {
   top:     '/',
   party:   '/party',     // 編成
   story:   '/story',     // ゲーム
+  sortie:   (stageId:    string) => `/sortie/${stageId}`, // 出撃準備
   scenario: (scenarioId: string) => `/scenario/${scenarioId}`, // シナリオ
   battle:   (stageId:    string) => `/battle/${stageId}`, // ゲーム
   member:  '/member',    // 人員

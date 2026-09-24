@@ -5,6 +5,7 @@ import BootPage from '../pages/boot/BootPage'
 import StartPage from '../pages/start/StartPage'
 import PartyPage from '../pages/party/PartyPage'
 import StoryMapPage from '../pages/story/StoryMapPage'
+import SortiePage from '../pages/sortie/SortiePage'
 import ScenarioPage from '../pages/scenario/ScenarioPage'
 import BattlePage from '../pages/battle/BattlePage'
 import MemberPage from '../pages/member/MemberPage'
@@ -24,6 +25,7 @@ export const router = createBrowserRouter(
         { index: true, element: <HomeOrBoot /> }, // Top（ホーム）。未起動ならロゴへ
         { path: 'party', element: <PartyPage /> }, // 編成
         { path: 'story', element: <StoryMapPage /> }, // ステージマップ
+        { path: 'sortie/:stageId', element: <SortiePage /> }, // 出撃準備
         { path: 'member', element: <MemberPage /> }, // 人員
         { path: 'member/:characterId', element: <MemberDetailPage /> }, // キャラ詳細・強化
         { path: 'recruit', element: <RecruitPage /> }, // 召集

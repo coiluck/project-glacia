@@ -6,6 +6,7 @@ import ViewportLayer from '../../layouts/ViewportLayer'
 import StageNode from './components/StageNode'
 import StageDrops from './components/StageDrops'
 import { useProgressStore } from '../../stores/progressStore'
+import { battleGuideRegistry } from '../../data/battleGuides'
 import { selectStamina, useStaminaStore } from '../../stores/staminaStore'
 import { chapters, isStageUnlocked, type Chapter, type ChapterStatus, type Stage, type StageStatus } from '../../data/stages'
 
@@ -227,10 +228,15 @@ export default function StoryMapPage() {
                     <StaminaCost current={stamina} cost={selectedNode.stamina} />
                   </div>
                 ) : (
-                  // クリア済みならシナリオを飛ばしてそのまま戦闘へ
+                  // チュートリアル戦闘は編成が固定なので出撃準備を飛ばしてシナリオへ
+                  // クリアとその他の未クリアはSortiePage側でわけている
                   <Link
                     className="story-map-stage-info-button sortie"
-                    to={selectedNode.status === 'cleared' ? paths.battle(selectedNode.id) : paths.scenario(selectedNode.id)}
+                    to={
+                      selectedNode.status !== 'cleared' && battleGuideRegistry[selectedNode.id]
+                        ? paths.scenario(selectedNode.id)
+                        : paths.sortie(selectedNode.id)
+                    }
                     replace
                   >
                     出撃
