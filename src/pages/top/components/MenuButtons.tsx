@@ -1,11 +1,16 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { paths } from '../../../router/paths'
 import { selectStamina, useStaminaStore } from '../../../stores/staminaStore'
+import { formatHms } from '../../../utils/format'
 
 // Top画面右のメインメニュー
 export default function MenuButtons() {
   const stamina = useStaminaStore((s) => selectStamina(s).stamina)
   const staminaMax = useStaminaStore((s) => s.base.stamina_max)
+  const toFull = useStaminaStore((s) => selectStamina(s).stamina_recovering_seconds_max)
+
+  const [isStaminaOpen, setIsStaminaOpen] = useState(false)
 
   return (
     <nav className="top-menu-buttons">
@@ -18,6 +23,25 @@ export default function MenuButtons() {
               <span className="top-menu-button-stamina-value">{stamina}</span>
               <span className="top-menu-button-stamina-max">MAX {staminaMax}</span>
             </div>
+
+            <div className="top-menu-button-stamina-button-container">
+              {/* Link の中にあるので遷移させない */}
+              <button
+                type="button"
+                className={`top-menu-button-stamina-button${isStaminaOpen ? ' is-open' : ''}`}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setIsStaminaOpen(!isStaminaOpen)
+                }}
+              />
+            </div>
+            {isStaminaOpen && (
+              <div className="top-menu-button-stamina-modal">
+                <p>回復まで</p>
+                <p>{formatHms(toFull)}</p>
+              </div>
+            )}
           </div>
 
           <span>戦闘</span>

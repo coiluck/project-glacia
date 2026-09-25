@@ -45,23 +45,27 @@
 }
 
 .top-menu-button-stamina-container {
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   height: 100%;
-  background: repeating-linear-gradient(
-    45deg,
-    #a3fcff 0,
-    #a3fcff calc(20px * var(--scale)),
-    #4d9fc5 calc(20px * var(--scale)),
-    #4d9fc5 calc(40px * var(--scale))
-  );
+  background:
+    linear-gradient(45deg, transparent 0%, rgba(163, 252, 255, 0.8) 70%),
+    repeating-linear-gradient(
+      45deg,
+      #a3fcff 0,
+      #a3fcff calc(20px * var(--scale)),
+      #4d9fc5 calc(20px * var(--scale)),
+      #4d9fc5 calc(40px * var(--scale))
+    );
 }
 .top-menu-button-stamina-icon {
   position: relative;
   aspect-ratio: 1 / 1;
   height: 100%;
+  margin-left: calc(16px * var(--scale));
 }
 .top-menu-button-stamina-icon::before {
   content: '';
@@ -108,6 +112,84 @@
     calc(12px * var(--scale)) 100%,
     0 50%
   );
+}
+
+/* スタミナの回復時間を開くボタン */
+.top-menu-button-stamina-button-container {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  transform: translateY(-50%) translateX(-50%);
+}
+.top-menu-button-stamina-button {
+  position: relative;
+  width: calc(36px * var(--scale));
+  height: calc(36px * var(--scale));
+  background: #282828;
+  border: calc(1px * var(--scale)) solid #282828;
+  cursor: pointer;
+  transition: background 0.12s ease-out, border-color 0.12s ease-out;
+}
+.top-menu-button-stamina-button::before,
+.top-menu-button-stamina-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(16px * var(--scale));
+  height: calc(1.5px * var(--scale));
+  background: #efefef;
+  transform: translate(-50%, -50%);
+  transition: transform 0.25s ease-out, background 0.12s ease-out;
+}
+.top-menu-button-stamina-button::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+.top-menu-button-stamina-button:hover {
+  background: #444;
+}
+.top-menu-button-stamina-button.is-open {
+  border-color: #fff;
+}
+.top-menu-button-stamina-button.is-open::before,
+.top-menu-button-stamina-button.is-open::after {
+  background: #fff;
+}
+.top-menu-button-stamina-button.is-open::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.top-menu-button-stamina-button.is-open::after {
+  transform: translate(-50%, -50%) rotate(135deg);
+}
+
+/* スタミナ欄にかぶせる回復時間 */
+.top-menu-button-stamina-modal {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  white-space: nowrap;
+  background: #282828;
+  animation: top-menu-stamina-modal-open 0.3s ease-out both;
+}
+.top-menu-button-stamina-modal p {
+  padding-left: calc(60px * var(--scale));
+  font-size: calc(1.5rem * var(--scale));
+  line-height: 1.2;
+}
+@keyframes top-menu-stamina-modal-open {
+  from {
+    max-width: 0;
+  }
+  to {
+    max-width: 100%;
+  }
 }
 
 .top-menu-button-party-icon {
