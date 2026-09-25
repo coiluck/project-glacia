@@ -1,4 +1,4 @@
-/* ===== 右中央：メインメニュー ===== */
+/* 右のメインメニュー */
 .top-menu-buttons {
   position: absolute;
   right: calc(96px * var(--scale));

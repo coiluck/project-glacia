@@ -2,53 +2,76 @@
 import type { EnemyDef } from '../features/battle/types';
 
 export const enemyDefs: Record<string, EnemyDef> = {
-  // 氷晶兵: 近接の雑魚
-  iceGrunt: {
-    id: 'iceGrunt',
-    nameKey: 'enemyIceGrunt',
+  // コオリモチ: 1章前半の雑魚。1-1 のチュートリアルはラピス1人で2体倒せる強さに合わせてある
+  glacimo: {
+    id: 'glacimo',
+    nameKey: 'enemyGlacimo',
     classId: 'soldier',
-    attack: 20,
-    defense: 15,
+    attack: 9,
+    defense: 12,
+    hp: 120,
+    maxHp: 120,
+  },
+  // シモフクロウ: 弓兵。水や壁の向こうから撃ってくる。隣に寄れば撃てない
+  rimeowl: {
+    id: 'rimeowl',
+    nameKey: 'enemyRimeowl',
+    classId: 'archer',
+    attack: 14,
+    defense: 10,
+    hp: 140,
+    maxHp: 140,
+  },
+  // カゲロウ: 攻撃が高く守りが薄い。放っておくと1人落とされる
+  wispwraith: {
+    id: 'wispwraith',
+    nameKey: 'enemyWispwraith',
+    classId: 'soldier',
+    attack: 18,
+    defense: 9,
+    hp: 180,
+    maxHp: 180,
+  },
+  // イワモチ: 硬いが痛くない。狭い通路をふさぐ役
+  saximo: {
+    id: 'saximo',
+    nameKey: 'enemySaximo',
+    classId: 'soldier',
+    attack: 14,
+    defense: 26,
+    hp: 260,
+    maxHp: 260,
+  },
+  // ホムラモチ: 魔導士。1ターンに1発だが重い
+  ignimo: {
+    id: 'ignimo',
+    nameKey: 'enemyIgnimo',
+    classId: 'mage',
+    attack: 24,
+    defense: 16,
     hp: 300,
     maxHp: 300,
   },
-  // チュートリアル（1-1）用に弱くした氷晶兵。ラピス1人で勝てる強さにしてある
-  iceGruntWeak: {
-    id: 'iceGruntWeak',
-    nameKey: 'enemyIceGrunt',
-    classId: 'soldier',
-    attack: 12,
-    defense: 15,
-    hp: 240,
-    maxHp: 240,
-  },
-  // 氷晶射手: 遠距離の雑魚
-  iceArcher: {
-    id: 'iceArcher',
-    nameKey: 'enemyIceArcher',
-    classId: 'archer',
-    attack: 22,
-    defense: 10,
-    hp: 200,
-    maxHp: 200,
-  },
-  // 霜の略奪長: 扇形範囲攻撃持ち。HP50%以下で一度だけ自己回復する
-  frostRaider: {
-    id: 'frostRaider',
-    nameKey: 'enemyFrostRaider',
-    classId: 'raider',
-    attack: 26,
-    defense: 20,
-    hp: 600,
-    maxHp: 600,
+  // 白焔: 1章のボス。2ターンごとと、HP50%を切ったときに周囲をまとめて焼く
+  palefire: {
+    id: 'palefire',
+    nameKey: 'enemyPalefire',
+    classId: 'mage',
+    attack: 24,
+    defense: 22,
+    hp: 1500,
+    maxHp: 1500,
     skill: {
       def: {
-        id: 'frostMend',
-        nameKey: 'skillFrostMend',
-        apCost: 2,
-        range: { kind: 'range', max: 0 }, // 対象マスを持たない = 自分対象
-        effect: [{ type: 'healHp', amount: 200, target: 'self' }],
+        id: 'palefireFoxfire',
+        nameKey: 'skillFoxfire',
+        apCost: 4,
+        range: { kind: 'range', max: 3 },
+        effect: [
+          { type: 'damage', power: 55, target: 'enemy', area: { kind: 'range', min: 0, max: 1 } },
+        ],
       },
+      everyNTurns: 2,
       hpTriggers: [50],
     },
   },

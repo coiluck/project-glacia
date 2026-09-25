@@ -20,8 +20,13 @@ const LOG_MAX_LINES = 50
 export default function ScenarioPage() {
   const { scenarioId } = useParams<{ scenarioId: string }>()
 
-  // 不正なシナリオID
-  if (!scenarioId || !scenarioRegistry[scenarioId]) {
+  // シナリオ未登録なら、そのまま同じステージの戦闘へ進む
+  if (scenarioId && !scenarioRegistry[scenarioId]) {
+    return <Navigate to={paths.battle(scenarioId)} replace />
+  }
+
+  // シナリオID自体がない場合
+  if (!scenarioId) {
     return <Navigate to={paths.story} replace />
   }
 

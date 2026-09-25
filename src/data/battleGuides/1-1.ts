@@ -3,8 +3,8 @@ import type { BattleGuideDef } from '../../features/tutorial/guide'
 // 初回バトルチュートリアル
 const DEPLOY_AT = { q: -2, r: 0 }
 const MOVE_TO = { q: -1, r: 0 }
-const FIRST_ENEMY = 'enemy-0-iceGruntWeak'
-const SECOND_ENEMY = 'enemy-1-iceGruntWeak'
+const FIRST_ENEMY = 'enemy-0-glacimo'
+const SECOND_ENEMY = 'enemy-1-glacimo'
 
 const guide: BattleGuideDef = {
   party: [
