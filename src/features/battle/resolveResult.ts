@@ -65,3 +65,15 @@ export function resolveBattleResult(
   // ランクアップでstamina_maxが変わりうるので
   return { me: { ...me, user: refreshStamina(user, now) }, reward }
 }
+
+// クリア済みステージの戦闘を省略する
+export function resolveBattleSkip(
+  me: MeResponse,
+  stageId: string,
+  now: number,
+): { me: MeResponse; reward: BattleReward } {
+  if (!me.user.cleared_stage_ids.includes(stageId)) {
+    throw new Error(`未クリアのステージはスキップできない: ${stageId}`)
+  }
+  return resolveBattleResult(me, stageId, 'victory', now)
+}

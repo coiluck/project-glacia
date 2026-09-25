@@ -1,9 +1,7 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
-import { Link } from 'react-router-dom'
-import { paths } from '../../../router/paths'
+import { useEffect, useState, type CSSProperties } from 'react'
 import { useTranslations } from '../../../i18n'
-import { sendBattleResult } from '../../../api/actions/battle'
 import type { BattleResult as ResultKind, BattleReward } from '../../../features/battle/resolveResult'
+import type { RankSnapshot } from '../../../hooks/useBattleResultSubmission'
 import { useRankStore } from '../../../stores/rankStore'
 import { formatCompact } from '../../../utils/format'
 import ViewportLayer from '../../../layouts/ViewportLayer'
@@ -48,41 +46,27 @@ const pad2 = (n: number) => String(n).padStart(2, '0')
 interface BattleResultProps {
   stageId: string
   result: ResultKind
+  reward: BattleReward | null
+  rankBefore: RankSnapshot
+  failed: boolean
+  onRetry: () => void
+  onBackToMap: () => void
 }
 
-export default function BattleResult({ stageId, result }: BattleResultProps) {
+export default function BattleResult({
+  stageId,
+  result,
+  reward,
+  rankBefore,
+  failed,
+  onRetry,
+  onBackToMap,
+}: BattleResultProps) {
   const t = useTranslations('battle', TRANSLATION_MAPPING)
   const tItem = useTranslations('items', ITEM_TRANSLATION_MAPPING)
-  const [reward, setReward] = useState<BattleReward | null>(null)
-  const [failed, setFailed] = useState(false)
-
-  // 戦闘前のランク。送信すると hydrate で上書きされるのでマウント時に控える
-  const [rankBefore] = useState(() => {
-    const s = useRankStore.getState()
-    return { rank: s.rank, expInRank: s.expInRank, expToNext: s.expToNext }
-  })
   const rank = useRankStore((s) => s.rank)
   const expInRank = useRankStore((s) => s.expInRank)
   const expToNext = useRankStore((s) => s.expToNext)
-
-  const send = () => {
-    setFailed(false)
-    sendBattleResult(stageId, result)
-      .then(setReward)
-      .catch((e) => {
-        console.error(e)
-        setFailed(true)
-      })
-  }
-
-  // 送信は1回だけ（失敗したときはボタンから送り直す）
-  const sentRef = useRef(false)
-  useEffect(() => {
-    if (sentRef.current) return
-    sentRef.current = true
-    send()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   // ランクが上がったら、バーが満ちきるのに合わせて数字を差し替える
   const isRankUp = reward != null && rank > rankBefore.rank
@@ -195,17 +179,16 @@ export default function BattleResult({ stageId, result }: BattleResultProps) {
           {failed ? (
             <div className="battle-result-failed">
               <span>{t.resultFailed}</span>
-              <button type="button" className="battle-result-retry" onClick={send}>
+              <button type="button" className="battle-result-retry" onClick={onRetry}>
                 {t.retry}
               </button>
             </div>
           ) : (
             <div />
           )}
-          {/* 戻ると戦闘がまるごと再開してしまうので、戦闘の履歴を残さない */}
-          <Link className="battle-result-button" to={paths.story} replace>
+          <button type="button" className="battle-result-button" onClick={onBackToMap}>
             {t.backToMap}
-          </Link>
+          </button>
         </div>
       </div>
 

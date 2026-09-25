@@ -17,6 +17,7 @@ import type { Command } from './routes/types'
 const COMMANDS: Record<string, Command<unknown>> = {
   '/gacha/pull': gacha.pull,
   '/battle/result': battle.result,
+  '/battle/skip': battle.skip,
   '/party': party.save,
   '/characters/enhance': characters.enhance,
   '/exchange': exchange.run,

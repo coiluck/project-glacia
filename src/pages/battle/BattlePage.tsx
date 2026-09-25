@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { paths } from '../../router/paths'
+import { sendBattleResult } from '../../api/actions/battle'
 import { useTranslations } from '../../i18n'
 import { battleGuideRegistry } from '../../data/battleGuides'
 import { battleStageRegistry } from '../../data/battleStages'
@@ -19,6 +20,7 @@ import {
   unitById,
 } from '../../features/battle/battle'
 import { useBattleStore } from '../../features/battle/battleStore'
+import { useBattleResultSubmission } from '../../hooks/useBattleResultSubmission'
 import { calcDamage } from '../../features/battle/damage'
 import { axialKey, effectTiles, shapeAimsAnyDirection, shapeTiles } from '../../features/battle/hex'
 import type { AimTile, Axial } from '../../features/battle/hex'
@@ -96,6 +98,7 @@ export default function BattlePage() {
 }
 
 function BattleScreen({ stageId }: { stageId: string | undefined }) {
+  const navigate = useNavigate()
   const tBattle = useTranslations('battle', BATTLE_TRANSLATION_MAPPING)
   const tCharacter = useTranslations('characters', CHARACTER_TRANSLATION_MAPPING)
   const tTutorial = useTranslations('tutorial', TUTORIAL_TRANSLATION_MAPPING)
@@ -136,11 +139,20 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   const undoTurn = useBattleStore((s) => s.undoTurn)
   const endPlayerTurn = useBattleStore((s) => s.endPlayerTurn)
   const guide = useBattleGuide(guideDef, state?.phase)
+  const { submission, submit, retry } = useBattleResultSubmission()
 
   // マウント時に戦闘状態を作り直す
   useEffect(() => {
     init(stageId)
   }, [stageId, init])
+
+  const finishedResult = state?.phase === 'victory' || state?.phase === 'defeat' ? state.phase : null
+
+  // 決着した時点で結果を一度だけ送る。BattleResult は受け取った内容の表示だけを担当する
+  useEffect(() => {
+    if (!stageId || !finishedResult || submission) return
+    submit(stageId, finishedResult, () => sendBattleResult(stageId, finishedResult))
+  }, [finishedResult, stageId, submission, submit])
 
   if (!stage || !state) {
     // init 前の1フレームは何も描かない。レジストリに無いステージだけ NO DATA を出す
@@ -591,9 +603,17 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
           />
         )}
 
-        {/* 勝敗。結果の送信と報酬の表示は BattleResult が持つ */}
-        {stageId && (state.phase === 'victory' || state.phase === 'defeat') && (
-          <BattleResult stageId={stageId} result={state.phase} />
+        {/* 勝敗 */}
+        {submission && (
+          <BattleResult
+            stageId={submission.stageId}
+            result={submission.result}
+            reward={submission.reward}
+            rankBefore={submission.rankBefore}
+            failed={submission.failed}
+            onRetry={retry}
+            onBackToMap={() => navigate(paths.story, { replace: true })}
+          />
         )}
       </div>
     </>

@@ -1,14 +1,17 @@
 import { useRef, useState, type MouseEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { paths } from '../../router/paths'
+import { sendBattleSkip } from '../../api/actions/battle'
 import Screen from '../../layouts/Screen'
 import ViewportLayer from '../../layouts/ViewportLayer'
 import StageNode from './components/StageNode'
 import StageDrops from './components/StageDrops'
+import BattleResult from '../battle/components/BattleResult'
 import { useProgressStore } from '../../stores/progressStore'
 import { battleGuideRegistry } from '../../data/battleGuides'
 import { selectStamina, useStaminaStore } from '../../stores/staminaStore'
 import { chapters, isStageUnlocked, type Chapter, type ChapterStatus, type Stage, type StageStatus } from '../../data/stages'
+import { useBattleResultSubmission } from '../../hooks/useBattleResultSubmission'
 
 // マップ描画用にstatusを付与
 export type StageNodeData = Stage & { status: StageStatus }
@@ -16,6 +19,9 @@ export type StageNodeData = Stage & { status: StageStatus }
 export default function StoryMapPage() {
   const [selectedNode, setSelectedNode] = useState<StageNodeData | null>(null)
   const [isChapterSelectOpen, setIsChapterSelectOpen] = useState(false)
+  const [isSkip, setIsSkip] = useState(true)
+  const navigate = useNavigate()
+  const { submission, submit, retry, clear } = useBattleResultSubmission()
   const maxChapter = useProgressStore((s) => s.chapter)
   const currentChapter = useProgressStore((s) => s.currentChapter)
   const clearedStageIds = useProgressStore((s) => s.clearedStageIds)
@@ -28,6 +34,23 @@ export default function StoryMapPage() {
   const current = chapters.find((c) => c.id === currentChapter)
 
   if (!current) return
+
+  if (submission) {
+    return (
+      <>
+        <BattleResult
+          stageId={submission.stageId}
+          result={submission.result}
+          reward={submission.reward}
+          rankBefore={submission.rankBefore}
+          failed={submission.failed}
+          onRetry={retry}
+          onBackToMap={clear}
+        />
+        <Screen background="images/story/1.png" />
+      </>
+    )
+  }
 
   const cleared = current.stages.filter((s) => clearedStageIds.includes(s.id))
   const clearRate = current.stages.length ? Math.round((cleared.length / current.stages.length) * 100) : 0
@@ -220,6 +243,16 @@ export default function StoryMapPage() {
               </div>
 
               <div className="story-map-stage-info-button-container">
+                {selectedNode.status === 'cleared' && (
+                  <label className="story-map-stage-info-skip">
+                    <input
+                      type="checkbox"
+                      checked={isSkip}
+                      onChange={(e) => setIsSkip(e.target.checked)}
+                    />
+                    スキップ
+                  </label>
+                )}
                 {selectedNode.status === 'locked' ? (
                   <div className="story-map-stage-info-button locked">未解放</div>
                 ) : stamina < selectedNode.stamina ? (
@@ -228,20 +261,27 @@ export default function StoryMapPage() {
                     <StaminaCost current={stamina} cost={selectedNode.stamina} />
                   </div>
                 ) : (
-                  // チュートリアル戦闘は編成が固定なので出撃準備を飛ばしてシナリオへ
-                  // クリアとその他の未クリアはSortiePage側でわけている
-                  <Link
+                  <div
                     className="story-map-stage-info-button sortie"
-                    to={
-                      selectedNode.status !== 'cleared' && battleGuideRegistry[selectedNode.id]
-                        ? paths.scenario(selectedNode.id)
-                        : paths.sortie(selectedNode.id)
-                    }
-                    replace
+                    onClick={() => {
+                      if (selectedNode.status === 'cleared' && isSkip) {
+                        const stageId = selectedNode.id
+                        submit(stageId, 'victory', () => sendBattleSkip(stageId))
+                        return
+                      }
+                      // チュートリアル戦闘は編成が固定なので出撃準備を飛ばしてシナリオへ
+                      // クリアとその他の未クリアはSortiePage側でわけている
+                      navigate(
+                        selectedNode.status !== 'cleared' && battleGuideRegistry[selectedNode.id]
+                          ? paths.scenario(selectedNode.id)
+                          : paths.sortie(selectedNode.id),
+                        { replace: true },
+                      )
+                    }}
                   >
                     出撃
                     <StaminaCost current={stamina} cost={selectedNode.stamina} />
-                  </Link>
+                  </div>
                 )}
               </div>
             </div>

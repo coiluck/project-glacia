@@ -16,3 +16,10 @@ export async function sendBattleResult(
   distribute(res.me)
   return res.result
 }
+
+// クリア済み戦闘を省略したときに使う
+export async function sendBattleSkip(stageId: string): Promise<BattleReward> {
+  const res = await apiPost<CommandResponse<BattleReward>>('/battle/skip', { stageId })
+  distribute(res.me)
+  return res.result
+}

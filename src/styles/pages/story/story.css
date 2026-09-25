@@ -177,15 +177,15 @@
 .story-map-stage-info-button-container {
   position: absolute;
   bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(12px * var(--scale));
   width: 100%;
-  height: calc(160px * var(--scale));
+  padding: calc(32px * var(--scale));
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 45%);
 }
 .story-map-stage-info-button {
-  position: absolute;
-  bottom: calc(32px * var(--scale));
-  left: calc(32px * var(--scale));
-  right: calc(32px * var(--scale));
+  position: relative;
   padding: calc(12px * var(--scale)) 0;
   text-align: center;
   text-decoration: none;
@@ -209,7 +209,25 @@
   box-shadow: none;
   cursor: not-allowed;
 }
-
+/* クリア済みステージのスキップ切り替え */
+.story-map-stage-info-skip {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: calc(16px * var(--scale));
+  font-size: calc(1.3rem * var(--scale));
+  letter-spacing: 0.1em;
+  color: #263544;
+  cursor: pointer;
+  user-select: none;
+}
+.story-map-stage-info-skip input {
+  width: calc(28px * var(--scale));
+  height: calc(28px * var(--scale));
+  margin: 0;
+  accent-color: #263544;
+  cursor: pointer;
+}
 /* 出撃ボタンのスタミナ表示 */
 .story-map-stage-info-cost {
   position: absolute;
