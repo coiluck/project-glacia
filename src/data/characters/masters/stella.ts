@@ -16,7 +16,7 @@ const stella: CharacterMaster = {
         id: 'stellaStardust',
         nameKey: 'skillStellaStardust',
         apCost: 4,
-        range: { kind: 'range', max: 2 },
+        range: { kind: 'range', min: 0, max: 2 },
         effect: [
           { type: 'damage', power: 55, target: 'enemy', area: { kind: 'range', min: 0, max: 1 } },
         ],
@@ -38,7 +38,7 @@ const stella: CharacterMaster = {
         id: 'stellaStarCharm',
         nameKey: 'skillStellaStarCharm',
         apCost: 3,
-        range: { kind: 'range', max: 2 },
+        range: { kind: 'range', min: 0, max: 2 },
         effect: [
           { type: 'healHp', amount: 55, target: 'ally', area: { kind: 'range', min: 0, max: 1 } },
         ],

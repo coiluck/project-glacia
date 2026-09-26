@@ -17,7 +17,7 @@ const oboro: CharacterMaster = {
         id: 'oboroWhirlingKunai',
         nameKey: 'skillOboroWhirlingKunai',
         apCost: 3,
-        range: { kind: 'range', max: 0 }, // 自分のマスだけを狙う
+        range: { kind: 'range', min: 0, max: 0 }, // 自分のマスだけを狙う
         effect: [
           { type: 'damage', power: 70, target: 'enemy', area: { kind: 'range', max: 1 }, drain: 30 },
         ],

@@ -414,9 +414,9 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   const handleSkillButton = () => {
     if (!selectedUnit?.skill) return
     // 選ぶ余地が無い（＝自分のマスしか狙えない）スキルは選ばせずそのまま撃つ。
-    // 自分のマスは常に狙えるので、候補が1つならそれは自分のマス
+    // 盤面の端では自分以外の1マスしか残らないこともあるので、自分のマスかまで確かめる
     const aims = aimableTilesOnBoard(stage, selectedUnit.pos, selectedUnit.skill)
-    if (aims.length === 1) {
+    if (aims.length === 1 && axialKey(aims[0].pos) === axialKey(selectedUnit.pos)) {
       guide.act({ type: 'skill', aim: aims[0].pos }, () => {
         doSkill(selectedUnit.id, aims[0].pos)
         finishAction()

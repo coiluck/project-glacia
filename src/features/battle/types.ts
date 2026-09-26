@@ -27,7 +27,7 @@ export interface SkillDef {
   id: string;
   nameKey: string; // i18n キー
   apCost: number; // 使用者の個人APとパーティAPの両方からこの値を消費する
-  range: AttackShape; // 狙えるマス。自分のマスは形に関わらず常に狙える（max:0 なら自分だけ）
+  range: AttackShape; // 狙えるマス
   effect: SkillEffect[];
 }
 

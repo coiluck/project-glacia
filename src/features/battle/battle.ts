@@ -184,14 +184,9 @@ export function attack(
 // スキル
 
 // 狙えるマスと、そこを狙ったときの効果の向き
-// 自分のマスは射程の形に関わらず常に狙える。誰に当たるかは効果の target と area が決めるので、
-// 「自分を狙う意味があるか」をここで判定しない（自分中心の範囲攻撃も target は enemy になる）
+// 自分のマスを狙えるのは射程の形が含むときだけ（range 型なら min: 0）
 export function aimableTiles(from: Axial, skill: SkillDef): AimTile[] {
-  const aims = shapeAimsAnyDirection(from, skill.range);
-  // 射程の形がすでに自分のマスを含むなら、その向きを活かして二重に足さない
-  const fromKey = axialKey(from);
-  if (aims.some((a) => axialKey(a.pos) === fromKey)) return aims;
-  return [{ pos: from, direction: 0 }, ...aims];
+  return shapeAimsAnyDirection(from, skill.range);
 }
 
 // 盤面に存在するマスだけに絞った狙えるマス。

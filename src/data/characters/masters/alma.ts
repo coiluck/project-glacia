@@ -44,7 +44,7 @@ const alma: CharacterMaster = {
         id: 'almaSilverBanner',
         nameKey: 'skillAlmaSilverBanner',
         apCost: 3,
-        range: { kind: 'range', max: 2 },
+        range: { kind: 'range', min: 0, max: 2 },
         effect: [
           { type: 'grantAp', amount: 2, target: 'ally' },
           { type: 'healHp', amount: 90, target: 'ally' },

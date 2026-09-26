@@ -17,7 +17,7 @@ const soleil: CharacterMaster = {
         id: 'soleilHalo',
         nameKey: 'skillSoleilHalo',
         apCost: 4,
-        range: { kind: 'range', max: 0 }, // 自分のマスだけを狙う
+        range: { kind: 'range', min: 0, max: 0 }, // 自分のマスだけを狙う
         effect: [
           {
             type: 'damage',
@@ -44,7 +44,7 @@ const soleil: CharacterMaster = {
         id: 'soleilBlessing',
         nameKey: 'skillSoleilBlessing',
         apCost: 4,
-        range: { kind: 'range', max: 0 },
+        range: { kind: 'range', min: 0, max: 0 },
         effect: [
           { type: 'healHp', amount: 60, target: 'ally', area: { kind: 'range', min: 0, max: 2 } },
           { type: 'grantAp', amount: 2, target: 'ally', area: { kind: 'range', min: 1, max: 2 } },

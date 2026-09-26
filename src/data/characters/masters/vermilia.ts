@@ -47,7 +47,7 @@ const vermilia: CharacterMaster = {
         id: 'vermiliaIronStance',
         nameKey: 'skillVermiliaIronStance',
         apCost: 3,
-        range: { kind: 'range', max: 0 }, // 対象マスを持たない = 自分対象
+        range: { kind: 'range', min: 0, max: 0 }, // 対象マスを持たない = 自分対象
         effect: [{ type: 'healHp', amount: 160, target: 'self' }],
       },
       descriptionKey: 'skillVermiliaIronStanceDesc',

@@ -66,7 +66,7 @@ export const enemyDefs: Record<string, EnemyDef> = {
         id: 'palefireFoxfire',
         nameKey: 'skillFoxfire',
         apCost: 4,
-        range: { kind: 'range', max: 3 },
+        range: { kind: 'range', min: 0, max: 3 },
         effect: [
           { type: 'damage', power: 55, target: 'enemy', area: { kind: 'range', min: 0, max: 1 } },
         ],

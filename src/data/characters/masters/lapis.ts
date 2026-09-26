@@ -37,7 +37,7 @@ const lapis: CharacterMaster = {
         id: 'lapisMendingLight',
         nameKey: 'skillLapisMendingLight',
         apCost: 3,
-        range: { kind: 'range', max: 2 },
+        range: { kind: 'range', min: 0, max: 2 },
         effect: [{ type: 'healHp', amount: 110, target: 'ally' }],
       },
       descriptionKey: 'skillLapisMendingLightDesc',

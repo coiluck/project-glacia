@@ -43,7 +43,7 @@ const sylvie: CharacterMaster = {
         id: 'sylvieForestMend',
         nameKey: 'skillSylvieForestMend',
         apCost: 3,
-        range: { kind: 'range', max: 3 },
+        range: { kind: 'range', min: 0, max: 3 },
         effect: [{ type: 'healHp', amount: 80, target: 'ally' }],
       },
       descriptionKey: 'skillSylvieForestMendDesc',

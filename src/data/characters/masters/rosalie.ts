@@ -16,7 +16,7 @@ const rosalie: CharacterMaster = {
         id: 'rosalieSilentPrayer',
         nameKey: 'skillRosalieSilentPrayer',
         apCost: 3,
-        range: { kind: 'range', max: 0 }, // 自分のマスだけを狙う
+        range: { kind: 'range', min: 0, max: 0 }, // 自分のマスだけを狙う
         effect: [
           { type: 'healHp', amount: 50, target: 'ally', area: { kind: 'range', min: 0, max: 1 } },
         ],
