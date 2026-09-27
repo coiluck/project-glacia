@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react'
+import { type AnimationEvent, type ReactNode } from 'react'
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { paths } from '../../router/paths'
@@ -50,7 +50,9 @@ export default function ResourceBar() {
     }
   }
 
-  const handleMenuAnimationEnd = () => {
+  // 中の項目のアニメーションも伝わってくるので、オーバーレイ自身のものだけ見る
+  const handleMenuAnimationEnd = (e: AnimationEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return;
     if (isMenuClosing) {
       setIsMenuOpen(false);
       setIsMenuClosing(false);
@@ -149,9 +151,7 @@ export default function ResourceBar() {
           onAnimationEnd={handleMenuAnimationEnd}
         >
           <div className="resource-bar-menu-container" onClick={(e) => e.stopPropagation()}>
-            <div className="resource-bar-menu-icon">
-              <MenuMap onSelect={handleMenuSelect} />
-            </div>
+            <MenuMap onSelect={handleMenuSelect} />
           </div>
         </div>
       )}

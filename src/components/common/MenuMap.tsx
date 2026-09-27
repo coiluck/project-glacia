@@ -1,89 +1,244 @@
+import type { CSSProperties, ReactNode } from 'react'
+import { useLocation } from 'react-router-dom'
 import { paths } from '../../router/paths'
+import { useTranslations } from '../../i18n'
+import { DAILY_SLOTS } from '../../data/missions'
+import { chapters, isStageUnlocked } from '../../data/stages'
+import { exchangeToday } from '../../features/exchange/exchange'
+import { claimableDailySlots, dailyMissionToday } from '../../features/mission/daily'
+import { claimablePermanentIds } from '../../features/mission/permanent'
+import { useCharacterStore } from '../../stores/characterStore'
+import { useExchangeStore } from '../../stores/exchangeStore'
+import { useMissionStore } from '../../stores/missionStore'
+import { useProgressStore } from '../../stores/progressStore'
+import { useRankStore } from '../../stores/rankStore'
+import { selectStamina, useStaminaStore } from '../../stores/staminaStore'
 
-// メニューのヘクスマップ。
-// 「構造（ヘクス枠＋接続線）」と「内容（ラベル＋遷移先）」を分離する。
-// 構造は viewBox 座標に固定し、内容だけをデータで差し替える。
-// ラベルは foreignObject 内の HTML として描画するため、文字数が変わっても
-// 自動で中央寄せ・折り返しされ、座標直書きによる位置ズレ・はみ出しが起きない。
+// 全画面共通のメニュー。各項目に遷移先の状態（次のステージ、受け取れる任務など）を出す。
 
-// 中心を原点(0,0)に揃えたヘクス枠。各ノードは中心座標へ translate するだけでよい。
-const HEX_PATH =
-  'm -4.719602,-8.188371 -4.731501,8.181412 4.719611,8.18813 9.451112,0.0072 4.73148,-8.181413 -4.71961,-8.188646 z m 0.50643,0.845426 8.465622,0.02325 4.21266,7.342704 -4.25244,7.31945 -8.465122,-0.02274 -4.213181,-7.342704 z'
+const BASE_URL = import.meta.env.BASE_URL
+const PARTY_SIZE = 5 // PartyPage の SLOTS と同じ
 
-type MenuNode = {
-  id: string
-  label: string // TODO: 将来は翻訳用JSONから読み込む
-  to: string | null // 遷移先パス。未実装の項目は null
-  cx: number
-  cy: number
-  scale?: number
-}
+const iconStyle = (path: string) => ({ '--icon': `url(${BASE_URL}images/${path})` }) as CSSProperties
 
-// ヘクスの配置（中心座標）。元のInkscape SVGのレイアウトを踏襲。
-const MENU_NODES: MenuNode[] = [
-  { id: 'front', label: '前線', to: paths.story, cx: 41.179103, cy: 13.188371 },
-  { id: 'party', label: '編成', to: paths.party, cx: 23.451105, cy: 28.188371 },
-  { id: 'member', label: '人員', to: paths.member, cx: 58.960512, cy: 28.188371 },
-  { id: 'base', label: '基地', to: paths.base, cx: 105.573264, cy: 13.188371, scale: 1.2 },
-  { id: 'recruit', label: '招集', to: paths.recruit, cx: 143.82612, cy: 28.188371 },
-  { id: 'exchange', label: '取引所', to: paths.exchange, cx: 183.270233, cy: 28.188371 },
-  { id: 'mission', label: '任務', to: paths.mission, cx: 163.332543, cy: 13.188371 },
-]
-
-// ヘクス同士をつなぐ装飾線（構造）。元SVGの線種をそのまま保持。
-type MenuLine = { d: string; cap?: 'round' | 'butt'; join?: 'round' | 'miter'; dash?: string }
-const MENU_LINES: MenuLine[] = [
-  { d: 'm 116.15942,13.224638 38.26087,-0.108696' },
-  { d: 'm 116.10898,13.117343 c 3.41598,0 6.83195,0 10.33336,1.827583 3.50141,1.827584 7.08811,5.482601 10.67489,9.137696' },
-  { d: 'm 152.79655,28.181792 c 7.20771,-0.01708 14.41541,-0.03416 21.62312,-0.05124' },
-  { d: 'm 95.100737,13.732219 c -6.012117,0.06832 -12.02423,0.136639 -16.874952,1.981301 -4.850722,1.844662 -8.5399,5.465522 -12.229154,9.086457' },
-  { d: 'M 50.11235,28.130553 32.28096,28.233031', cap: 'butt', join: 'miter' },
-  { d: 'm 49.90739,13.219822 44.875217,-0.03142', cap: 'butt', join: 'miter', dash: '1.6,1.6' },
-  { d: 'm 50.061111,13.194203 10.145445,0.01967', cap: 'butt', join: 'miter' },
-  { d: 'm 76.34058,13.201993 18.659419,-0.01359', cap: 'butt', join: 'miter' },
-]
+// 今の章 = 到達済みでステージのある最後の章
+const latestChapter = (reached: number) =>
+  chapters.filter((c) => c.id <= reached && c.stages.length > 0).at(-1) ?? chapters[0]
 
 type Props = {
   onSelect: (to: string) => void
 }
 
 export default function MenuMap({ onSelect }: Props) {
-  return (
-    <svg className="menu-map" viewBox="0 0 200 40" xmlns="http://www.w3.org/2000/svg">
-      {/* 構造: 接続線 */}
-      <g className="menu-map-lines" fill="none" stroke="currentColor" strokeWidth={0.8}>
-        {MENU_LINES.map((line, i) => (
-          <path
-            key={i}
-            d={line.d}
-            strokeLinecap={line.cap ?? 'round'}
-            strokeLinejoin={line.join ?? 'round'}
-            strokeDasharray={line.dash}
-          />
-        ))}
-      </g>
+  const { pathname } = useLocation()
 
-      {/* 構造（ヘクス枠）＋内容（ラベル）。遷移先があるノードのみクリック可能 */}
-      {MENU_NODES.map((node) => {
-        const clickable = node.to !== null
-        return (
-          <g
-            key={node.id}
-            className={`menu-map-node${clickable ? '' : ' is-disabled'}`}
-            transform={`translate(${node.cx} ${node.cy}) scale(${node.scale ?? 1})`}
-            role={clickable ? 'button' : undefined}
-            aria-label={node.label}
-            onClick={clickable ? () => onSelect(node.to as string) : undefined}
-          >
-            <path className="menu-map-hex" d={HEX_PATH} fill="currentColor" />
-            <foreignObject x={-8} y={-6.5} width={16} height={13}>
-              <div className="menu-map-label">
-                <span>{node.label}</span>
-              </div>
-            </foreignObject>
-          </g>
-        )
-      })}
-    </svg>
+  const stamina = useStaminaStore((s) => selectStamina(s).stamina)
+  const staminaMax = useStaminaStore((s) => s.base.stamina_max)
+  const now = useStaminaStore((s) => s.now)
+  const reachedChapter = useProgressStore((s) => s.chapter)
+  const clearedStageIds = useProgressStore((s) => s.clearedStageIds)
+  const party = useCharacterStore((s) => s.party[s.currentPartySlotIndex])
+  const owned = useCharacterStore((s) => s.owned)
+  const rank = useRankStore((s) => s.rank)
+  const missionBase = useMissionStore((s) => s.base)
+  const missionDone = useMissionStore((s) => s.done)
+  const exchangeBase = useExchangeStore((s) => s.base)
+
+  const chapter = latestChapter(reachedChapter)
+  const t = useTranslations('common', { chapterTitle: chapter.titleKey })
+
+  // 前線
+  const cleared = chapter.stages.filter((s) => clearedStageIds.includes(s.id)).length
+  const nextStage = chapter.stages.find(
+    (s) => !clearedStageIds.includes(s.id) && isStageUnlocked(s, chapter.stages, clearedStageIds),
+  )
+
+  // 任務
+  const dailyClaimed = dailyMissionToday(missionBase, now).claimed.length
+  const missionClaimable =
+    claimableDailySlots(missionBase, now).length +
+    claimablePermanentIds(
+      { user: { rank, cleared_stage_ids: clearedStageIds }, characters: Object.values(owned) },
+      missionDone,
+    ).length
+
+  // 取引所
+  const supplyClaimed = exchangeToday(exchangeBase, now).claimed
+
+  const isCurrent = (to: string) => pathname === to || pathname.startsWith(`${to}/`)
+  const frontCurrent = isCurrent(paths.story)
+
+  let index = 0 // 出てくる順
+
+  // 意味の近い2項目を縦に積む
+  const oneColumn = (el1: ReactNode, el2: ReactNode) => (
+    <div className="menu-map-column">
+      {el1}
+      {el2}
+    </div>
+  )
+
+  const tile = (
+    to: string,
+    label: string,
+    icon: string,
+    info: ReactNode,
+    options: { notice?: boolean; badge?: ReactNode } = {},
+  ) => {
+    const current = isCurrent(to)
+    const className = [
+      'menu-map-item',
+      options.notice && 'has-notice',
+      current && 'is-current',
+    ]
+      .filter(Boolean)
+      .join(' ')
+    return (
+      <button
+        type="button"
+        className={className}
+        style={{ '--i': index++ } as CSSProperties}
+        disabled={current}
+        onClick={() => onSelect(to)}
+      >
+        <span className="menu-map-item-icon" style={iconStyle(icon)} />
+        <span className="menu-map-item-label">{label}</span>
+        <div className="menu-map-item-info">{info}</div>
+        {!current && options.badge !== undefined && (
+          <span className={`menu-map-badge${typeof options.badge === 'string' ? ' is-text' : ''}`}>
+            {options.badge}
+          </span>
+        )}
+        {current && <span className="menu-map-here">現在地</span>}
+      </button>
+    )
+  }
+
+  return (
+    <nav className="menu-map">
+      {oneColumn(
+        tile(
+          paths.party,
+          '編成',
+          'top/menu-main/knight.svg',
+          <span className="menu-map-faces">
+            {Array.from({ length: PARTY_SIZE }, (_, i) =>
+              party?.[i] ? (
+                <i
+                  key={i}
+                  className="menu-map-face"
+                  style={{ backgroundImage: `url(${BASE_URL}images/character/face/${party[i]}.png)` }}
+                />
+              ) : (
+                <i key={i} className="menu-map-face is-empty" />
+              ),
+            )}
+          </span>,
+        ),
+        tile(
+          paths.member,
+          '人員',
+          'top/menu-main/team.svg',
+          null,
+        ),
+      )}
+
+      {/* 前線 */}
+      <button
+        type="button"
+        className={`menu-map-item is-front${frontCurrent ? ' is-current' : ''}`}
+        style={{ '--i': index++ } as CSSProperties}
+        disabled={frontCurrent}
+        onClick={() => onSelect(paths.story)}
+      >
+        <span
+          className="menu-map-front-map"
+          style={{ '--map': `url(${BASE_URL}images/story/1.png)` } as CSSProperties}
+        />
+        <div className="menu-map-front-head">
+          <span className="menu-map-item-label">前線</span>
+          <span className="menu-map-stamina">
+            <i style={iconStyle('top/menu-main/bolt.svg')} />
+            <b>
+              {stamina}
+              <span> / {staminaMax}</span>
+            </b>
+          </span>
+        </div>
+        <div className="menu-map-front-body">
+          <div className="menu-map-front-chapter">
+            <small>CHAPTER {chapter.id}</small>
+            {t.chapterTitle}
+          </div>
+          <div className="menu-map-front-next">
+            <small>次の作戦</small>
+            <b>{nextStage?.id ?? '—'}</b>
+          </div>
+          <div className="menu-map-front-progress">
+            <span className="menu-map-front-progress-bar">
+              <i style={{ width: `${(cleared / chapter.stages.length) * 100}%` }} />
+            </span>
+            <span>
+              {cleared} / {chapter.stages.length}
+            </span>
+          </div>
+        </div>
+        {frontCurrent && <span className="menu-map-here">現在地</span>}
+      </button>
+
+      {oneColumn(
+        tile(
+          paths.recruit,
+          '召集',
+          'top/menu-main/graduation_hat.svg',
+          null,
+        ),
+        tile(
+          paths.mission,
+          '任務',
+          'top/menu-main/mission.svg',
+          <>
+            <small>本日</small>
+            <span className="menu-map-pips">
+              {DAILY_SLOTS.map((_, i) => (
+                <i key={i} className={`menu-map-pip${i < dailyClaimed ? ' is-on' : ''}`} />
+              ))}
+            </span>
+          </>,
+          { notice: missionClaimable > 0, badge: missionClaimable > 0 ? missionClaimable : undefined },
+        ),
+      )}
+      {oneColumn(
+        tile(
+          paths.exchange,
+          '取引所',
+          'top/menu-main/exchange.svg',
+          <>
+            <small>交換材料</small>
+            <b>{exchangeBase.exchange_tokens}</b>
+          </>,
+          { notice: !supplyClaimed, badge: supplyClaimed ? undefined : '配給' },
+        ),
+        tile(
+          paths.base, '基地',
+          'top/menu-main/base.svg',
+          null,
+        ),
+      )}
+      {oneColumn(
+        tile(
+          paths.warehouse,
+          '倉庫',
+          'top/menu-main/warehouse.svg',
+          null,
+        ),
+        tile(
+          paths.top,
+          'ホーム',
+          'component/resource-bar/home.svg',
+          null,
+        ),
+      )}
+    </nav>
   )
 }

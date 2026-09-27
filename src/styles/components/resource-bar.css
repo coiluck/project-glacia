@@ -16,7 +16,8 @@
 .resource-bar-component-container-right {
   position: relative;
 }
-.resource-bar-component-container-left {
+.resource-bar-component-container-left,
+.resource-bar-component-container-right {
   z-index: 3; /* menu-overlay(2)より上 */
 }
 
@@ -149,87 +150,57 @@
     drop-shadow(0 calc(1px * var(--scale)) calc(1px * var(--scale)) rgba(0, 0, 0, 0.5));
 }
 
-/* メニュー */
+/* メニュー: 後ろのページを沈める */
 .resource-bar-menu-overlay {
   position: fixed;
   inset: 0;
   z-index: 2; /* screen-safe < this < resource-bar */
-  animation: resource-bar-menu-overlay-drop 0.4s ease-out forwards;
+  background: rgba(4, 6, 10, 0.55);
+  animation: resource-bar-menu-overlay-fade 0.3s ease-out both;
 }
 .resource-bar-menu-overlay.closing {
-  animation: resource-bar-menu-overlay-raise 0.4s ease-in forwards;
+  animation: resource-bar-menu-overlay-fade-out 0.3s ease-in both;
 }
-@keyframes resource-bar-menu-overlay-drop {
-  from {
-    transform: translateY(-100%);
-  }
-  to {
-    transform: translateY(0);
-  }
+@keyframes resource-bar-menu-overlay-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
-@keyframes resource-bar-menu-overlay-raise {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-100%);
-  }
+@keyframes resource-bar-menu-overlay-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
+
+/* 上から降りてくる帯。上端はリソースバーのぶん空ける */
 .resource-bar-menu-container {
   position: absolute;
-  width: 100%;
-  background: linear-gradient(to bottom, #282828 60%, rgba(0, 0, 0, 0.5) 100%);
+  top: 0;
+  right: 0;
+  left: 0;
+  padding: calc(132px * var(--scale)) calc(96px * var(--scale)) calc(40px * var(--scale));
+  background: linear-gradient(to bottom, rgba(14, 16, 18, 0.97) 40%, rgba(14, 16, 18, 0.92));
+  border-bottom: calc(2px * var(--scale)) solid #5c646b;
+  box-shadow: 0 calc(12px * var(--scale)) calc(40px * var(--scale)) rgba(0, 0, 0, 0.5);
+  animation: resource-bar-menu-drop 0.35s cubic-bezier(0.2, 0.8, 0.3, 1) both;
 }
-
-/* メニューSVG */
-.resource-bar-menu-icon {
-  position: relative;
-  z-index: 2; /* beforeより上 */
-  color: #fff;
+.resource-bar-menu-overlay.closing .resource-bar-menu-container {
+  animation: resource-bar-menu-raise 0.3s ease-in both;
 }
-.resource-bar-menu-icon .menu-map {
-  display: block;
-  width: 100%;
+@keyframes resource-bar-menu-drop {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
 }
-
-/* クリック可能なノードのみポインタ表示 */
-.menu-map-node[role='button'] {
-  cursor: pointer;
+@keyframes resource-bar-menu-raise {
+  from { transform: translateY(0); }
+  to { transform: translateY(-100%); }
 }
-.menu-map-node.is-disabled {
-  opacity: 0.45;
-}
-
-.menu-map-label {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  overflow: hidden;
-  font-family: 'HakkouMincho', serif;
-  font-size: 4.2px;
-  font-weight: 600;
-  line-height: 1.1;
-  word-break: break-word;
-  overflow-wrap: anywhere;
-}
-
+/* 薄い六角の地模様 */
 .resource-bar-menu-container::before {
   content: '';
   position: absolute;
   inset: 0;
-  z-index: 1;
   pointer-events: none;
-  background-image: url('/project-glacia/images/start/hex-frame.jpg');
-  background-repeat: repeat-x;
-  background-position: left center;
-  background-size: auto 100%;
-  filter: invert(1) brightness(1.2) contrast(1.2);
+  background: url('/project-glacia/images/start/hex-frame.jpg') left center / auto 100% repeat-x;
+  filter: invert(1);
   mix-blend-mode: screen;
-  opacity: 0.8;
-  transform: scaleY(-1);
-  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, transparent 100%);
-  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, transparent 100%);
+  opacity: 0.06;
 }
