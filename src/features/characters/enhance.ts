@@ -4,6 +4,7 @@ import { CURRENCY_PER_EXP, MAX_SKILL_LEVEL } from '../../data/characters/const'
 import type { CharacterMaster, MaterialCost, UserCharacter } from '../../data/characters/types'
 import { items as itemDefs } from '../../data/items'
 import { hasItems, spendItems } from '../inventory/inventory'
+import { bumpMission } from '../mission/daily'
 import { canLimitBreak, effectiveSkillLevel, expToCap, gainExp } from './growth'
 
 function find(me: MeResponse, masterId: string): { master: CharacterMaster; user: UserCharacter } {
@@ -35,7 +36,12 @@ function apply(
 }
 
 // レベルアップ
-export function levelUp(me: MeResponse, masterId: string, use: MaterialCost[]): MeResponse {
+export function levelUp(
+  me: MeResponse,
+  masterId: string,
+  use: MaterialCost[],
+  now: number,
+): MeResponse {
   const { master, user } = find(me, masterId)
   if (use.length === 0) throw new Error('使うアイテムが無い')
   // hasItems は同じ itemId を個別に判定するので、重複は先に弾く
@@ -54,7 +60,9 @@ export function levelUp(me: MeResponse, masterId: string, use: MaterialCost[]): 
   // 上限を超えたぶんは切り捨てる
   if (expToCap(master, user) === 0) throw new Error('レベル上限に達している')
 
-  return apply(me, gainExp(master, user, exp), use, exp * CURRENCY_PER_EXP)
+  const currency = exp * CURRENCY_PER_EXP
+  const next = apply(me, gainExp(master, user, exp), use, currency)
+  return { ...next, user: bumpMission(next.user, 'currencySpent', currency, now) }
 }
 
 // 上限解放

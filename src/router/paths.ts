@@ -14,4 +14,5 @@ export const paths = {
   base:    '/base',      // 基地
   warehouse: '/warehouse', // 倉庫
   exchange: '/exchange', // 取引所
+  mission: '/mission',   // 任務
 } as const

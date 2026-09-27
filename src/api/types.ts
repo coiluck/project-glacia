@@ -1,4 +1,5 @@
 import type { MaterialCost, UserCharacter } from '../data/characters/types'
+import type { MissionEvent } from '../data/missions'
 
 // Cloudflare Workers (D1) が返すユーザーデータ
 export interface UserRow {
@@ -43,6 +44,12 @@ export interface UserRow {
   // --- loginBonus（loginBonusStore）---
   login_claimed_day: number // 最後にログインボーナスを受け取った日（dayIndex）
   login_count: number // その日の月に受け取った回数
+
+  // --- mission（missionStore）---
+  mission_day: number // mission_counts と mission_claimed がどの日のものか（dayIndex）
+  mission_counts: Partial<Record<MissionEvent, number>> // その日に数えたイベントの回数
+  mission_claimed: number[] // その日に受け取ったデイリーの枠（dailyMissionsFor の添字）
+  mission_done: string[] // 受け取った永続任務の id
 
   // --- お気に入りキャラ（characterStore）---
   favorite_character_id: string // CharacterMaster.id
@@ -92,3 +99,15 @@ export type ExchangePayload =
   | { kind: 'claim' } // 本日分の交換材料を受け取る
   | { kind: 'buyTokens'; count: number } // 紙幣で交換材料を買う
   | { kind: 'trade'; slot: number } // 今日のラインナップの枠を交換する
+
+// POST /mission のリクエスト
+export type MissionPayload =
+  | { kind: 'daily'; slot: number } // 今日のデイリーの枠
+  | { kind: 'dailyAll' } // 受け取れるデイリーを全部
+  | { kind: 'permanent'; id: string } // 永続任務の id
+  | { kind: 'permanentAll' } // 受け取れる永続任務を全部
+
+// POST /mission の result
+export interface MissionResult {
+  gems: number // 受け取ったジェム。全達成ボーナスを含む
+}

@@ -213,6 +213,16 @@
   opacity: 0.2;
 }
 
+.top-menu-button-mission-icon {
+  width: calc(72px * var(--scale));
+  height: calc(72px * var(--scale));
+  mask-image: url('/project-glacia/images/top/menu-main/mission.svg');
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  background-color: #282828;
+  opacity: 0.2;
+}
 .top-menu-button-exchange-icon {
   width: calc(72px * var(--scale));
   height: calc(72px * var(--scale));

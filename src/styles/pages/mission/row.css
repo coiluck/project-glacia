@@ -1,0 +1,166 @@
+/* 任務1件 */
+.mission-row {
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  min-height: 124px;
+  padding: 52px 20px 20px 36px;
+  background: rgba(5, 7, 20, 0.7);
+  /* 24px はmargin-left と思って */
+  clip-path: polygon(-24px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, -24px 100%);
+  animation: mission-rise 0.3s ease-out backwards;
+  animation-delay: calc(var(--i) * 0.05s);
+  overflow: visible;
+}
+.mission-row-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.mission-row-caption {
+  position: absolute;
+  top: 5px;
+  left: -24px;
+  z-index: 0;
+  padding: 10px 30px 10px 20px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 18px;
+  line-height: 1;
+  letter-spacing: 0.3em;
+  color: #454b50;
+}
+.mission-row-caption::before,
+.mission-row-caption::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+}
+.mission-row-caption::before {
+  background: rgba(0, 0, 0, 0.5);
+  transform: translate(8px, 7px);
+}
+.mission-row-caption::after {
+  background: linear-gradient(to right, #7fe0ff, #b6f5ff);
+}
+.mission-row-text {
+  font-size: 24px;
+  line-height: 1.25;
+  letter-spacing: 0.06em;
+}
+.mission-row-text b {
+  margin: 0 0.15em;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+}
+.mission-progress {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.mission-progress-bar {
+  position: relative;
+  flex: 1;
+  height: 8px;
+  background: #2a3036;
+}
+.mission-progress-bar i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background: #8a9299;
+  transition: width 0.4s ease-out;
+}
+.mission-row.is-achieved .mission-progress-bar i { background: #d9dee2; }
+.mission-progress-value {
+  min-width: 112px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-align: right;
+  color: #8a9299;
+}
+.mission-progress-value b {
+  font-size: 24px;
+  font-weight: 600;
+  color: #e4e7ea;
+}
+
+/* 報酬の枠 */
+.mission-reward {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 92px;
+  height: 92px;
+  background: #252a30;
+}
+.mission-reward .gem-icon {
+  width: 38px;
+  height: 38px;
+}
+.mission-reward b {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.mission-button {
+  flex-shrink: 0;
+  width: 164px;
+  height: 56px;
+  font-family: inherit;
+  font-size: 22px;
+  letter-spacing: 0.24em;
+  text-indent: 0.24em;
+  color: #111;
+  background: #d9dee2;
+  border: none;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+  cursor: pointer;
+  transition: background 0.12s ease-out;
+}
+.mission-button:disabled {
+  color: #5c646b;
+  background: #2a3036;
+  cursor: default;
+}
+/* 受け取れる */
+.mission-row.is-achieved:not(.is-claimed) .mission-button { background: #e8c774; }
+.mission-row.is-achieved:not(.is-claimed) .mission-button:hover { background: #f3d894; }
+
+/* 受取済み */
+.mission-row.is-claimed { background: #34393f; }
+.mission-row.is-claimed::before { background: #5c646b; }
+.mission-row.is-claimed .mission-row-main,
+.mission-row.is-claimed .mission-reward {
+  opacity: 0.28;
+}
+.mission-stamp {
+  flex-shrink: 0;
+  width: 164px;
+  padding: 4px 0;
+  text-align: center;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  text-indent: 0.4em;
+  color: #8a9299;
+  border: 2px solid #5c646b;
+  white-space: nowrap;
+  transform: rotate(-8deg);
+}

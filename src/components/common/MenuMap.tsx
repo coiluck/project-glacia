@@ -27,7 +27,7 @@ const MENU_NODES: MenuNode[] = [
   { id: 'base', label: '基地', to: paths.base, cx: 105.573264, cy: 13.188371, scale: 1.2 },
   { id: 'recruit', label: '招集', to: paths.recruit, cx: 143.82612, cy: 28.188371 },
   { id: 'exchange', label: '取引所', to: paths.exchange, cx: 183.270233, cy: 28.188371 },
-  { id: 'mission', label: '任務', to: null, cx: 163.332543, cy: 13.188371 },
+  { id: 'mission', label: '任務', to: paths.mission, cx: 163.332543, cy: 13.188371 },
 ]
 
 // ヘクス同士をつなぐ装飾線（構造）。元SVGの線種をそのまま保持。

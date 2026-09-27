@@ -10,7 +10,7 @@ export const run: Command<null> = (me, body, ctx) => {
     case 'claim':
       return { me: claimDaily(me, ctx.now), result: null }
     case 'buyTokens':
-      return { me: buyTokens(me, b.count), result: null }
+      return { me: buyTokens(me, b.count, ctx.now), result: null }
     case 'trade':
       return { me: trade(me, b.slot, ctx.now), result: null }
     default:

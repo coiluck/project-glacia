@@ -51,5 +51,12 @@
   "skillClariceSuppressiveFire": "Suppressive Fire",
   "skillClariceSuppressiveFireDesc": "Deals damage with {0} power to enemies on a tile 2-3 tiles away and the two tiles on either side in front of it.",
   "skillRosalieSilentPrayer": "Silent Prayer",
-  "skillRosalieSilentPrayerDesc": "Restores {0} HP to herself and every adjacent ally."
+  "skillRosalieSilentPrayerDesc": "Restores {0} HP to herself and every adjacent ally.",
+
+  "missionLapisDailyStart": "Here are today's missions. They change at 5 a.m., so let's finish them before then.",
+  "missionLapisDailyClaimable": "You've completed a mission. Don't forget to collect the reward.",
+  "missionLapisDailyHalf": "That's the spirit. Let's keep this pace and clear the rest.",
+  "missionLapisDailyDone": "That's every mission for today. Good work, and let's do our best again tomorrow.",
+  "missionLapisPermanent": "Achievements have no deadline. Let's take them one step at a time.",
+  "missionLapisPermanentClaimable": "All that effort has paid off. There are rewards to collect."
 }

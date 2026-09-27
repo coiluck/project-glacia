@@ -5,6 +5,7 @@ import { dropTables } from '../../data/drops'
 import { expToNextRank, staminaMaxFor } from '../../data/rank'
 import { chapters, isChapterCleared } from '../../data/stages'
 import { addItems } from '../inventory/inventory'
+import { bumpMission } from '../mission/daily'
 import { refreshStamina, spendStamina } from '../stamina/stamina'
 import { rollDrops } from './drops'
 
@@ -22,7 +23,8 @@ const NO_REWARD: BattleReward = { currency: 0, rankExp: 0, drops: [] }
 const findStage = (stageId: string) =>
   chapters.flatMap((c) => c.stages).find((s) => s.id === stageId)
 
-export function resolveBattleResult(
+// 結果の反映。スキップでも通る
+function settle(
   me: MeResponse,
   stageId: string,
   result: BattleResult,
@@ -31,7 +33,7 @@ export function resolveBattleResult(
   const stage = findStage(stageId)
   if (!stage) throw new Error(`ステージが無い: ${stageId}`)
 
-  const user = spendStamina(me.user, stage.stamina, now)
+  const user = bumpMission(spendStamina(me.user, stage.stamina, now), 'staminaSpent', stage.stamina, now)
 
   // 負けたらスタミナだけ引く
   if (result === 'defeat') return { me: { ...me, user }, reward: NO_REWARD }
@@ -63,7 +65,21 @@ export function resolveBattleResult(
   }
 
   // ランクアップでstamina_maxが変わりうるので
-  return { me: { ...me, user: refreshStamina(user, now) }, reward }
+  return { me: { ...me, user: bumpMission(refreshStamina(user, now), 'battleWin', 1, now) }, reward }
+}
+
+export function resolveBattleResult(
+  me: MeResponse,
+  stageId: string,
+  result: BattleResult,
+  now: number,
+): { me: MeResponse; reward: BattleReward } {
+  const settled = settle(me, stageId, result, now)
+  if (result === 'defeat') return settled
+
+  // スキップしなかった勝利だけ数える
+  const user = bumpMission(settled.me.user, 'battleWinManual', 1, now)
+  return { ...settled, me: { ...settled.me, user } }
 }
 
 // クリア済みステージの戦闘を省略する
@@ -75,5 +91,5 @@ export function resolveBattleSkip(
   if (!me.user.cleared_stage_ids.includes(stageId)) {
     throw new Error(`未クリアのステージはスキップできない: ${stageId}`)
   }
-  return resolveBattleResult(me, stageId, 'victory', now)
+  return settle(me, stageId, 'victory', now)
 }

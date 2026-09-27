@@ -2,6 +2,7 @@ import type { MeResponse, UserRow } from '../../api/types'
 import { DAILY_TOKENS, TOKEN_PRICE } from '../../data/exchange'
 import { dayIndex } from '../daily/day'
 import { addItems } from '../inventory/inventory'
+import { bumpMission } from '../mission/daily'
 import { lineupFor } from './lineup'
 
 // 取引所の判定に要る値
@@ -25,16 +26,21 @@ export function claimDaily(me: MeResponse, now: number): MeResponse {
 
   return {
     ...me,
-    user: {
-      ...me.user,
-      exchange_tokens: me.user.exchange_tokens + DAILY_TOKENS,
-      exchange_claimed_day: dayIndex(now),
-    },
+    user: bumpMission(
+      {
+        ...me.user,
+        exchange_tokens: me.user.exchange_tokens + DAILY_TOKENS,
+        exchange_claimed_day: dayIndex(now),
+      },
+      'exchangeClaim',
+      1,
+      now,
+    ),
   }
 }
 
 // 紙幣で交換材料を買う
-export function buyTokens(me: MeResponse, count: number): MeResponse {
+export function buyTokens(me: MeResponse, count: number, now: number): MeResponse {
   if (!Number.isInteger(count) || count <= 0) throw new Error(`個数が不正: ${count}`)
 
   const cost = count * TOKEN_PRICE
@@ -42,11 +48,16 @@ export function buyTokens(me: MeResponse, count: number): MeResponse {
 
   return {
     ...me,
-    user: {
-      ...me.user,
-      currency: me.user.currency - cost,
-      exchange_tokens: me.user.exchange_tokens + count,
-    },
+    user: bumpMission(
+      {
+        ...me.user,
+        currency: me.user.currency - cost,
+        exchange_tokens: me.user.exchange_tokens + count,
+      },
+      'currencySpent',
+      cost,
+      now,
+    ),
   }
 }
 
@@ -61,12 +72,17 @@ export function trade(me: MeResponse, slot: number, now: number): MeResponse {
 
   return {
     ...me,
-    user: {
-      ...me.user,
-      exchange_tokens: me.user.exchange_tokens - offer.price,
-      exchange_bought_day: dayIndex(now),
-      exchange_bought: [...bought, slot],
-      items: addItems(me.user.items, [{ itemId: offer.itemId, count: 1 }]),
-    },
+    user: bumpMission(
+      {
+        ...me.user,
+        exchange_tokens: me.user.exchange_tokens - offer.price,
+        exchange_bought_day: dayIndex(now),
+        exchange_bought: [...bought, slot],
+        items: addItems(me.user.items, [{ itemId: offer.itemId, count: 1 }]),
+      },
+      'exchangeTrade',
+      1,
+      now,
+    ),
   }
 }

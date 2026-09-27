@@ -1,0 +1,101 @@
+/* デイリー / 永続の欄で共通の枠 */
+.mission-head {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+  height: 76px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+  animation: mission-rise 0.4s ease-out both;
+}
+.mission-head-title {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.mission-head-title small {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 15px;
+  line-height: 1;
+  letter-spacing: 0.3em;
+  color: #6b7986;
+}
+.mission-head-title span {
+  font-size: 34px;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  color: #282828;
+}
+
+/* 任務の一覧 */
+.mission-list {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  /* 行の札が左へはみ出すぶん、スクロール領域を外へ広げる */
+  margin-left: -24px;
+  padding-left: 24px;
+  overflow-y: auto;
+  list-style: none;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+}
+
+/* 全達成ボーナス / 達成数とまとめて受け取る */
+.mission-foot {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  height: 144px;
+  padding: 24px 20px 0 30px;
+  background: rgba(5, 7, 20, 0.7);
+  border-top: 2px solid #5c646b;
+  animation: mission-rise 0.4s ease-out 0.15s both;
+}
+.mission-foot-summary {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.mission-foot-label {
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  color: #e4e7ea;
+}
+.mission-foot-label b {
+  font-family: 'CaviarDreams', sans-serif;
+  font-weight: 600;
+}
+.mission-foot .mission-progress-bar { flex: none; height: 10px; }
+.mission-foot .mission-progress-bar i { background: #d9dee2; }
+.mission-foot .mission-reward.is-claimed { opacity: 0.35; }
+
+.mission-claim-all {
+  flex-shrink: 0;
+  width: 220px;
+  height: 64px;
+  font-family: inherit;
+  font-size: 22px;
+  letter-spacing: 0.16em;
+  text-indent: 0.16em;
+  color: #111;
+  background: #e8c774;
+  border: none;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+  cursor: pointer;
+  transition: background 0.12s ease-out;
+}
+.mission-claim-all:hover:not(:disabled) { background: #f3d894; }
+.mission-claim-all:disabled {
+  color: #5c646b;
+  background: #2a3036;
+  cursor: default;
+}

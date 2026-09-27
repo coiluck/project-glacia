@@ -14,6 +14,7 @@ import RecruitPage from '../pages/recruit/RecruitPage'
 import BasePage from '../pages/base/BasePage'
 import WarehousePage from '../pages/warehouse/WarehousePage'
 import ExchangePage from '../pages/exchange/ExchangePage'
+import MissionPage from '../pages/mission/MissionPage'
 
 export const router = createBrowserRouter(
   [
@@ -32,6 +33,7 @@ export const router = createBrowserRouter(
         { path: 'base', element: <BasePage /> }, // 基地
         { path: 'warehouse', element: <WarehousePage /> }, // 倉庫
         { path: 'exchange', element: <ExchangePage /> }, // 取引所
+        { path: 'mission', element: <MissionPage /> }, // 任務
       ],
     },
     { path: 'battle/:stageId', element: <BattlePage /> }, // 戦闘

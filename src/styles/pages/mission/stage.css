@@ -1,0 +1,99 @@
+/* 任務: 左の立ち絵とセリフ */
+.mission-stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 880px;
+  height: 1080px;
+  overflow: hidden;
+  pointer-events: none;
+}
+/* 背景の大きな文字 */
+.mission-stage-mark {
+  position: absolute;
+  top: 120px;
+  left: 20px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 200px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: rgba(40, 40, 40, 0.07);
+  writing-mode: vertical-rl;
+  white-space: nowrap;
+}
+/* 斜めの帯 */
+.mission-stage::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 260px;
+  width: 360px;
+  background: linear-gradient(to bottom, rgba(40, 40, 40, 0.1), rgba(40, 40, 40, 0.02));
+  transform: skewX(-14deg);
+}
+.mission-stage-art {
+  position: absolute;
+  top: -90px;
+  left: 50px;
+  height: 1300px;
+  animation: mission-art 0.6s ease-out both;
+}
+
+.mission-line {
+  position: absolute;
+  bottom: 170px;
+  left: 110px;
+  width: 640px;
+  padding: 36px 40px 28px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.84) 45%, rgba(0, 0, 0, 0.62));
+  animation: mission-rise 0.4s ease-out 0.2s both;
+}
+.mission-line-name {
+  position: absolute;
+  top: 0;
+  left: 36px;
+  height: 40px;
+  padding: 0 30px;
+  font-size: 22px;
+  line-height: 40px;
+  letter-spacing: 0.16em;
+  color: #282828;
+  background: #fff;
+  clip-path: polygon(12px 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 12px 100%, 0 50%);
+  transform: translateY(-50%);
+}
+.mission-line-text {
+  min-height: 82px;
+  font-size: 25px;
+  line-height: 1.64;
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+.mission-line-text.is-changed { animation: mission-line 0.35s ease-out; }
+/* 送りの印 */
+.mission-line::after {
+  content: '';
+  position: absolute;
+  right: 22px;
+  bottom: 16px;
+  width: 14px;
+  height: 10px;
+  background: #8a9299;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  animation: mission-blink 1.2s ease-in-out infinite;
+}
+
+@keyframes mission-art {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes mission-line {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes mission-blink {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}

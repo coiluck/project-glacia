@@ -1,0 +1,37 @@
+/* 永続任務 */
+.mission-categories {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+  list-style: none;
+}
+.mission-category {
+  position: relative;
+  height: 42px;
+  padding: 0 18px;
+  font-family: inherit;
+  font-size: 19px;
+  letter-spacing: 0.1em;
+  color: #6b7986;
+  background: rgba(0, 0, 0, 0.06);
+  border: none;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+  cursor: pointer;
+  transition: background 0.12s ease-out;
+}
+.mission-category:hover:not(.is-active) { background: rgba(0, 0, 0, 0.12); }
+.mission-category.is-active {
+  color: #fff;
+  background: #282828;
+  cursor: default;
+}
+.mission-category.has-claimable::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 8px;
+  height: 8px;
+  background: #d9a441;
+  transform: rotate(45deg);
+}

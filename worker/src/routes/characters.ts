@@ -3,12 +3,12 @@ import { levelUp, limitBreak, skillLevelUp } from '../../../src/features/charact
 import type { Command } from './types'
 
 // POST /characters/enhance
-export const enhance: Command<null> = (me, body) => {
+export const enhance: Command<null> = (me, body, ctx) => {
   const b = body as EnhancePayload
 
   switch (b.kind) {
     case 'level':
-      return { me: levelUp(me, b.masterId, b.use), result: null }
+      return { me: levelUp(me, b.masterId, b.use, ctx.now), result: null }
     case 'limitBreak':
       return { me: limitBreak(me, b.masterId), result: null }
     case 'skill':

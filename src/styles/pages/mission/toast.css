@@ -1,0 +1,32 @@
+/* 受け取ったときの表示 */
+.mission-toast {
+  position: absolute;
+  top: 150px;
+  left: 1380px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 36px;
+  font-size: 22px;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  background: rgba(8, 10, 12, 0.9);
+  transform: translateX(-50%);
+  animation: mission-toast 1.8s ease-out both;
+  pointer-events: none;
+}
+.mission-toast .gem-icon { width: 30px; height: 30px; }
+.mission-toast b {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+@keyframes mission-toast {
+  0% { opacity: 0; transform: translate(-50%, 12px); }
+  12% { opacity: 1; transform: translate(-50%, 0); }
+  80% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, -8px); }
+}

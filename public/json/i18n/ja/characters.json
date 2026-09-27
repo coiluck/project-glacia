@@ -51,5 +51,12 @@
   "skillClariceSuppressiveFire": "制圧射撃",
   "skillClariceSuppressiveFireDesc": "距離2〜3の狙ったマスと、その手前の両隣にいる敵に威力{0}のダメージを与える。",
   "skillRosalieSilentPrayer": "黙祷",
-  "skillRosalieSilentPrayerDesc": "自分と周囲1マスの味方すべてのHPを{0}回復する。"
+  "skillRosalieSilentPrayerDesc": "自分と周囲1マスの味方すべてのHPを{0}回復する。",
+
+  "missionLapisDailyStart": "今日の任務はこちらです。朝の5時に入れ替わるので、それまでに済ませましょうね。",
+  "missionLapisDailyClaimable": "達成した任務がありますよ。報酬は忘れずに受け取っておきましょう。",
+  "missionLapisDailyHalf": "その調子です。残りの任務も、この勢いで片付けてしまいましょう。",
+  "missionLapisDailyDone": "今日の任務はこれで全部です。お疲れさまでした。また明日もよろしくお願いしますね。",
+  "missionLapisPermanent": "永続任務に期限はありません。焦らず、一歩ずつ進んでいきましょう。",
+  "missionLapisPermanentClaimable": "これまでの積み重ねが実を結びましたね。受け取れる報酬があります。"
 }

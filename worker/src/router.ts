@@ -10,6 +10,7 @@ import * as exchange from './routes/exchange'
 import * as favorite from './routes/favorite'
 import * as gacha from './routes/gacha'
 import * as loginBonus from './routes/loginBonus'
+import * as mission from './routes/mission'
 import * as party from './routes/party'
 import type { Command } from './routes/types'
 
@@ -23,6 +24,7 @@ const COMMANDS: Record<string, Command<unknown>> = {
   '/exchange': exchange.run,
   '/favorite': favorite.set,
   '/login-bonus': loginBonus.claim,
+  '/mission': mission.claim,
   '/debug/set': debug.set,
 }
 

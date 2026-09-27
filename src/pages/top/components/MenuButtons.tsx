@@ -60,6 +60,10 @@ export default function MenuButtons() {
       </div>
 
       <div className="top-menu-buttons-row">
+        <Link to={paths.mission}>
+          <span>任務</span>
+          <div className="top-menu-button-mission-icon" />
+        </Link>
         <Link to={paths.exchange}>
           <span>取引所</span>
           <div className="top-menu-button-exchange-icon" />

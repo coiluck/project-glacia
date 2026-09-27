@@ -24,6 +24,10 @@ CREATE TABLE IF NOT EXISTS users (
   exchange_bought                TEXT    NOT NULL DEFAULT '[]',
   login_claimed_day              INTEGER NOT NULL DEFAULT 0,
   login_count                    INTEGER NOT NULL DEFAULT 0,
+  mission_day                    INTEGER NOT NULL DEFAULT 0,
+  mission_counts                 TEXT    NOT NULL DEFAULT '{}',
+  mission_claimed                TEXT    NOT NULL DEFAULT '[]',
+  mission_done                   TEXT    NOT NULL DEFAULT '[]',
   favorite_character_id          TEXT    NOT NULL DEFAULT 'lapis'
 );
 
