@@ -12,6 +12,8 @@ type UserTableRow = Omit<
   | 'mission_counts'
   | 'mission_claimed'
   | 'mission_done'
+  | 'base_board'
+  | 'base_members'
 > & {
   cleared_stage_ids: string
   tutorial_steps: string
@@ -20,6 +22,8 @@ type UserTableRow = Omit<
   mission_counts: string
   mission_claimed: string
   mission_done: string
+  base_board: string
+  base_members: string
   // SELECT * で一緒に来るが、レスポンスには含めない
   password_hash: string
   password_salt: string
@@ -104,6 +108,8 @@ export async function loadMe({ db, userId, now }: Context): Promise<MeResponse> 
         mission_counts: JSON.parse(user.mission_counts),
         mission_claimed: JSON.parse(user.mission_claimed),
         mission_done: JSON.parse(user.mission_done),
+        base_board: JSON.parse(user.base_board),
+        base_members: JSON.parse(user.base_members),
       },
       now,
     ),
@@ -143,7 +149,8 @@ export async function saveMe(
            exchange_tokens = ?, exchange_claimed_day = ?, exchange_bought_day = ?, exchange_bought = ?,
            login_claimed_day = ?, login_count = ?,
            mission_day = ?, mission_counts = ?, mission_claimed = ?, mission_done = ?,
-           favorite_character_id = ?
+           favorite_character_id = ?,
+           base_board = ?, base_members = ?, base_tower_level = ?, base_collected_at = ?
          WHERE id = ?`,
       )
       .bind(
@@ -173,6 +180,10 @@ export async function saveMe(
         JSON.stringify(u.mission_claimed),
         JSON.stringify(u.mission_done),
         u.favorite_character_id,
+        JSON.stringify(u.base_board),
+        JSON.stringify(u.base_members),
+        u.base_tower_level,
+        u.base_collected_at,
         u.id,
       ),
   ]

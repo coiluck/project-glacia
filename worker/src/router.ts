@@ -3,6 +3,7 @@ import { findSessionUserId } from './db/sessions'
 import { loadMe, saveMe } from './db/users'
 import { error, json } from './http'
 import * as auth from './routes/auth'
+import * as baseRoute from './routes/base'
 import * as battle from './routes/battle'
 import * as characters from './routes/characters'
 import * as debug from './routes/debug'
@@ -25,6 +26,7 @@ const COMMANDS: Record<string, Command<unknown>> = {
   '/favorite': favorite.set,
   '/login-bonus': loginBonus.claim,
   '/mission': mission.claim,
+  '/base': baseRoute.run,
   '/debug/set': debug.set,
 }
 

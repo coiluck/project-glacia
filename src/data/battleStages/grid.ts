@@ -26,7 +26,7 @@ export interface StageMap {
   partyApPerTurn: number;
 }
 
-function cells(rows: string[]): { pos: Axial; ch: string }[] {
+export function cells(rows: string[]): { pos: Axial; ch: string }[] {
   return rows.flatMap((row, r) =>
     [...row].flatMap((ch, col) => {
       if (ch === ' ') return [];

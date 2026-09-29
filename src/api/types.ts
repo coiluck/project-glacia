@@ -1,5 +1,8 @@
 import type { MaterialCost, UserCharacter } from '../data/characters/types'
 import type { MissionEvent } from '../data/missions'
+import type { BaseBuildingKind } from '../data/base'
+import type { BaseBuilding } from '../features/base/types'
+import type { Axial } from '../features/battle/hex'
 
 // Cloudflare Workers (D1) が返すユーザーデータ
 export interface UserRow {
@@ -53,6 +56,12 @@ export interface UserRow {
 
   // --- お気に入りキャラ（characterStore）---
   favorite_character_id: string // CharacterMaster.id
+
+  // --- 基地 ---
+  base_board: Record<string, BaseBuilding> // axialKey -> 建物。配管もここに入る
+  base_members: Record<string, string> // CharacterMaster.id -> 立っているマスの axialKey
+  base_tower_level: number // 暖房塔の Lv
+  base_collected_at: number // 最後に回収した時刻（Unix秒）
 }
 
 export interface MeResponse {
@@ -111,3 +120,14 @@ export type MissionPayload =
 export interface MissionResult {
   gems: number // 受け取ったジェム。全達成ボーナスを含む
 }
+
+// POST /base のリクエスト。pos は盤面の axial 座標
+export type BasePayload =
+  | { kind: 'collect' } // 貯まった物を回収する
+  | { kind: 'build'; pos: Axial; building: BaseBuildingKind; output?: string } // output は採掘場と書庫だけ
+  | { kind: 'remove'; pos: Axial }
+  | { kind: 'upgrade'; pos: Axial }
+  | { kind: 'output'; pos: Axial; output: string } // 作る物を変える
+  | { kind: 'place'; characterId: string; pos: Axial | null } // null で外す
+  | { kind: 'upgradeTower' }
+  | { kind: 'refine'; itemId: string; count: number } // 精錬所で合成する
