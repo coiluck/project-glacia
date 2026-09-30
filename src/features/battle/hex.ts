@@ -1,0 +1,178 @@
+// HEX盤面の座標
+export interface Axial {
+  q: number;
+  r: number;
+}
+
+export interface Pixel {
+  x: number;
+  y: number;
+}
+
+// Map/Set のキー用文字列
+export function axialKey(c: Axial): string {
+  return `${c.q},${c.r}`;
+}
+
+// 右隣から反時計回りの6方向
+const DIRECTIONS: readonly Axial[] = [
+  { q: 1, r: 0 },
+  { q: 1, r: -1 },
+  { q: 0, r: -1 },
+  { q: -1, r: 0 },
+  { q: -1, r: 1 },
+  { q: 0, r: 1 },
+];
+
+export function neighbors(c: Axial): Axial[] {
+  return DIRECTIONS.map((d) => ({ q: c.q + d.q, r: c.r + d.r }));
+}
+
+// 2座標間のHEX距離
+export function distance(a: Axial, b: Axial): number {
+  const dq = a.q - b.q;
+  const dr = a.r - b.r;
+  return (Math.abs(dq) + Math.abs(dr) + Math.abs(dq + dr)) / 2;
+}
+
+// center から半径 radius 以内の全座標
+// 盤面上に存在するかは考慮しない
+export function coordsInRange(center: Axial, radius: number): Axial[] {
+  const result: Axial[] = [];
+  for (let q = -radius; q <= radius; q++) {
+    const rMin = Math.max(-radius, -q - radius);
+    const rMax = Math.min(radius, -q + radius);
+    for (let r = rMin; r <= rMax; r++) {
+      result.push({ q: center.q + q, r: center.r + r });
+    }
+  }
+  return result;
+}
+
+// 移動範囲（各マスへの必要歩数 cost つき）
+// 盤面に存在するか・他ユニットが居ないかの判定は呼び出し側がisPassableに含めて渡す。
+export function reachable(
+  start: Axial,
+  move: number,
+  isPassable: (c: Axial) => boolean,
+): { pos: Axial; cost: number }[] {
+  const visited = new Set<string>([axialKey(start)]);
+  const result: { pos: Axial; cost: number }[] = [];
+  let frontier: Axial[] = [start];
+  for (let step = 1; step <= move; step++) {
+    const next: Axial[] = [];
+    for (const c of frontier) {
+      for (const n of neighbors(c)) {
+        const key = axialKey(n);
+        if (visited.has(key) || !isPassable(n)) continue;
+        visited.add(key);
+        result.push({ pos: n, cost: step });
+        next.push(n);
+      }
+    }
+    frontier = next;
+  }
+  return result;
+}
+
+// size は六角形の中心から頂点までの距離。
+// 戻り値は六角形の中心座標
+export function hexToPixel(c: Axial, size: number): Pixel {
+  return {
+    x: size * Math.sqrt(3) * (c.q + c.r / 2),
+    y: size * 1.5 * c.r,
+  };
+}
+
+// 六角形の頂点6つ（pointy-top）。中心からの相対座標で返す
+export function hexCorners(size: number): Pixel[] {
+  return Array.from({ length: 6 }, (_, i) => {
+    const angle = (Math.PI / 180) * (60 * i - 30);
+    return { x: size * Math.cos(angle), y: size * Math.sin(angle) };
+  });
+}
+
+// 攻撃範囲の形
+// range: 距離 min〜max 以内の任意マスを対象に選ぶ（向きなし）
+// pattern: 東(+q)向きを基準にした相対座標の集合。使用時に6方向のどれかへ回転して発動する
+export type AttackShape =
+  | { kind: 'range'; max: number; min?: number }
+  | { kind: 'pattern'; offsets: Axial[] };
+
+// 原点周りに 60°× steps 反時計回りに回転する。
+// DIRECTIONS[0]（東）を steps 回まわすと DIRECTIONS[steps] になる。
+export function rotateOffset(c: Axial, steps: number): Axial {
+  let { q, r } = c;
+  const n = ((steps % 6) + 6) % 6;
+  for (let i = 0; i < n; i++) {
+    // キューブ座標の反時計回り回転: [q,r,s] -> [-s,-q,-r]
+    const nq = q + r; // -s
+    const nr = -q;
+    q = nq;
+    r = nr;
+  }
+  return { q, r };
+}
+
+// 形が及ぶ絶対座標の一覧を返す。
+// direction は 0〜5（東=0 から反時計回り）
+// kind:'range' は向きを持たないため direction は無視
+// 盤面上に存在するマスかどうかは呼び出し側で絞り込む
+export function shapeTiles(origin: Axial, shape: AttackShape, direction = 0): Axial[] {
+  if (shape.kind === 'range') {
+    const min = shape.min ?? 1;
+    return coordsInRange(origin, shape.max).filter((c) => distance(origin, c) >= min);
+  }
+  return shape.offsets.map((o) => {
+    const rotated = rotateOffset(o, direction);
+    return { q: origin.q + rotated.q, r: origin.r + rotated.r };
+  });
+}
+
+// 6角形なのでね
+export const DIRECTION_STEPS: readonly number[] = [0, 1, 2, 3, 4, 5];
+
+// 狙えるマスと、そこを狙ったときに効果の area を回す向き
+export interface AimTile {
+  pos: Axial;
+  direction: number;
+}
+
+// どれかの向きに回せば届くマスの一覧（重複なし）と、そのときの向き
+// range 型は向きを持たない形なので、術者から見た方位を雑に計算
+export function shapeAimsAnyDirection(origin: Axial, shape: AttackShape): AimTile[] {
+  if (shape.kind === 'range') {
+    return shapeTiles(origin, shape).map((pos) => ({ pos, direction: directionOf(origin, pos) }));
+  }
+  const seen = new Set<string>();
+  const result: AimTile[] = [];
+  for (const direction of DIRECTION_STEPS) {
+    for (const pos of shapeTiles(origin, shape, direction)) {
+      const key = axialKey(pos);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      result.push({ pos, direction });
+    }
+  }
+  return result;
+}
+
+// from から to へ向かう方位（0〜5）
+// 隣接なら DIRECTIONS の添字と一致、同じマスなら0
+// 2方位のちょうど中間のマス（HEXならありうるよね）は必ず反時計回り側を返す
+function directionOf(from: Axial, to: Axial): number {
+  const d = hexToPixel({ q: to.q - from.q, r: to.r - from.r }, 1);
+  if (d.x === 0 && d.y === 0) return 0;
+  // hexToPixel は画面座標（y下向き）なので、反時計回りにするためyを反転する
+  const angle = Math.atan2(-d.y, d.x);
+  return ((Math.round(angle / (Math.PI / 3)) % 6) + 6) % 6;
+}
+
+// 効果が当たるマス。area 省略時は狙ったマスだけ
+export function effectTiles(
+  aim: Axial,
+  area: AttackShape | undefined,
+  direction: number,
+): Axial[] {
+  return area ? shapeTiles(aim, area, direction) : [aim];
+}

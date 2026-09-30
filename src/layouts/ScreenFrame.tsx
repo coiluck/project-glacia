@@ -1,9 +1,7 @@
-import { createContext, useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { SCREEN } from '../config/screen'
 import { ViewportBgContext } from './useViewportBackground'
-
-// .screen-viewport
-export const ScreenViewportContext = createContext<HTMLDivElement | null>(null)
+import { ScreenViewportContext } from './ScreenViewportContext'
 
 // 画面フレームを拡大縮小
 export default function ScreenFrame({ children }: { children: ReactNode }) {

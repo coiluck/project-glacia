@@ -1,0 +1,65 @@
+/* ===== 立ち絵レイヤー ===== */
+.scenario-sprite-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: calc(64px * var(--scale));
+  pointer-events: none;
+}
+
+.scenario-sprite-image {
+  height: calc(950px * var(--scale));
+  max-width: calc(860px * var(--scale));
+  object-fit: contain;
+  object-position: bottom;
+  -webkit-user-drag: none;
+}
+
+/* bounce 指定付きで登場したときはフェードイン＋バウンド */
+.scenario-sprite-image.appear-bounce {
+  animation: scenarioSpriteAppear 2s ease-in-out both;
+}
+
+/* ポーズ入れ替え時のバウンド（話している雰囲気） */
+.scenario-sprite-image.bounce {
+  animation: scenarioSpriteBounce 1.2s ease-in-out;
+}
+
+@keyframes scenarioSpriteAppear {
+  0%   { transform: translateY(0);                            opacity: 0; }
+  10%  { transform: translateY(calc(-15px * var(--scale)));   opacity: 0.5; }
+  20%  { transform: translateY(0);                            opacity: 1; }
+  30%  { transform: translateY(calc(-8px * var(--scale)));    opacity: 1; }
+  40%  { transform: translateY(0);                            opacity: 1; }
+  100% { transform: translateY(0);                            opacity: 1; }
+}
+
+@keyframes scenarioSpriteBounce {
+  0%   { transform: translateY(0); }
+  15%  { transform: translateY(calc(-15px * var(--scale))); }
+  30%  { transform: translateY(0); }
+  45%  { transform: translateY(calc(-8px * var(--scale))); }
+  60%  { transform: translateY(0); }
+  100% { transform: translateY(0); }
+}
+
+/* ===== 顔レイヤー（テキストウィンドウ左） ===== */
+.scenario-face-layer {
+  position: absolute;
+  bottom: 0;
+  left: calc(24px * var(--scale));
+  width: calc(280px * var(--scale));
+  height: calc(340px * var(--scale));
+  z-index: 2;
+  pointer-events: none;
+}
+
+.scenario-face-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom;
+  -webkit-user-drag: none;
+}

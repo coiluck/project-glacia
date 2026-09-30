@@ -1,0 +1,69 @@
+/* ===== backlog ===== */
+.scenario-log-container {
+  position: absolute;
+  inset: calc(80px * var(--scale)) calc(240px * var(--scale));
+  display: flex;
+  flex-direction: column;
+  gap: calc(24px *  var(--scale));
+  padding: calc(48px *  var(--scale));
+  overflow-y: auto;
+  scrollbar-color: #d8f9f9 transparent;
+  background-color: rgba(7, 6, 24, 0.8);
+  backdrop-filter: blur(4px);
+  z-index: 3;
+}
+
+.scenario-log-container::-webkit-scrollbar {
+  background: transparent;
+}
+.scenario-log-container::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 0 !important;
+}
+.scenario-log-container::-webkit-scrollbar-thumb {
+  background-color: #d8f9f9;
+  border-radius: 0 !important;
+  border: none;
+  background-clip: padding-box;
+}
+
+
+
+.scenario-log-line {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: calc(48px *  var(--scale));
+}
+.scenario-log-face {
+  width: calc(96px * var(--scale));
+  height: calc(96px * var(--scale));
+  background-color: aliceblue;
+  object-fit: contain;
+  object-position: bottom;
+}
+.scenario-log-face-dummy {
+  width: calc(96px * var(--scale));
+  height: calc(24px * var(--scale));
+  background-color: aliceblue;
+}
+.scenario-log-text {
+  flex: 1;
+  text-align: left;
+  font-size: calc(24px * var(--scale));
+}
+
+/* hr */
+.scenario-log-horizonal-line {
+  flex-shrink: 0;
+  width: 100%;
+  height: calc(3px * var(--scale));
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse 50% 100% at center,
+    rgba(161, 208, 225, 0.7) 10%,
+    rgba(101, 188, 219, 0.6) 20%,
+    rgba(48, 114, 181, 0.35) 55%,
+    rgba(32, 49, 105, 0) 100%
+  );
+}

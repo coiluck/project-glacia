@@ -1,0 +1,14 @@
+{
+  "firstBattleIntro": "Enemies ahead. Before we fight, let's decide where I should stand.",
+  "firstBattleDeploy": "Drag my portrait onto the glowing tile.",
+  "firstBattleStart": "That position will do. Let's begin the battle.",
+  "firstBattleAp": "Every action costs AP. Party AP is shared by everyone, and I can use up to 4 of it per turn.",
+  "firstBattleSelect": "First, select me.",
+  "firstBattleMove": "Moving costs AP too. The number on each tile is the cost. Let's step forward one tile.",
+  "firstBattleSkill": "Frost Bolt reaches 2 to 3 tiles away. It can't hit anything too close, so be careful.",
+  "firstBattleAim": "Choose a target. The number above its head is the damage you will deal.",
+  "firstBattleEndTurn": "There's no AP left for an attack. Let's end the turn.",
+  "firstBattleEnemyPhase": "It's the enemy's turn. Watch how they move.",
+  "firstBattleThreat": "Select an enemy to see the tiles its attacks can reach.",
+  "firstBattleOutro": "Frost Bolt can't reach an enemy right next to me. Use a normal attack for that. ...The rest is up to you."
+}

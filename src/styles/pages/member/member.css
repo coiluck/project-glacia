@@ -1,0 +1,23 @@
+/* 所持キャラ一覧。編成のキャラ選択と同じ2段の横スクロールグリッド */
+.page-member {
+  position: absolute;
+  inset: 0;
+}
+
+.member-list-grid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(2, 1fr);
+  gap: 24px;
+  align-content: start;
+  justify-content: start;
+  padding: 108px 72px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

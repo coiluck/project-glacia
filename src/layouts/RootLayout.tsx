@@ -1,14 +1,33 @@
-import { Outlet, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
+import { paths } from '../router/paths'
+import { hasToken } from '../api/session'
+import { useUserData } from '../hooks/useUserData'
+import ViewportLayer from './ViewportLayer'
 import ResourceBar from '../components/common/ResourceBar'
+import { useStaminaStore } from '../stores/staminaStore'
 
-// 全画面共通の枠。上部にリソースバー（スタミナ・通貨・ジェム）、下に各ページを描画する。
+// 全画面共通の枠（上部にリソースバー）
 export default function RootLayout() {
-  // パスを key にして、ページ遷移のたびに描画領域を作り直す＝毎回 fade-in を走らせる。
-  // リソースバーは枠の外なのでフェードせず据え置きになる。
   const location = useLocation()
+  const ready = useUserData()
+
+  useEffect(() => {
+    const tick = useStaminaStore.getState().tick
+    const timer = setInterval(tick, 1000)
+    return () => clearInterval(timer)
+  }, [])
+
+  // 未ログイン
+  if (!hasToken()) return <Navigate to={paths.start} replace />
+
+  if (!ready) return null
+
   return (
     <div className="app-shell">
-      <ResourceBar />
+      <ViewportLayer>
+        <ResourceBar />
+      </ViewportLayer>
       <main key={location.pathname} className="app-main fade-in">
         <Outlet />
       </main>

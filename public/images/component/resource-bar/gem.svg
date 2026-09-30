@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   class="svg-icon"
+   style="overflow:hidden;fill:currentColor"
+   viewBox="0 0 120 120"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="gem.svg"
+   width="120"
+   height="120"
+   inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.80957031"
+     inkscape:cx="49.408926"
+     inkscape:cy="177.87214"
+     inkscape:window-width="933"
+     inkscape:window-height="1032"
+     inkscape:window-x="542"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1" />
+  <path
+     d="m 95.55,13.92 16.29,28.8 H 93.642 L 81.186,13.92 Z m -23.04,0 12.456,28.8 H 35.034 L 47.49,13.92 Z m -48.06,0 H 38.814 L 26.358,42.72 H 8.16 Z M 8.16,48.48 h 18.126 l 22.14,45.306 c 0.27,0.558 -0.486,1.062 -0.9,0.594 z m 26.676,0 h 50.328 l -24.66,57.276 c -0.18,0.432 -0.81,0.432 -0.99,0 z M 71.574,93.786 93.714,48.48 H 111.84 L 72.474,94.362 c -0.414,0.486 -1.17,-0.018 -0.9,-0.576 z"
+     fill=""
+     id="path1"
+     style="stroke-width:0.09" />
+</svg>

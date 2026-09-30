@@ -1,0 +1,4 @@
+# wrangler dev が使う workerd はインストール時にバイナリを取ってくるので許可が要る
+allowBuilds:
+  esbuild: true
+  workerd: true

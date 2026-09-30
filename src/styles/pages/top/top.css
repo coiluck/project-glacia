@@ -1,0 +1,9 @@
+/* absoluteだからね */
+.page-top {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* 中は端からは2remずつ */

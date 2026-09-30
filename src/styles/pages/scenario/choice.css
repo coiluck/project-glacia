@@ -1,0 +1,89 @@
+/* ===== 選択肢 ===== */
+.scenario-choice-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(24px * var(--scale));
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+}
+
+.scenario-choice-button {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: calc(16px * var(--scale));
+  width: calc(840px * var(--scale));
+  padding: calc(20px * var(--scale)) calc(32px * var(--scale));
+  font-size: calc(24px * var(--scale));
+  letter-spacing: calc(3px * var(--scale));
+  line-height: 1.6;
+  color: #fff;
+  background: linear-gradient(120deg, rgba(34, 46, 64, 0.85), rgba(10, 14, 22, 0.85));
+  backdrop-filter: blur(4px);
+  --cut: calc(24px * var(--scale));
+  clip-path: polygon(
+    var(--cut) 0%,
+    100% 0%,
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    0% 100%,
+    0% var(--cut)
+  );
+  border: none;
+  cursor: pointer;
+  transition: filter 0.2s ease-out;
+  opacity: 0;
+  transform: translateY(calc(6px * var(--scale)));
+  animation: scenarioChoiceIn 0.4s ease-out forwards;
+  animation-delay: var(--delay, 0ms);
+}
+@keyframes scenarioChoiceIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scenario-choice-button:hover {
+  filter: brightness(1.35);
+}
+
+.scenario-choice-button-text {
+  text-align: center;
+}
+
+.scenario-choice-button-decorator {
+  display: flex;
+  align-items: center;
+  gap: calc(6px * var(--scale));
+}
+
+.scenario-choice-button-diamond {
+  display: inline-block;
+  width: calc(7px * var(--scale));
+  height: calc(7px * var(--scale));
+  border: 1.5px solid rgba(127, 224, 255, 0.9);
+  transform: rotate(45deg);
+  transition: background-color 0.2s ease-out;
+}
+.scenario-choice-button:hover .scenario-choice-button-diamond {
+  background-color: rgba(127, 224, 255, 0.9);
+}
+
+.scenario-choice-button-line {
+  width: calc(28px * var(--scale));
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(127, 224, 255, 0.7));
+  transition: width 0.2s ease-out;
+}
+.scenario-choice-button-decorator.right .scenario-choice-button-line {
+  background: linear-gradient(90deg, rgba(127, 224, 255, 0.7), transparent);
+}
+.scenario-choice-button:hover .scenario-choice-button-line {
+  width: calc(44px * var(--scale));
+}

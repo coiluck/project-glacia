@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# wrangler のローカル状態
+.wrangler
+.dev.vars
+.env
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -24,3 +29,7 @@ dist-ssr
 *.sw?
 
 CLAUDE.md
+
+# PNG の原本はローカルにだけ置く（配信は AVIF）。PWA アイコンは PNG のまま
+public/images/**/*.png
+!public/images/pwa/*.png

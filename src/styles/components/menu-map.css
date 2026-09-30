@@ -1,0 +1,345 @@
+.menu-map {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr calc(560px * var(--scale)) repeat(3, 1fr);
+  gap: calc(12px * var(--scale));
+  max-width: calc(1728px * var(--scale));
+  margin: 0 auto;
+}
+/* 意味の近い2項目を縦に積む列 */
+.menu-map-column {
+  display: grid;
+  grid-template-rows: repeat(2, calc(152px * var(--scale)));
+  gap: calc(12px * var(--scale));
+  min-width: 0;
+}
+
+.menu-map-item {
+  --cut: calc(14px * var(--scale));
+  --fg: #fff;
+  --sub: #8a9299;
+  --accent: linear-gradient(to right, #7fe0ff, #b6f5ff);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+  padding: calc(18px * var(--scale)) calc(22px * var(--scale)) calc(20px * var(--scale));
+  overflow: hidden;
+  font-family: inherit;
+  text-align: left;
+  background: #22272d;
+  border: none;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%);
+  cursor: pointer;
+  transition: background 0.15s ease-out;
+  animation: menu-map-rise 0.3s ease-out both;
+  animation-delay: calc(0.12s + var(--i) * 0.03s);
+}
+.menu-map-item * { color: var(--fg); }
+.menu-map-item:hover { background: #2e343b; }
+.menu-map-item-label {
+  position: relative;
+  font-size: calc(30px * var(--scale));
+  line-height: 1;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+}
+/* アイコン */
+.menu-map-item-icon {
+  position: absolute;
+  top: 50%;
+  right: calc(-8px * var(--scale));
+  width: calc(120px * var(--scale));
+  height: calc(120px * var(--scale));
+  background: var(--fg);
+  opacity: 0.08;
+  -webkit-mask: var(--icon) no-repeat center / contain;
+  mask: var(--icon) no-repeat center / contain;
+  transform: translateY(-50%);
+  transition: opacity 0.15s ease-out, transform 0.25s ease-out;
+}
+.menu-map-item:hover .menu-map-item-icon {
+  opacity: 0.16;
+  transform: translate(calc(-6px * var(--scale)), -50%);
+}
+/* 下の色。hover で伸びるやつ */
+.menu-map-item::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: calc(40px * var(--scale));
+  height: calc(4px * var(--scale));
+  background: var(--accent);
+  transition: width 0.25s ease-out;
+}
+.menu-map-item:hover::after { width: 100%; }
+
+/* 状態の行 */
+.menu-map-item-info {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: calc(12px * var(--scale));
+  min-height: calc(40px * var(--scale));
+  font-size: calc(19px * var(--scale));
+  line-height: 1;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.menu-map-item-info small {
+  font-size: calc(18px * var(--scale));
+  letter-spacing: 0.08em;
+  color: var(--sub);
+}
+.menu-map-item-info b {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: calc(28px * var(--scale));
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.menu-map-item-info b span {
+  font-size: 0.7em;
+  color: var(--sub);
+}
+
+/* 編成の顔 */
+.menu-map-faces {
+  display: flex;
+  gap: calc(6px * var(--scale));
+}
+.menu-map-face {
+  width: calc(40px * var(--scale));
+  height: calc(40px * var(--scale));
+  background: #14181c center / cover no-repeat;
+  outline: 1px solid rgba(255, 255, 255, 0.2);
+}
+.menu-map-face.is-empty {
+  background: rgba(255, 255, 255, 0.05);
+  outline-style: dashed;
+}
+
+/* 任務の目盛り */
+.menu-map-pips {
+  display: flex;
+  gap: calc(5px * var(--scale));
+}
+.menu-map-pip {
+  width: calc(22px * var(--scale));
+  height: calc(8px * var(--scale));
+  background: #3a4148;
+}
+.menu-map-pip.is-on { background: #d9dee2; }
+
+/* 受け取れるものがある */
+.menu-map-item.has-notice { --accent: #e8c774; }
+.menu-map-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: calc(34px * var(--scale));
+  height: calc(34px * var(--scale));
+  padding: 0 calc(10px * var(--scale)) 0 calc(16px * var(--scale));
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: calc(20px * var(--scale));
+  font-weight: 600;
+  line-height: calc(34px * var(--scale));
+  text-align: center;
+  color: #111 !important;
+  background: #d9a441;
+  clip-path: polygon(calc(10px * var(--scale)) 0, 100% 0, 100% 100%, 0 100%);
+}
+.menu-map-badge.is-text {
+  font-family: inherit;
+  font-size: calc(16px * var(--scale));
+  font-weight: normal;
+  letter-spacing: 0.1em;
+}
+
+/* 準備中 */
+.menu-map-item.is-soon .menu-map-item-label,
+.menu-map-item.is-soon .menu-map-item-icon {
+  opacity: 0.4;
+}
+.menu-map-chip {
+  padding: calc(5px * var(--scale)) calc(10px * var(--scale));
+  font-size: calc(16px * var(--scale));
+  letter-spacing: 0.12em;
+  color: var(--sub) !important;
+  border: 1px solid #454b50;
+}
+
+/* 前線 */
+.menu-map-item.is-front {
+  padding: calc(24px * var(--scale)) calc(30px * var(--scale)) calc(26px * var(--scale));
+  background: #0a0e16;
+}
+.menu-map-item.is-front:hover { background: #0a0e16; }
+
+.menu-map-front-map {
+  --veil: rgba(8, 18, 28, 0.96) 25%, rgba(8, 18, 28, 0.6) 65%, rgba(8, 18, 28, 0.25);
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right, var(--veil)),
+    var(--map) 70% center / cover no-repeat;
+  transition: transform 0.4s ease-out;
+}
+.menu-map-item.is-front:hover .menu-map-front-map { transform: scale(1.04); }
+.menu-map-item.is-front::after { width: calc(80px * var(--scale)); }
+.menu-map-item.is-front:hover::after { width: 100%; }
+.menu-map-front-head {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.menu-map-item.is-front .menu-map-item-label {
+  padding-left: calc(18px * var(--scale));
+  font-size: calc(44px * var(--scale));
+}
+/* スタミナ */
+.menu-map-stamina {
+  display: flex;
+  align-items: center;
+  gap: calc(8px * var(--scale));
+  padding: calc(6px * var(--scale)) calc(16px * var(--scale)) calc(6px * var(--scale)) calc(10px * var(--scale));
+  background: rgba(8, 18, 28, 0.8);
+  border: 1px solid rgba(127, 224, 255, 0.4);
+}
+.menu-map-stamina i {
+  width: calc(24px * var(--scale));
+  height: calc(24px * var(--scale));
+  background: #7fe0ff;
+  -webkit-mask: var(--icon) no-repeat center / contain;
+  mask: var(--icon) no-repeat center / contain;
+}
+.menu-map-stamina b {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: calc(24px * var(--scale));
+  font-weight: 600;
+  line-height: 1;
+}
+.menu-map-stamina b span {
+  font-size: 0.75em;
+  color: var(--sub);
+}
+
+.menu-map-front-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: calc(14px * var(--scale));
+}
+.menu-map-front-chapter {
+  display: flex;
+  align-items: center;
+  gap: calc(14px * var(--scale));
+  font-size: calc(22px * var(--scale));
+  line-height: 1;
+  letter-spacing: 0.1em;
+}
+/* 章番号 */
+.menu-map-front-chapter small {
+  padding: calc(4px * var(--scale)) calc(12px * var(--scale));
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: calc(15px * var(--scale));
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: #08121c !important;
+  background: linear-gradient(160deg, rgb(123, 213, 255), rgb(123, 241, 215));
+}
+.menu-map-front-next {
+  display: flex;
+  align-items: baseline;
+  gap: calc(18px * var(--scale));
+}
+.menu-map-front-next small {
+  font-size: calc(19px * var(--scale));
+  letter-spacing: 0.12em;
+  color: var(--sub);
+}
+.menu-map-front-next b {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: calc(64px * var(--scale));
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 calc(18px * var(--scale)) rgba(127, 224, 255, 0.5);
+}
+.menu-map-front-progress {
+  display: flex;
+  align-items: center;
+  gap: calc(16px * var(--scale));
+  width: calc(360px * var(--scale));
+}
+.menu-map-front-progress-bar {
+  position: relative;
+  flex: 1;
+  height: calc(8px * var(--scale));
+  background: rgba(255, 255, 255, 0.2);
+}
+.menu-map-front-progress-bar i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(to right, #7fe0ff, #b6f5ff);
+}
+.menu-map-front-progress span {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: calc(20px * var(--scale));
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* 今いる画面 */
+.menu-map-item.is-current,
+.menu-map-item.is-current:hover {
+  --fg: #282828;
+  --sub: #5c646b;
+  --accent: #282828;
+  background: #dee4e7;
+  box-shadow: 0 0 calc(20px * var(--scale)) rgba(255, 255, 255, 0.3);
+  cursor: default;
+}
+.menu-map-item.is-current .menu-map-item-icon {
+  opacity: 0.1;
+  transform: translateY(-50%);
+}
+.menu-map-item.is-current::after { width: 100%; }
+.menu-map-item.is-current .menu-map-pip { background: #b9c1c7; }
+.menu-map-item.is-current .menu-map-pip.is-on { background: #282828; }
+.menu-map-item.is-current .menu-map-face { outline-color: rgba(0, 0, 0, 0.2); }
+.menu-map-item.is-current .menu-map-chip { border-color: #9aa3aa; }
+/* 前線は地図を残して明るい幕にする */
+.menu-map-item.is-front.is-current .menu-map-front-map {
+  --veil: rgba(222, 228, 231, 0.97) 30%, rgba(222, 228, 231, 0.75) 65%, rgba(222, 228, 231, 0.45);
+  transform: none;
+}
+.menu-map-item.is-front.is-current .menu-map-front-next b { text-shadow: none; }
+.menu-map-item.is-front.is-current .menu-map-stamina {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: #9aa3aa;
+}
+.menu-map-item.is-front.is-current .menu-map-stamina i { background: #282828; }
+.menu-map-item.is-front.is-current .menu-map-front-progress-bar { background: rgba(0, 0, 0, 0.15); }
+.menu-map-item.is-front.is-current .menu-map-front-progress-bar i { background: #282828; }
+/* 現在地 */
+.menu-map-here {
+  position: absolute;
+  bottom: calc(18px * var(--scale));
+  right: calc(20px * var(--scale));
+  padding: calc(6px * var(--scale)) calc(12px * var(--scale));
+  font-size: calc(15px * var(--scale));
+  line-height: 1;
+  letter-spacing: 0.2em;
+  color: #7bfff8 !important;
+  background: #08121c;
+}
+
+@keyframes menu-map-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

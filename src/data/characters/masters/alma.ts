@@ -1,0 +1,80 @@
+import type { CharacterMaster } from '../types';
+
+// アルマ（★3・剣士）
+const alma: CharacterMaster = {
+  id: 'alma',
+  nameKey: 'charAlma',
+  topLineKey: 'topLineAlma',
+  rarity: 3,
+  classId: 'soldier',
+  base: { hp: 340, attack: 34, defense: 22 },
+  growth: { hp: 11, attack: 1.3, defense: 0.8 },
+  skills: [
+    // 刺突: 正面2マスを貫く直線。2APで撃てる。1発の威力より回数で削るのがアルマの持ち味
+    {
+      def: {
+        id: 'almaPiercingThrust',
+        nameKey: 'skillAlmaPiercingThrust',
+        apCost: 2,
+        range: { kind: 'range', max: 1 },
+        effect: [
+          {
+            type: 'damage',
+            power: 85,
+            target: 'enemy',
+            // 狙ったマスと、その1つ奥（術者から見て真っ直ぐ）を貫く
+            area: { kind: 'pattern', offsets: [{ q: 0, r: 0 }, { q: 1, r: 0 }] },
+          },
+        ],
+      },
+      descriptionKey: 'skillAlmaPiercingThrustDesc',
+      effectGrowth: [9],
+      levelUpCosts: [
+        [{ itemId: 'skillBookSmall', count: 2 }],
+        [{ itemId: 'skillBookSmall', count: 4 }],
+        [{ itemId: 'skillBookSmall', count: 6 }, { itemId: 'iceCrystal', count: 2 }],
+        [{ itemId: 'skillBookLarge', count: 2 }, { itemId: 'iceCrystal', count: 4 }],
+        [{ itemId: 'skillBookLarge', count: 4 }, { itemId: 'iceCrystal', count: 6 }],
+        [{ itemId: 'skillBookLarge', count: 6 }, { itemId: 'arcaneCore', count: 1 }],
+      ],
+    },
+    // 銀旗の号令: 距離2以内の味方1体にAPを渡しつつHPも回復する。AP付与量はレベルで伸ばさない
+    {
+      def: {
+        id: 'almaSilverBanner',
+        nameKey: 'skillAlmaSilverBanner',
+        apCost: 3,
+        range: { kind: 'range', min: 0, max: 2 },
+        effect: [
+          { type: 'grantAp', amount: 2, target: 'ally' },
+          { type: 'healHp', amount: 90, target: 'ally' },
+        ],
+      },
+      descriptionKey: 'skillAlmaSilverBannerDesc',
+      effectGrowth: [0, 18],
+      levelUpCosts: [
+        [{ itemId: 'skillBookSmall', count: 2 }],
+        [{ itemId: 'skillBookSmall', count: 4 }],
+        [{ itemId: 'skillBookSmall', count: 6 }, { itemId: 'iceCrystal', count: 2 }],
+        [{ itemId: 'skillBookLarge', count: 2 }, { itemId: 'iceCrystal', count: 4 }],
+        [{ itemId: 'skillBookLarge', count: 4 }, { itemId: 'iceCrystal', count: 6 }],
+        [{ itemId: 'skillBookLarge', count: 6 }, { itemId: 'arcaneCore', count: 1 }],
+      ],
+    },
+  ],
+  limitBreakCosts: [
+    // Lv30 の壁
+    [{ itemId: 'awakenStone', count: 5 }, { itemId: 'iceCrystal', count: 10 }],
+    // Lv45 の壁
+    [{ itemId: 'awakenStone', count: 15 }, { itemId: 'radiantStone', count: 3 }],
+  ],
+  dupeBonuses: [
+    { status: { attack: 8 } },
+    { status: { hp: 40, defense: 4 } },
+    { status: { hp: 60, defense: 6 } },
+    { status: { attack: 14, defense: 4 } },
+    { status: { hp: 120, attack: 22, defense: 10 } },
+  ],
+};
+
+export default alma;

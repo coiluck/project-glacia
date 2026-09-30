@@ -1,0 +1,11 @@
+{
+  "empty": "None owned",
+  "noItem": "No items",
+  "owned": "Owned",
+  "exp": "EXP",
+  "recipe": "Recipe",
+  "sources": "Obtained from",
+  "sourcesNote": "Filled: guaranteed drop. Outlined: chance drop",
+  "noDrop": "Does not drop",
+  "noDropRecipe": "Does not drop. Craft it instead"
+}

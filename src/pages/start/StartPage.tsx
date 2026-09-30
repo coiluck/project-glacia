@@ -1,20 +1,41 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { paths } from '../../router/paths'
+import { useTranslations } from '../../i18n'
+import { hasToken } from '../../api/session'
+import { useUserData } from '../../hooks/useUserData'
 import Screen from '../../layouts/Screen'
 import StartActions from './StartActions'
+import AccountPanel from './components/AccountPanel'
+import LoginForm from './components/LoginForm'
 
-// スタート画面。通常はタップするだけでHOMEへ進む。初回のみログイン（プレースホルダー）を表示する。
 const BOOTED_KEY = 'glacia:booted' // セッション中に起動フローを通過済みか（sessionStorage）
-const LOGGED_IN_KEY = 'glacia:loggedIn' // ログイン済みか＝初回かどうかの判定（localStorage）
+
+// 新規登録の直後はトップを通さず、このステージのシナリオ -> 戦闘へ直行する
+const FIRST_STAGE_ID = '1-1'
 
 // 背景画像（BASE_URL 基準の相対パス）。Screen がビューポート全体に敷く。
 const BACKGROUND = 'images/start/background.png'
 
 export default function StartPage() {
+  const ready = useUserData()
+
+  if (!ready) return null
+  return <StartScreen />
+}
+
+function StartScreen() {
   const navigate = useNavigate()
-  // 初回判定
-  const [isFirstTime] = useState(() => !localStorage.getItem(LOGGED_IN_KEY))
+  const [loggedIn, setLoggedIn] = useState(hasToken)
+  const [showLoginForm, setShowLoginForm] = useState(false)
+  const [accountOpen, setAccountOpen] = useState(false)
+
+  const t = useTranslations('start', {
+    login: 'login',
+    needLogin: 'needLogin',
+    manageAccount: 'manageAccount',
+    tapToStart: 'tapToStart',
+  })
 
   const logoSrc = `${import.meta.env.BASE_URL}images/start/logo.svg`
 
@@ -24,38 +45,68 @@ export default function StartPage() {
     navigate(paths.top, { replace: true })
   }
 
-  // 初回ログイン
-  // TODO: 認証処理
-  const handleLogin = () => {
-    localStorage.setItem(LOGGED_IN_KEY, '1')
+  const startFirstStage = () => {
+    sessionStorage.setItem(BOOTED_KEY, '1')
+    navigate(paths.scenario(FIRST_STAGE_ID), { replace: true })
   }
 
-  if (isFirstTime) {
+  const title = (
+    <div className="start-title-container">
+      <img className="start-emblem" src={logoSrc} alt="" aria-hidden />
+      <h1 className="start-logo">氷途</h1>
+    </div>
+  )
+
+  if (!loggedIn) {
     return (
-      <Screen background={BACKGROUND}>
-        <div className="start-screen fade-in" onClick={handleLogin}>
-          <div className="start-title-container">
-            <img className="start-emblem" src={logoSrc} alt="" aria-hidden />
-            <h1 className="start-logo">氷途</h1>
-          </div>
-          <p className="start-prompt">ログインが必要です</p>
+      <Screen
+        background={BACKGROUND}
+        viewport={
+          <>
+            <StartActions
+              buttonText={t.login}
+              onClick={() => setShowLoginForm(true)}
+            />
+            {showLoginForm && (
+              <LoginForm
+                onDone={(registered) => (registered ? startFirstStage() : setLoggedIn(true))}
+                onClose={() => setShowLoginForm(false)}
+              />
+            )}
+          </>
+        }
+      >
+        <div className="start-screen fade-in" onClick={() => setShowLoginForm(true)}>
+          {title}
+          <p className="start-prompt">{t.needLogin}</p>
         </div>
       </Screen>
     )
   }
 
   return (
-    <Screen
-      background={BACKGROUND}
-      viewport={<StartActions buttonText="アカウント管理" onClick={handleLogin} />}
-    >
-      <div className="start-screen start-tap fade-in" onClick={enterGame}>
-        <div className="start-title-container">
-          <img className="start-emblem" src={logoSrc} alt="" aria-hidden />
-          <h1 className="start-logo">氷途</h1>
+    <>
+      <Screen
+        background={BACKGROUND}
+        viewport={
+          <StartActions buttonText={t.manageAccount} onClick={() => setAccountOpen(true)} />
+        }
+      >
+        <div className="start-screen start-tap fade-in" onClick={enterGame}>
+          {title}
+          <p className="start-prompt">{t.tapToStart}</p>
         </div>
-        <p className="start-prompt">TAP TO START</p>
-      </div>
-    </Screen>
+      </Screen>
+
+      {accountOpen && (
+        <AccountPanel
+          onClose={() => setAccountOpen(false)}
+          onLoggedOut={() => {
+            setAccountOpen(false)
+            setLoggedIn(false)
+          }}
+        />
+      )}
+    </>
   )
 }

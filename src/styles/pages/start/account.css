@@ -1,0 +1,37 @@
+/* アカウント管理 */
+.start-account-rows {
+  margin-top: calc(24px * var(--scale));
+  color: #000;
+  font-size: calc(22px * var(--scale));
+  line-height: 1.6;
+}
+
+.start-account-rows dt {
+  margin-top: calc(12px * var(--scale));
+  color: #000;
+  opacity: 0.6;
+}
+
+.start-account-rows dd {
+  width: fit-content;
+  background: #ddd;
+  padding: calc(4px * var(--scale)) calc(8px * var(--scale));
+  border-radius: calc(4px * var(--scale));
+  word-break: break-all;
+  user-select: all;
+  color: #000;
+}
+
+.start-account-note {
+  margin-top: calc(20px * var(--scale));
+  color: #000;
+  font-size: calc(18px * var(--scale));
+  line-height: 1.6;
+  opacity: 0.7;
+}
+
+.start-account-buttons {
+  display: flex;
+  justify-content: end;
+  gap: calc(48px * var(--scale));
+}

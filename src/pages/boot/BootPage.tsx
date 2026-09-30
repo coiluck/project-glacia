@@ -1,7 +1,8 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
 import { paths } from '../../router/paths'
-import "../../styles/pages/boot.css";
+import { syncUserData } from '../../api/sync'
+import { hasToken } from '../../api/session'
 
 // 定数
 const textTop = "KOKONE";
@@ -12,12 +13,17 @@ export default function BootPage() {
   const navigate = useNavigate();
   const [showText, setShowText] = useState(false);
 
-  const animationType = useMemo(() => {
+  const [animationType] = useState(() => {
     const logoAnimationArray = ['bounce', 'scale', 'jump'];
     return logoAnimationArray[Math.floor(Math.random() * logoAnimationArray.length)];
-  }, []);
+  });
 
   useEffect(() => {
+    // 未ログインなら取りに行かない
+    const loading = hasToken()
+      ? syncUserData().catch((e) => console.error(e))
+      : Promise.resolve()
+
     const startTimer = setTimeout(() => {
       setShowText(true);
 
@@ -30,7 +36,7 @@ export default function BootPage() {
       // アニメーション完了後の処理
       const navTimer = setTimeout(() => {
         // ここで遷移
-        navigate(paths.start, { replace: true })
+        void loading.then(() => navigate(paths.start, { replace: true }))
       }, totalWaitTimeMs);
 
       return () => clearTimeout(navTimer);

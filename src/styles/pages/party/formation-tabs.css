@@ -1,0 +1,64 @@
+
+.party-formation-tabs-container {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: flex-end;
+  gap: calc(64px * var(--scale));
+  width: calc(1440px * var(--scale));
+  height: calc(80px * var(--scale));
+  padding: calc(10px * var(--scale));
+  z-index: 2;
+}
+
+.party-formation-tab {
+  --cut: calc(20px * var(--scale));
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0 calc(20px * var(--scale));
+  border: none;
+  border-radius: calc(10px * var(--scale));
+  background: linear-gradient(160deg, #3f3f3f, #232323);
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - var(--cut)),  /* 右下カット */
+    calc(100% - var(--cut)) 100%,
+    0 100%
+  );
+  filter: drop-shadow(calc(10px * var(--scale)) calc(10px * var(--scale)) calc(20px * var(--scale)) rgba(0, 0, 0, 0.55));
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+
+.party-formation-tab-label {
+  font-size: calc(1.8rem * var(--scale));
+  line-height: 1;
+  letter-spacing: calc(0.15rem * var(--scale));
+  color: #7fe0ff;
+}
+/* 選択中 */
+.party-formation-tab.selected {
+  background: linear-gradient(160deg, #7fe0ff 0%, #a8f0ff 55%, #b6f5ff 100%);
+  filter:
+    drop-shadow(calc(2px * var(--scale)) calc(4px * var(--scale)) calc(6px * var(--scale)) rgba(0, 0, 0, 0.55))
+    drop-shadow(0 0 calc(14px * var(--scale)) rgba(60, 248, 255, 0.45));
+  cursor: default;
+}
+.party-formation-tab.selected .party-formation-tab-label {
+  color: #0a2b33;
+  text-shadow: 0 calc(1px * var(--scale)) 0 rgba(255, 255, 255, 0.5);
+}
+
+@media (hover: hover) {
+  .party-formation-tab:not(.selected):hover {
+    filter:
+      drop-shadow(calc(10px * var(--scale)) calc(10px * var(--scale)) calc(20px * var(--scale)) rgba(0, 0, 0, 0.55))
+      brightness(1.2);
+  }
+}

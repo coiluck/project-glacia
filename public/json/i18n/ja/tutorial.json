@@ -1,0 +1,14 @@
+{
+  "firstBattleIntro": "敵影です。戦う前に、まずは私の立ち位置を決めましょう。",
+  "firstBattleDeploy": "私の顔をドラッグして、光っているマスに置いてください。",
+  "firstBattleStart": "配置はこれで大丈夫です。戦闘を始めましょう。",
+  "firstBattleAp": "行動には AP を使います。パーティ AP は全員の共有で、私ひとりが使えるのは 1 ターンに 4 までです。",
+  "firstBattleSelect": "まずは私を選んでください。",
+  "firstBattleMove": "移動にも AP を使います。マスの数字が消費量です。1 マス前に出ましょう。",
+  "firstBattleSkill": "氷礫は 2〜3 マス先まで届きます。近すぎると撃てないので気をつけて。",
+  "firstBattleAim": "狙う敵を選んでください。頭上の数字が、与えるダメージの予告です。",
+  "firstBattleEndTurn": "攻撃に使える AP はもう残っていません。ターンを終えましょう。",
+  "firstBattleEnemyPhase": "敵の番です。どう動くか、よく見ておいてください。",
+  "firstBattleThreat": "敵を選ぶと、その敵の攻撃が届く範囲が見えます。",
+  "firstBattleOutro": "隣にいる敵には氷礫が届きません。そういうときは通常攻撃で。……あとは任せます。"
+}

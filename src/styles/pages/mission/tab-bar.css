@@ -1,0 +1,74 @@
+/* 下のデイリー / 永続の切り替え */
+.mission-tabbar {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  height: calc(120px * var(--scale));
+  background: rgba(14, 16, 18, 0.9);
+}
+.mission-tab-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mission-tab-separator {
+  display: flex;
+  align-self: center;
+  justify-self: center;
+  width: calc(1px * var(--scale));
+  height: 50%;
+  background: rgba(255, 255, 255, 0.3);
+}
+.mission-tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(18px * var(--scale));
+  padding: calc(10px * var(--scale)) calc(150px * var(--scale));
+  font-family: inherit;
+  font-size: calc(28px * var(--scale));
+  letter-spacing: calc(0.2em * var(--scale));
+  color: rgba(255, 255, 255, 0.5);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease-out;
+}
+.mission-tab-container:hover .mission-tab:not(.is-active) { background: rgba(255, 255, 255, 0.2); }
+.mission-tab svg {
+  width: calc(34px * var(--scale));
+  height: calc(34px * var(--scale));
+  fill: none;
+  stroke: #8a9299;
+  stroke-width: calc(1.6 * var(--scale));
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.mission-tab.is-active {
+  color: #333;
+  background: #dee4e7;
+  box-shadow: 0 0 calc(20px * var(--scale)) rgba(255, 255, 255, 0.3);
+  cursor: default;
+}
+.mission-tab.is-active small { color: #8a9299; }
+.mission-tab.is-active svg { stroke: #333; }
+/* 受け取れる数 */
+.mission-tab-badge {
+  min-width: calc(30px * var(--scale));
+  height: calc(30px * var(--scale));
+  padding: 0 calc(8px * var(--scale));
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: calc(18px * var(--scale));
+  font-weight: 600;
+  line-height: calc(30px * var(--scale));
+  letter-spacing: 0;
+  text-align: center;
+  color: #111;
+  background: #d9a441;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - calc(6px * var(--scale))), calc(100% - calc(6px * var(--scale))) 100%, 0 100%);
+}

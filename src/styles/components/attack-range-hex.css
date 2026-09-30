@@ -1,0 +1,15 @@
+/* スキルの効果範囲。大きさは AttackRangeHex の size Props で決まる */
+.attack-range-hex {
+  display: block;
+}
+
+/* 自分のいるマス */
+.attack-range-hex-origin {
+  fill: #ffffff;
+}
+
+/* 効果が及ぶマス */
+.attack-range-hex-tile {
+  fill: none;
+  stroke: #ffffff;
+}
