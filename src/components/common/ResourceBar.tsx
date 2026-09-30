@@ -107,7 +107,7 @@ export default function ResourceBar() {
              </clipPath>
              <image
                clipPath="url(#resource-bar-user-icon-clip)"
-               href={`${import.meta.env.BASE_URL}images/character/face/${favoriteCharacterId}.png`}
+               href={`${import.meta.env.BASE_URL}images/character/face/${favoriteCharacterId}.avif`}
                x={0}
                y={0.5}
                width={99}

@@ -16,7 +16,7 @@ const fill = (template: string, ...values: number[]) =>
   template.replace(/\{(\d+)\}/g, (match, index: string) => String(values[Number(index)] ?? match))
 
 interface LoginFormProps {
-  onDone: () => void
+  onDone: (registered: boolean) => void // registered: 新規登録だった
   onClose: () => void
 }
 
@@ -52,7 +52,7 @@ export default function LoginForm({ onDone, onClose }: LoginFormProps) {
     setErrorCode(null)
     try {
       await (mode === 'login' ? login(name, password) : register(name, password))
-      onDone()
+      onDone(mode === 'register')
     } catch (e) {
       setErrorCode(e instanceof Error ? e.message : '')
     } finally {

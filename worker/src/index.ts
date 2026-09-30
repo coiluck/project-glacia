@@ -9,12 +9,14 @@ export default {
     // vite の proxy 経由だと `/api` が付いたまま来る
     const path = new URL(request.url).pathname.replace(/^\/api/, '')
 
-    if (request.method === 'OPTIONS') return withCors(new Response(null, { status: 204 }), env)
+    const origin = request.headers.get('Origin')
+
+    if (request.method === 'OPTIONS') return withCors(new Response(null, { status: 204 }), env, origin)
 
     try {
-      return withCors(await route(request, env, path), env)
+      return withCors(await route(request, env, path), env, origin)
     } catch (e) {
-      return withCors(error((e as Error).message, 400), env)
+      return withCors(error((e as Error).message, 400), env, origin)
     }
   },
 } satisfies ExportedHandler<Env>

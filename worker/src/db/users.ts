@@ -1,4 +1,5 @@
 import type { MeResponse, UserRow } from '../../../src/api/types'
+import { characterMasters } from '../../../src/data/characters'
 import type { UserCharacter } from '../../../src/data/characters/types'
 import { refreshStamina } from '../../../src/features/stamina/stamina'
 import type { Context } from '../context'
@@ -46,6 +47,9 @@ interface PartyTableRow {
 
 const PARTY_SLOTS = [1, 2, 3, 4]
 
+// 新規登録で最初から持っているキャラ
+const STARTER_CHARACTER_ID = 'lapis'
+
 // ログイン用。nameはユーザー名かid
 export async function findCredentials(db: D1Database, name: string) {
   return db
@@ -67,8 +71,19 @@ export async function createUser(
          VALUES (?, ?, ?, ?, ?)`,
       )
       .bind(user.id, user.name, user.passwordHash, user.passwordSalt, now),
+    db
+      .prepare(
+        'INSERT INTO user_characters (user_id, master_id, selected_skill_id) VALUES (?, ?, ?)',
+      )
+      .bind(
+        user.id,
+        STARTER_CHARACTER_ID,
+        characterMasters[STARTER_CHARACTER_ID].skills[0].def.id,
+      ),
     ...PARTY_SLOTS.map((slot) =>
-      db.prepare('INSERT INTO user_parties (user_id, slot) VALUES (?, ?)').bind(user.id, slot),
+      db
+        .prepare('INSERT INTO user_parties (user_id, slot, master_ids) VALUES (?, ?, ?)')
+        .bind(user.id, slot, JSON.stringify(slot === 1 ? [STARTER_CHARACTER_ID] : [])),
     ),
   ])
 }

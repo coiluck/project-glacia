@@ -320,7 +320,7 @@ export default function BattleGuide({
 
         {dragCharId && (
           <div ref={dragRef} className="battle-guide-drag-hint">
-            <img src={`${base}images/character/chibi/${dragCharId}.png`} alt="" draggable={false} />
+            <img src={`${base}images/character/chibi/${dragCharId}.avif`} alt="" draggable={false} />
           </div>
         )}
 
@@ -337,7 +337,7 @@ export default function BattleGuide({
               {/* 喋るキャラがいなければ背景だけ */}
               <div className="battle-guide-portrait">
                 {speakerId && (
-                  <img src={`${base}images/character/face/${speakerId}.png`} alt="" draggable={false} />
+                  <img src={`${base}images/character/face/${speakerId}.avif`} alt="" draggable={false} />
                 )}
               </div>
               <div className="battle-guide-main">

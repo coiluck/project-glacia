@@ -45,7 +45,7 @@ export default function MemberCard({ member, name, unitClassName, fontSize = 16,
     <div className={`member-card is-rarity-${member.master.rarity}`} style={{ fontSize: `${fontSize}px` }} onClick={onClick}>
       <div className="member-card-portrait">
         <img
-          src={`${import.meta.env.BASE_URL}images/character/full_body/${member.master.id}.png`}
+          src={`${import.meta.env.BASE_URL}images/character/full_body/${member.master.id}.avif`}
           alt={name}
         />
       </div>

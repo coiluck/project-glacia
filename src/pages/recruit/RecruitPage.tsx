@@ -72,7 +72,7 @@ export default function RecruitPage() {
             {pickUp && (
               <img
                 className="recruit-banner-art"
-                src={`${import.meta.env.BASE_URL}images/character/full_body/${pickUp.id}.png`}
+                src={`${import.meta.env.BASE_URL}images/character/full_body/${pickUp.id}.avif`}
                 alt={tCharacter[pickUp.nameKey]}
               />
             )}

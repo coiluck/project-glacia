@@ -63,7 +63,7 @@ export default function CharacterStage() {
                       onClick={() => pick(m.id)}
                     >
                       <img
-                        src={`${import.meta.env.BASE_URL}images/character/face/${m.id}.png`}
+                        src={`${import.meta.env.BASE_URL}images/character/face/${m.id}.avif`}
                         alt={t[m.nameKey]}
                       />
                     </button>
@@ -79,7 +79,7 @@ export default function CharacterStage() {
         <img
           key={master.id}
           className="fade-in"
-          src={`${import.meta.env.BASE_URL}images/character/full_body/${master.id}.png`}
+          src={`${import.meta.env.BASE_URL}images/character/full_body/${master.id}.avif`}
           alt={name}
         />
       </div>

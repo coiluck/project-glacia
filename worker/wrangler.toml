@@ -12,9 +12,9 @@ database_id = "f8009b8c-9014-48f5-8bae-cfc19b48bf8d"
 [dev]
 port = 8787
 
-# CORS の許可元。デプロイ時は GitHub Pages の origin に変える
+# CORS の許可元。カンマ区切りで複数書ける
 [vars]
-ALLOWED_ORIGIN = "http://localhost:5173"
+ALLOWED_ORIGIN = "http://localhost:5173,https://coiluck.github.io,https://coiluck.moe"
 
 # secret（ここには書かない）
 #   PASSWORD_PEPPER … パスワードハッシュの鍵。`npx wrangler secret put PASSWORD_PEPPER`

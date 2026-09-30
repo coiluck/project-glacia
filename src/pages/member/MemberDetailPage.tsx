@@ -144,7 +144,7 @@ export default function MemberDetailPage() {
       <div className="page page-member-detail" onPointerOver={closeTip}>
         <div className="member-detail-portrait">
           <img
-            src={`${import.meta.env.BASE_URL}images/character/full_body/${master.id}.png`}
+            src={`${import.meta.env.BASE_URL}images/character/full_body/${master.id}.avif`}
             alt={tCharacter[master.nameKey]}
           />
         </div>

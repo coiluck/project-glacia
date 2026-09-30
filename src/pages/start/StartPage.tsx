@@ -11,6 +11,9 @@ import LoginForm from './components/LoginForm'
 
 const BOOTED_KEY = 'glacia:booted' // セッション中に起動フローを通過済みか（sessionStorage）
 
+// 新規登録の直後はトップを通さず、このステージのシナリオ -> 戦闘へ直行する
+const FIRST_STAGE_ID = '1-1'
+
 // 背景画像（BASE_URL 基準の相対パス）。Screen がビューポート全体に敷く。
 const BACKGROUND = 'images/start/background.png'
 
@@ -42,6 +45,11 @@ function StartScreen() {
     navigate(paths.top, { replace: true })
   }
 
+  const startFirstStage = () => {
+    sessionStorage.setItem(BOOTED_KEY, '1')
+    navigate(paths.scenario(FIRST_STAGE_ID), { replace: true })
+  }
+
   const title = (
     <div className="start-title-container">
       <img className="start-emblem" src={logoSrc} alt="" aria-hidden />
@@ -61,7 +69,7 @@ function StartScreen() {
             />
             {showLoginForm && (
               <LoginForm
-                onDone={() => setLoggedIn(true)}
+                onDone={(registered) => (registered ? startFirstStage() : setLoggedIn(true))}
                 onClose={() => setShowLoginForm(false)}
               />
             )}

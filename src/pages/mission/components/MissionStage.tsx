@@ -10,7 +10,7 @@ export default function MissionStage({ name, line }: Props) {
       <span className="mission-stage-mark">MISSION</span>
       <img
         className="mission-stage-art"
-        src={`${import.meta.env.BASE_URL}images/character/full_body/lapis.png`}
+        src={`${import.meta.env.BASE_URL}images/character/full_body/lapis.avif`}
         alt=""
       />
       <div className="mission-line">

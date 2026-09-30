@@ -6,6 +6,7 @@ import Screen from '../../layouts/Screen'
 import ViewportLayer from '../../layouts/ViewportLayer'
 import StageNode from './components/StageNode'
 import StageDrops from './components/StageDrops'
+import StageEnemies from './components/StageEnemies'
 import BattleResult from '../battle/components/BattleResult'
 import { useProgressStore } from '../../stores/progressStore'
 import { battleGuideRegistry } from '../../data/battleGuides'
@@ -47,7 +48,7 @@ export default function StoryMapPage() {
           onRetry={retry}
           onBackToMap={clear}
         />
-        <Screen background="images/story/1.png" />
+        <Screen background="images/story/1.avif" />
       </>
     )
   }
@@ -234,7 +235,7 @@ export default function StoryMapPage() {
               <div className="story-map-stage-info-description-container">
                 <section className="story-map-stage-info-item">
                   <div className="story-map-stage-info-item-title">敵</div>
-                  <p>敵はここに書きます。</p>
+                  <StageEnemies stageId={selectedNode.id} />
                 </section>
                 <section className="story-map-stage-info-item">
                   <div className="story-map-stage-info-item-title">ドロップ</div>
@@ -289,7 +290,7 @@ export default function StoryMapPage() {
         )}
       </ViewportLayer>
 
-      <Screen background="images/story/1.png" />
+      <Screen background="images/story/1.avif" />
     </>
   )
 }

@@ -125,7 +125,7 @@ export default function DeployDock({
               >
                 <span className="battle-deploy-face-img">
                   <img
-                    src={`${import.meta.env.BASE_URL}images/character/face/${m.character.id}.png`}
+                    src={`${import.meta.env.BASE_URL}images/character/face/${m.character.id}.avif`}
                     alt=""
                     draggable={false}
                   />
@@ -158,7 +158,7 @@ export default function DeployDock({
             <div className="battle-deploy-ghost-swing">
               <img
                 className="battle-deploy-ghost-body"
-                src={`${import.meta.env.BASE_URL}images/character/chibi/${holding.character.id}.png`}
+                src={`${import.meta.env.BASE_URL}images/character/chibi/${holding.character.id}.avif`}
                 alt=""
                 draggable={false}
               />

@@ -23,7 +23,7 @@ export default function UnitPanel({ unit, name, unitClass, className, ap, spend,
       <div className="battle-unit-panel-portrait">
         {isAlly ? (
           <img
-            src={`${import.meta.env.BASE_URL}images/character/face/${unit.id.slice('ally-'.length)}.png`}
+            src={`${import.meta.env.BASE_URL}images/character/face/${unit.id.slice('ally-'.length)}.avif`}
             alt=""
             draggable={false}
           />

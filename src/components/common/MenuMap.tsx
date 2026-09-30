@@ -127,7 +127,7 @@ export default function MenuMap({ onSelect }: Props) {
                 <i
                   key={i}
                   className="menu-map-face"
-                  style={{ backgroundImage: `url(${BASE_URL}images/character/face/${party[i]}.png)` }}
+                  style={{ backgroundImage: `url(${BASE_URL}images/character/face/${party[i]}.avif)` }}
                 />
               ) : (
                 <i key={i} className="menu-map-face is-empty" />
@@ -153,7 +153,7 @@ export default function MenuMap({ onSelect }: Props) {
       >
         <span
           className="menu-map-front-map"
-          style={{ '--map': `url(${BASE_URL}images/story/1.png)` } as CSSProperties}
+          style={{ '--map': `url(${BASE_URL}images/story/1.avif)` } as CSSProperties}
         />
         <div className="menu-map-front-head">
           <span className="menu-map-item-label">前線</span>

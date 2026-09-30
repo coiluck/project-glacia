@@ -30,7 +30,6 @@ dist-ssr
 
 CLAUDE.md
 
-# バイナリ系は重いので除外
-public/images/**
-!public/images/**/
-!public/images/**/*.svg
+# PNG の原本はローカルにだけ置く（配信は AVIF）。PWA アイコンは PNG のまま
+public/images/**/*.png
+!public/images/pwa/*.png

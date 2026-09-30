@@ -88,6 +88,9 @@ export interface UnitChip {
   lethal?: boolean // このダメージで倒せる
 }
 
+// 敵ユニットの id（enemy-<番号>-<EnemyDef.id>）から EnemyDef.id を取り出す
+const enemyIdOf = (unit: Unit) => unit.id.split('-').slice(2).join('-')
+
 // i18n の {0} {1} … を埋める
 const fill = (template: string, ...values: (string | number)[]) =>
   template.replace(/\{(\d+)\}/g, (match, index: string) => String(values[Number(index)] ?? match))
@@ -192,15 +195,15 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   const unitNameKey = (unit: Unit): string => {
     if (unit.side === 'ally')
       return characterMasters[unit.id.slice('ally-'.length)]?.nameKey ?? unit.id
-    return enemyDefs[unit.id.split('-').slice(2).join('-')]?.nameKey ?? unit.id
+    return enemyDefs[enemyIdOf(unit)]?.nameKey ?? unit.id
   }
   const getUnitName = (unit: Unit) => t[unitNameKey(unit)] ?? ''
 
-  // 味方は配置フェーズと同じちび絵を盤面に立てる。敵は絵がないので null（トークン表示）
-  const getUnitChibi = (unit: Unit): string | null =>
+  // 味方は配置フェーズと同じちび絵、敵は images/enemy/ の絵を盤面に立てる
+  const getUnitChibi = (unit: Unit): string =>
     unit.side === 'ally'
-      ? `${import.meta.env.BASE_URL}images/character/chibi/${unit.id.slice('ally-'.length)}.png`
-      : null
+      ? `${import.meta.env.BASE_URL}images/character/chibi/${unit.id.slice('ally-'.length)}.avif`
+      : `${import.meta.env.BASE_URL}images/enemy/${enemyIdOf(unit)}.avif`
 
   const isDeployed = (charId: string) => state.units.some((u) => u.id === `ally-${charId}`)
 

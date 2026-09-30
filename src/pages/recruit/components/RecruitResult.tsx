@@ -112,7 +112,7 @@ export default function RecruitResult({ outcomes, onClose }: RecruitResultProps)
           <span className="recruit-hero-glow" />
           <img
             className="recruit-hero-art"
-            src={`${import.meta.env.BASE_URL}images/character/full_body/${heroMaster.id}.png`}
+            src={`${import.meta.env.BASE_URL}images/character/full_body/${heroMaster.id}.avif`}
             alt={tCharacter[heroMaster.nameKey]}
           />
 
@@ -151,7 +151,7 @@ export default function RecruitResult({ outcomes, onClose }: RecruitResultProps)
                 <span className="recruit-cell-rim" />
                 <span className="recruit-cell-face">
                   <img
-                    src={`${import.meta.env.BASE_URL}images/character/face/${master.id}.png`}
+                    src={`${import.meta.env.BASE_URL}images/character/face/${master.id}.avif`}
                     alt={tCharacter[master.nameKey]}
                   />
                 </span>
