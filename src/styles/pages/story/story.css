@@ -190,6 +190,17 @@
   background: #fff;
   border-bottom: 3px solid var(--rarity);
 }
+span.story-map-stage-drop-icon {
+  display: flex;
+  flex-shrink: 0;
+}
+.story-map-stage-drop-bill {
+  width: 100%;
+  height: 100%;
+}
+.story-map-stage-drop-bill span {
+  color: #263544;
+}
 .story-map-stage-drop-name {
   flex: 1;
   font-size: calc(1.5rem * var(--scale));

@@ -239,7 +239,7 @@ export default function StoryMapPage() {
                 </section>
                 <section className="story-map-stage-info-item">
                   <div className="story-map-stage-info-item-title">ドロップ</div>
-                  <StageDrops stageId={selectedNode.id} />
+                  <StageDrops stageId={selectedNode.id} reward={selectedNode.reward} />
                 </section>
               </div>
 
