@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useGameStore } from '../../../features/scenario/gameStore';
 
 // @char の bounce フラグで明示的にはねて、話している雰囲気を演出する立ち絵。
-function SpriteImage({ id, pose }: { id: string; pose: string }) {
+function SpriteImage({ id }: { id: string }) {
   const ref = useRef<HTMLImageElement>(null);
   const mountedRef = useRef(false);
   const bounce = useGameStore((s) => s.bounce);
@@ -33,7 +33,7 @@ function SpriteImage({ id, pose }: { id: string; pose: string }) {
     <img
       ref={ref}
       className={`scenario-sprite-image ${appearClass}`}
-      src={`${import.meta.env.BASE_URL}images/scenario/character/full_body/${id}/${pose}.png`}
+      src={`${import.meta.env.BASE_URL}images/character/full_body/${id}.avif`}
       alt={id}
     />
   );
@@ -47,7 +47,7 @@ export function CharacterSprite() {
   return (
     <div className="scenario-sprite-layer">
       {characters.map((c) => (
-        <SpriteImage key={c.id} id={c.id} pose={c.pose} />
+        <SpriteImage key={c.id} id={c.id} />
       ))}
     </div>
   );
@@ -65,7 +65,7 @@ export function CharacterFace() {
     <div className="scenario-face-layer fade-in">
       <img
         className="scenario-face-image"
-        src={`${import.meta.env.BASE_URL}images/scenario/character/face/${c.id}/${c.pose}.png`}
+        src={`${import.meta.env.BASE_URL}images/character/face/${c.id}.avif`}
         alt={c.id}
       />
     </div>

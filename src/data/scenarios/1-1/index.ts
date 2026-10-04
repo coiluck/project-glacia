@@ -1,96 +1,271 @@
 import type { ScenarioFile } from '../../../features/scenario/types';
 
-// ステージ 1-1 のシナリオ。lines に本編、choices に分岐を書く。
-// エンジン機能テスト用のサンプル。char / charDelete は画像未作成のため未使用。
+// 背景:
+// - bg/camp_tent.avif（テントの中）
+// - bg/camp_border.avif（野営地と、地平線の凍った帝都）
 const scenario: ScenarioFile = {
   id: '1-1',
   lines: [
     {
-      text: 'テキスト1です。背景を fade で表示しています。',
+      text: '……寒い。'
+    },
+    {
+      text: 'それが、最初に思ったことだった。'
+    },
+    {
+      text: '目を開けると、薄い布の天井が風に揺れていた。布の向こうで、火のはぜる音がする。',
       commands: [
-        { type: 'bg', file: 'images/start/background.png', transition: 'fade' },
-      ],
+        { type: 'bg', file: 'images/scenario/bg/camp_tent.avif', transition: 'fade' }
+      ]
     },
     {
-      text: 'テキスト2です。',
-    },
-    {
-      text: 'テキスト3です。speaker 付きのセリフです。',
-      speaker: 'キャラA',
-    },
-    {
-      text: 'テキスト4です。背景を crossfade で切り替えました。',
+      text: '……！ 起きた……',
+      speaker: '？？？',
       commands: [
-        { type: 'bg', file: 'images/top/ice_port.jpg', transition: 'crossfade' },
-      ],
+        { type: 'char', id: 'lapis', pose: 'surprised', bounce: true }
+      ]
     },
     {
-      text: 'テキスト5です。bgMove で背景が左から右へ動きます。',
+      text: '動かないでください。体、まだ冷えきってますから。',
+      speaker: '？？？',
       commands: [
-        { type: 'bgMove', direction: 'leftToRight', duration: 3000 },
-      ],
+        { type: 'char', id: 'lapis', pose: 'normal' }
+      ]
     },
     {
-      text: 'テキスト6です。この行の前に wait で1秒待ちました。',
-      commands: [
-        { type: 'wait', ms: 1000 },
-      ],
+      text: '少女は毛布を肩まで引き上げてから、こちらの顔をのぞき込んだ。'
     },
     {
-      text: 'テキスト7です。次は選択肢が出ます。',
-      speaker: 'キャラB',
+      text: '私はラピス。あなたは？',
+      speaker: '？？？'
     },
     {
-      // choiceId 行の text は表示されない
+      text: '答えようとして、言葉が止まった。名前が、出てこない。'
+    },
+    {
       text: '',
-      choiceId: 'first',
+      choiceId: 'name'
     },
     {
-      text: 'テキスト8です。分岐から合流しました。',
+      text: 'あなたは、帝都のほうから歩いてきたんです。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'serious' }
+      ]
     },
     {
-      // 選択肢Aを選んでいた場合のみ「選択肢C」が表示される (showIf のテスト)
+      text: '境界の、内側から。',
+      speaker: 'ラピス'
+    },
+    {
+      text: '雪の上をまっすぐこっちへ来て、境界を出たところで倒れました。服も髪も、霜で真っ白でした。',
+      speaker: 'ラピス'
+    },
+    {
+      text: '境界を越えた人は、誰も戻ってきません。帝都が凍ってから、ずっとです。',
+      speaker: 'ラピス'
+    },
+    {
+      text: '……あなたが、初めてなんです。',
+      speaker: 'ラピス'
+    },
+    {
+      text: '中で、誰かに会いませんでしたか。',
+      speaker: 'ラピス'
+    },
+    {
       text: '',
-      choiceId: 'second',
+      choiceId: 'inside'
     },
     {
-      text: 'テキスト9です。2つ目の分岐から合流しました。',
+      text: 'ラピスは膝の上で手を握って、それから立ち上がった。'
     },
     {
-      text: 'テキスト10です。これで最後です。ここで advance すると end になります。',
-      speaker: 'キャラA',
+      text: '外、出られますか。見てほしいものがあるんです。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'normal' }
+      ]
+    },
+    {
+      text: 'テントの外は、一面の雪原だった。',
+      commands: [
+        { type: 'charDelete' },
+        { type: 'bg', file: 'images/scenario/bg/camp_border.avif', transition: 'crossfade' },
+        { type: 'bgMove', direction: 'leftToRight', duration: 4000 }
+      ]
+    },
+    {
+      text: '雪原の先で、景色が白く霞んでいる。空気がそこだけ凍りついたように、一本の線を境に色が変わっていた。'
+    },
+    {
+      text: 'その奥、地平線のあたりに、凍りついた尖塔の群れが影のように立っている。'
+    },
+    {
+      text: 'あれが境界です。その向こうが、帝都。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'serious' }
+      ]
+    },
+    {
+      text: 'ここも寒いですけど、火と装備があれば、人は過ごせます。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'normal' }
+      ]
+    },
+    {
+      text: 'でも、境界を越えたら、体はすぐに凍ります。中がどうなっているのかも、中の人が生きているのかも、外からは分かりません。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'serious' }
+      ]
+    },
+    {
+      text: '……私、帝都に住んでたんです。あの日、外へ逃がしてもらった側でした。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'sad' }
+      ]
+    },
+    {
+      text: '逃げる途中で、姉とはぐれました。姉は、今もあの中にいます。',
+      speaker: 'ラピス'
+    },
+    {
+      text: 'だから、ここにいるんです。境界のそばに。',
+      speaker: 'ラピス'
+    },
+    {
+      text: '',
+      choiceId: 'sister'
+    },
+    {
+      text: '中から出てこられる人がいるなら、姉だって、きっと。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'serious' }
+      ]
+    },
+    {
+      text: 'そのとき、雪原の向こうで氷の割れる音がした。',
+      commands: [
+        { type: 'bgShake', duration: 400, intensity: 6 }
+      ]
+    },
+    {
+      text: 'コオリモチ……！',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'surprised', bounce: true }
+      ]
+    },
+    {
+      text: '裂け目から出てきた魔物です。帝都が凍ったのとは関係なく、このあたりをうろついていて……',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'serious' }
+      ]
+    },
+    {
+      text: '白くて丸い影がふたつ、川の向こうから、まっすぐこちらへ向かってくる。'
+    },
+    {
+      text: 'あなたはテントに戻っていてください。まだ立つのもやっとでしょう？',
+      speaker: 'ラピス'
+    },
+    {
+      text: '',
+      choiceId: 'sortie'
+    },
+    {
+      text: '渡れるのは、川の真ん中の浅瀬だけです。……行きます！',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'serious', bounce: true }
+      ]
     },
   ],
   choices: {
-    first: [
+    name: [
       {
-        buttonText: '選択肢Aです (sampleA +1)',
-        points: { sampleA: 1 },
+        buttonText: '……分からない',
         branch: [
-          { text: '選択肢Aのテキスト1です。' },
-          { text: '選択肢Aのテキスト2です。points に sampleA が加算されました。', speaker: 'キャラA' },
+          {
+            text: '分からない……？',
+            speaker: 'ラピス',
+            commands: [
+              { type: 'char', id: 'lapis', pose: 'surprised' }
+            ]
+          },
+          {
+            text: '……そう、ですか。',
+            speaker: 'ラピス',
+            commands: [
+              { type: 'char', id: 'lapis', pose: 'sad' }
+            ]
+          }
+        ]
+      },
+      {
+        buttonText: '何も、思い出せない',
+        branch: [
+          {
+            text: '何も……自分の名前も、ですか。',
+            speaker: 'ラピス',
+            commands: [
+              { type: 'char', id: 'lapis', pose: 'sad' }
+            ]
+          }
+        ]
+      },
+    ],
+    inside: [
+      {
+        buttonText: '……覚えていない',
+        branch: [
+          { text: '……そう、ですよね。目が覚めたばかりなのに、ごめんなさい。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'sad' }] },
         ],
       },
       {
-        buttonText: '選択肢Bです (points なし)',
+        buttonText: '誰かを探しているのか？',
+        points: { lapisTrust: 1 },
         branch: [
-          { text: '選択肢Bのテキスト1です。' },
-          { text: '選択肢Bのテキスト2です。', speaker: 'キャラB' },
+          { text: '……はい。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'sad' }] },
+          { text: 'でも、覚えていないなら、いいんです。ごめんなさい、急に。', speaker: 'ラピス' },
         ],
       },
     ],
-    second: [
+    sister: [
       {
-        buttonText: '選択肢Cです (Aを選んだときだけ表示)',
-        showIf: [{ key: 'sampleA', op: '>=', value: 1 }],
+        buttonText: 'ひとりで、ずっと？',
+        points: { lapisTrust: 1 },
         branch: [
-          { text: '選択肢Cのテキスト1です。showIf の条件を満たしています。' },
+          { text: 'ひとりで待つのは、もう慣れました。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'smile' }] },
+          { text: '……でも、あなたが出てきた。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'normal' }] },
         ],
       },
       {
-        buttonText: '選択肢Dです (常に表示)',
+        buttonText: '何か思い出したら、必ず話す',
         branch: [
-          { text: '選択肢Dのテキスト1です。' },
+          { text: '……はい。お願いします。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'smile' }] },
+        ],
+      },
+    ],
+    sortie: [
+      {
+        buttonText: '戦い方なら、分かる気がする',
+        branch: [
+          { text: 'え……？', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'surprised' }] },
+          { text: '……分かりました。指示をください。ひとりで二体は、正直きついので。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'serious' }] },
+        ],
+      },
+      {
+        buttonText: 'ひとりで行かせられない',
+        branch: [
+          { text: 'それはこっちの台詞です。せっかく目が覚めたのに。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'normal' }] },
+          { text: '……じゃあ、後ろから指示をください。それなら、いいです。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'serious' }] },
         ],
       },
     ],
