@@ -42,7 +42,11 @@
 @import './pages/member/skill.css';
 @import './pages/recruit/recruit.css';
 @import './pages/recruit/result.css';
-@import './pages/base.css';
+@import './pages/base/base.css';
+@import './pages/base/board.css';
+@import './pages/base/panel.css';
+@import './pages/base/detail.css';
+@import './pages/base/heat.css';
 @import './pages/warehouse/warehouse.css';
 @import './pages/warehouse/detail.css';
 @import './pages/exchange/exchange.css';

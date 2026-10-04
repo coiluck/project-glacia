@@ -1,0 +1,170 @@
+/* 熱の使用量 */
+.base-heat {
+  position: absolute;
+  top: 80px;
+  left: 56px;
+  z-index: 2;
+  width: 560px;
+}
+.base-heat-head {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  text-align: left;
+}
+.base-heat-tab {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 154, 77, 0.32);
+}
+.base-heat-tab span {
+  padding: 4px 32px 4px 14px;
+  font-size: 19px;
+  line-height: 1.3;
+  letter-spacing: 0.12em;
+  color: #1c1006;
+  background: var(--heat);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 20px) 100%, 0 100%);
+}
+.base-heat-tab small {
+  padding-right: 16px;
+  font-size: 18px;
+  letter-spacing: 0.06em;
+  color: var(--heat-soft);
+}
+.base-heat-main,
+.base-heat-rows > div {
+  display: grid;
+  grid-template-columns: 1fr 200px 40px;
+  align-items: center;
+  column-gap: 16px;
+}
+.base-heat-main {
+  height: 76px;
+  padding: 0 22px;
+  background: rgba(14, 19, 28, 0.88);
+  transition: background 0.12s ease-out;
+}
+.base-heat-head:hover .base-heat-main {
+  background: rgba(24, 31, 43, 0.92);
+}
+.base-heat-value {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+.base-heat-value small {
+  margin-left: 6px;
+  font-size: 20px;
+  color: var(--ink-dim);
+}
+.base-heat.is-max .base-heat-value {
+  color: var(--heat);
+}
+/* 目盛り */
+.base-heat-cells {
+  display: flex;
+  gap: 3px;
+  height: 26px;
+}
+.base-heat-cells i {
+  flex: 1;
+  background: #1f262d;
+  outline: 1px solid rgba(255, 255, 255, 0.08);
+  transform: skewX(-14deg);
+}
+.base-heat-cells i.is-on {
+  background: var(--heat);
+  outline: none;
+}
+/* 開閉の印 */
+.base-heat-chevron {
+  justify-self: end;
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+  border-right: 2px solid var(--ink-dim);
+  border-bottom: 2px solid var(--ink-dim);
+  transform: translateY(-4px) rotate(45deg);
+  transition: transform 0.3s ease-out;
+}
+.base-heat.is-open .base-heat-chevron {
+  transform: translateY(4px) rotate(-135deg);
+}
+
+/* 内訳 */
+.base-heat-detail {
+  max-height: 0;
+  overflow: hidden;
+  background: rgba(14, 19, 28, 0.88);
+  opacity: 0;
+  transition:
+    max-height 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.25s ease-out;
+}
+.base-heat.is-open .base-heat-detail {
+  max-height: 420px;
+  opacity: 1;
+}
+.base-heat-rows {
+  margin: 0 22px;
+  padding: 4px 0 12px;
+  border-top: 1px solid var(--line);
+}
+.base-heat-rows > div {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.base-heat-rows dt {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 20px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.base-heat-rows dt small {
+  font-size: 18px;
+  color: var(--ink-dim);
+}
+.base-heat-rows dt em {
+  padding: 0 8px;
+  font-size: 18px;
+  font-style: normal;
+  color: var(--short);
+  border: 1px solid var(--short);
+}
+.base-heat-rows dd {
+  display: contents;
+}
+.base-heat-rows dd b {
+  grid-column: 3;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1;
+  text-align: right;
+}
+.base-heat-rows .base-heat-cells {
+  height: 12px;
+}
+.base-heat-rows .base-heat-cells i {
+  background: rgba(255, 255, 255, 0.07);
+  outline: none;
+}
+.base-heat-rows .base-heat-cells i.is-on {
+  background: var(--heat);
+}
+/* 熱の出力 */
+.base-heat-rows > .is-output {
+  border-bottom: none;
+}
+.base-heat-rows .is-output dt {
+  color: var(--heat-soft);
+}
+.base-heat-rows .is-output dd b {
+  color: var(--heat);
+}
