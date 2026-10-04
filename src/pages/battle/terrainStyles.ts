@@ -113,6 +113,40 @@ export const TERRAIN_STYLES: Record<TerrainKind, TerrainStyle> = {
       { type: 'fractalNoise', freq: '0.06', octaves: 5, seed: 99, rgb: [0.36, 0.34, 0.48], gain: 1.0, bias: -0.78 },
     ],
   },
+  // 鉱脈
+  ore: {
+    top: '#6b7079',
+    side: '#41464d',
+    noise: [
+      { type: 'fractalNoise', freq: '0.04', octaves: 4, seed: 23, rgb: [0.25, 0.27, 0.31], gain: 1.5, bias: -0.5 },
+      { type: 'turbulence', freq: '0.03', octaves: 3, seed: 37, rgb: [0.2, 0.55, 0.75], gain: -10, bias: 1.1 },
+      { type: 'turbulence', freq: '0.03', octaves: 3, seed: 37, rgb: [0.7, 0.95, 1], gain: -15, bias: 0.8 },
+      { type: 'fractalNoise', freq: '0.35', octaves: 3, seed: 6, rgb: [0.8, 0.84, 0.88], gain: 1.3, bias: -0.85 },
+    ],
+  },
+  // 豊かな鉱脈
+  oreRich: {
+    top: '#6b7079',
+    side: '#41464d',
+    noise: [
+      { type: 'fractalNoise', freq: '0.04', octaves: 4, seed: 23, rgb: [0.25, 0.27, 0.31], gain: 1.5, bias: -0.5 },
+      { type: 'turbulence', freq: '0.02', octaves: 3, seed: 11, rgb: [0.2, 0.55, 0.75], gain: -8, bias: 1.5 },
+      { type: 'turbulence', freq: '0.02', octaves: 3, seed: 11, rgb: [0.7, 0.95, 1], gain: -11, bias: 1.35 },
+      { type: 'turbulence', freq: '0.03', octaves: 3, seed: 37, rgb: [0.2, 0.55, 0.75], gain: -10, bias: 1.2 },
+      { type: 'turbulence', freq: '0.03', octaves: 3, seed: 37, rgb: [0.7, 0.95, 1], gain: -15, bias: 1.05 },
+      { type: 'fractalNoise', freq: '0.35', octaves: 3, seed: 6, rgb: [0.8, 0.84, 0.88], gain: 1.3, bias: -0.85 },
+    ],
+  },
+  // 雪の融けた地面。湿った土に水たまりと融け残りの雪
+  thaw: {
+    top: '#6a5746',
+    side: '#40342a',
+    noise: [
+      { type: 'fractalNoise', freq: '0.04', octaves: 4, seed: 84, rgb: [0.2, 0.16, 0.13], gain: 1.7, bias: -0.6 },
+      { type: 'fractalNoise', freq: '0.03', octaves: 4, seed: 17, rgb: [0.86, 0.89, 0.92], gain: 2.2, bias: -1.4 },
+      { type: 'fractalNoise', freq: '0.35', octaves: 3, seed: 11, rgb: [0.58, 0.49, 0.39], gain: 1.2, bias: -0.78 },
+    ],
+  },
 };
 
 // タイル1枚の層を下から順に返す

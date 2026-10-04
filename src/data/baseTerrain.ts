@@ -20,11 +20,11 @@ const TILE_CHARS: Record<string, BaseTileKind> = {
 };
 
 const MAP = [
-  '    . . o . . x . o',
+  '    . . o . x x . o',
   '   . x . . o . . o .',
-  '  . . . . . . o . x .',
-  ' x . o . . T R . o . .',
-  '  . . . o . . . . . .',
+  '  . o . . . . o . . x',
+  ' x . . x . T R . o . x',
+  '  . . . o . . . x . .',
   '   . o . . x . . . .',
   '    x . . . o . . .',
 ];

@@ -1,0 +1,59 @@
+/* マスの詳細を出す右の欄。中身は detail.css */
+.base-side {
+  position: absolute;
+  top: 80px;
+  right: 40px;
+  bottom: 32px;
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(calc(100% + 60px));
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.page-base.is-open .base-side {
+  transform: none;
+}
+.base-subtitle {
+  margin-bottom: 8px;
+  font-size: 19px;
+  letter-spacing: 0.12em;
+  color: var(--ink-dim);
+}
+
+/* 作る物 */
+.base-output-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.base-output-grid.is-library {
+  grid-template-columns: repeat(2, 1fr);
+}
+.page-base .base-output {
+  width: 100%;
+  height: 66px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 18px;
+  white-space: nowrap;
+  background: var(--tile);
+  border: 1px solid var(--line);
+  border-bottom: 2px solid var(--rarity);
+  transition: background 0.12s ease-out, border-color 0.12s ease-out;
+}
+.page-base .base-output:hover:not(:disabled) {
+  background: #22272c;
+}
+.page-base .base-output.is-active {
+  background: var(--tile-active);
+  border-color: var(--accent);
+}
+.base-output:disabled:not(.is-active) {
+  opacity: 0.45;
+}
+.base-output span {
+  font-size: 18px;
+}

@@ -235,7 +235,7 @@ function ScenarioRunner({ scenarioId }: { scenarioId: string }) {
                     {face ? (
                       <img
                         className="scenario-log-face"
-                        src={`${import.meta.env.BASE_URL}images/scenario/character/face/${face.id}/${face.pose}.png`}
+                        src={`${import.meta.env.BASE_URL}images/character/face/${face.id}.avif`}
                         alt={face.id}
                      />
                     ) : (

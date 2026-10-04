@@ -23,7 +23,7 @@ export const STORAGE_HOURS = [12, 16, 20, 24, 28];
 export const SELF_STORAGE_HOURS = 4;
 
 // 暖房塔からの距離ごとの資源のマスの採掘量の倍率
-export const RESOURCE_GRADES = [1.0, 1.0, 1.0, 1.5, 2.0];
+export const RESOURCE_GRADES = [1.0, 1.0, 1.0, 1.5];
 
 // 採掘場と書庫で作れる物
 export interface BaseOutputDef {

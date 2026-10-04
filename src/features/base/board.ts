@@ -28,7 +28,7 @@ export interface BuildingStatus {
   active: boolean // 動いているか。配管は暖房塔につながっているか
   rate: number // 1時間あたりの生産量。作る物の cost で割ると個数。動いていない建物と、採掘場・書庫以外は 0
   hours: number // 貯められる時間
-  workerId?: string // 速さを上げているキャラ
+  workerIds: string[] // 速さを上げているキャラ。作業範囲に入っている全員
   carrierId?: string // 貯蔵庫へ運んでいるキャラ
 }
 
@@ -140,16 +140,8 @@ export function analyzeBase(base: BaseRow, characters: UserCharacter[]): BaseAna
   for (const { key, pos, building, active } of entries) {
     const covering = members.filter((m) => inRange(m, pos))
 
-    // 作業範囲のキャラのうち効果が一番大きい1人で速くなる
-    let boost = 0
-    let workerId: string | undefined
-    for (const m of covering) {
-      const b = workBoost(m.level, m.effect)
-      if (b > boost) {
-        boost = b
-        workerId = m.id
-      }
-    }
+    // 作業範囲のキャラ全員の効果を足した分だけ速くなる
+    const boost = covering.reduce((sum, m) => sum + workBoost(m.level, m.effect), 0)
 
     // 範囲に動いている貯蔵庫もあるキャラがいれば、その貯蔵庫の上限時間まで貯められる
     let hours = SELF_STORAGE_HOURS
@@ -169,7 +161,7 @@ export function analyzeBase(base: BaseRow, characters: UserCharacter[]): BaseAna
       active,
       rate: active ? baseRate(pos, building) * (1 + boost) : 0,
       hours,
-      workerId,
+      workerIds: covering.map((m) => m.id),
       carrierId,
     }
   }

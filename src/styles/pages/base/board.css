@@ -1,0 +1,499 @@
+/* 基地の盤面 */
+.base-board {
+  position: relative;
+}
+.base-board-svg {
+  display: block;
+  overflow: visible;
+}
+
+/* マス */
+.base-tile-shade {
+  fill: rgba(0, 0, 0, 0.3);
+}
+.base-tile-top {
+  stroke: #26323e;
+  stroke-width: 1.5;
+  stroke-opacity: 0.5;
+}
+/* 熱の届かない雪のマス */
+.base-tile-night,
+.base-tile-night-side {
+  opacity: 0.62;
+  pointer-events: none;
+}
+.base-tile-night {
+  fill: #0a2344;
+}
+.base-tile-night-side {
+  fill: #050d1c;
+}
+.base-tile-glow {
+  fill: url(#base-warm-glow);
+  pointer-events: none;
+}
+.base-tile.is-selectable {
+  cursor: pointer;
+}
+.base-tile.is-selectable:hover .base-tile-top {
+  filter: brightness(1.08);
+}
+
+/* 作業範囲と選んでいるマス */
+.base-tile-outline {
+  fill: none;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+.base-tile-outline.is-range {
+  fill: rgba(127, 224, 255, 0.14);
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-dasharray: 8 6;
+}
+.base-tile-outline.is-selected {
+  stroke: #fff;
+  stroke-width: 4;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
+  animation: base-pulse 1.4s ease-in-out infinite;
+}
+@keyframes base-pulse {
+  50% { stroke-opacity: 0.5; }
+}
+
+/* 配管・建物・鉱脈はホロ
+   動いている物は水色、熱の元（暖房塔と熱の通った配管）は橙、止まっている物は灰色 */
+.base-art,
+.base-pipe-hub {
+  --hc: #7efff9;
+  --hf: url(#base-scan-cool);
+}
+.base-art.is-tower,
+.base-pipe-hub.is-hot {
+  --hc: #ff7f5f;
+  --hf: url(#base-scan-warm);
+}
+.base-art.is-idle,
+.base-pipe-hub.is-cut {
+  --hc: #8498ad;
+  --hf: rgba(141, 153, 166, 0.06);
+}
+.base-art :is(polygon, path, ellipse, circle),
+.base-pipe-hub polygon {
+  fill: var(--hf);
+  stroke: var(--hc);
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+.base-art line,
+.base-pipe-hub line {
+  stroke: var(--hc);
+  stroke-width: 1;
+  opacity: 0.7;
+}
+
+/* 配管 */
+.base-pipe-tile {
+  pointer-events: none;
+}
+.base-pipe line {
+  stroke-linecap: round;
+}
+.base-pipe-case {
+  stroke: #0a1118;
+  stroke-width: 12;
+}
+.base-pipe-body {
+  stroke: rgba(255, 180, 110, 0.18);
+  stroke-width: 8;
+}
+.base-pipe-glow {
+  stroke: #ffb46e;
+  stroke-width: 2;
+  filter: url(#base-glow);
+}
+/* 暖房塔から外へ流れる熱 */
+.base-pipe-flow {
+  stroke: #fff0c8;
+  stroke-width: 4;
+  stroke-dasharray: 3 9;
+  filter: url(#base-glow);
+  animation: base-flow 0.9s linear infinite;
+}
+@keyframes base-flow {
+  to { stroke-dashoffset: -24; }
+}
+.base-pipe line.base-pipe-flange {
+  stroke: #ffb46e;
+  stroke-width: 2;
+  stroke-linecap: butt;
+}
+.base-pipe.is-cut .base-pipe-body {
+  stroke: rgba(127, 168, 204, 0.18);
+  stroke-dasharray: 6 5;
+}
+.base-pipe.is-cut line.base-pipe-flange {
+  stroke: #7fa8cc;
+}
+.base-pipe-hub .base-pipe-grate {
+  fill: var(--hc);
+  opacity: 0.85;
+}
+.base-pipe-hub.is-cut .base-pipe-grate {
+  fill: none;
+}
+
+/* 建物の絵 */
+.base-art {
+  cursor: pointer;
+}
+.base-art:hover {
+  filter: brightness(1.15);
+}
+.base-art .art-body {
+  filter: drop-shadow(0 0 3px var(--hc));
+}
+.base-art .is-top {
+  fill: rgba(166, 240, 255, 0.14);
+}
+.base-art.is-tower .is-top {
+  fill: rgba(255, 194, 126, 0.16);
+}
+.base-art.is-idle .is-top {
+  fill: rgba(141, 153, 166, 0.08);
+}
+.base-art .art-stub,
+.base-art .art-rim {
+  fill: none;
+}
+/* 灯り */
+.base-art .art-window {
+  fill: var(--hc);
+  opacity: 0.85;
+}
+.base-art .art-fire {
+  fill: #ffc27e;
+  opacity: 0.85;
+}
+.base-art .art-window,
+.base-art .art-fire {
+  animation: base-flicker 2.6s ease-in-out infinite;
+}
+@keyframes base-flicker {
+  40% { opacity: 0.7; }
+  55% { opacity: 0.85; }
+  70% { opacity: 0.78; }
+}
+.base-art .art-heat-ring {
+  fill: none;
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: base-heat-ring 2.8s ease-out infinite;
+}
+@keyframes base-heat-ring {
+  0% { opacity: 0.8; transform: scale(0.9); }
+  100% { opacity: 0; transform: scale(2.3); }
+}
+.base-art .art-smoke circle {
+  fill: none;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: base-smoke 3.4s ease-out infinite;
+}
+.base-art .art-smoke.is-big circle {
+  animation-duration: 3.9s;
+}
+@keyframes base-smoke {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.4); }
+  15% { opacity: 0.55; }
+  100% { opacity: 0; transform: translate(16px, -48px) scale(2); }
+}
+.base-art .art-sparks circle {
+  opacity: 0;
+  animation: base-spark 2.2s ease-out infinite;
+}
+@keyframes base-spark {
+  0% { opacity: 0; transform: translate(0, 0); }
+  10% { opacity: 1; }
+  100% { opacity: 0; transform: translate(10px, -56px); }
+}
+.base-art .art-spin {
+  animation: base-spin 3s linear infinite;
+}
+@keyframes base-spin {
+  to { transform: rotate(360deg); }
+}
+.base-art .art-bucket {
+  animation: base-bucket 4s ease-in-out infinite;
+}
+@keyframes base-bucket {
+  50% { transform: translateY(-34px); }
+}
+
+/* 冷えて止まっている。線が破線になり、灯りと動きが止まる */
+.base-art.is-idle .art-body * {
+  stroke-dasharray: 3 3;
+}
+.base-art.is-idle :is(.art-window, .art-fire) {
+  fill: none;
+  animation: none;
+}
+.base-art.is-idle :is(.art-smoke, .art-sparks) {
+  display: none;
+}
+.base-art.is-idle :is(.art-spin, .art-bucket) {
+  animation: none;
+}
+
+/* 絵の上に浮かぶ印 */
+.base-art .art-emblem-bob {
+  animation: base-emblem-bob 2.6s ease-in-out infinite;
+}
+@keyframes base-emblem-bob {
+  50% { transform: translateY(-5px); }
+}
+.base-art .art-emblem-plate {
+  fill: rgba(8, 12, 18, 0.85);
+  stroke-width: 1.6;
+}
+.base-art .art-emblem-icon {
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+/* 鉱脈 */
+.base-ore {
+  pointer-events: none;
+}
+.base-ore .base-ore-glow {
+  fill: url(#base-ore-glow);
+  stroke: none;
+}
+.base-ore.is-cold .base-ore-glow {
+  opacity: 0.6;
+}
+.base-ore polygon {
+  fill: rgba(127, 224, 255, 0.2);
+  stroke: #7fe0ff;
+  stroke-width: 1;
+}
+.base-ore .base-ore-rock {
+  fill: none;
+  stroke: rgba(127, 224, 255, 0.4);
+}
+/* 豊かな鉱脈 */
+.base-ore-glint {
+  fill: #fff;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: base-glint 2.6s ease-in-out infinite;
+}
+@keyframes base-glint {
+  0%, 60%, 100% { opacity: 0; transform: scale(0.3); }
+  75% { opacity: 1; transform: scale(1); }
+}
+
+/* 盤面の上の HTML の層 */
+.base-board-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* キャラを持ち上げて吸着している間の見込み。速く=水色、運ぶ=金、動き出す=橙 */
+.base-forecast {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transform: translate(-50%, -100%);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5));
+  animation: base-forecast-in 0.15s ease-out;
+}
+@keyframes base-forecast-in {
+  from { opacity: 0; transform: translate(-50%, calc(-100% + 8px)); }
+  to { opacity: 1; transform: translate(-50%, -100%); }
+}
+.base-forecast span {
+  padding: 2px 12px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+  background: rgba(6, 10, 16, 0.92);
+  border-top: 3px solid;
+}
+.base-forecast .is-speed {
+  color: var(--accent-soft);
+  border-color: var(--accent);
+}
+.base-forecast .is-carry {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+.base-forecast .is-warm {
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: normal;
+  letter-spacing: 0.06em;
+  color: var(--heat-soft);
+  border-color: var(--heat);
+}
+
+/* 建物に貯まっている数。輪は次の1個までの割合 */
+.base-stock {
+  --ring: #9fd4ff;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  transform: translate(-28px, -100%);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5));
+}
+.base-stock::after {
+  content: '';
+  position: absolute;
+  left: 21px;
+  bottom: -7px;
+  border: 7px solid transparent;
+  border-bottom: none;
+  border-top-color: var(--ring);
+}
+.base-stock-ring {
+  position: relative;
+  z-index: 1;
+  width: 56px;
+  height: 56px;
+  padding: 4px;
+  border-radius: 50%;
+  background: conic-gradient(var(--ring) calc(var(--ratio) * 360deg), rgba(255, 255, 255, 0.16) 0);
+}
+.base-stock-face {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #2a3a4c, #0b121b 75%);
+}
+.base-stock-icon {
+  width: 30px;
+  height: 30px;
+  fill: none;
+  stroke: #e4eef7;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.base-stock b {
+  margin-left: -10px;
+  padding: 1px 12px 1px 16px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+  background: rgba(8, 12, 18, 0.92);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+}
+.base-stock.is-full {
+  --ring: #f3d27e;
+  animation: base-stock-bob 1.4s ease-in-out infinite;
+}
+.base-stock.is-full .base-stock-ring {
+  box-shadow: 0 0 18px rgba(243, 210, 126, 0.75);
+}
+.base-stock.is-full .base-stock-face {
+  background: radial-gradient(circle at 35% 30%, #fff1c2, #e3b04f 80%);
+}
+.base-stock.is-full .base-stock-icon {
+  stroke: #2a1d08;
+}
+.base-stock.is-full b {
+  color: #1b1a14;
+  background: #f3d27e;
+}
+@keyframes base-stock-bob {
+  50% { transform: translate(-28px, calc(-100% - 6px)); }
+}
+
+
+/* 盤面に立つキャラ */
+.base-member {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: auto;
+  cursor: pointer;
+}
+/* 基地のキャラの一覧を開いている間は持ち上げられる */
+.base-member.is-grabbable {
+  cursor: grab;
+  touch-action: none;
+}
+.base-member.is-held {
+  opacity: 0.35;
+}
+.base-member-body {
+  position: absolute;
+  left: -44px;
+  bottom: 0;
+  width: 88px;
+  height: 88px;
+  animation: base-bob 2.4s ease-in-out infinite;
+}
+.base-member-chibi {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 3px rgba(0, 0, 0, 0.35));
+}
+.base-member.is-carrying {
+  animation: base-carry var(--dur) linear infinite;
+}
+.base-member.is-carrying .base-member-body {
+  animation: base-walk 0.42s ease-in-out infinite;
+}
+.base-member.is-carrying .base-member-chibi {
+  animation: base-face var(--dur) step-end infinite;
+}
+.base-member-load {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+  margin-left: -15px;
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: base-load var(--dur) step-end infinite;
+}
+/* 歩いているのは 6〜44% と 56〜94% */
+@keyframes base-carry {
+  0%, 6% { transform: translate(var(--ax), var(--ay)); }
+  44%, 56% { transform: translate(var(--bx), var(--by)); }
+  94%, 100% { transform: translate(var(--ax), var(--ay)); }
+}
+@keyframes base-face {
+  0% { transform: scaleX(var(--face)); }
+  50% { transform: scaleX(calc(var(--face) * -1)); }
+}
+/* 行きだけ素材を持つ */
+@keyframes base-load {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+}
+@keyframes base-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@keyframes base-walk {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}

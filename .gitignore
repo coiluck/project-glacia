@@ -30,6 +30,6 @@ dist-ssr
 
 CLAUDE.md
 
-# PNG の原本はローカルにだけ置く（配信は AVIF）。PWA アイコンは PNG のまま
+# 配信は AVIF
 public/images/**/*.png
 !public/images/pwa/*.png

@@ -1,0 +1,505 @@
+.page-base {
+  --line: rgba(255, 255, 255, 0.14);
+  --line-strong: rgba(255, 255, 255, 0.3);
+  --card: rgba(10, 14, 20, 0.86);
+  --tile: #1a1e22;
+  --tile-active: #1f2a33;
+  --ink: #e4e7ea;
+  --ink-dim: #8a9299;
+  --ink-mute: #5c646b;
+  --select: #d9dee2;
+  --accent: #7fe0ff;
+  --accent-soft: #b6f5ff;
+  --gold: #e8c774;
+  --gold-hover: #f3d894;
+  --short: #c96b6b;
+  --heat: #ff9a4d;
+  --heat-soft: #ffc48a;
+  position: absolute;
+  inset: 0;
+  text-align: left;
+}
+.page-base .is-rarity-1 {
+  --rarity: #7d868e;
+}
+.page-base .is-rarity-2 {
+  --rarity: #7f9fb3;
+}
+.page-base .is-rarity-3 {
+  --rarity: #c9a860;
+}
+.page-base button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+.page-base button:disabled {
+  cursor: default;
+}
+.page-base ul {
+  list-style: none;
+}
+
+/* アイテムのアイコン */
+.base-item-icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: #cfd6dc;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* 盤面の置き場 */
+.base-board-area {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.page-base.is-open .base-board-area {
+  transform: translateX(-240px);
+}
+.base-members-wrap {
+  display: contents;
+}
+
+/* 降る雪 */
+.base-snow {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+
+/* 基地のキャラ */
+.base-members-mini {
+  position: absolute;
+  left: 56px;
+  bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  transition: transform 0.3s ease-out;
+}
+.base-members-mini.is-open {
+  transform: translateX(calc(-100% - 56px));
+}
+.base-members-mini-head {
+  display: flex;
+  background: rgba(123, 218, 255, 0.6);
+}
+.base-members-mini-head span {
+  padding: 4px 32px 4px 14px;
+  font-size: 19px;
+  line-height: 1.3;
+  letter-spacing: 0.12em;
+  color: #08121c;
+  background: rgb(123, 255, 248);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 20px) 100%, 0 100%);
+}
+.base-members-mini-main {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 14px 22px 14px 16px;
+  background: linear-gradient(160deg, rgba(26, 34, 48, 0.88), rgba(10, 14, 22, 0.88));
+  transition: background 0.12s ease-out;
+}
+.base-members-mini:hover .base-members-mini-main {
+  background: linear-gradient(160deg, rgba(36, 46, 62, 0.92), rgba(16, 22, 32, 0.92));
+}
+.base-members-mini-faces {
+  display: flex;
+  gap: 8px;
+}
+.base-members-mini-faces img,
+.base-members-mini-faces i {
+  width: 56px;
+  height: 56px;
+}
+.base-members-mini-faces img {
+  object-fit: cover;
+  outline: 1px solid var(--line-strong);
+}
+.base-members-mini-faces i {
+  outline: 1px dashed var(--line-strong);
+  outline-offset: -1px;
+}
+.base-members-mini-main b {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+.base-members-mini-main small {
+  margin-left: 6px;
+  font-size: 18px;
+  color: var(--ink-dim);
+}
+
+/* 基地のキャラの一覧。開いている間は盤面を右へ寄せる */
+.page-base.is-members .base-board-area {
+  transform: translateX(240px);
+}
+.base-left {
+  position: absolute;
+  top: 240px;
+  left: 56px;
+  bottom: 32px;
+  width: 560px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(10, 15, 24, 0.9);
+  border: 1px solid var(--line);
+  animation: base-left-in 0.3s ease-out;
+}
+@keyframes base-left-in {
+  from { opacity: 0; transform: translateX(-60px); }
+  to { opacity: 1; transform: none; }
+}
+.base-left-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.base-left-tag {
+  padding: 4px 32px 4px 14px;
+  font-size: 19px;
+  line-height: 1.3;
+  letter-spacing: 0.12em;
+  color: #08121c;
+  background: rgb(123, 255, 248);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 20px) 100%, 0 100%);
+}
+.base-left-head b {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--accent-soft);
+}
+.base-left-list {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  overflow-y: auto;
+}
+.page-base .base-left-row {
+  width: 100%;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-right: 14px;
+  text-align: left;
+  background: rgba(30, 40, 52, 0.55);
+  border: 1px solid transparent;
+  touch-action: none;
+}
+.page-base .base-left-row:hover {
+  background: rgba(44, 58, 74, 0.7);
+}
+.base-left-face {
+  flex: none;
+  width: 92px;
+  height: 66px;
+  overflow: hidden;
+}
+.base-left-face img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.base-left-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.base-left-text b {
+  display: flex;
+  align-items: center;
+  font-size: 21px;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.base-left-placed {
+  margin-left: 10px;
+  padding: 0 8px;
+  font-size: 18px;
+  line-height: 1.4;
+  letter-spacing: 0;
+  color: #08121c;
+  background: rgb(123, 255, 248);
+}
+.base-left-text > span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 18px;
+  color: var(--ink-dim);
+  white-space: nowrap;
+}
+.base-left-class {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: var(--ink-dim);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* 立っているキャラが動かしている建物の数。速く=水色、運ぶ=金、暖める=橙 */
+.base-left-work {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.base-left-work > span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.base-left-work svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.base-left-work .is-speed svg {
+  stroke: var(--accent);
+}
+.base-left-work .is-carry svg {
+  stroke: var(--gold);
+}
+.base-left-work .is-warm svg {
+  stroke: var(--heat);
+}
+.base-left-work b {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+}
+/* 選んでいるキャラ */
+.page-base .base-left-row.is-active {
+  background: linear-gradient(100deg, #7fe0ff, #b6f5ff 70%, #dffaff);
+  border-color: #dffaff;
+}
+.base-left-row.is-active * {
+  color: #08121c;
+}
+.base-left-row.is-active svg {
+  stroke: #08121c;
+}
+.base-left-row.is-active .base-left-placed {
+  color: rgb(123, 255, 248);
+  background: #08121c;
+}
+.base-left-row.is-held,
+.base-left-row.is-locked .base-left-face {
+  opacity: 0.45;
+}
+.base-left-foot {
+  padding: 12px 16px 16px;
+  border-top: 1px solid var(--line);
+}
+/* 外す */
+.page-base .base-left-remove {
+  width: 100%;
+  height: 52px;
+  font-size: 22px;
+  letter-spacing: 0.16em;
+  text-align: center;
+  color: #1b1a14;
+  background: linear-gradient(120deg, #f0d48a, #d9a441);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+}
+.page-base .base-left-remove:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+.page-base .base-left-remove:disabled {
+  background:
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.07) 0 7px, transparent 7px 14px),
+    #1a1f25;
+}
+
+/* 持ち上げているキャラ */
+.base-ghost {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 4;
+  width: calc(var(--scale) * 88px);
+  height: calc(var(--scale) * 88px);
+  pointer-events: none;
+  transition: transform 0.08s linear;
+}
+/* マウスの下で左右に揺れる */
+.base-ghost-swing {
+  height: 100%;
+  transform: translateX(-50%);
+  transform-origin: 50% 0;
+  animation: base-ghost-sway 1.4s ease-in-out infinite;
+}
+@keyframes base-ghost-sway {
+  0%,
+  100% {
+    transform: translateX(-50%) rotate(-6deg);
+  }
+  50% {
+    transform: translateX(-50%) rotate(6deg);
+  }
+}
+.base-ghost.is-snapped .base-ghost-swing {
+  transform: translateX(-50%);
+  animation: none;
+}
+.base-ghost-body {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 calc(var(--scale) * 6px) calc(var(--scale) * 8px) rgba(0, 0, 0, 0.5));
+  transition: transform 0.12s ease-out;
+}
+/* 足元をマスの中心より少し手前に（盤面のキャラと同じ） */
+.base-ghost.is-snapped .base-ghost-body {
+  transform: translateY(calc(-100% + var(--scale) * 12px));
+}
+
+
+/* 回収 */
+.base-collect {
+  position: absolute;
+  right: 32px;
+  bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 420px;
+  height: 118px;
+  padding: 16px 24px 16px 28px;
+  text-align: left;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+  transition: opacity 0.3s, transform 0.3s, filter 0.15s;
+}
+.page-base .base-collect {
+  background: linear-gradient(120deg, #f0d48a, #d9a441);
+}
+.page-base .base-collect:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+.base-collect * {
+  color: #1b1a14;
+}
+.page-base.is-open .base-collect {
+  opacity: 0;
+  transform: translateX(40px);
+  pointer-events: none;
+}
+.base-collect-items {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.base-collect-items > span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.base-collect-icon {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: #1b1a14;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.base-collect-items b {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1;
+}
+.base-collect-items .base-collect-full {
+  margin-left: auto;
+  padding: 2px 12px;
+  font-size: 18px;
+  letter-spacing: 0.1em;
+  color: #f0d48a;
+  background: #1b1a14;
+}
+.base-collect-label {
+  font-size: 30px;
+  line-height: 1;
+  letter-spacing: 0.3em;
+}
+.page-base .base-collect:disabled {
+  background: var(--card);
+}
+.base-collect:disabled * {
+  color: var(--ink-dim);
+}
+.base-collect:disabled .base-collect-label {
+  color: var(--ink-mute);
+}
+.base-collect-empty {
+  font-size: 20px;
+}
+
+
+/* 回収・合成したとき */
+.base-toast {
+  position: absolute;
+  top: 210px;
+  left: 960px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 36px;
+  font-size: 22px;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  background: rgba(8, 10, 12, 0.9);
+  transform: translateX(-50%);
+  animation: base-toast 2.2s ease-out both;
+  pointer-events: none;
+}
+.base-toast-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.base-toast-item b {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--gold);
+}
+@keyframes base-toast {
+  0% { opacity: 0; transform: translate(-50%, 12px); }
+  12% { opacity: 1; transform: translate(-50%, 0); }
+  80% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, -8px); }
+}

@@ -9,7 +9,10 @@ export type TerrainKind =
   | 'snow'
   | 'water'
   | 'lava'
-  | 'void';
+  | 'void'
+  | 'ore'
+  | 'oreRich'
+  | 'thaw';
 
 // 地形そのものの定義。見た目は pages/battle/terrainStyles.ts が持つ
 export interface TerrainDef {
@@ -26,6 +29,9 @@ export const TERRAINS: Record<TerrainKind, TerrainDef> = {
   water:  { nameKey: 'terrain.water',  passable: false },
   lava:   { nameKey: 'terrain.lava',   passable: false },
   void:   { nameKey: 'terrain.void',   passable: false },
+  ore:    { nameKey: 'terrain.ore',    passable: true  },
+  oreRich: { nameKey: 'terrain.oreRich', passable: true  },
+  thaw:   { nameKey: 'terrain.thaw',   passable: true  },
 };
 
 // 通行可能か
