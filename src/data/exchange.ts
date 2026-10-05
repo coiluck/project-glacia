@@ -13,7 +13,7 @@ export const LINEUP_SIZE = 8;
 export const BASE_PRICE: Record<ItemKind, number> = {
   material: 40,
   book: 100,
-  exp: 80,
+  exp: 15,
 };
 
 // PRICE_MIN〜PRICE_MAX 倍の幅でぶれる
