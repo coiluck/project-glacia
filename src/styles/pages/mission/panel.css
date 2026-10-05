@@ -76,6 +76,10 @@
 }
 .mission-foot .mission-progress-bar { flex: none; height: 10px; }
 .mission-foot .mission-progress-bar i { background: #d9dee2; }
+.mission-foot .mission-progress-bar i.is-claimable {
+  background: #9ea5ac;
+  animation: mission-claimable 1.6s ease-in-out infinite;
+}
 .mission-foot .mission-reward.is-claimed { opacity: 0.35; }
 
 .mission-claim-all {
