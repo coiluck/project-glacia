@@ -51,7 +51,7 @@
   align-items: center;
   gap: 28px;
   height: 144px;
-  padding: 24px 20px 0 30px;
+  padding: 20px 20px 0 30px;
   background: rgba(5, 7, 20, 0.7);
   border-top: 2px solid #5c646b;
   animation: mission-rise 0.4s ease-out 0.15s both;

@@ -8,6 +8,7 @@ import {
   PRICE_STEP,
   exchangePool,
 } from '../../data/exchange'
+import { items } from '../../data/items'
 import { seededRandom } from '../daily/random'
 
 // 1枠ぶん
@@ -32,4 +33,10 @@ export function lineupFor(day: number): ExchangeOffer[] {
   }
 
   return offers
+}
+
+// 相場（基準価格×個数）との差を % で。PRICE_MIN〜PRICE_MAX の幅に収まる
+export function marketRate(offer: ExchangeOffer): number {
+  const base = BASE_PRICE[items[offer.itemId].kind] * offer.count
+  return Math.round((offer.price / base - 1) * 100)
 }

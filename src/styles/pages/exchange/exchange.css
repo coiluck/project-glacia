@@ -2,34 +2,23 @@
 .page-exchange {
   --line: rgba(255, 255, 255, 0.2);
   --line-strong: rgba(255, 255, 255, 0.3);
-  --tile: #1a1e22;
-  --tile-hover: #22272c;
+  --panel: rgba(5, 7, 20, 0.72);
+  --wallet: rgba(6, 8, 39, 0.78);
   --ink: #e4e7ea;
   --ink-dim: #8a9299;
   --ink-mute: #5c646b;
   --select: #d9dee2;
-  --short: #c96b6b;
+  --frost: #7fe0ff;
+  --frost-light: #b6f5ff;
+  --short: #e07a6e;
+  --dear: #e0b48a;
   --token: #d9c48a;
-  --token-paper: #a98a3c;
   --paper-ink: #282828;
-  --paper-ink-dim: #6b7986;
-  --paper-line: rgba(0, 0, 0, 0.18);
+  --paper-ink-dim: #5f6a74;
+  --rail: rgba(40, 40, 40, 0.55);
   position: absolute;
   inset: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 108px 72px 64px;
   text-align: left;
-}
-.page-exchange .is-rarity-1 {
-  --rarity: #7d868e;
-}
-.page-exchange .is-rarity-2 {
-  --rarity: #7f9fb3;
-}
-.page-exchange .is-rarity-3 {
-  --rarity: #c9a860;
 }
 
 /* 交換材料のアイコン */
@@ -40,7 +29,7 @@
   vertical-align: -0.12em;
   fill: none;
   stroke: var(--token);
-  stroke-width: 1.6;
+  stroke-width: 1.8;
   stroke-linejoin: round;
 }
 .page-exchange .exchange-bill {
@@ -49,155 +38,304 @@
 }
 
 
-/* 残高とカウントダウン */
+/* 左の立ち絵 */
+.exchange-character {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 880px;
+  height: 1080px;
+  overflow: hidden;
+  pointer-events: none;
+}
+.exchange-character::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 260px;
+  width: 360px;
+  background: linear-gradient(to bottom, rgba(40, 40, 40, 0.1), rgba(40, 40, 40, 0.02));
+  transform: skewX(-14deg);
+}
+.exchange-character-art {
+  position: absolute;
+  top: -90px;
+  left: 50px;
+  height: 1300px;
+  animation: exchange-art 0.6s ease-out both;
+}
+.exchange-line {
+  position: absolute;
+  bottom: 120px;
+  left: 110px;
+  width: 640px;
+  padding: 36px 40px 28px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.84) 45%, rgba(0, 0, 0, 0.62));
+  animation: exchange-rise 0.4s ease-out 0.2s both;
+}
+.exchange-line-name {
+  position: absolute;
+  top: 0;
+  left: 36px;
+  height: 40px;
+  padding: 0 30px;
+  font-size: 22px;
+  line-height: 40px;
+  letter-spacing: 0.16em;
+  color: #282828;
+  background: #fff;
+  clip-path: polygon(12px 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 12px 100%, 0 50%);
+  transform: translateY(-50%);
+}
+.exchange-line-text {
+  min-height: 82px;
+  font-size: 25px;
+  line-height: 1.64;
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+  animation: exchange-fade 0.35s ease-out;
+}
+
+
+/* 右 */
+.exchange-panel {
+  position: absolute;
+  top: 112px;
+  right: 60px;
+  bottom: 40px;
+  left: 840px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* header */
 .exchange-head {
   position: relative;
   z-index: 2;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  height: 44px;
+  gap: 28px;
+  height: 64px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(40, 40, 40, 0.35);
   animation: exchange-rise 0.4s ease-out both;
 }
-.exchange-wallet {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.exchange-wallet .token-icon {
-  font-size: 30px;
-  stroke: var(--token-paper);
-  stroke-width: 2;
-}
-.exchange-wallet b {
-  font-family: 'CaviarDreams', sans-serif;
-  font-size: 40px;
-  font-weight: 600;
+.exchange-title {
+  font-size: 32px;
   line-height: 1;
+  letter-spacing: 0.16em;
   color: var(--paper-ink);
+  white-space: nowrap;
 }
-
-/* 紙幣で購入を開くボタン */
-.exchange-wallet-toggle {
-  position: relative;
-  width: 36px;
-  height: 36px;
-  margin-left: 6px;
-  background: transparent;
-  border: 1px solid var(--paper-ink);
-  cursor: pointer;
-  transition: background 0.12s ease-out;
-}
-.exchange-wallet-toggle::before,
-.exchange-wallet-toggle::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 16px;
-  height: 1.5px;
-  background: var(--paper-ink);
-  transform: translate(-50%, -50%);
-  transition: transform 0.25s ease-out, background 0.12s ease-out;
-}
-.exchange-wallet-toggle::after {
-  transform: translate(-50%, -50%) rotate(90deg);
-}
-.exchange-wallet-toggle:hover {
-  background: var(--paper-ink);
-}
-.exchange-wallet-toggle:hover::before,
-.exchange-wallet-toggle:hover::after {
-  background: #fff;
-}
-.exchange-wallet-toggle.is-open::before {
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-.exchange-wallet-toggle.is-open::after {
-  transform: translate(-50%, -50%) rotate(135deg);
-}
-
-.exchange-head-reset {
+.exchange-reset {
   display: flex;
   align-items: baseline;
   gap: 10px;
   font-size: 18px;
   letter-spacing: 0.12em;
   color: var(--paper-ink-dim);
+  white-space: nowrap;
 }
-.exchange-head-reset b {
+.exchange-reset b {
   font-family: 'CaviarDreams', sans-serif;
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   color: var(--paper-ink);
+}
+
+/* 残高 */
+.exchange-wallet {
+  position: relative;
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+.exchange-wallet-purchase,
+.exchange-wallet-balance {
+  height: 56px;
+  background: var(--wallet);
+  clip-path: polygon(20px 0, 100% 0, calc(100% - 20px) 100%, 0 100%);
+}
+
+.exchange-wallet-purchase {
+  position: relative;
+  width: 76px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.12s ease-out;
+}
+.exchange-wallet-purchase::before,
+.exchange-wallet-purchase::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 22px;
+  height: 2px;
+  background: #fff;
+  transform: translate(-50%, -50%);
+  transition: transform 0.25s ease-out, background 0.12s ease-out;
+}
+.exchange-wallet-purchase::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+.exchange-wallet-purchase:hover {
+  background: rgba(30, 36, 72, 0.88);
+}
+.exchange-wallet-purchase.is-open {
+  background: var(--frost);
+}
+.exchange-wallet-purchase.is-open::before,
+.exchange-wallet-purchase.is-open::after {
+  background: #111;
+}
+.exchange-wallet-purchase.is-open::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.exchange-wallet-purchase.is-open::after {
+  transform: translate(-50%, -50%) rotate(135deg);
+}
+.exchange-wallet-purchase:focus-visible {
+  outline: none;
+  background: rgba(30, 36, 72, 0.88);
+}
+
+.exchange-wallet-balance {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 240px;
+  padding: 0 40px 0 34px;
+}
+.exchange-wallet-balance::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 56px;
+  height: 3px;
+  background: var(--token);
+}
+.exchange-wallet-balance .token-icon {
+  font-size: 30px;
+  filter: drop-shadow(0 0 6px rgba(217, 196, 138, 0.7));
+}
+.exchange-wallet-value {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  margin-left: auto;
 }
 
 
 /* 本日のラインナップ */
-.exchange-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 16px;
+.exchange-list {
+  --owned-width: 120px;
+  position: relative;
   flex: 1;
   min-height: 0;
+  display: grid;
+  grid-template-rows: repeat(8, 1fr);
+  gap: 10px;
   list-style: none;
+}
+/* レール */
+.exchange-list::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  bottom: -8px;
+  left: var(--owned-width);
+  width: 3px;
+  background: var(--rail);
 }
 .exchange-offer {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 26px 22px 22px;
-  background: var(--tile);
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+  display: grid;
+  grid-template-columns: var(--owned-width) 1fr;
+  align-items: stretch;
   animation: exchange-rise 0.3s ease-out backwards;
-  animation-delay: calc(var(--i) * 0.05s);
+  animation-delay: calc(var(--i) * 0.04s);
 }
+/* 札の紐 */
 .exchange-offer::before {
   content: '';
   position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  top: 50%;
+  left: var(--owned-width);
+  transform: translateY(-50%);
+  width: 27px; /* これが .exchange-offer-tag につくギリギリのサイズ */
   height: 2px;
-  background: var(--rarity);
+  background: rgba(40, 40, 40, 0.7);
+  pointer-events: none;
+  z-index: 2;
 }
-.exchange-offer-rarity {
-  position: absolute;
-  top: 10px;
-  left: 14px;
-  font-size: 15px;
-  line-height: 1;
-  letter-spacing: 0.08em;
-  color: var(--rarity);
-}
-.exchange-offer-kind {
-  position: absolute;
-  top: 10px;
-  right: 14px;
-  font-family: 'CaviarDreams', sans-serif;
-  font-size: 14px;
-  line-height: 1;
-  letter-spacing: 0.3em;
-  color: var(--ink-mute);
-}
-.exchange-offer-body {
-  flex: 1;
+
+/* 所持数 */
+.exchange-offer-owned {
+  align-self: center;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0 22px 0 14px;
+  font-size: 18px;
+  letter-spacing: 0.1em;
+  color: var(--paper-ink-dim);
+  white-space: nowrap;
 }
+.exchange-offer-owned b {
+  margin-left: 4px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--paper-ink);
+}
+
+/* 荷札 */
+.exchange-offer-tag {
+  --hole: 18px;
+  --cut: 16px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-left: 26px;
+  padding: 0 18px 0 52px;
+  background: var(--panel);
+  clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, var(--cut) 100%, 0 calc(100% - var(--cut)), 0 var(--cut));
+  mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1 22 6.6v10.8L12 23 2 17.4V6.6Z'/%3E%3C/svg%3E") 14px center / var(--hole) var(--hole) no-repeat,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+/* 穴の縁 */
+.exchange-offer-eyelet {
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  width: calc(var(--hole) + 12px);
+  height: calc(var(--hole) + 12px);
+  margin-top: calc(var(--hole) / -2 - 6px);
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.35);
+  stroke-width: 1.2;
+  pointer-events: none;
+}
+
 .exchange-offer-figure {
   position: relative;
+  flex-shrink: 0;
 }
 .exchange-offer-icon {
   display: block;
-  width: 104px;
-  height: 104px;
+  width: 60px;
+  height: 60px;
   fill: none;
   stroke: #cfd6dc;
   stroke-width: 1.1;
@@ -206,45 +344,72 @@
 }
 .exchange-offer-count {
   position: absolute;
-  right: -18px;
-  bottom: -6px;
+  right: -14px;
+  bottom: -4px;
   font-family: 'CaviarDreams', sans-serif;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 600;
   line-height: 1;
   color: #fff;
 }
 .exchange-offer-count i {
   margin-right: 2px;
-  font-size: 20px;
+  font-size: 16px;
   font-style: normal;
   color: var(--ink-dim);
 }
 .exchange-offer-name {
-  margin-top: 16px;
-  font-size: 26px;
+  flex: 1;
+  min-width: 0;
+  padding-left: 12px;
+  overflow: hidden;
+  font-size: 24px;
   line-height: 1.2;
   letter-spacing: 0.06em;
-  color: #fff;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
-.exchange-offer-owned {
-  margin-top: 6px;
-  font-size: 18px;
-  letter-spacing: 0.1em;
+
+/* 相場との差 */
+.exchange-offer-market {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 132px;
+  height: 30px;
+  font-size: 16px;
+  letter-spacing: 0.08em;
   color: var(--ink-dim);
+  background: rgba(255, 255, 255, 0.06);
+  white-space: nowrap;
 }
-.exchange-offer-owned b {
+.exchange-offer-market b {
   font-family: 'CaviarDreams', sans-serif;
   font-size: 20px;
   font-weight: 600;
+  letter-spacing: 0.02em;
   color: var(--ink);
 }
+.exchange-offer-market.is-cheap {
+  color: #10222a;
+  background: linear-gradient(to right, var(--frost), var(--frost-light));
+}
+.exchange-offer-market.is-cheap b {
+  color: #10222a;
+}
+.exchange-offer-market.is-dear b {
+  color: var(--dear);
+}
+
 .exchange-offer-price {
+  flex-shrink: 0;
   display: flex;
   align-items: baseline;
+  justify-content: flex-end;
   gap: 8px;
-  padding-top: 18px;
+  width: 104px;
   font-family: 'CaviarDreams', sans-serif;
   font-size: 36px;
   font-weight: 600;
@@ -255,8 +420,7 @@
   color: var(--token);
 }
 .exchange-offer-price .token-icon {
-  font-size: 26px;
-  stroke-width: 1.8;
+  font-size: 24px;
 }
 .exchange-offer.is-short .exchange-offer-price b {
   color: var(--short);
@@ -266,21 +430,24 @@
 }
 
 .exchange-offer-button {
-  width: 100%;
-  height: 48px;
-  margin-top: 16px;
+  flex-shrink: 0;
+  width: 172px;
+  height: 50px;
   font-family: inherit;
   font-size: 20px;
-  letter-spacing: 0.24em;
-  text-indent: 0.24em;
+  letter-spacing: 0.16em;
+  text-indent: 0.16em;
   color: #111;
   background: var(--select);
   border: none;
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+  white-space: nowrap;
   cursor: pointer;
   transition: background 0.12s ease-out;
 }
-.exchange-offer-button:hover:not(:disabled) {
+.exchange-offer-button:hover:not(:disabled),
+.exchange-offer-button:focus-visible {
+  outline: none;
   background: #fff;
 }
 .exchange-offer-button:disabled {
@@ -290,35 +457,30 @@
 }
 
 /* 交換済み */
-.exchange-offer.is-sold {
-  background: #14171a;
+.exchange-offer.is-sold .exchange-offer-tag {
+  background: rgba(77, 78, 87, 0.8);
 }
-.exchange-offer.is-sold::before {
-  background: var(--ink-mute);
-}
-.exchange-offer.is-sold .exchange-offer-rarity,
-.exchange-offer.is-sold .exchange-offer-kind,
-.exchange-offer.is-sold .exchange-offer-icon,
-.exchange-offer.is-sold .exchange-offer-count,
+.exchange-offer.is-sold .exchange-offer-figure,
 .exchange-offer.is-sold .exchange-offer-name,
-.exchange-offer.is-sold .exchange-offer-owned,
+.exchange-offer.is-sold .exchange-offer-market,
 .exchange-offer.is-sold .exchange-offer-price {
   opacity: 0.28;
 }
 .exchange-offer-stamp {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  padding: 6px 22px;
-  font-family: 'CaviarDreams', sans-serif;
-  font-size: 26px;
-  font-weight: 600;
-  letter-spacing: 0.4em;
-  text-indent: 0.4em;
-  color: var(--ink-dim);
-  border: 2px solid var(--ink-mute);
+  flex-shrink: 0;
+  width: 172px;
+  padding: 4px 0;
+  font-size: 20px;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  text-align: center;
+  color: var(--ink);
+  border: 2px solid var(--ink-dim);
   white-space: nowrap;
-  transform: translate(-50%, -50%) rotate(-12deg);
+  transform: rotate(-8deg);
+}
+.exchange-offer-stamp.is-fresh {
+  animation: exchange-stamp 0.35s cubic-bezier(0.3, 1.4, 0.5, 1) both;
 }
 
 @keyframes exchange-rise {
@@ -337,5 +499,25 @@
   }
   to {
     opacity: 1;
+  }
+}
+@keyframes exchange-art {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes exchange-stamp {
+  from {
+    opacity: 0;
+    transform: rotate(-2deg) scale(1.8);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(-8deg) scale(1);
   }
 }

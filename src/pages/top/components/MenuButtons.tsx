@@ -8,6 +8,7 @@ import { formatHms } from '../../../utils/format'
 export default function MenuButtons() {
   const stamina = useStaminaStore((s) => selectStamina(s).stamina)
   const staminaMax = useStaminaStore((s) => s.base.stamina_max)
+  const toNext = useStaminaStore((s) => selectStamina(s).stamina_recovering_seconds)
   const toFull = useStaminaStore((s) => selectStamina(s).stamina_recovering_seconds_max)
 
   const [isStaminaOpen, setIsStaminaOpen] = useState(false)
@@ -37,10 +38,18 @@ export default function MenuButtons() {
               />
             </div>
             {isStaminaOpen && (
-              <div className="top-menu-button-stamina-modal">
-                <p>回復まで</p>
-                <p>{formatHms(toFull)}</p>
-              </div>
+              <dl className="top-menu-button-stamina-modal">
+                {stamina >= staminaMax ? (
+                  <dt>全回復済み</dt>
+                ) : (
+                  <>
+                    <dt>1回復まで</dt>
+                    <dd>{formatHms(toNext)}</dd>
+                    <dt>全回復まで</dt>
+                    <dd>{formatHms(toFull)}</dd>
+                  </>
+                )}
+              </dl>
             )}
           </div>
 

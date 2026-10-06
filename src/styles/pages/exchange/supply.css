@@ -1,75 +1,180 @@
-/* 本日分の交換材料を受け取ったオーバーレイ */
 .exchange-supply {
   position: absolute;
   inset: 0;
   z-index: 5;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(8, 10, 12, 0.78);
+  overflow: hidden;
+  background: rgba(8, 10, 12, 0.7);
+  backdrop-filter: blur(14px);
   cursor: pointer;
-  animation: exchange-fade 0.3s ease-out both;
+  animation: exchange-supply-fade 0.3s ease-out both;
 }
 .exchange-supply.is-closing {
-  animation: exchange-fade 0.25s ease-in reverse both;
+  animation: exchange-supply-fade-out 0.25s ease-in both;
   pointer-events: none;
 }
 
-.exchange-supply-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-.exchange-supply-body > * {
-  animation: exchange-rise 0.4s ease-out backwards;
-}
-.exchange-supply-body > *:nth-child(2) {
-  animation-delay: 0.08s;
-}
-.exchange-supply-body > *:nth-child(3) {
-  animation-delay: 0.16s;
-}
-.exchange-supply-body > *:nth-child(4) {
-  animation-delay: 0.6s;
-}
-
-.exchange-supply-caption {
-  font-family: 'CaviarDreams', sans-serif;
-  font-size: 16px;
+.exchange-supply-title {
+  position: absolute;
+  top: 132px;
+  font-size: 28px;
   line-height: 1;
   letter-spacing: 0.4em;
   text-indent: 0.4em;
+  color: var(--ink);
+  animation: exchange-rise 0.4s ease-out both;
+}
+
+.exchange-supply-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 440px;
+  height: 440px;
+}
+.exchange-supply-rays {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1200px;
+  height: 1200px;
+  margin: -600px 0 0 -600px;
+  background: repeating-conic-gradient(from 0deg, rgba(255, 255, 255, 0.07) 0 2.5deg, transparent 2.5deg 22.5deg);
+  -webkit-mask-image: radial-gradient(circle, #000 0%, rgba(0, 0, 0, 0.5) 28%, transparent 60%);
+  mask-image: radial-gradient(circle, #000 0%, rgba(0, 0, 0, 0.5) 28%, transparent 60%);
+  animation: exchange-supply-spin 120s linear infinite, exchange-supply-fade 0.8s ease-out both;
+}
+.exchange-supply-glow {
+  position: absolute;
+  inset: -80px;
+  background: radial-gradient(circle, rgba(217, 196, 138, 0.42) 0%, transparent 58%);
+  animation: exchange-supply-glow 2.4s ease-in-out 0.4s infinite alternate, exchange-supply-fade 0.5s ease-out both;
+}
+.exchange-supply-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 0.5;
+  animation: exchange-supply-frame-in 0.5s ease-out both;
+}
+.exchange-supply-frame.is-inner {
+  inset: 14px;
+  width: calc(100% - 28px);
+  height: calc(100% - 28px);
+  opacity: 0.5;
+  animation-delay: 0.05s;
+}
+.exchange-supply-icon {
+  position: relative;
+  font-size: 170px;
+  line-height: 1;
+  animation: exchange-supply-pop 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2) 0.2s both;
+}
+.page-exchange .exchange-supply-icon .token-icon {
+  display: block;
+  stroke-width: 1.2;
+  filter: drop-shadow(0 0 24px rgba(217, 196, 138, 0.9));
+}
+
+.exchange-supply-amount {
+  margin-top: 20px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 120px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  animation: exchange-supply-pop 0.4s ease-out 0.5s both;
+}
+.exchange-supply-amount i {
+  margin-right: 10px;
+  font-size: 64px;
+  font-style: normal;
   color: var(--ink-dim);
 }
-.exchange-supply-label {
-  font-size: 24px;
+.exchange-supply-name {
+  margin-top: 16px;
+  font-size: 20px;
   line-height: 1;
   letter-spacing: 0.3em;
   text-indent: 0.3em;
   color: var(--ink);
+  animation: exchange-rise 0.4s ease-out 0.6s both;
 }
-.exchange-supply-amount {
+.exchange-supply-balance {
   display: flex;
   align-items: baseline;
-  gap: 18px;
-  margin-top: 18px;
-  font-family: 'CaviarDreams', sans-serif;
-  font-size: 112px;
-  font-weight: 600;
-  line-height: 1;
+  gap: 10px;
+  margin-top: 26px;
+  font-size: 19px;
+  letter-spacing: 0.12em;
+  color: var(--ink-dim);
+  animation: exchange-rise 0.4s ease-out 0.7s both;
 }
-.exchange-supply-amount b {
+.exchange-supply-balance b {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 26px;
   font-weight: 600;
   color: var(--token);
 }
-.exchange-supply-amount .token-icon {
-  font-size: 64px;
+
+@keyframes exchange-supply-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
-.exchange-supply-hint {
-  margin-top: 28px;
-  font-size: 17px;
-  letter-spacing: 0.3em;
-  text-indent: 0.3em;
-  color: var(--ink-mute);
+@keyframes exchange-supply-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes exchange-supply-pop {
+  from {
+    opacity: 0;
+    transform: scale(1.4);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes exchange-supply-frame-in {
+  from {
+    opacity: 0;
+    transform: scale(1.25);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes exchange-supply-glow {
+  from {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes exchange-supply-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

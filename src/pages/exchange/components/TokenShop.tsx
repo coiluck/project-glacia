@@ -23,10 +23,7 @@ export default function TokenShop({ open, currency, pending, labels, onBuy }: Pr
   return (
     <div className={`exchange-shop${open ? ' is-open' : ''}`} aria-hidden={!open}>
       <div className="exchange-shop-inner">
-        <div>
-          <div className="exchange-caption">PURCHASE</div>
-          <div className="exchange-label">{labels.purchase}</div>
-        </div>
+        <div className="exchange-label">{labels.purchase}</div>
 
         {/* レート */}
         <div className="exchange-rate">
