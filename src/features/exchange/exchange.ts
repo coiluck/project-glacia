@@ -78,7 +78,7 @@ export function trade(me: MeResponse, slot: number, now: number): MeResponse {
         exchange_tokens: me.user.exchange_tokens - offer.price,
         exchange_bought_day: dayIndex(now),
         exchange_bought: [...bought, slot],
-        items: addItems(me.user.items, [{ itemId: offer.itemId, count: 1 }]),
+        items: addItems(me.user.items, [{ itemId: offer.itemId, count: offer.count }]),
       },
       'exchangeTrade',
       1,

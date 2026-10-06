@@ -204,6 +204,22 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+.exchange-offer-count {
+  position: absolute;
+  right: -18px;
+  bottom: -6px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1;
+  color: #fff;
+}
+.exchange-offer-count i {
+  margin-right: 2px;
+  font-size: 20px;
+  font-style: normal;
+  color: var(--ink-dim);
+}
 .exchange-offer-name {
   margin-top: 16px;
   font-size: 26px;
@@ -283,6 +299,7 @@
 .exchange-offer.is-sold .exchange-offer-rarity,
 .exchange-offer.is-sold .exchange-offer-kind,
 .exchange-offer.is-sold .exchange-offer-icon,
+.exchange-offer.is-sold .exchange-offer-count,
 .exchange-offer.is-sold .exchange-offer-name,
 .exchange-offer.is-sold .exchange-offer-owned,
 .exchange-offer.is-sold .exchange-offer-price {

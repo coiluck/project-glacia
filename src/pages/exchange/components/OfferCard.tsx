@@ -13,6 +13,7 @@ type Props = {
   index: number // 表示順
   item: ItemDef
   name: string
+  count: number // 1枠で手に入る個数
   price: number
   owned: number
   sold: boolean // もう交換したか
@@ -27,6 +28,7 @@ export default function OfferCard({
   index,
   item,
   name,
+  count,
   price,
   owned,
   sold,
@@ -45,6 +47,10 @@ export default function OfferCard({
       <div className="exchange-offer-body">
         <span className="exchange-offer-figure">
           <ItemIcon item={item} className="exchange-offer-icon" />
+          <span className="exchange-offer-count">
+            <i>×</i>
+            {count}
+          </span>
           {sold && <span className="exchange-offer-stamp">SOLD</span>}
         </span>
         <span className="exchange-offer-name">{name}</span>

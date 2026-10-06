@@ -123,6 +123,7 @@ export default function ExchangePage() {
                 index={slot}
                 item={item}
                 name={tItem[item.nameKey]}
+                count={offer.count}
                 price={offer.price}
                 owned={owned[item.id] ?? 0}
                 sold={sold}
