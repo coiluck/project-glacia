@@ -1,11 +1,18 @@
 {
-  "empty": "None owned",
-  "noItem": "No items",
+  "kindCount": "{0} types",
+  "expGain": "+{0} EXP",
   "owned": "Owned",
-  "exp": "EXP",
-  "recipe": "Recipe",
+  "expDesc": "Grants {0} EXP when used on a character. Each one also costs {1} bills.",
   "sources": "Obtained from",
-  "sourcesNote": "Filled: guaranteed drop. Outlined: chance drop",
+  "sourcesNote": "Filled: guaranteed. Outlined: chance",
   "noDrop": "Does not drop",
-  "noDropRecipe": "Does not drop. Craft it instead"
+  "noDropRecipe": "Does not drop. Craft it at the refinery",
+  "chapter": "Ch. {0}",
+  "lockedChapter": "{1} in Ch. {0}",
+  "lockedSep": ", ",
+  "locked": "{0} (locked)",
+  "recipe": "Recipe",
+  "usage": "Used for",
+  "limitBreak": "Limit break",
+  "skillLevel": "{0} Lv{1}"
 }
