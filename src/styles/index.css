@@ -16,6 +16,11 @@
 @import './pages/top/character-stage.css';
 @import './pages/top/event-banner.css';
 @import './pages/top/system-menu.css';
+@import './pages/top/system/panel.css';
+@import './pages/top/system/news.css';
+@import './pages/top/system/mail.css';
+@import './pages/top/system/scenario.css';
+@import './pages/top/system/settings.css';
 @import './pages/top/menu-buttons.css';
 @import './pages/top/login-bonus.css';
 @import './pages/party/party.css';

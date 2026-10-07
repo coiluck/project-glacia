@@ -1,0 +1,60 @@
+.system-scenario {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.system-scenario-chapter h3 {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  margin-bottom: 14px;
+  font-size: 24px;
+}
+.system-scenario-chapter h3 span {
+  font-family: 'SoukouMincho', serif;
+  font-size: 32px;
+}
+
+.system-scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.system-scenario-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 96px;
+  padding: 0 28px;
+  font: inherit;
+  background: var(--row);
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+@media (hover: hover) {
+  .system-scenario-row:not(:disabled):hover {
+    background: var(--row-active);
+  }
+}
+.system-scenario-id {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 40px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.system-scenario-state {
+  font-size: 21px;
+}
+.system-panel .system-scenario-row.is-locked * {
+  color: var(--ink-sub);
+}
+.system-scenario-row.is-locked {
+  opacity: 0.6;
+  cursor: default;
+}

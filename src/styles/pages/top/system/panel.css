@@ -1,0 +1,183 @@
+/* システムパネル全体 */
+.system-panel {
+  --ink: #282828;
+  --ink-sub: #6b737a;
+  --dark: #2a2f35;
+  --row: rgba(255, 255, 255, 0.55);
+  --row-active: #fff;
+  --ice: #7fe0ff;
+  --ice-hi: #b6f5ff;
+  --notice: #fcd48c;
+  position: absolute;
+  inset: 0;
+  z-index: 20; /* リソースバーより上 */
+  background: rgba(226, 231, 235, 0.72);
+  backdrop-filter: blur(18px) saturate(0.7);
+}
+.system-panel * {
+  color: var(--ink);
+}
+
+/* 戻る */
+.system-panel-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  height: calc((84px + 32px) * var(--scale));
+  padding: calc(16px * var(--scale));
+}
+
+.system-panel-safe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  width: var(--design-w);
+  height: var(--design-h);
+  padding: 120px 110px 64px;
+  transform: translate(-50%, -50%) scale(var(--scale));
+}
+
+.system-panel-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 36px;
+  border-bottom: 2px solid var(--ink);
+}
+.system-panel-tab {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 72px;
+  padding: 0 40px;
+  font: inherit;
+  font-size: 25px;
+  letter-spacing: 0.08em;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.system-panel .system-panel-tab {
+  color: var(--ink-sub);
+  transition: background 0.3s;
+}
+.system-panel-tab i {
+  width: 32px;
+  height: 32px;
+  background: var(--ink-sub);
+  mask: var(--icon-url) center / contain no-repeat;
+}
+.system-panel .system-panel-tab.is-active {
+  color: #fff;
+  background: var(--dark);
+  cursor: default;
+}
+.system-panel-tab.is-active i {
+  background: #fff;
+}
+@media (hover: hover) {
+  .system-panel-tab:not(.is-active):hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
+}
+/* 通知の数 */
+.system-panel .system-panel-tab-count {
+  min-width: 28px;
+  padding: 0 6px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 26px;
+  text-align: center;
+  color: #3a2a10;
+  background: var(--notice);
+}
+
+.system-panel-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.system-panel .system-panel-summary {
+  min-height: 45px;
+  margin: -20px 0 24px;
+  font-size: 21px;
+  color: var(--ink-sub);
+}
+.system-panel-summary b {
+  margin: 0 4px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.system-panel .system-panel-empty {
+  padding: 64px 0;
+  font-size: 22px;
+  text-align: center;
+  color: var(--ink-sub);
+}
+
+.system-panel-foot {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+  padding-top: 18px;
+}
+
+/* タブで共通の部品 */
+.system-dot {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  background: var(--notice);
+  transform: rotate(45deg);
+  box-shadow: 0 0 10px rgba(252, 212, 140, 0.8);
+}
+.system-dot.is-off {
+  visibility: hidden;
+}
+
+/* 通知の種類 */
+.system-tag {
+  flex-shrink: 0;
+  padding: 2px 12px;
+  font-size: 18px;
+  line-height: 1.4;
+}
+.system-panel .system-tag.is-maintenance { color: #fff; background: #4a525a; }
+.system-panel .system-tag.is-event { color: #20343c; background: linear-gradient(to right, var(--ice), var(--ice-hi)); }
+.system-panel .system-tag.is-bug { color: #fff; background: #b6474a; }
+.system-panel .system-tag.is-info { color: #333; background: #cfd6dc; }
+
+.system-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 56px;
+  padding: 0 36px;
+  font: inherit;
+  font-size: 22px;
+  letter-spacing: 0.1em;
+  background: var(--dark);
+  border: none;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+  cursor: pointer;
+}
+.system-panel .system-button {
+  color: #fff;
+}
+.system-panel .system-button.is-primary {
+  color: #1e2b33;
+  background: linear-gradient(to right, rgb(107, 191, 252), rgb(102, 255, 255));
+}
+.system-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}

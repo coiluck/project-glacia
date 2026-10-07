@@ -1,0 +1,69 @@
+.system-mail-list {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.system-mail-row {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 24px;
+  background: var(--row);
+}
+.system-mail-row.is-claimed {
+  opacity: 0.45;
+}
+.system-mail-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.system-panel .system-mail-from {
+  font-size: 18px;
+  color: var(--ink-sub);
+}
+.system-mail-subject {
+  font-size: 22px;
+  line-height: 1.4;
+}
+.system-panel .system-mail-limit {
+  width: 140px;
+  font-size: 18px;
+  text-align: right;
+  color: var(--ink-sub);
+}
+.system-panel .system-mail-limit.is-soon,
+.system-panel .system-mail-limit.is-soon * {
+  color: #c97f22;
+}
+
+/* 添付の札 */
+.system-mail-reward {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: var(--dark);
+}
+.system-panel .system-mail-reward * {
+  color: #fff;
+}
+.system-mail-reward-icon {
+  width: 34px;
+  height: 34px;
+}
+.system-mail-reward b {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.1;
+}

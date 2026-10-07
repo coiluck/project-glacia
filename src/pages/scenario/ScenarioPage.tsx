@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { useNavigate, useParams, Navigate } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams, Navigate } from 'react-router-dom'
 import { paths } from '../../router/paths'
 import { scenarioRegistry } from '../../data/scenarios'
 import { createInitialState, resetGameEngine, useGameEngine } from '../../features/scenario/useGameEngine'
@@ -19,6 +19,9 @@ const LOG_MAX_LINES = 50
 
 export default function ScenarioPage() {
   const { scenarioId } = useParams<{ scenarioId: string }>()
+  // システムメニューからの読み返し
+  const [searchParams] = useSearchParams()
+  const replay = searchParams.has('replay')
 
   // シナリオ未登録なら、そのまま同じステージの戦闘へ進む
   if (scenarioId && !scenarioRegistry[scenarioId]) {
@@ -30,10 +33,10 @@ export default function ScenarioPage() {
     return <Navigate to={paths.story} replace />
   }
 
-  return <ScenarioRunner key={scenarioId} scenarioId={scenarioId} />
+  return <ScenarioRunner key={`${scenarioId}:${replay}`} scenarioId={scenarioId} replay={replay} />
 }
 
-function ScenarioRunner({ scenarioId }: { scenarioId: string }) {
+function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: boolean }) {
   const navigate = useNavigate()
   // エンジンを初期化
   useState(() => resetGameEngine(createInitialState(scenarioId)))
@@ -53,15 +56,17 @@ function ScenarioRunner({ scenarioId }: { scenarioId: string }) {
   const [isLogOpen, setIsLogOpen] = useState(false)
   const [logEntries, setLogEntries] = useState<SceneSnapshot[]>([])
 
-  // 進行位置を progressStore に保存する（スロット無しの単一セーブ）
+  // 進行位置を progressStore に保存する（スロット無しの単一セーブ）。
+  // 読み返しでは本編のセーブを上書きしない
   const persistProgress = () => {
+    if (replay) return
     useProgressStore.getState().saveScenario(scenarioId, engine.getState())
   }
 
   // 進行中セーブがあれば復元、なければ先頭の行を表示
   useEffect(() => {
     const saved = useProgressStore.getState()
-    if (saved.scenarioId === scenarioId && saved.scenarioState) {
+    if (!replay && saved.scenarioId === scenarioId && saved.scenarioState) {
       instantNextRef.current = true
       engine.restore(saved.scenarioState)
     } else {
@@ -114,8 +119,12 @@ function ScenarioRunner({ scenarioId }: { scenarioId: string }) {
 
   const isTyping = !!snapshot.text && displayedText.length < snapshot.text.length
 
-  // シナリオおしまい -> 戦闘へ
+  // シナリオおしまい -> 戦闘へ。読み返しならトップへ戻る
   const finishScenario = () => {
+    if (replay) {
+      navigate(paths.top, { replace: true })
+      return
+    }
     useProgressStore.getState().clearScenario()
     navigate(paths.battle(scenarioId), { replace: true })
   }
