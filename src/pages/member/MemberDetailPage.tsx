@@ -12,10 +12,9 @@ import { characterMasters } from '../../data/characters'
 import { classIcons } from '../../data/characters/classIcons'
 import { MAX_DUPE, MAX_SKILL_LEVEL, RARITIES } from '../../data/characters/const'
 import { unitClasses } from '../../data/unitClasses'
-import type { DupeBonus } from '../../data/characters/types'
 import { skillReach } from '../../features/battle/battle'
 import { shapeTiles, type Axial } from '../../features/battle/hex'
-import { formatSkillDescription } from '../../features/characters/describe'
+import { describeDupeBonus, formatSkillDescription } from '../../features/characters/describe'
 import { resolveOwned } from '../../features/characters/resolve'
 import { useCharacterStore } from '../../stores/characterStore'
 
@@ -49,16 +48,6 @@ const CHARACTER_TRANSLATION_MAPPING = Object.fromEntries(
 const CLASS_TRANSLATION_MAPPING = Object.fromEntries(
   Object.values(unitClasses).map((c) => [c.nameKey, c.nameKey]),
 )
-
-// 凸1つ分の効果はここで文にする
-function describeDupeBonus(bonus: DupeBonus): string[] {
-  const parts: string[] = []
-  if (bonus.status?.hp) parts.push(`HP +${bonus.status.hp}`)
-  if (bonus.status?.attack) parts.push(`ATK +${bonus.status.attack}`)
-  if (bonus.status?.defense) parts.push(`DEF +${bonus.status.defense}`)
-  if (bonus.skillApCost) parts.push(`スキルAP ${bonus.skillApCost}`)
-  return parts
-}
 
 // 兵科アイコン
 function ClassIcon({ classId }: { classId: string }) {

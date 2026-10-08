@@ -3,58 +3,84 @@ import Screen from '../../layouts/Screen'
 import { useTranslations } from '../../i18n'
 import { useBackHandler } from '../../hooks/useBackHandler'
 import RecruitResult from './components/RecruitResult'
-import { pullGacha } from '../../api/actions/gacha'
+import RecruitBanner from './components/RecruitBanner'
+import RecruitExchange from './components/RecruitExchange'
+import RecruitConfirm from './components/RecruitConfirm'
+import GemIcon from '../../components/common/GemIcon'
+import { exchangeCeiling, pullGacha } from '../../api/actions/gacha'
 import { characterMasters } from '../../data/characters'
-import { RARITIES } from '../../data/characters/const'
 import {
+  BANNER_IDS,
   CEILING_PULLS,
+  CEILING_TARGETS,
   MULTI_PULL_COUNT,
   PICK_UP_IDS,
   PULL_COST_MULTI,
   PULL_COST_SINGLE,
+  gachaPool,
+  type BannerId,
 } from '../../data/gacha'
-import { rarityRates } from '../../features/gacha/roll'
 import type { PullOutcome } from '../../features/gacha/types'
+import { useCharacterStore } from '../../stores/characterStore'
 import { useGachaStore } from '../../stores/gachaStore'
 import { useResourceStore } from '../../stores/resourceStore'
 import { formatCompact } from '../../utils/format'
+import { dupeLabel } from './dupe'
 
 // i18n。キャラ名は characters.json にある
 const CHARACTER_TRANSLATION_MAPPING = Object.fromEntries(
   Object.values(characterMasters).map((c) => [c.nameKey, c.nameKey]),
 )
 
-const RARITY_ROWS = [...RARITIES]
+const BANNER_TITLES: Record<BannerId, string> = {
+  pickup: 'ピックアップ召集',
+  standard: '常設召集',
+}
+
+// 下の帯の札に出す顔
+const BANNER_FACES: Record<BannerId, string[]> = {
+  pickup: PICK_UP_IDS,
+  standard: gachaPool[3],
+}
+
+// 召集の画面と、その召集の交換所
+type View = { kind: 'banner' } | { kind: 'exchange'; selected: string }
 
 export default function RecruitPage() {
   const tCharacter = useTranslations('characters', CHARACTER_TRANSLATION_MAPPING)
+  const nameOf = (id: string) => tCharacter[characterMasters[id].nameKey]
 
   const gems = useResourceStore((s) => s.gems)
-  const pity = useGachaStore((s) => s.pity)
+  const points = useGachaStore((s) => s.pity)
+  const owned = useCharacterStore((s) => s.owned)
 
+  const [banner, setBanner] = useState<BannerId>('pickup')
+  const [view, setView] = useState<View>({ kind: 'banner' })
+  const [confirming, setConfirming] = useState(false)
   // 結果表示中は引けない。nullなら引ける
   const [outcomes, setOutcomes] = useState<PullOutcome[] | null>(null)
-  const [pending, setPending] = useState(false) // 応答待ち。二重に引かせない
+  const [pending, setPending] = useState(false) // 応答待ち。二重に送らせない
   const [error, setError] = useState<string | null>(null)
 
-  // 結果を出しているあいだは閉じるだけ
   useBackHandler(() => {
-    if (outcomes === null) return false
-    setOutcomes(null)
+    if (outcomes !== null) setOutcomes(null)
+    else if (confirming) setConfirming(false)
+    else if (view.kind === 'exchange') setView({ kind: 'banner' })
+    else return false
     return true
   })
 
-  const rates = rarityRates()
-  const pickUp = characterMasters[PICK_UP_IDS[0]] ?? null
+  const full = points >= CEILING_PULLS
+  const dupeOf = (id: string) => owned[id]?.dupe ?? null
 
   // costはボタンの表示と押せるかどうかの判定のみ
   const pull = async (count: number, cost: number) => {
-    if (pending || outcomes !== null || gems < cost) return
+    if (pending || gems < cost) return
 
     setPending(true)
     setError(null)
     try {
-      setOutcomes(await pullGacha(count))
+      setOutcomes(await pullGacha(count, banner))
     } catch (e) {
       console.error(e)
       setError('召集に失敗')
@@ -63,99 +89,180 @@ export default function RecruitPage() {
     }
   }
 
+  const exchange = async (masterId: string) => {
+    if (pending || !full) return
+
+    setPending(true)
+    setError(null)
+    try {
+      const outcome = await exchangeCeiling(masterId)
+      setConfirming(false)
+      setOutcomes([outcome])
+    } catch (e) {
+      console.error(e)
+      setError('交換に失敗')
+    } finally {
+      setPending(false)
+    }
+  }
+
+  if (outcomes !== null) {
+    return (
+      <>
+        <RecruitResult outcomes={outcomes} onClose={() => setOutcomes(null)} />
+        <Screen background="images/scenario/bg/camp_border.avif" />
+      </>
+    )
+  }
+
+  const shortage =
+    gems < PULL_COST_SINGLE
+      ? `ジェムが${formatCompact(PULL_COST_SINGLE - gems)}足りない`
+      : gems < PULL_COST_MULTI
+        ? `10連にはジェムが${formatCompact(PULL_COST_MULTI - gems)}足りない`
+        : ''
+
   return (
     <>
-      {outcomes === null ? (
-        <div className="page page-recruit">
-          {/* ピックアップ対象の立ち絵 */}
-          <div className="recruit-banner">
-            {pickUp && (
-              <img
-                className="recruit-banner-art"
-                src={`${import.meta.env.BASE_URL}images/character/full_body/${pickUp.id}.avif`}
-                alt={tCharacter[pickUp.nameKey]}
-              />
-            )}
+      <div className="page page-recruit">
+        {/* 絵と左の文字組み*/}
+        {view.kind === 'banner' ? (
+          <RecruitBanner key={banner} banner={banner} title={BANNER_TITLES[banner]} nameOf={nameOf} />
+        ) : (
+          <RecruitExchange
+            key={view.selected}
+            masterId={view.selected}
+            title={BANNER_TITLES[banner]}
+            dupe={dupeOf(view.selected)}
+            nameOf={nameOf}
+          />
+        )}
 
-            <div className="recruit-banner-caption">
-              <p className="recruit-banner-label">PICK UP</p>
-              <p className="recruit-banner-name">{pickUp ? tCharacter[pickUp.nameKey] : '---'}</p>
-            </div>
+        {/* 下の帯 */}
+        <div className="recruit-band">
+          <div className="recruit-tabs">
+            {view.kind === 'banner'
+              ? BANNER_IDS.map((id) => (
+                  <button
+                    key={id}
+                    type="button"
+                    className={`recruit-tab${banner === id ? ' is-on' : ''}`}
+                    onClick={() => setBanner(id)}
+                  >
+                    <span className="recruit-tab-faces">
+                      {BANNER_FACES[id].map((face) => (
+                        <img
+                          key={face}
+                          src={`${import.meta.env.BASE_URL}images/character/face/${face}.avif`}
+                          alt=""
+                        />
+                      ))}
+                    </span>
+                    <span className="recruit-tab-label">{BANNER_TITLES[id]}</span>
+                  </button>
+                ))
+              : CEILING_TARGETS[banner].map((id) => (
+                  <button
+                    key={id}
+                    type="button"
+                    className={`recruit-tab is-candidate${view.selected === id ? ' is-on' : ''}`}
+                    onClick={() => setView({ kind: 'exchange', selected: id })}
+                  >
+                    <span className="recruit-tab-faces">
+                      <img
+                        src={`${import.meta.env.BASE_URL}images/character/face/${id}.avif`}
+                        alt=""
+                      />
+                    </span>
+                    <span className="recruit-tab-label">{nameOf(id)}</span>
+                    <span className="recruit-tab-dupe">{dupeLabel(dupeOf(id))}</span>
+                  </button>
+                ))}
           </div>
 
-          <div className="recruit-panel">
-            <div className="recruit-panel-head">
-              <h1 className="recruit-title">召集</h1>
-              <p className="recruit-lead">ピックアップ対象は同レアリティの中から優先して選ばれる。</p>
+          {/* 交換pt */}
+          <div className={`recruit-points${full ? ' is-full' : ''}`}>
+            <div>
+              <p className="recruit-points-label">交換pt</p>
+              <p className="recruit-points-value">
+                <b>{points}</b>
+                <span>/ {CEILING_PULLS}</span>
+              </p>
             </div>
-
-            {/* 実際の排出率 */}
-            <dl className="recruit-rates">
-              {RARITY_ROWS.filter((rarity) => rates[rarity] > 0).map((rarity) => (
-                <div key={rarity} className={`recruit-rate-row is-rarity-${rarity}`}>
-                  <dt>
-                    {Array.from({ length: rarity }, (_, i) => (
-                      <span key={i}>★</span>
-                    ))}
-                  </dt>
-                  <dd>{rates[rarity].toFixed(1)}%</dd>
-                </div>
-              ))}
-            </dl>
-
-            {/* 天井 */}
-            <div className="recruit-pity">
-              <div className="recruit-pity-head">
-                <span className="recruit-pity-label">★3確定まで</span>
-                <span className="recruit-pity-count">あと {CEILING_PULLS - pity} 回</span>
-              </div>
-              <span className="recruit-pity-bar">
-                <span
-                  className="recruit-pity-bar-fill"
-                  style={{ width: `${(pity / CEILING_PULLS) * 100}%` }}
-                />
-              </span>
-            </div>
-
-            <div className="recruit-actions">
+            {view.kind === 'banner' && (
               <button
                 type="button"
-                className="recruit-action"
-                disabled={pending || gems < PULL_COST_SINGLE}
-                onClick={() => void pull(1, PULL_COST_SINGLE)}
+                className="recruit-points-link"
+                onClick={() => setView({ kind: 'exchange', selected: CEILING_TARGETS[banner][0] })}
               >
-                <span className="recruit-action-label">単発</span>
-                <span className="recruit-action-cost">
-                  <span className="recruit-action-gem" />
-                  {formatCompact(PULL_COST_SINGLE)}
-                </span>
+                {full ? '交換する' : '交換所'}
               </button>
+            )}
+          </div>
 
-              <button
-                type="button"
-                className="recruit-action is-multi"
-                disabled={pending || gems < PULL_COST_MULTI}
-                onClick={() => void pull(MULTI_PULL_COUNT, PULL_COST_MULTI)}
-              >
-                <span className="recruit-action-label">{MULTI_PULL_COUNT}連</span>
-                <span className="recruit-action-cost">
-                  <span className="recruit-action-gem" />
-                  {formatCompact(PULL_COST_MULTI)}
-                </span>
-              </button>
-            </div>
-
+          <div className="recruit-actions">
             {error && <p className="recruit-shortage">{error}</p>}
-            {!error && gems < PULL_COST_SINGLE && (
-              <p className="recruit-shortage">ジェムが足りない</p>
+            {view.kind === 'banner' ? (
+              <>
+                {!error && shortage && <p className="recruit-shortage">{shortage}</p>}
+                <button
+                  type="button"
+                  className="recruit-action"
+                  disabled={pending || gems < PULL_COST_SINGLE}
+                  onClick={() => void pull(1, PULL_COST_SINGLE)}
+                >
+                  <span className="recruit-action-label">単発</span>
+                  <span className="recruit-action-cost">
+                    <GemIcon className="recruit-action-gem" />
+                    {formatCompact(PULL_COST_SINGLE)}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  className="recruit-action is-gold"
+                  disabled={pending || gems < PULL_COST_MULTI}
+                  onClick={() => void pull(MULTI_PULL_COUNT, PULL_COST_MULTI)}
+                >
+                  <span className="recruit-action-label">{MULTI_PULL_COUNT}連</span>
+                  <span className="recruit-action-cost">
+                    <GemIcon className="recruit-action-gem" />
+                    {formatCompact(PULL_COST_MULTI)}
+                  </span>
+                </button>
+              </>
+            ) : (
+              <button
+                type="button"
+                className="recruit-action is-gold is-wide"
+                disabled={!full}
+                onClick={() => setConfirming(true)}
+              >
+                <span className="recruit-action-label">
+                  {full ? '交換する' : `あと${CEILING_PULLS - points}回召集すると交換できる`}
+                </span>
+                {full && <span className="recruit-action-cost">交換pt {CEILING_PULLS}</span>}
+              </button>
             )}
           </div>
         </div>
-      ) : (
-        <RecruitResult outcomes={outcomes} onClose={() => setOutcomes(null)} />
-      )}
 
-      <Screen background="images/start/hex-frame.jpg" />
+        {confirming && view.kind === 'exchange' && (
+          <RecruitConfirm
+            name={nameOf(view.selected)}
+            masterId={view.selected}
+            dupe={dupeOf(view.selected)}
+            points={points}
+            pending={pending}
+            onCancel={() => setConfirming(false)}
+            onConfirm={() => void exchange(view.selected)}
+          />
+        )}
+      </div>
+
+      <Screen
+        background="images/scenario/bg/camp_border.avif"
+        viewport={<div className="recruit-shade" />}
+      />
     </>
   )
 }

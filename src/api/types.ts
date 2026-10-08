@@ -27,7 +27,7 @@ export interface UserRow {
   gems: number
 
   // --- gacha（gachaStore）---
-  pity: number
+  pity: number // 交換pt。召集1回で1たまり、天井交換で CEILING_PULLS 減る
 
   // --- progress（progressStore）---
   chapter: number

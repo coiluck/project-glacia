@@ -1,6 +1,7 @@
 // スキルの説明文の組み立て。
 // 効果量はスキルレベルと凸で変わるので、i18n 側は数値を {0} {1} … で空けておき、
 // 解決済みの ResolvedSkill から埋める。
+import type { DupeBonus } from '../../data/characters/types'
 import type { SkillEffect } from '../battle/types'
 import type { ResolvedSkill } from './resolve'
 
@@ -23,4 +24,14 @@ export function formatSkillDescription(template: string, skill: ResolvedSkill): 
     const effect = skill.def.effect[Number(index)]
     return effect ? String(effectValue(effect)) : match
   })
+}
+
+// 凸1つ分の効果を項目ごとの文にする
+export function describeDupeBonus(bonus: DupeBonus): string[] {
+  const parts: string[] = []
+  if (bonus.status?.hp) parts.push(`HP +${bonus.status.hp}`)
+  if (bonus.status?.attack) parts.push(`ATK +${bonus.status.attack}`)
+  if (bonus.status?.defense) parts.push(`DEF +${bonus.status.defense}`)
+  if (bonus.skillApCost) parts.push(`スキルAP ${bonus.skillApCost}`)
+  return parts
 }

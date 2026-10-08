@@ -19,6 +19,7 @@ import type { Command } from './routes/types'
 // 状態を変えるルートのmap
 const COMMANDS: Record<string, Command<unknown>> = {
   '/gacha/pull': gacha.pull,
+  '/gacha/exchange': gacha.exchange,
   '/battle/result': battle.result,
   '/battle/skip': battle.skip,
   '/party': party.save,
