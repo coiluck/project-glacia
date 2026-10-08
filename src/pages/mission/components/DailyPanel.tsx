@@ -37,7 +37,8 @@ export default function DailyPanel({ base, now, pending, t, onClaim, onClaimAll 
     gems: m.gems,
     claimed: claimed.includes(slot),
   }))
-  const claimable = rows.some((r) => !r.claimed && r.current >= r.target)
+  const claimableCount = rows.filter((r) => !r.claimed && r.current >= r.target).length
+  const claimable = claimableCount > 0
 
   return (
     <>
@@ -73,7 +74,13 @@ export default function DailyPanel({ base, now, pending, t, onClaim, onClaimAll 
             {DAILY_SLOTS.map((_, i) => (
               <span
                 key={i}
-                className={`mission-pip${i < claimed.length ? ' is-claimed' : ''}`}
+                className={`mission-pip${
+                  i < claimed.length
+                    ? ' is-claimed'
+                    : i < claimed.length + claimableCount
+                      ? ' is-claimable'
+                      : ''
+                }`}
               />
             ))}
           </div>

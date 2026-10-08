@@ -28,3 +28,5 @@
   background: #2a3036;
 }
 .mission-pip.is-claimed { background: #d9dee2; }
+
+.mission-pip.is-claimable { animation: mission-claimable 1.6s ease-in-out infinite; }

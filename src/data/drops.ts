@@ -13,8 +13,9 @@ export const dropTables: Record<string, DropEntry[]> = {
   ],
   '1-2': [
     { itemId: 'iceCrystal', count: 2 },
+    { itemId: 'trainingRecordSmall', count: 1 },
     { itemId: 'steelScrap', count: 1, rate: 0.5 },
-    { itemId: 'trainingRecordSmall', count: 1, rate: 0.15 },
+    { itemId: 'trainingRecordSmall', count: 1, rate: 0.5 },
   ],
   '1-3': [
     { itemId: 'steelScrap', count: 2 },
@@ -25,9 +26,10 @@ export const dropTables: Record<string, DropEntry[]> = {
   // 火打石を集めるならここが一番効率がいい
   '1-4': [
     { itemId: 'flint', count: 2 },
+    { itemId: 'trainingRecordSmall', count: 2 },
     { itemId: 'flint', count: 2, rate: 0.4 },
     { itemId: 'brokenGear', count: 1, rate: 0.5 },
-    { itemId: 'trainingRecordSmall', count: 1, rate: 0.25 },
+    { itemId: 'trainingRecordSmall', count: 1, rate: 0.5 },
   ],
   '1-5': [
     { itemId: 'brokenGear', count: 2 },
@@ -38,9 +40,10 @@ export const dropTables: Record<string, DropEntry[]> = {
   '1-6': [
     { itemId: 'iceCrystal', count: 3 },
     { itemId: 'steelScrap', count: 2 },
+    { itemId: 'trainingRecordSmall', count: 3 },
     { itemId: 'brokenGear', count: 2, rate: 0.45 },
     { itemId: 'skillBookSmall', count: 1, rate: 0.55 },
-    { itemId: 'trainingRecordSmall', count: 1, rate: 0.35 },
+    { itemId: 'trainingRecordSmall', count: 1, rate: 0.5 },
   ],
 
   // 2章: 獣の牙・丈夫な毛皮・薬草の束・魔石の粉
@@ -56,9 +59,10 @@ export const dropTables: Record<string, DropEntry[]> = {
   ],
   '2-3': [
     { itemId: 'toughHide', count: 2 },
+    { itemId: 'trainingRecordSmall', count: 2 },
     { itemId: 'toughHide', count: 1, rate: 0.45 },
     { itemId: 'herbBundle', count: 1, rate: 0.5 },
-    { itemId: 'trainingRecordSmall', count: 1, rate: 0.3 },
+    { itemId: 'trainingRecordSmall', count: 2, rate: 0.5 },
   ],
   // 薬草の束を集めるならここが一番効率がいい
   '2-4': [
@@ -74,16 +78,18 @@ export const dropTables: Record<string, DropEntry[]> = {
   ],
   '2-6': [
     { itemId: 'toughHide', count: 3 },
+    { itemId: 'trainingRecordSmall', count: 3 },
     { itemId: 'magicDust', count: 2, rate: 0.55 },
     { itemId: 'flint', count: 2, rate: 0.4 },
-    { itemId: 'trainingRecordSmall', count: 1, rate: 0.35 },
+    { itemId: 'trainingRecordSmall', count: 1, rate: 0.5 },
   ],
   '2-7': [
     { itemId: 'beastFang', count: 3 },
     { itemId: 'herbBundle', count: 3 },
+    { itemId: 'trainingRecordSmall', count: 4 },
     { itemId: 'magicDust', count: 2, rate: 0.5 },
     { itemId: 'skillBookSmall', count: 2, rate: 0.6 },
-    { itemId: 'trainingRecordSmall', count: 1, rate: 0.45 },
+    { itemId: 'trainingRecordSmall', count: 1, rate: 0.5 },
   ],
 
   // 3章: 覚醒石・精錬鋼
@@ -99,8 +105,9 @@ export const dropTables: Record<string, DropEntry[]> = {
   ],
   '3-3': [
     { itemId: 'brokenGear', count: 3 },
+    { itemId: 'trainingRecordMedium', count: 1 },
     { itemId: 'refinedSteel', count: 1, rate: 0.2 },
-    { itemId: 'trainingRecordMedium', count: 1, rate: 0.2 },
+    { itemId: 'trainingRecordMedium', count: 2, rate: 0.5 },
   ],
   // ここから覚醒石が確定枠に入る
   '3-4': [
@@ -118,15 +125,17 @@ export const dropTables: Record<string, DropEntry[]> = {
   '3-6': [
     { itemId: 'awakenStone', count: 1 },
     { itemId: 'toughHide', count: 3 },
+    { itemId: 'trainingRecordMedium', count: 2 },
     { itemId: 'refinedSteel', count: 1, rate: 0.35 },
-    { itemId: 'trainingRecordMedium', count: 1, rate: 0.25 },
+    { itemId: 'trainingRecordMedium', count: 1, rate: 0.5 },
   ],
   '3-7': [
     { itemId: 'awakenStone', count: 2 },
     { itemId: 'refinedSteel', count: 1 },
+    { itemId: 'trainingRecordMedium', count: 3 },
     { itemId: 'iceCrystal', count: 4, rate: 0.45 },
     { itemId: 'skillBookMedium', count: 1, rate: 0.5 },
-    { itemId: 'trainingRecordMedium', count: 1, rate: 0.4 },
+    { itemId: 'trainingRecordMedium', count: 2, rate: 0.5 },
   ],
 
   // 4章: 魔獣石・強化皮革・霊薬の雫
@@ -137,8 +146,9 @@ export const dropTables: Record<string, DropEntry[]> = {
   ],
   '4-2': [
     { itemId: 'toughHide', count: 4 },
+    { itemId: 'trainingRecordMedium', count: 2 },
     { itemId: 'temperedLeather', count: 1, rate: 0.2 },
-    { itemId: 'trainingRecordMedium', count: 1, rate: 0.3 },
+    { itemId: 'trainingRecordMedium', count: 2, rate: 0.5 },
   ],
   '4-3': [
     { itemId: 'herbBundle', count: 4 },
@@ -153,9 +163,10 @@ export const dropTables: Record<string, DropEntry[]> = {
   ],
   '4-5': [
     { itemId: 'temperedLeather', count: 1 },
+    { itemId: 'trainingRecordMedium', count: 3 },
     { itemId: 'beastStone', count: 1, rate: 0.3 },
     { itemId: 'awakenStone', count: 1, rate: 0.35 },
-    { itemId: 'trainingRecordMedium', count: 1, rate: 0.35 },
+    { itemId: 'trainingRecordMedium', count: 1, rate: 0.5 },
   ],
   '4-6': [
     { itemId: 'elixirDrop', count: 1 },
@@ -167,15 +178,17 @@ export const dropTables: Record<string, DropEntry[]> = {
   '4-7': [
     { itemId: 'beastStone', count: 1 },
     { itemId: 'elixirDrop', count: 1 },
+    { itemId: 'trainingRecordLarge', count: 1 },
     { itemId: 'temperedLeather', count: 1, rate: 0.4 },
-    { itemId: 'trainingRecordLarge', count: 1, rate: 0.15 },
+    { itemId: 'trainingRecordLarge', count: 1, rate: 0.5 },
   ],
   '4-8': [
     { itemId: 'awakenStone', count: 2 },
     { itemId: 'beastStone', count: 1 },
+    { itemId: 'trainingRecordLarge', count: 2 },
     { itemId: 'temperedLeather', count: 1, rate: 0.45 },
     { itemId: 'elixirDrop', count: 1, rate: 0.45 },
     { itemId: 'skillBookMedium', count: 2, rate: 0.55 },
-    { itemId: 'trainingRecordLarge', count: 1, rate: 0.25 },
+    { itemId: 'trainingRecordLarge', count: 1, rate: 0.5 },
   ],
 }

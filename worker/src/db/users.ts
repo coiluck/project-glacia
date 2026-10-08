@@ -165,7 +165,8 @@ export async function saveMe(
            login_claimed_day = ?, login_count = ?,
            mission_day = ?, mission_counts = ?, mission_claimed = ?, mission_done = ?,
            favorite_character_id = ?,
-           base_board = ?, base_members = ?, base_tower_level = ?, base_collected_at = ?
+           base_board = ?, base_members = ?, base_tower_level = ?, base_collected_at = ?,
+           settings_bgm = ?, settings_se = ?, settings_text_speed = ?, settings_text_size = ?, settings_lang = ?
          WHERE id = ?`,
       )
       .bind(
@@ -199,6 +200,11 @@ export async function saveMe(
         JSON.stringify(u.base_members),
         u.base_tower_level,
         u.base_collected_at,
+        u.settings_bgm,
+        u.settings_se,
+        u.settings_text_speed,
+        u.settings_text_size,
+        u.settings_lang,
         u.id,
       ),
   ]

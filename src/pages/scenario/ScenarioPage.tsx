@@ -1,24 +1,25 @@
 import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { useNavigate, useParams, Navigate } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams, Navigate } from 'react-router-dom'
 import { paths } from '../../router/paths'
 import { scenarioRegistry } from '../../data/scenarios'
 import { createInitialState, resetGameEngine, useGameEngine } from '../../features/scenario/useGameEngine'
 import { useGameStore } from '../../features/scenario/gameStore'
 import type { SceneSnapshot } from '../../features/scenario/types'
 import { useProgressStore } from '../../stores/progressStore'
+import { useSettingsStore } from '../../stores/settingsStore'
+import { TEXT_SIZE_PX, TEXT_SPEED_MS } from '../../data/settings'
 import ViewportLayer from '../../layouts/ViewportLayer'
 import { Background } from './components/Background'
 import { CharacterSprite, CharacterFace } from './components/Character'
-
-// useSettingsStore 未作成のため定数で仮置き。作成したら差し替える。
-const TEXT_SIZE = 32 // px（設計解像度 1920x1080 基準）
-const TEXT_SPEED = 7 // 1文字あたり (40 - TEXT_SPEED * 3) ms
 
 // log に表示する過去の行数
 const LOG_MAX_LINES = 50
 
 export default function ScenarioPage() {
   const { scenarioId } = useParams<{ scenarioId: string }>()
+  // システムメニューからの読み返し
+  const [searchParams] = useSearchParams()
+  const replay = searchParams.has('replay')
 
   // シナリオ未登録なら、そのまま同じステージの戦闘へ進む
   if (scenarioId && !scenarioRegistry[scenarioId]) {
@@ -30,10 +31,10 @@ export default function ScenarioPage() {
     return <Navigate to={paths.story} replace />
   }
 
-  return <ScenarioRunner key={scenarioId} scenarioId={scenarioId} />
+  return <ScenarioRunner key={`${scenarioId}:${replay}`} scenarioId={scenarioId} replay={replay} />
 }
 
-function ScenarioRunner({ scenarioId }: { scenarioId: string }) {
+function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: boolean }) {
   const navigate = useNavigate()
   // エンジンを初期化
   useState(() => resetGameEngine(createInitialState(scenarioId)))
@@ -42,6 +43,7 @@ function ScenarioRunner({ scenarioId }: { scenarioId: string }) {
   const snapshot = useGameStore((s) => s.snapshot)
   const motion = useGameStore((s) => s.motion)
   const pendingChoice = useGameStore((s) => s.pendingChoice)
+  const textSize = useSettingsStore((s) => s.textSize)
 
   const advancingRef = useRef(false)
   const typingIdRef = useRef(0)
@@ -53,15 +55,17 @@ function ScenarioRunner({ scenarioId }: { scenarioId: string }) {
   const [isLogOpen, setIsLogOpen] = useState(false)
   const [logEntries, setLogEntries] = useState<SceneSnapshot[]>([])
 
-  // 進行位置を progressStore に保存する（スロット無しの単一セーブ）
+  // 進行位置を progressStore に保存する（スロット無しの単一セーブ）。
+  // 読み返しでは本編のセーブを上書きしない
   const persistProgress = () => {
+    if (replay) return
     useProgressStore.getState().saveScenario(scenarioId, engine.getState())
   }
 
   // 進行中セーブがあれば復元、なければ先頭の行を表示
   useEffect(() => {
     const saved = useProgressStore.getState()
-    if (saved.scenarioId === scenarioId && saved.scenarioState) {
+    if (!replay && saved.scenarioId === scenarioId && saved.scenarioState) {
       instantNextRef.current = true
       engine.restore(saved.scenarioState)
     } else {
@@ -86,12 +90,7 @@ function ScenarioRunner({ scenarioId }: { scenarioId: string }) {
       return
     }
 
-    const stepMs = Math.max(0, 40 - TEXT_SPEED * 3)
-    if (stepMs === 0) {
-      setDisplayedText(target)
-      return
-    }
-
+    const stepMs = TEXT_SPEED_MS[useSettingsStore.getState().textSpeed]
     setDisplayedText('')
     let i = 0
     const tick = () => {
@@ -114,8 +113,12 @@ function ScenarioRunner({ scenarioId }: { scenarioId: string }) {
 
   const isTyping = !!snapshot.text && displayedText.length < snapshot.text.length
 
-  // シナリオおしまい -> 戦闘へ
+  // シナリオおしまい -> 戦闘へ。読み返しならトップへ戻る
   const finishScenario = () => {
+    if (replay) {
+      navigate(paths.top, { replace: true })
+      return
+    }
     useProgressStore.getState().clearScenario()
     navigate(paths.battle(scenarioId), { replace: true })
   }
@@ -202,7 +205,7 @@ function ScenarioRunner({ scenarioId }: { scenarioId: string }) {
           <div className="scenario-speaker-name" style={{ visibility: snapshot.speaker ? 'visible' : 'hidden' }}>
             {snapshot.speaker}
           </div>
-          <div className="scenario-text-message" style={{ fontSize: `calc(${TEXT_SIZE}px * var(--scale))` }}>
+          <div className="scenario-text-message" style={{ fontSize: `calc(${TEXT_SIZE_PX[textSize]}px * var(--scale))` }}>
             <span className="scenario-text-message-text">{snapshot.text ? displayedText : '...'}</span>
             <span className="scenario-text-message-cursor" />
           </div>

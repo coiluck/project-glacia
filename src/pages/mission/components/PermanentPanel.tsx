@@ -71,7 +71,8 @@ export default function PermanentPanel({
     .sort((a, b) => order(a.row) - order(b.row))
 
   const claimedRows = rows.filter((r) => r.row.claimed)
-  const claimable = rows.some((r) => isClaimable(r.row))
+  const claimableCount = rows.filter((r) => isClaimable(r.row)).length
+  const claimable = claimableCount > 0
   // まとめて受け取るで手に入る数。カテゴリの絞り込みに関係なく全件
   const claimableGems = rows
     .filter((r) => isClaimable(r.row))
@@ -125,6 +126,13 @@ export default function PermanentPanel({
           </span>
           <span className="mission-progress-bar">
             <i style={{ width: `${(claimedRows.length / rows.length) * 100}%` }} />
+            <i
+              className="is-claimable"
+              style={{
+                left: `${(claimedRows.length / rows.length) * 100}%`,
+                width: `${(claimableCount / rows.length) * 100}%`,
+              }}
+            />
           </span>
         </div>
         <span className={`mission-reward${claimable ? '' : ' is-claimed'}`}>

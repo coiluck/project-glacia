@@ -58,5 +58,10 @@
   "missionLapisDailyHalf": "その調子です。残りの任務も、この勢いで片付けてしまいましょう。",
   "missionLapisDailyDone": "今日の任務はこれで全部です。お疲れさまでした。また明日もよろしくお願いしますね。",
   "missionLapisPermanent": "永続任務に期限はありません。焦らず、一歩ずつ進んでいきましょう。",
-  "missionLapisPermanentClaimable": "これまでの積み重ねが実を結びましたね。受け取れる報酬があります。"
+  "missionLapisPermanentClaimable": "これまでの積み重ねが実を結びましたね。受け取れる報酬があります。",
+
+  "exchangeLapisStart": "今日の入荷分です。交換材料では全部は揃わないので、要る物から選びましょうね。",
+  "exchangeLapisTraded": "交換しておきました。ほかに要る物はありますか？",
+  "exchangeLapisShort": "交換材料が足りませんね。紙幣で買い足すこともできますよ。",
+  "exchangeLapisDone": "今日の分はこれで全部です。朝の5時に次の荷が届きますよ。"
 }

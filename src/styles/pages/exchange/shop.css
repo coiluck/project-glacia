@@ -2,19 +2,19 @@
 .exchange-shop {
   position: absolute;
   top: 100%;
-  left: 0;
-  width: 360px;
+  right: 0;
+  width: 420px;
   max-height: 0;
-  margin-top: 10px;
+  margin-top: 14px;
   overflow: hidden;
-  background: var(--tile-hover);
-  border: 1px solid var(--line-strong);
+  background: #161a24;
+  border-top: 3px solid var(--token);
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
   visibility: hidden;
   transition: max-height 0.3s ease-out, visibility 0s linear 0.3s;
 }
 .exchange-shop.is-open {
-  max-height: 400px;
+  max-height: 420px;
   visibility: visible;
   transition: max-height 0.3s ease-out;
 }
@@ -22,18 +22,10 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 24px 26px 28px;
+  padding: 24px 28px 28px;
 }
 
-.exchange-caption {
-  font-family: 'CaviarDreams', sans-serif;
-  font-size: 14px;
-  line-height: 1;
-  letter-spacing: 0.34em;
-  color: var(--ink-mute);
-}
 .exchange-label {
-  margin-top: 6px;
   font-size: 19px;
   line-height: 1;
   letter-spacing: 0.2em;

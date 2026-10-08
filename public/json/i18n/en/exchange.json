@@ -3,10 +3,13 @@
   "owned": "Owned",
   "trade": "Exchange",
   "traded": "Exchanged",
-  "short": "Not enough material",
+  "short": "Not enough",
   "purchase": "Buy with bills",
   "cost": "Bills needed",
   "buy": "Buy",
+  "lineup": "Today's stock",
   "supply": "Today's exchange material",
-  "tapToClose": "Tap to close"
+  "token": "Exchange material",
+  "market": "Market",
+  "marketEven": "At market"
 }

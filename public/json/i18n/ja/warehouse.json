@@ -1,11 +1,18 @@
 {
-  "empty": "持っていない",
-  "noItem": "アイテムがない",
-  "owned": "所持数",
-  "exp": "経験値",
-  "recipe": "合成レシピ",
+  "kindCount": "{0}種",
+  "expGain": "+{0} EXP",
+  "owned": "所持",
+  "expDesc": "キャラクターに使うと経験値が {0} 入る。1個につき紙幣 {1} もかかる。",
   "sources": "入手先",
-  "sourcesNote": "塗りは確定ドロップ、枠だけは確率ドロップ",
+  "sourcesNote": "塗りは確定、枠は確率",
   "noDrop": "ドロップしない",
-  "noDropRecipe": "ドロップしない。合成で入手する"
+  "noDropRecipe": "ドロップしない。精錬所で合成する",
+  "chapter": "{0}章",
+  "lockedChapter": "{0}章で{1}か所",
+  "lockedSep": "、",
+  "locked": "{0}（未開放）",
+  "recipe": "合成",
+  "usage": "使い道",
+  "limitBreak": "上限解放",
+  "skillLevel": "{0} Lv{1}"
 }

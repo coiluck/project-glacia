@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
+import { useSettingsStore } from '../stores/settingsStore'
 
 export const AVAILABLE_LANGS = ['en', 'ja'] as const
 type Lang = typeof AVAILABLE_LANGS[number]
 
-const CURRENT_LANG: Lang = 'ja'
 const DEFAULT_LANG: Lang = AVAILABLE_LANGS[0] // 'en'
 type Namespace = Record<string, string> // key, 翻訳テキスト
 
@@ -50,8 +50,7 @@ export function useTranslations<T extends Record<string, string>>(
   const localKeys = Object.keys(mapping) as (keyof T)[]
   const translationKeys = Object.values(mapping) as string[]
 
-  // TODO: const lang = useSettingsStore(s => s.lang)
-  const lang = CURRENT_LANG
+  const lang = useSettingsStore(s => s.lang)
 
   const [translations, setTranslations] = useState<T>(
     () => Object.fromEntries(localKeys.map(k => [k, ''])) as T

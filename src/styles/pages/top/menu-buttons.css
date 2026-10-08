@@ -164,31 +164,66 @@
   transform: translate(-50%, -50%) rotate(135deg);
 }
 
-/* スタミナ欄にかぶせる回復時間 */
 .top-menu-button-stamina-modal {
   position: absolute;
-  inset: 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: calc(316px * var(--scale));
   z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: auto auto;
+  align-content: center;
+  justify-content: space-between;
+  column-gap: calc(20px * var(--scale));
+  row-gap: calc(8px * var(--scale));
+  padding: 0 calc(20px * var(--scale)) 0 calc(40px * var(--scale));
   overflow: hidden;
+  font-family: initial;
+  text-shadow: none;
   white-space: nowrap;
-  background: #282828;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      rgba(127, 224, 255, 0.06) 0,
+      rgba(127, 224, 255, 0.06) calc(20px * var(--scale)),
+      transparent calc(20px * var(--scale)),
+      transparent calc(40px * var(--scale))
+    ),
+    #0a0d2a;
   animation: top-menu-stamina-modal-open 0.3s ease-out both;
 }
-.top-menu-button-stamina-modal p {
-  padding-left: calc(60px * var(--scale));
-  font-size: calc(1.5rem * var(--scale));
-  line-height: 1.2;
+.top-menu-button-stamina-modal dt {
+  align-self: center;
+  font-size: calc(18px * var(--scale));
+  line-height: 1;
+  letter-spacing: 0.1em;
+  color: #8a9299;
+}
+.top-menu-button-stamina-modal dd {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: calc(28px * var(--scale));
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-align: right;
+  color: #e4e7ea;
+}
+/* 全回復済み */
+.top-menu-button-stamina-modal dt:only-child {
+  font-size: calc(22px * var(--scale));
+  color: #7fe0ff;
+}
+/* 全回復までは強めに */
+.top-menu-button-stamina-modal dd:last-child {
+  color: #7fe0ff;
 }
 @keyframes top-menu-stamina-modal-open {
   from {
-    max-width: 0;
+    clip-path: inset(0 100% 0 0);
   }
   to {
-    max-width: 100%;
+    clip-path: inset(0);
   }
 }
 

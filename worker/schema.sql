@@ -32,7 +32,12 @@ CREATE TABLE IF NOT EXISTS users (
   base_board                     TEXT    NOT NULL DEFAULT '{}',
   base_members                   TEXT    NOT NULL DEFAULT '{}',
   base_tower_level               INTEGER NOT NULL DEFAULT 1,
-  base_collected_at              INTEGER NOT NULL DEFAULT 0
+  base_collected_at              INTEGER NOT NULL DEFAULT 0,
+  settings_bgm                   INTEGER NOT NULL DEFAULT 80,
+  settings_se                    INTEGER NOT NULL DEFAULT 80,
+  settings_text_speed            TEXT    NOT NULL DEFAULT 'normal',
+  settings_text_size             TEXT    NOT NULL DEFAULT 'normal',
+  settings_lang                  TEXT    NOT NULL DEFAULT 'ja'
 );
 
 -- 所持キャラ

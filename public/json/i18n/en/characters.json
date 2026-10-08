@@ -58,5 +58,10 @@
   "missionLapisDailyHalf": "That's the spirit. Let's keep this pace and clear the rest.",
   "missionLapisDailyDone": "That's every mission for today. Good work, and let's do our best again tomorrow.",
   "missionLapisPermanent": "Achievements have no deadline. Let's take them one step at a time.",
-  "missionLapisPermanentClaimable": "All that effort has paid off. There are rewards to collect."
+  "missionLapisPermanentClaimable": "All that effort has paid off. There are rewards to collect.",
+
+  "exchangeLapisStart": "Here's today's stock. Our material won't cover all of it, so let's pick what we need.",
+  "exchangeLapisTraded": "Done. Is there anything else we need?",
+  "exchangeLapisShort": "We're short on material. We can buy more with bills, though.",
+  "exchangeLapisDone": "That's everything for today. The next shipment arrives at 5 a.m."
 }

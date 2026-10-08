@@ -7,6 +7,7 @@ export const paths = {
   story:   '/story',     // ゲーム
   sortie:   (stageId:    string) => `/sortie/${stageId}`, // 出撃準備
   scenario: (scenarioId: string) => `/scenario/${scenarioId}`, // シナリオ
+  scenarioReplay: (scenarioId: string) => `/scenario/${scenarioId}?replay`, // シナリオの読み返し。終わったらトップへ戻る
   battle:   (stageId:    string) => `/battle/${stageId}`, // ゲーム
   member:  '/member',    // 人員
   memberDetail: (characterId: string) => `/member/${characterId}`, // キャラ詳細・強化

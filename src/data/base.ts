@@ -14,7 +14,7 @@ export const baseBuildings: Record<BaseBuildingKind, BaseBuildingDef> = {
 };
 
 export const MINE_RATES = [1, 1.1, 1.25, 1.4, 1.5]; // 採掘場と書庫の Lv ごとの生産量（1時間あたり）
-export const LIBRARY_RATES = [250, 300, 350, 400, 450]; // 書庫の Lv ごとの生産量（1時間あたり）
+export const LIBRARY_RATES = [50, 60, 70, 80, 90]; // 書庫の Lv ごとの生産量（1時間あたり）
 
 // 貯蔵庫の Lv ごとの上限時間
 export const STORAGE_HOURS = [12, 16, 20, 24, 28];
@@ -46,8 +46,8 @@ export const MINE_OUTPUTS: BaseOutputDef[] = [
 
 // 書庫で選べる訓練記録
 export const LIBRARY_OUTPUTS: BaseOutputDef[] = [
-  { itemId: 'trainingRecordSmall', unlockLevel: 1, cost: 500 },
-  { itemId: 'trainingRecordMedium', unlockLevel: 3, cost: 1400 },
+  { itemId: 'trainingRecordSmall', unlockLevel: 1, cost: 50 },
+  { itemId: 'trainingRecordMedium', unlockLevel: 3, cost: 140 },
 ];
 
 export interface TowerLevelDef {

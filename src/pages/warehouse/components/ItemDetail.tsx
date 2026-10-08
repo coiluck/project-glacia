@@ -1,118 +1,144 @@
 import { Link } from 'react-router-dom'
 import { paths } from '../../../router/paths'
 import { items, type ItemDef, type ItemKind } from '../../../data/items'
+import { characterMasters } from '../../../data/characters'
 import { RARITIES } from '../../../data/characters/const'
 import { useTranslations } from '../../../i18n'
 import { useProgressStore } from '../../../stores/progressStore'
-import { chapterOf, dropSources } from '../dropSources'
-import ItemIcon from '../../../components/common/ItemIcon'
+import { useCharacterStore } from '../../../stores/characterStore'
+import { chapterOf, dropSources, type DropSource } from '../dropSources'
+import { growthUses, productsOf } from '../usage'
+import { fill } from '../fill'
+import HexIcon from './HexIcon'
 
-const KIND_KEYS: Record<ItemKind, { label: string; desc: string }> = {
-  material: { label: 'kindMaterial', desc: 'kindMaterialDesc' },
-  book: { label: 'kindBook', desc: 'kindBookDesc' },
-  exp: { label: 'kindExp', desc: 'kindExpDesc' },
-}
+const KIND_LABEL: Record<ItemKind, string> = { material: 'kindMaterial', book: 'kindBook', exp: 'kindExp' }
 
 const ITEM_TRANSLATION_MAPPING = Object.fromEntries([
   ...Object.values(items).map((i) => [i.nameKey, i.nameKey]),
-  ...Object.values(KIND_KEYS).flatMap((k) => [
-    [k.label, k.label],
-    [k.desc, k.desc],
-  ]),
+  ...Object.values(KIND_LABEL).map((k) => [k, k]),
 ])
 
+const CHARACTER_TRANSLATION_MAPPING = Object.fromEntries(
+  Object.values(characterMasters).flatMap((c) => [
+    [c.nameKey, c.nameKey],
+    ...c.skills.map((s) => [s.def.nameKey, s.def.nameKey]),
+  ]),
+)
+
 const WAREHOUSE_TRANSLATION_MAPPING = {
-  noItem: 'noItem',
   owned: 'owned',
-  exp: 'exp',
-  recipe: 'recipe',
+  expDesc: 'expDesc',
   sources: 'sources',
   sourcesNote: 'sourcesNote',
   noDrop: 'noDrop',
   noDropRecipe: 'noDropRecipe',
+  chapter: 'chapter',
+  lockedChapter: 'lockedChapter',
+  lockedSep: 'lockedSep',
+  locked: 'locked',
+  recipe: 'recipe',
+  usage: 'usage',
+  limitBreak: 'limitBreak',
+  skillLevel: 'skillLevel',
 }
+
+const faceUrl = (id: string) => `${import.meta.env.BASE_URL}images/character/face/${id}.avif`
 
 type Props = {
-  item: ItemDef | null // null は1つも持っていないとき
+  item: ItemDef
   owned: Record<string, number>
+  onSelect: (id: string) => void
 }
 
-// 選択中アイテムの詳細
-export default function ItemDetail({ item, owned }: Props) {
+export default function ItemDetail({ item, owned, onSelect }: Props) {
   const tItem = useTranslations('items', ITEM_TRANSLATION_MAPPING)
+  const tChar = useTranslations('characters', CHARACTER_TRANSLATION_MAPPING)
   const t = useTranslations('warehouse', WAREHOUSE_TRANSLATION_MAPPING)
   const maxChapter = useProgressStore((s) => s.chapter)
   const setCurrentChapter = useProgressStore((s) => s.setCurrentChapter)
+  const characters = useCharacterStore((s) => s.owned)
 
-  if (!item) {
-    return (
-      <section className="warehouse-detail">
-        <div className="warehouse-detail-body">
-          <span className="warehouse-detail-caption">DETAIL</span>
-          <p className="warehouse-detail-placeholder">{t.noItem}</p>
-        </div>
-      </section>
-    )
+  const count = owned[item.id] ?? 0
+
+  const byChapter = new Map<number, DropSource[]>()
+  for (const s of dropSources[item.id] ?? []) {
+    const chapter = chapterOf(s.stageId)
+    byChapter.set(chapter, [...(byChapter.get(chapter) ?? []), s])
   }
+  const chapters = [...byChapter].sort(([a], [b]) => a - b)
+  const open = chapters.filter(([c]) => c <= maxChapter)
+  const locked = chapters.filter(([c]) => c > maxChapter)
 
-  const kind = KIND_KEYS[item.kind]
-  const sources = dropSources[item.id] ?? []
+  const uses = growthUses(item.id, Object.values(characters))
+  const products = productsOf(item.id)
 
   return (
-    <section className={`warehouse-detail is-rarity-${item.rarity}`}>
+    <section className="warehouse-detail">
       <div key={item.id} className="warehouse-detail-body">
-        <span className="warehouse-detail-caption">DETAIL</span>
-
         <div className="warehouse-detail-head">
-          <div className="warehouse-detail-frame">
-            <ItemIcon item={item} />
-          </div>
+          <HexIcon item={item} />
           <div className="warehouse-detail-title">
-            <span className="warehouse-detail-kind">{tItem[kind.label]}</span>
-            <span className="warehouse-detail-name">{tItem[item.nameKey]}</span>
-            <span className="warehouse-detail-stars">
-              {RARITIES.map((r) => (
-                <span key={r} className={`warehouse-detail-star${r > item.rarity ? ' is-off' : ''}`}>
-                  ★
-                </span>
-              ))}
+            <span className="warehouse-tag">
+              {tItem[KIND_LABEL[item.kind]]}
+              <span className="warehouse-stars">
+                {RARITIES.map((r) => (r <= item.rarity ? '★' : <i key={r}>★</i>))}
+              </span>
             </span>
+            <span className="warehouse-detail-name">{tItem[item.nameKey]}</span>
+          </div>
+          <div className={`warehouse-detail-owned${count === 0 ? ' is-zero' : ''}`}>
+            <small>{t.owned}</small>
+            <b>{count}</b>
           </div>
         </div>
 
-        <dl className="warehouse-detail-rows">
-          <div className="warehouse-detail-row">
-            <dt>{t.owned}</dt>
-            <dd>{owned[item.id] ?? 0}</dd>
-          </div>
-          {item.kind === 'exp' && (
-            <div className="warehouse-detail-row">
-              <dt>{t.exp}</dt>
-              <dd>
-                +{item.exp}
-                <small>EXP</small>
-              </dd>
-            </div>
-          )}
-        </dl>
+        {item.exp !== undefined && <p className="warehouse-detail-desc">{fill(t.expDesc, item.exp, item.exp)}</p>}
 
-        <p className="warehouse-detail-desc">{tItem[kind.desc]}</p>
+        <div className="warehouse-detail-block">
+          <h3 className="warehouse-detail-section-title">
+            {t.sources}
+            {open.length > 0 && <em>{t.sourcesNote}</em>}
+          </h3>
+          {chapters.length === 0 && (
+            <span className="warehouse-detail-none">{item.recipe ? t.noDropRecipe : t.noDrop}</span>
+          )}
+          {open.map(([chapter, list]) => (
+            <div key={chapter} className="warehouse-sources">
+              <span className="warehouse-sources-chapter">{fill(t.chapter, chapter)}</span>
+              <ul>
+                {list.map((s) => (
+                  <li key={s.stageId}>
+                    <Link
+                      to={paths.story}
+                      className={`warehouse-source${s.sure ? ' is-sure' : ''}`}
+                      onClick={() => setCurrentChapter(chapter)}
+                    >
+                      {s.stageId}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+          {locked.length > 0 && (
+            <span className="warehouse-sources-locked">
+              {fill(t.locked, locked.map(([c, list]) => fill(t.lockedChapter, c, list.length)).join(t.lockedSep))}
+            </span>
+          )}
+        </div>
 
         {item.recipe && (
           <div className="warehouse-detail-block">
             <h3 className="warehouse-detail-section-title">{t.recipe}</h3>
-            <ul className="warehouse-recipe">
+            <ul className="warehouse-lines">
               {item.recipe.map((cost) => {
                 const material = items[cost.itemId]
                 const have = owned[cost.itemId] ?? 0
                 return (
-                  <li
-                    key={cost.itemId}
-                    className={`warehouse-recipe-item is-rarity-${material.rarity}${have < cost.count ? ' is-short' : ''}`}
-                  >
-                    <ItemIcon item={material} className="warehouse-recipe-icon" />
-                    <span className="warehouse-recipe-name">{tItem[material.nameKey]}</span>
-                    <span className="warehouse-recipe-count">
+                  <li key={cost.itemId} className={`warehouse-line${have < cost.count ? ' is-short' : ''}`}>
+                    <HexIcon item={material} />
+                    <span className="warehouse-line-name">{tItem[material.nameKey]}</span>
+                    <span className="warehouse-line-value">
                       {have} <small>/ {cost.count}</small>
                     </span>
                   </li>
@@ -122,34 +148,42 @@ export default function ItemDetail({ item, owned }: Props) {
           </div>
         )}
 
-        <div className="warehouse-detail-block">
-          <h3 className="warehouse-detail-section-title">{t.sources}</h3>
-          {sources.length === 0 ? (
-            <span className="warehouse-detail-none">{item.recipe ? t.noDropRecipe : t.noDrop}</span>
-          ) : (
-            <>
-              {/* 章が解放済みならジャンプ */}
-              <ul className="warehouse-sources">
-                {sources.map((s) => {
-                  const chapter = chapterOf(s.stageId)
-                  const className = `warehouse-source${s.sure ? ' is-sure' : ''}`
+        {(uses.length > 0 || products.length > 0) && (
+          <div className="warehouse-detail-block">
+            <h3 className="warehouse-detail-section-title">{t.usage}</h3>
+            {uses.length > 0 && (
+              <ul className="warehouse-lines">
+                {uses.map((u) => {
+                  const master = characterMasters[u.characterId]
+                  const skill = master.skills.find((s) => s.def.id === u.skillId)
                   return (
-                    <li key={s.stageId}>
-                      {chapter <= maxChapter ? (
-                        <Link to={paths.story} className={className} onClick={() => setCurrentChapter(chapter)}>
-                          {s.stageId}
-                        </Link>
-                      ) : (
-                        <span className={`${className} is-locked`}>{s.stageId}</span>
-                      )}
+                    <li key={`${u.characterId}-${u.skillId}`} className="warehouse-line">
+                      <img className="warehouse-line-face" src={faceUrl(u.characterId)} alt="" />
+                      <span className="warehouse-line-name">
+                        {tChar[master.nameKey]}
+                        <small>{skill ? fill(t.skillLevel, tChar[skill.def.nameKey], u.level) : t.limitBreak}</small>
+                      </span>
+                      <span className="warehouse-line-value">{u.count}</span>
                     </li>
                   )
                 })}
               </ul>
-              <span className="warehouse-sources-note">{t.sourcesNote}</span>
-            </>
-          )}
-        </div>
+            )}
+            {products.length > 0 && (
+              <ul className="warehouse-products">
+                {products.map((p) => (
+                  <li key={p.id}>
+                    <button type="button" className="warehouse-product" onClick={() => onSelect(p.id)}>
+                      <HexIcon item={p} />
+                      {tItem[p.nameKey]}
+                      <small>×{p.recipe!.find((c) => c.itemId === item.id)!.count}</small>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
       </div>
     </section>
   )
