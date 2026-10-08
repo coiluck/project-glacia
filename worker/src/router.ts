@@ -13,6 +13,7 @@ import * as gacha from './routes/gacha'
 import * as loginBonus from './routes/loginBonus'
 import * as mission from './routes/mission'
 import * as party from './routes/party'
+import * as settings from './routes/settings'
 import type { Command } from './routes/types'
 
 // 状態を変えるルートのmap
@@ -27,6 +28,7 @@ const COMMANDS: Record<string, Command<unknown>> = {
   '/login-bonus': loginBonus.claim,
   '/mission': mission.claim,
   '/base': baseRoute.run,
+  '/settings': settings.save,
   '/debug/set': debug.set,
 }
 

@@ -3,6 +3,7 @@ import type { MissionEvent } from '../data/missions'
 import type { BaseBuildingKind } from '../data/base'
 import type { BaseBuilding } from '../features/base/types'
 import type { Axial } from '../features/battle/hex'
+import type { Lang, TextSize, TextSpeed } from '../data/settings'
 
 // Cloudflare Workers (D1) が返すユーザーデータ
 export interface UserRow {
@@ -62,6 +63,13 @@ export interface UserRow {
   base_members: Record<string, string> // CharacterMaster.id -> 立っているマスの axialKey
   base_tower_level: number // 暖房塔の Lv
   base_collected_at: number // 最後に回収した時刻（Unix秒）
+
+  // --- 設定（settingsStore）---
+  settings_bgm: number // 0〜100
+  settings_se: number // 0〜100
+  settings_text_speed: TextSpeed
+  settings_text_size: TextSize
+  settings_lang: Lang
 }
 
 export interface MeResponse {
@@ -96,6 +104,15 @@ export type EnhancePayload =
 // POST /favorite のリクエスト
 export interface FavoritePayload {
   masterId: string // CharacterMaster.id
+}
+
+// POST /settings のリクエスト。全項目をまとめて送る
+export interface SettingsPayload {
+  bgm: number
+  se: number
+  textSpeed: TextSpeed
+  textSize: TextSize
+  lang: Lang
 }
 
 // POST /login-bonus の result

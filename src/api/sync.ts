@@ -13,6 +13,7 @@ import { useExchangeStore } from '../stores/exchangeStore'
 import { useLoginBonusStore } from '../stores/loginBonusStore'
 import { useMissionStore } from '../stores/missionStore'
 import { useBaseStore } from '../stores/baseStore'
+import { useSettingsStore } from '../stores/settingsStore'
 
 // ユーザーデータを取得し、全ストアへ反映する
 export async function syncUserData(): Promise<MeResponse> {
@@ -35,6 +36,7 @@ export function distribute(me: MeResponse) {
   useLoginBonusStore.getState().hydrate(me.user)
   useMissionStore.getState().hydrate(me.user)
   useBaseStore.getState().hydrate(me.user)
+  useSettingsStore.getState().hydrate(me.user)
   useCharacterStore.getState().hydrate(me)
 }
 
@@ -52,5 +54,6 @@ export function resetAll() {
   useLoginBonusStore.getState().reset()
   useMissionStore.getState().reset()
   useBaseStore.getState().reset()
+  useSettingsStore.getState().reset()
   useCharacterStore.getState().reset()
 }
