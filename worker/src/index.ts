@@ -1,7 +1,7 @@
 // Cloudflare Workers用
 // 値を決めるのはsrc/features/*/resolve*.ts
 import type { Env } from './context'
-import { error, withCors } from './http'
+import { BadRequest, error, withCors } from './http'
 import { route } from './router'
 
 export default {
@@ -16,7 +16,10 @@ export default {
     try {
       return withCors(await route(request, env, path), env, origin)
     } catch (e) {
-      return withCors(error((e as Error).message, 400), env, origin)
+      if (e instanceof BadRequest) return withCors(error(e.message, 400), env, origin)
+      // D1のエラーとかだけのはず
+      console.error(e)
+      return withCors(error('internal error', 500), env, origin)
     }
   },
 } satisfies ExportedHandler<Env>

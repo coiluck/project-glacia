@@ -9,11 +9,21 @@ import {
 import type { Context } from '../context'
 import { createSession, deleteSession } from '../db/sessions'
 import { createUser, findCredentials, loadMe } from '../db/users'
-import { error, json } from '../http'
+import { BadRequest, error, json, readJson } from '../http'
 
 interface Credentials {
   name: string
   password: string
+}
+
+async function readCredentials(request: Request): Promise<Credentials> {
+  const body = (await readJson(request)) as Partial<Record<keyof Credentials, unknown>> | null
+  const name = body?.name
+  const password = body?.password
+  if (typeof name !== 'string' || typeof password !== 'string') {
+    throw new BadRequest('bad credentials')
+  }
+  return { name, password }
 }
 
 // ユーザー名とパスワードのどちらが違うかは返さない
@@ -28,8 +38,12 @@ async function issue(ctx: Context, userId: string): Promise<Response> {
 
 // POST /auth/register
 export async function register(request: Request, ctx: Context): Promise<Response> {
-  const { name, password } = (await request.json()) as Credentials
-  validateCredentials(name, password)
+  const { name, password } = await readCredentials(request)
+  try {
+    validateCredentials(name, password)
+  } catch (e) {
+    return error((e as Error).message, 400)
+  }
 
   const salt = randomHex(16)
   const id = crypto.randomUUID()
@@ -47,7 +61,7 @@ export async function register(request: Request, ctx: Context): Promise<Response
 
 // POST /auth/login。nameはユーザー名かidでもよい
 export async function login(request: Request, ctx: Context): Promise<Response> {
-  const { name, password } = (await request.json()) as Credentials
+  const { name, password } = await readCredentials(request)
 
   const found = await findCredentials(ctx.db, name)
   if (!found) return error(REJECT, 401)

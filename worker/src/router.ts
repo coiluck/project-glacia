@@ -1,7 +1,7 @@
 import { nowSeconds, readToken, type Context, type Env } from './context'
 import { findSessionUserId } from './db/sessions'
 import { loadMe, saveMe } from './db/users'
-import { error, json } from './http'
+import { BadRequest, error, json, readJson } from './http'
 import * as auth from './routes/auth'
 import * as baseRoute from './routes/base'
 import * as battle from './routes/battle'
@@ -68,7 +68,13 @@ export async function route(request: Request, env: Env, path: string): Promise<R
   if (request.method !== 'POST') return error('method not allowed', 405)
 
   const before = await loadMe(ctx)
-  const after = command(before, await request.json(), ctx)
+  const body = await readJson(request)
+  let after: ReturnType<typeof command>
+  try {
+    after = command(before, body, ctx)
+  } catch (e) {
+    throw new BadRequest((e as Error).message)
+  }
   await saveMe(ctx, before, after.me)
   return json({ me: after.me, result: after.result })
 }

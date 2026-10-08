@@ -147,7 +147,7 @@ const characterKey = (c: UserCharacter) =>
 
 // before と比べて変わった行だけ書く
 export async function saveMe(
-  { db }: Context,
+  { db, userId }: Context,
   before: MeResponse,
   after: MeResponse,
 ): Promise<void> {
@@ -156,7 +156,7 @@ export async function saveMe(
     db
       .prepare(
         `UPDATE users SET
-           username = ?, "rank" = ?, total_exp = ?, exp_in_rank = ?, exp_to_next = ?,
+           "rank" = ?, total_exp = ?, exp_in_rank = ?, exp_to_next = ?,
            stamina = ?, stamina_max = ?, stamina_updated_at = ?,
            currency = ?, gems = ?, pity = ?,
            chapter = ?, cleared_stage_ids = ?, tutorial_steps = ?,
@@ -170,7 +170,6 @@ export async function saveMe(
          WHERE id = ?`,
       )
       .bind(
-        u.username,
         u.rank,
         u.total_exp,
         u.exp_in_rank,
@@ -205,7 +204,7 @@ export async function saveMe(
         u.settings_text_speed,
         u.settings_text_size,
         u.settings_lang,
-        u.id,
+        userId,
       ),
   ]
 
@@ -224,7 +223,7 @@ export async function saveMe(
              skill_levels = excluded.skill_levels`,
         )
         .bind(
-          u.id,
+          userId,
           c.masterId,
           c.level,
           c.exp,
@@ -243,7 +242,7 @@ export async function saveMe(
     statements.push(
       db
         .prepare('DELETE FROM user_characters WHERE user_id = ? AND master_id = ?')
-        .bind(u.id, c.masterId),
+        .bind(userId, c.masterId),
     )
   }
 
@@ -253,7 +252,7 @@ export async function saveMe(
     statements.push(
       db
         .prepare('UPDATE user_parties SET master_ids = ? WHERE user_id = ? AND slot = ?')
-        .bind(next, u.id, slot),
+        .bind(next, userId, slot),
     )
   }
 
