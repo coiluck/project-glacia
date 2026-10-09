@@ -1,19 +1,46 @@
-/* ===== 左下：イベントバナー ===== */
-.top-event-banner {
+.top-event-banner-area {
   position: absolute;
   left: calc(2rem * var(--scale));
-  bottom: calc(2rem * var(--scale));
+  bottom: calc(1.5rem * var(--scale));
   display: flex;
   flex-direction: column;
-  gap: calc(4px * var(--scale));
-  aspect-ratio: 5 / 2;
+  gap: calc(8px * var(--scale));
   width: 30vw;
-  background: linear-gradient(135deg, rgba(180, 30, 30, 0.85), rgba(40, 0, 0, 0.85));
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  cursor: pointer;
 }
-.top-event-banner-item {
-  font-size: calc(1.1rem * var(--scale));
-  letter-spacing: 0.15em;
-  opacity: 0.9;
+
+.top-event-banner-list {
+  position: relative;
+  display: flex;
+  aspect-ratio: 5 / 2;
+  overflow: hidden;
+}
+.top-event-banner {
+  flex: 0 0 100%;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.5s ease;
+}
+.top-event-banner-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 枚数ぶんの平行四辺形 */
+.top-event-banner-indicator {
+  display: flex;
+  gap: calc(10px * var(--scale));
+}
+.top-event-banner-indicator-button {
+  flex: 1;
+  height: calc(12px * var(--scale));
+  padding: 0;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+  transform: skewX(-14deg);
+}
+.top-event-banner-indicator-button.is-active {
+  background: rgb(107, 191, 252);
 }

@@ -1,0 +1,165 @@
+/* イベントバナー共通。1200×480 で組む */
+@import url('https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap');
+
+@font-face {
+  font-family: 'SoukouMincho';
+  src: url('../src/styles/fonts/SoukouMincho.woff2') format('woff2');
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1200px; height: 480px; overflow: hidden; background: #000; }
+
+.banner {
+  position: relative;
+  width: 1200px;
+  height: 480px;
+  overflow: hidden;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  color: #fff;
+}
+
+/* 背景 */
+.bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+}
+.bg-grade {
+  position: absolute;
+  inset: 0;
+}
+
+/* 六角の格子（戦闘盤面のモチーフ） */
+.hexes {
+  position: absolute;
+  inset: 0;
+}
+
+/* キャラ */
+.chara {
+  position: absolute;
+  height: auto;
+  filter: drop-shadow(-10px 6px 14px rgba(0, 0, 0, 0.45));
+}
+
+/* 左の文字パネル */
+.panel {
+  position: absolute;
+  backdrop-filter: blur(6px);
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 640px;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 120px) 100%, 0 100%);
+}
+.panel-edge {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 650px;
+  clip-path: polygon(calc(100% - 10px) 0, 100% 0, calc(100% - 120px) 100%, calc(100% - 130px) 100%);
+}
+
+.text {
+  position: absolute;
+  left: 96px;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+}
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+.title-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 18px;
+}
+.title {
+  font-family: 'SoukouMincho', serif;
+  font-size: 112px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+  white-space: nowrap;
+}
+.badge {
+  position: relative;
+  padding: 2px 16px 4px;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  color: var(--badge-ink);
+  white-space: nowrap;
+}
+.badge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--accent);
+  transform: skewX(-14deg);
+}
+.badge { isolation: isolate; }
+.sub {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  opacity: 0.92;
+}
+.sub::before {
+  content: '';
+  width: 56px;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.7;
+}
+
+/* 枠の細線 */
+.frame {
+  position: absolute;
+  inset: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+}
+.frame::before, .frame::after {
+  content: '';
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-color: var(--accent);
+  border-style: solid;
+}
+.frame::before { left: -4px; top: -4px; border-width: 4px 0 0 4px; }
+.frame::after { right: -4px; bottom: -4px; border-width: 0 4px 4px 0; }
+
+/* 粉雪 */
+.snow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* 右上からの光 */
+.flare {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 520px 300px at 92% -8%, rgba(255, 255, 255, 0.55), transparent 70%),
+    radial-gradient(ellipse 260px 140px at 80% 6%, rgba(190, 230, 255, 0.35), transparent 70%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}

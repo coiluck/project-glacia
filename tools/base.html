@@ -1,0 +1,54 @@
+<!doctype html>
+<!-- イベントバナーの元。render.py で同名の .avif に書き出し、public/images/events/ にコピーして使う -->
+<html lang="ja"><head><meta charset="utf-8"><link rel="stylesheet" href="style.css">
+<style>
+  .banner { --accent: #ffb35c; --badge-ink: #3a1c00; }
+  .bg { background-image: url('../public/images/scenario/bg/camp_tent.png'); background-position: 80% 60%; background-size: 125% auto; }
+  .bg-grade {
+    background:
+      linear-gradient(to top, rgba(14, 18, 34, 0.7), transparent 45%),
+      radial-gradient(ellipse 420px 320px at 98% 70%, rgba(255, 150, 60, 0.35), transparent 70%);
+  }
+  .panel { background: linear-gradient(100deg, rgba(14, 22, 44, 0.84) 0%, rgba(20, 30, 58, 0.55) 60%, rgba(20, 30, 58, 0.25) 100%); }
+  .panel-edge { background: var(--accent); }
+  .hexes { -webkit-mask-image: radial-gradient(ellipse 520px 300px at 0% 100%, #000, transparent); }
+  .title { font-size: 128px; }
+  .c-clarice { width: 540px; left: 660px; top: -50px; }
+  /* 床に広がる六角の区画 */
+  .colony {
+    position: absolute;
+    left: 330px;
+    top: 300px;
+    width: 700px;
+    height: 400px;
+    transform: perspective(700px) rotateX(62deg) scale(0.8);
+    transform-origin: 50% 0;
+    -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 40%, #000 40%, transparent 100%);
+  }
+  .colony svg { width: 100%; height: 100%; overflow: visible; }
+  .flare {
+    background:
+      radial-gradient(ellipse 380px 260px at 100% 72%, rgba(255, 170, 80, 0.5), transparent 70%),
+      radial-gradient(ellipse 300px 120px at 62% 92%, rgba(255, 160, 70, 0.4), transparent 70%);
+  }
+</style></head>
+<body>
+<div class="banner">
+  <div class="bg"></div>
+  <div class="bg-grade"></div>
+  <div class="colony"><svg viewBox="0 0 700 400"><polygon points="387.4,178.4 387.4,221.6 350.0,243.2 312.6,221.6 312.6,178.4 350.0,156.8" fill="rgba(255,170,80,0.22)" stroke="#ffc27a" stroke-width="2.5"/><polygon points="467.1,178.4 467.1,221.6 429.7,243.2 392.2,221.6 392.2,178.4 429.7,156.8" fill="rgba(255,170,80,0.22)" stroke="#ffc27a" stroke-width="2.5"/><polygon points="307.8,178.4 307.8,221.6 270.3,243.2 232.9,221.6 232.9,178.4 270.3,156.8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,210,160,0.45)" stroke-width="1.5" stroke-dasharray="6 5"/><polygon points="347.6,109.4 347.6,152.6 310.2,174.2 272.7,152.6 272.7,109.4 310.2,87.8" fill="rgba(255,170,80,0.22)" stroke="#ffc27a" stroke-width="2.5"/><polygon points="427.3,109.4 427.3,152.6 389.8,174.2 352.4,152.6 352.4,109.4 389.8,87.8" fill="rgba(255,170,80,0.22)" stroke="#ffc27a" stroke-width="2.5"/><polygon points="347.6,247.4 347.6,290.6 310.2,312.2 272.7,290.6 272.7,247.4 310.2,225.8" fill="rgba(255,170,80,0.22)" stroke="#ffc27a" stroke-width="2.5"/><polygon points="427.3,247.4 427.3,290.6 389.8,312.2 352.4,290.6 352.4,247.4 389.8,225.8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,210,160,0.45)" stroke-width="1.5" stroke-dasharray="6 5"/><polygon points="507.0,109.4 507.0,152.6 469.5,174.2 432.1,152.6 432.1,109.4 469.5,87.8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,210,160,0.45)" stroke-width="1.5" stroke-dasharray="6 5"/><polygon points="267.9,247.4 267.9,290.6 230.5,312.2 193.0,290.6 193.0,247.4 230.5,225.8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,210,160,0.45)" stroke-width="1.5" stroke-dasharray="6 5"/><polygon points="546.8,178.4 546.8,221.6 509.3,243.2 471.9,221.6 471.9,178.4 509.3,156.8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,210,160,0.45)" stroke-width="1.5" stroke-dasharray="6 5"/><polygon points="228.1,178.4 228.1,221.6 190.7,243.2 153.2,221.6 153.2,178.4 190.7,156.8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,210,160,0.45)" stroke-width="1.5" stroke-dasharray="6 5"/><polygon points="507.0,247.4 507.0,290.6 469.5,312.2 432.1,290.6 432.1,247.4 469.5,225.8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,210,160,0.45)" stroke-width="1.5" stroke-dasharray="6 5"/><polygon points="267.9,109.4 267.9,152.6 230.5,174.2 193.0,152.6 193.0,109.4 230.5,87.8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,210,160,0.45)" stroke-width="1.5" stroke-dasharray="6 5"/></svg></div>
+  <img class="chara c-clarice" src="../public/images/character/full_body/clarice.png">
+  <div class="panel"></div>
+  <div class="panel-edge"></div>
+  <div class="hexes" data-r="40" data-color="rgba(255,190,120,0.25)"></div>
+  <div class="flare"></div>
+  <div class="snow" data-n="50"></div>
+  <div class="text">
+    <div class="kicker"><span class="badge">解放</span>新機能</div>
+    <div class="title">基地</div>
+    <div class="sub">凍土を拓き、拠点を築く</div>
+  </div>
+  <div class="frame"></div>
+</div>
+<script src="deco.js"></script>
+</body></html>

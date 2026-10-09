@@ -33,3 +33,6 @@ CLAUDE.md
 # 配信は AVIF
 public/images/**/*.png
 !public/images/pwa/*.png
+
+# tools
+tools/*.avif
