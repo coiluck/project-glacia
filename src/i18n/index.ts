@@ -69,3 +69,5 @@ export function useTranslations<T extends Record<string, string>>(
 
   return translations
 }
+
+export { fill } from './fill'

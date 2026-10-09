@@ -87,7 +87,7 @@ export default function ResourceBar() {
          <div className="resource-bar-user-container fade-in">
            <svg
              className="resource-bar-user-svg"
-             viewBox="0 0 400 99.49749"
+             viewBox="0 0 400 100"
              xmlns="http://www.w3.org/2000/svg"
            >
              {/* 経験値バー */}
@@ -99,7 +99,7 @@ export default function ResourceBar() {
                </linearGradient>
              </defs>
              {/* 背景パネル */}
-             <path fill="#060827" fillOpacity={0.386792} d="M 0,0 V 70 H 320 L 400,0 Z" />
+             <path fill="#060827" fillOpacity={0.66} d="M 0,0 V 70 H 320 L 400,0 Z" />
              {/* ユーザーアイコン */}
              <rect fill="#060827" width={70} height={70} x={35.355347} y={-34.644653} transform="rotate(45)" />
              <clipPath id="resource-bar-user-icon-clip">

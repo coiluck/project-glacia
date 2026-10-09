@@ -31,6 +31,7 @@ export default function MemberSelect({
 }: MemberSelectProps) {
   const tCharacter = useTranslations('characters', CHARACTER_TRANSLATION_MAPPING)
   const tClass = useTranslations('battle', CLASS_TRANSLATION_MAPPING)
+  const t = useTranslations('party', { inParty: 'inParty', select: 'select' })
 
   const owned = useCharacterStore((s) => s.owned)
   const party = useCharacterStore((s) => s.party)
@@ -78,7 +79,7 @@ export default function MemberSelect({
                       () => setSelectedId((prev) => (prev === c.master.id ? null : c.master.id))
                 }
               />
-              {isUsed && <span className="party-member-select-used-label">編成済み</span>}
+              {isUsed && <span className="party-member-select-used-label">{t.inParty}</span>}
             </div>
           )
         })}
@@ -88,7 +89,7 @@ export default function MemberSelect({
           className="party-member-select-decide"
           onClick={decide}
         >
-          選択
+          {t.select}
         </button>
       </div>
 

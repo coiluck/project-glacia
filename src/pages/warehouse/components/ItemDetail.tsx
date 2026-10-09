@@ -3,12 +3,11 @@ import { paths } from '../../../router/paths'
 import { items, type ItemDef, type ItemKind } from '../../../data/items'
 import { characterMasters } from '../../../data/characters'
 import { RARITIES } from '../../../data/characters/const'
-import { useTranslations } from '../../../i18n'
+import { fill, useTranslations } from '../../../i18n'
 import { useProgressStore } from '../../../stores/progressStore'
 import { useCharacterStore } from '../../../stores/characterStore'
 import { chapterOf, dropSources, type DropSource } from '../dropSources'
 import { growthUses, productsOf } from '../usage'
-import { fill } from '../fill'
 import HexIcon from './HexIcon'
 
 const KIND_LABEL: Record<ItemKind, string> = { material: 'kindMaterial', book: 'kindBook', exp: 'kindExp' }

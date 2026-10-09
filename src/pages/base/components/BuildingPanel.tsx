@@ -8,7 +8,8 @@ import ItemIcon from '../../../components/common/ItemIcon'
 import { EMBLEMS } from './art'
 import { DetailCard, GoldButton, HeatCells, HoloArt, Stage } from './detail'
 import { OutputPicker } from './parts'
-import { boostOf, faceUrl, fill, formatPerHour, previewWith } from '../view'
+import { fill } from '../../../i18n'
+import { boostOf, faceUrl, formatPerHour, previewWith } from '../view'
 import type { BaseView, Stock } from '../view'
 
 type Props = {

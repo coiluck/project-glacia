@@ -1,9 +1,8 @@
 import { useMemo } from 'react'
 import { items } from '../../../data/items'
 import { RARITIES } from '../../../data/characters/const'
-import { useTranslations } from '../../../i18n'
+import { fill, useTranslations } from '../../../i18n'
 import { treeSections } from '../treeLayout'
-import { fill } from '../fill'
 import HexIcon from './HexIcon'
 
 // 盤面の寸法（設計座標）

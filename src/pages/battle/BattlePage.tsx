@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { paths } from '../../router/paths'
 import { sendBattleResult } from '../../api/actions/battle'
-import { useTranslations } from '../../i18n'
+import { fill, useTranslations } from '../../i18n'
 import { battleGuideRegistry } from '../../data/battleGuides'
 import { battleStageRegistry } from '../../data/battleStages'
 import { characterMasters } from '../../data/characters'
@@ -90,10 +90,6 @@ export interface UnitChip {
 
 // 敵ユニットの id（enemy-<番号>-<EnemyDef.id>）から EnemyDef.id を取り出す
 const enemyIdOf = (unit: Unit) => unit.id.split('-').slice(2).join('-')
-
-// i18n の {0} {1} … を埋める
-const fill = (template: string, ...values: (string | number)[]) =>
-  template.replace(/\{(\d+)\}/g, (match, index: string) => String(values[Number(index)] ?? match))
 
 export default function BattlePage() {
   const { stageId } = useParams<{ stageId: string }>()

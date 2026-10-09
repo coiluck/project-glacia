@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useTranslations } from '../../../i18n'
+import { fill, useTranslations } from '../../../i18n'
 import MaterialCostList from './MaterialCostList'
 import BillIcon from '../../../components/common/BillIcon'
 import { enhanceCharacter } from '../../../api/actions/characters'
@@ -18,6 +18,26 @@ const RECORDS = Object.values(items)
   .sort((a, b) => (a.exp ?? 0) - (b.exp ?? 0))
 
 const RECORD_TRANSLATION_MAPPING = Object.fromEntries(RECORDS.map((r) => [r.nameKey, r.nameKey]))
+
+const TRANSLATION_MAPPING = {
+  failed: 'failed',
+  cappedNext: 'cappedNext',
+  cappedMax: 'cappedMax',
+  gateOpen: 'gateOpen',
+  gateReady: 'gateReady',
+  gateLocked: 'gateLocked',
+  level: 'level',
+  toCap: 'toCap',
+  levelUp: 'levelUp',
+  toCapShort: 'toCapShort',
+  owned: 'owned',
+  fillToCap: 'fillToCap',
+  clear: 'clear',
+  limitBreak: 'limitBreak',
+  cap: 'cap',
+  reachToRelease: 'reachToRelease',
+  release: 'release',
+}
 
 // レールのマス数
 const RAIL_CELLS = Math.max(...Object.values(MAX_LEVEL))
@@ -50,6 +70,7 @@ function Gate({ level, state, large }: { level: number; state: GateState; large?
 export default function MemberLevelPanel({ character }: { character: ResolvedCharacter }) {
   const { master, user } = character
   const tItem = useTranslations('items', RECORD_TRANSLATION_MAPPING)
+  const t = useTranslations('member', TRANSLATION_MAPPING)
   const owned = useInventoryStore((s) => s.items)
   const currency = useResourceStore((s) => s.currency)
   const [use, setUse] = useState<Record<string, number>>({}) // 使う育成記録の個数
@@ -71,7 +92,7 @@ export default function MemberLevelPanel({ character }: { character: ResolvedCha
       await enhanceCharacter(payload)
       setUse({})
     } catch (e) {
-      setError(e instanceof Error ? e.message : '失敗した')
+      setError(e instanceof Error ? e.message : t.failed)
     } finally {
       setPending(false)
     }
@@ -109,8 +130,8 @@ export default function MemberLevelPanel({ character }: { character: ResolvedCha
   const shortCurrency = currency < total
   const cappedText =
     user.limitBreak < walls.length
-      ? `上限に達している。上限解放で Lv ${maxLevel(master.rarity, user.limitBreak + 1)} まで上げられる`
-      : '最大レベルに達している'
+      ? fill(t.cappedNext, maxLevel(master.rarity, user.limitBreak + 1))
+      : t.cappedMax
 
   // 上限解放
   const cost = character.nextLimitBreakCost
@@ -122,7 +143,7 @@ export default function MemberLevelPanel({ character }: { character: ResolvedCha
     i < user.limitBreak ? 'open' : i === user.limitBreak && character.canLimitBreak ? 'ready' : 'locked'
   const gateCaption = (i: number) => {
     const state = gateState(i)
-    return state === 'open' ? '解放済み' : state === 'ready' ? '解放できる' : `Lv${walls[i]} で解放`
+    return state === 'open' ? t.gateOpen : state === 'ready' ? t.gateReady : fill(t.gateLocked, walls[i])
   }
 
   // ─ レール ─
@@ -145,9 +166,9 @@ export default function MemberLevelPanel({ character }: { character: ResolvedCha
     <>
       <section className="member-detail-rail">
         <div className="member-detail-block-head">
-          <h2 className="member-detail-section-title">レベル</h2>
+          <h2 className="member-detail-section-title">{t.level}</h2>
           <span className="member-detail-level-note">
-            {room === 0 ? cappedText : `上限 Lv${cap} まで あと ${room} EXP`}
+            {room === 0 ? cappedText : fill(t.toCap, cap, room)}
           </span>
         </div>
 
@@ -194,9 +215,9 @@ export default function MemberLevelPanel({ character }: { character: ResolvedCha
       <div className="member-detail-level-cols">
         <section className="member-detail-levelup">
           <div className="member-detail-block-head">
-            <h2 className="member-detail-section-title">レベルアップ</h2>
+            <h2 className="member-detail-section-title">{t.levelUp}</h2>
             {room > 0 && (
-              <span className="member-detail-level-note">上限まで あと {room} EXP</span>
+              <span className="member-detail-level-note">{fill(t.toCapShort, room)}</span>
             )}
           </div>
 
@@ -228,7 +249,7 @@ export default function MemberLevelPanel({ character }: { character: ResolvedCha
                       <span className="member-detail-record-name">{tItem[r.nameKey]}</span>
                       <span className="member-detail-record-exp">+{r.exp}</span>
                       <span className="member-detail-record-owned">
-                        所持 <b>{have}</b>
+                        {t.owned} <b>{have}</b>
                       </span>
                       <div className={`member-detail-stepper${count ? ' is-active' : ''}`}>
                         <button
@@ -256,7 +277,7 @@ export default function MemberLevelPanel({ character }: { character: ResolvedCha
                 {bill}
                 <b>−{total}</b>
                 <span className="member-detail-level-cost-owned">
-                  所持 <b>{currency}</b>
+                  {t.owned} <b>{currency}</b>
                 </span>
               </span>
 
@@ -267,7 +288,7 @@ export default function MemberLevelPanel({ character }: { character: ResolvedCha
                   disabled={!canFill}
                   onClick={fillToCap}
                 >
-                  上限まで
+                  {t.fillToCap}
                 </button>
                 <button
                   type="button"
@@ -275,7 +296,7 @@ export default function MemberLevelPanel({ character }: { character: ResolvedCha
                   disabled={total === 0}
                   onClick={() => setUse({})}
                 >
-                  クリア
+                  {t.clear}
                 </button>
                 <button
                   type="button"
@@ -283,7 +304,7 @@ export default function MemberLevelPanel({ character }: { character: ResolvedCha
                   disabled={pending || total === 0 || shortCurrency}
                   onClick={levelUp}
                 >
-                  レベルアップ
+                  {t.levelUp}
                 </button>
               </div>
             </>
@@ -292,7 +313,7 @@ export default function MemberLevelPanel({ character }: { character: ResolvedCha
 
         <section className="member-detail-limit-break">
           <div className="member-detail-block-head">
-            <h2 className="member-detail-section-title">上限解放</h2>
+            <h2 className="member-detail-section-title">{t.limitBreak}</h2>
             <span className="member-detail-block-count">
               {user.limitBreak}/{walls.length}
             </span>
@@ -306,7 +327,7 @@ export default function MemberLevelPanel({ character }: { character: ResolvedCha
             />
             <div className="member-detail-gate-text">
               <span className="member-detail-cap-jump">
-                <span className="member-detail-cap-jump-label">上限</span>
+                <span className="member-detail-cap-jump-label">{t.cap}</span>
                 {cost ? (
                   <>
                     <b>{cap}</b>
@@ -325,11 +346,11 @@ export default function MemberLevelPanel({ character }: { character: ResolvedCha
               {/* 素材が足りない */}
               {!character.canLimitBreak ? (
                 <span className="member-detail-limit-break-state">
-                  Lv {nextWall} に到達すると解放できる（あと {nextWall - character.level} レベル）
+                  {fill(t.reachToRelease, nextWall, nextWall - character.level)}
                 </span>
               ) : (
                 canRelease && (
-                  <span className="member-detail-limit-break-state is-ok">解放できる</span>
+                  <span className="member-detail-limit-break-state is-ok">{t.gateReady}</span>
                 )
               )}
               <MaterialCostList costs={cost} />
@@ -340,7 +361,7 @@ export default function MemberLevelPanel({ character }: { character: ResolvedCha
                   disabled={pending || !canRelease}
                   onClick={release}
                 >
-                  解放する
+                  {t.release}
                 </button>
               </div>
             </>

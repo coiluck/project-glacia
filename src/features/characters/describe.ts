@@ -2,6 +2,7 @@
 // 効果量はスキルレベルと凸で変わるので、i18n 側は数値を {0} {1} … で空けておき、
 // 解決済みの ResolvedSkill から埋める。
 import type { DupeBonus } from '../../data/characters/types'
+import { fill } from '../../i18n/fill'
 import type { SkillEffect } from '../battle/types'
 import type { ResolvedSkill } from './resolve'
 
@@ -20,10 +21,7 @@ function effectValue(effect: SkillEffect): number {
 // 説明文の {0} {1} … を def.effect の同じ添字の効果量で埋める。
 // 添字の並びは effectGrowth と同じ（どちらも def.effect 基準）
 export function formatSkillDescription(template: string, skill: ResolvedSkill): string {
-  return template.replace(/\{(\d+)\}/g, (match, index: string) => {
-    const effect = skill.def.effect[Number(index)]
-    return effect ? String(effectValue(effect)) : match
-  })
+  return fill(template, ...skill.def.effect.map(effectValue))
 }
 
 // 凸1つ分の効果を項目ごとの文にする

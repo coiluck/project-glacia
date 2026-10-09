@@ -8,7 +8,7 @@
   display: flex;
   flex-direction: column;
   gap: calc(32px * var(--scale));
-  width: 40vw;
+  width: calc(768px * var(--scale));
 }
 .top-menu-buttons-row {
   display: flex;
@@ -227,71 +227,47 @@
   }
 }
 
-.top-menu-button-party-icon {
-  width: calc(72px * var(--scale));
-  height: calc(72px * var(--scale));
-  mask-image: url('/project-glacia/images/top/menu-main/knight.svg');
+/* アイコンは文字の背景に敷く。横幅を文字にまるごと渡すため（英語だと横に並べると収まらない） */
+.top-menu-buttons a:has(> .top-menu-button-icon) {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.top-menu-button-icon {
+  position: absolute;
+  right: calc(-12px * var(--scale));
+  bottom: calc(-20px * var(--scale));
+  z-index: -1;
+  width: calc(120px * var(--scale));
+  height: calc(120px * var(--scale));
   mask-repeat: no-repeat;
   mask-position: center;
   mask-size: contain;
   background-color: #282828;
   opacity: 0.2;
 }
+.top-menu-button-party-icon {
+  mask-image: url('/project-glacia/images/top/menu-main/knight.svg');
+}
 .top-menu-button-member-icon {
-  width: calc(72px * var(--scale));
-  height: calc(72px * var(--scale));
   mask-image: url('/project-glacia/images/top/menu-main/team.svg');
-  mask-repeat: no-repeat;
-  mask-position: center;
-  mask-size: contain;
-  background-color: #282828;
-  opacity: 0.2;
 }
 
 .top-menu-button-mission-icon {
-  width: calc(72px * var(--scale));
-  height: calc(72px * var(--scale));
   mask-image: url('/project-glacia/images/top/menu-main/mission.svg');
-  mask-repeat: no-repeat;
-  mask-position: center;
-  mask-size: contain;
-  background-color: #282828;
-  opacity: 0.2;
 }
 .top-menu-button-exchange-icon {
-  width: calc(72px * var(--scale));
-  height: calc(72px * var(--scale));
   mask-image: url('/project-glacia/images/top/menu-main/exchange.svg');
-  mask-repeat: no-repeat;
-  mask-position: center;
-  mask-size: contain;
-  background-color: #282828;
-  opacity: 0.2;
 }
 .top-menu-button-recruit-icon {
-  width: calc(72px * var(--scale));
-  height: calc(72px * var(--scale));
   mask-image: url('/project-glacia/images/top/menu-main/graduation_hat.svg');
-  mask-repeat: no-repeat;
-  mask-position: center;
-  mask-size: contain;
-  background-color: #282828;
-  opacity: 0.2;
 }
 
 .top-menu-buttons a.top-menu-button-base {
   padding: 0 calc(48px * var(--scale));
-  gap: calc(32px * var(--scale));
 }
 .top-menu-button-base-icon {
-  width: calc(72px * var(--scale));
-  height: calc(72px * var(--scale));
   mask-image: url('/project-glacia/images/top/menu-main/base.svg');
-  mask-repeat: no-repeat;
-  mask-position: center;
-  mask-size: contain;
-  background-color: #282828;
-  opacity: 0.2;
 }
 
 .top-menu-buttons a.top-menu-button-store {

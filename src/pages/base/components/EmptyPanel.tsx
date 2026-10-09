@@ -8,7 +8,8 @@ import type { BaseAnalysis, BuildingStatus } from '../../../features/base/board'
 import BillIcon from '../../../components/common/BillIcon'
 import ItemIcon from '../../../components/common/ItemIcon'
 import { DetailCard, FlameIcon, GoldButton, HeatCells, HoloArt, LockIcon, Stage } from './detail'
-import { fill, gradeStep, heatBlocked, previewWith } from '../view'
+import { fill } from '../../../i18n'
+import { gradeStep, heatBlocked, previewWith } from '../view'
 import type { BaseView } from '../view'
 
 const KINDS: BaseBuildingKind[] = ['mine', 'library', 'storage', 'pipe']

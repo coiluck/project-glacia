@@ -355,7 +355,7 @@
 .recruit-action:disabled {
   color: #8a96a2;
   background: rgba(20, 28, 44, 0.86);
-  cursor: default;
+  cursor: not-allowed;
 }
 .recruit-action-label {
   font-size: 30px;

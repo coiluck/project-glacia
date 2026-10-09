@@ -115,13 +115,6 @@ export default function RecruitPage() {
     )
   }
 
-  const shortage =
-    gems < PULL_COST_SINGLE
-      ? `ジェムが${formatCompact(PULL_COST_SINGLE - gems)}足りない`
-      : gems < PULL_COST_MULTI
-        ? `10連にはジェムが${formatCompact(PULL_COST_MULTI - gems)}足りない`
-        : ''
-
   return (
     <>
       <div className="page page-recruit">
@@ -204,7 +197,6 @@ export default function RecruitPage() {
             {error && <p className="recruit-shortage">{error}</p>}
             {view.kind === 'banner' ? (
               <>
-                {!error && shortage && <p className="recruit-shortage">{shortage}</p>}
                 <button
                   type="button"
                   className="recruit-action"

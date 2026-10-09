@@ -1,11 +1,27 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslations } from '../../../i18n'
 import { paths } from '../../../router/paths'
 import { selectStamina, useStaminaStore } from '../../../stores/staminaStore'
 import { formatHms } from '../../../utils/format'
 
+const TRANSLATION_MAPPING = {
+  battle: 'battle',
+  party: 'party',
+  member: 'member',
+  mission: 'mission',
+  exchange: 'exchange',
+  recruit: 'recruit',
+  base: 'base',
+  warehouse: 'warehouse',
+  staminaFull: 'staminaFull',
+  staminaToNext: 'staminaToNext',
+  staminaToFull: 'staminaToFull',
+}
+
 // Top画面右のメインメニュー
 export default function MenuButtons() {
+  const t = useTranslations('top', TRANSLATION_MAPPING)
   const stamina = useStaminaStore((s) => selectStamina(s).stamina)
   const staminaMax = useStaminaStore((s) => s.base.stamina_max)
   const toNext = useStaminaStore((s) => selectStamina(s).stamina_recovering_seconds)
@@ -40,12 +56,12 @@ export default function MenuButtons() {
             {isStaminaOpen && (
               <dl className="top-menu-button-stamina-modal">
                 {stamina >= staminaMax ? (
-                  <dt>全回復済み</dt>
+                  <dt>{t.staminaFull}</dt>
                 ) : (
                   <>
-                    <dt>1回復まで</dt>
+                    <dt>{t.staminaToNext}</dt>
                     <dd>{formatHms(toNext)}</dd>
-                    <dt>全回復まで</dt>
+                    <dt>{t.staminaToFull}</dt>
                     <dd>{formatHms(toFull)}</dd>
                   </>
                 )}
@@ -53,42 +69,42 @@ export default function MenuButtons() {
             )}
           </div>
 
-          <span>戦闘</span>
+          <span>{t.battle}</span>
         </Link>
       </div>
 
       <div className="top-menu-buttons-row">
         <Link to={paths.party} className="top-menu-button-party">
-          <span>編成</span>
-          <div className="top-menu-button-party-icon" />
+          <span>{t.party}</span>
+          <div className="top-menu-button-icon top-menu-button-party-icon" />
         </Link>
         <Link to={paths.member} className="top-menu-button-member">
-          <span>人員</span>
-          <div className="top-menu-button-member-icon" />
+          <span>{t.member}</span>
+          <div className="top-menu-button-icon top-menu-button-member-icon" />
         </Link>
       </div>
 
       <div className="top-menu-buttons-row">
         <Link to={paths.mission}>
-          <span>任務</span>
-          <div className="top-menu-button-mission-icon" />
+          <span>{t.mission}</span>
+          <div className="top-menu-button-icon top-menu-button-mission-icon" />
         </Link>
         <Link to={paths.exchange}>
-          <span>取引所</span>
-          <div className="top-menu-button-exchange-icon" />
+          <span>{t.exchange}</span>
+          <div className="top-menu-button-icon top-menu-button-exchange-icon" />
         </Link>
         <Link to={paths.recruit}>
-          <span>召集</span>
-          <div className="top-menu-button-recruit-icon" />
+          <span>{t.recruit}</span>
+          <div className="top-menu-button-icon top-menu-button-recruit-icon" />
         </Link>
       </div>
 
       <div className="top-menu-buttons-row">
         <Link to={paths.base} className="top-menu-button-base">
-          <span>基地</span>
-          <div className="top-menu-button-base-icon" />
+          <span>{t.base}</span>
+          <div className="top-menu-button-icon top-menu-button-base-icon" />
         </Link>
-        <Link to={paths.warehouse} className="top-menu-button-store">倉庫</Link>
+        <Link to={paths.warehouse} className="top-menu-button-store">{t.warehouse}</Link>
       </div>
     </nav>
   )

@@ -2,7 +2,7 @@ import { TOWER_LEVELS } from '../../../data/base'
 import { chapters, isChapterCleared } from '../../../data/stages'
 import { EMBLEMS } from './art'
 import { DetailCard, GoldButton, HoloArt, LockIcon, Stage } from './detail'
-import { fill } from '../view'
+import { fill } from '../../../i18n'
 import type { BaseView } from '../view'
 
 type Props = {

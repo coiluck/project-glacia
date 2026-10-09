@@ -85,6 +85,7 @@ interface MemberSelectDetailProps {
 // セーフエリア外（実画面の高さいっぱい）に出すのでビューポートへPortalする
 export default function MemberSelectDetail({ selected }: MemberSelectDetailProps) {
   const tCharacter = useTranslations('characters', CHARACTER_TRANSLATION_MAPPING)
+  const t = useTranslations('party', { selectPrompt: 'selectPrompt', enhance: 'enhance' })
   const setSelectedSkill = useCharacterStore((s) => s.setSelectedSkill)
   const viewportEl = useContext(ScreenViewportContext)
   if (!viewportEl) return null
@@ -93,7 +94,7 @@ export default function MemberSelectDetail({ selected }: MemberSelectDetailProps
     <div className="party-member-select-detail fade-in">
       <div className="party-member-select-detail-header">
         <p className="party-member-select-name">
-          {selected ? tCharacter[selected.master.nameKey] : '選択してください'}
+          {selected ? tCharacter[selected.master.nameKey] : t.selectPrompt}
         </p>
 
         {selected && (
@@ -101,7 +102,7 @@ export default function MemberSelectDetail({ selected }: MemberSelectDetailProps
             className="party-member-select-enhance"
             to={paths.memberDetail(selected.master.id)}
           >
-            強化する
+            {t.enhance}
           </Link>
         )}
       </div>

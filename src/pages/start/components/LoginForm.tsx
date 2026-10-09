@@ -7,13 +7,9 @@ import {
   PASSWORD_MAX,
   PASSWORD_MIN,
 } from '../../../features/auth/auth'
-import { useTranslations } from '../../../i18n'
+import { fill, useTranslations } from '../../../i18n'
 
 type Mode = 'login' | 'register'
-
-// 文言の {0} {1} … を数値で埋める
-const fill = (template: string, ...values: number[]) =>
-  template.replace(/\{(\d+)\}/g, (match, index: string) => String(values[Number(index)] ?? match))
 
 interface LoginFormProps {
   onDone: (registered: boolean) => void // registered: 新規登録だった
