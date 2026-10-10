@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams, useSearchParams, Navigate } from 'react-router-dom'
 import { paths } from '../../router/paths'
 import { scenarioRegistry } from '../../data/scenarios'
@@ -8,12 +8,22 @@ import type { SceneSnapshot } from '../../features/scenario/types'
 import { useProgressStore } from '../../stores/progressStore'
 import { useSettingsStore } from '../../stores/settingsStore'
 import { TEXT_SIZE_PX, TEXT_SPEED_MS } from '../../data/settings'
+import { useTranslations } from '../../i18n'
 import ViewportLayer from '../../layouts/ViewportLayer'
 import { Background } from './components/Background'
 import { CharacterSprite, CharacterFace } from './components/Character'
+import { ScenarioMenu } from './components/ScenarioMenu'
+import { ScenarioLog } from './components/ScenarioLog'
 
 // log に表示する過去の行数
 const LOG_MAX_LINES = 50
+
+const SCENARIO_TRANSLATION_MAPPING = {
+  prev: 'prev',
+  log: 'log',
+  skip: 'skip',
+  close: 'close',
+}
 
 export default function ScenarioPage() {
   const { scenarioId } = useParams<{ scenarioId: string }>()
@@ -44,14 +54,13 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
   const motion = useGameStore((s) => s.motion)
   const pendingChoice = useGameStore((s) => s.pendingChoice)
   const textSize = useSettingsStore((s) => s.textSize)
+  const t = useTranslations('scenario', SCENARIO_TRANSLATION_MAPPING)
 
   const advancingRef = useRef(false)
   const typingIdRef = useRef(0)
   const instantNextRef = useRef(false)
-  const logContainerRef = useRef<HTMLDivElement>(null)
 
   const [displayedText, setDisplayedText] = useState('')
-  const [auto, setAuto] = useState(false)
   const [isLogOpen, setIsLogOpen] = useState(false)
   const [logEntries, setLogEntries] = useState<SceneSnapshot[]>([])
 
@@ -103,13 +112,6 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
 
     return () => window.clearTimeout(timer)
   }, [snapshot.text])
-
-  // log を開いたら最新までスクロール
-  useLayoutEffect(() => {
-    if (!isLogOpen) return
-    const el = logContainerRef.current
-    if (el) el.scrollTop = el.scrollHeight
-  }, [isLogOpen])
 
   const isTyping = !!snapshot.text && displayedText.length < snapshot.text.length
 
@@ -172,11 +174,6 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
     setIsLogOpen((v) => !v)
   }
 
-  const handleAutoToggle = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    setAuto((v) => !v)
-  }
-
   const handleChoice = async (index: number, e: React.MouseEvent) => {
     e.stopPropagation()
     if (!pendingChoice || advancingRef.current) return
@@ -209,53 +206,17 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
             <span className="scenario-text-message-text">{snapshot.text ? displayedText : '...'}</span>
             <span className="scenario-text-message-cursor" />
           </div>
-
-          {/* アイコン未用意のため文字表示 */}
-          <nav className="scenario-menu">
-            <button className="scenario-menu-button" onClick={handlePrev}>prev</button>
-            <button className="scenario-menu-button" onClick={handleLogToggle}>log</button>
-            <button className="scenario-menu-button" onClick={handleSkip}>skip</button>
-            <button
-              className={`scenario-menu-button${auto ? ' is-on' : ''}`}
-              onClick={handleAutoToggle}
-            >
-              auto {auto ? 'ON' : 'OFF'}
-            </button>
-          </nav>
         </div>
 
-        {isLogOpen && (
-          <div
-            ref={logContainerRef}
-            className="scenario-log-container"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {logEntries.map((s, i) => {
-              const face = s.faceId ? s.characters.find((x) => x.id === s.faceId) : null
-              return (
-                <Fragment key={i}>
-                  <div className="scenario-log-line">
-                    {face ? (
-                      <img
-                        className="scenario-log-face"
-                        src={`${import.meta.env.BASE_URL}images/character/face/${face.id}.avif`}
-                        alt={face.id}
-                     />
-                    ) : (
-                      <div className="scenario-log-face-dummy" />
-                    )}
-                    <div className="scenario-log-text">{s.text}</div>
-                  </div>
+        <ScenarioMenu
+          isLogOpen={isLogOpen}
+          labels={t}
+          onPrev={handlePrev}
+          onLog={handleLogToggle}
+          onSkip={handleSkip}
+        />
 
-                  {/* 最後以外はhr */}
-                  {i !== logEntries.length - 1 && (
-                    <div className="scenario-log-horizonal-line" />
-                  )}
-                </Fragment>
-              )
-            })}
-          </div>
-        )}
+        {isLogOpen && <ScenarioLog entries={logEntries} />}
 
         {/* 選択肢は同じ行のテキストを表示し終えてから出す */}
         {pendingChoice && !isTyping && (
