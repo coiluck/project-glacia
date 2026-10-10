@@ -206,9 +206,9 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
-  width: 250px;
+  width: 270px;
   height: 118px;
-  padding: 14px 18px 14px 20px;
+  padding: 14px 18px 0 20px;
   font-family: inherit;
   text-align: left;
   cursor: pointer;
@@ -229,17 +229,6 @@
   clip-path: inherit;
   transition: border-color 0.15s ease-out;
 }
-/* 左端の色帯 */
-.battle-action-button::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background: var(--tone);
-  opacity: 0.6;
-}
 .battle-action-button:hover:not(:disabled) {
   background: rgba(20, 30, 40, 0.92);
 }
@@ -252,9 +241,6 @@
 .battle-action-button.is-active::before {
   border-color: var(--tone);
   box-shadow: inset 0 0 24px color-mix(in srgb, var(--tone) 25%, transparent);
-}
-.battle-action-button.is-active::after {
-  opacity: 1;
 }
 /* AP不足 */
 .battle-action-button:disabled {
@@ -271,6 +257,9 @@
   background: rgba(255, 107, 122, 0.5);
   box-shadow: none;
 }
+.battle-action-button:disabled .battle-action-foot {
+  background: rgba(255, 107, 122, 0.1);
+}
 
 .battle-action-kind {
   font-family: 'CaviarDreams', sans-serif;
@@ -285,12 +274,27 @@
   letter-spacing: 0.06em;
   color: #fff;
 }
+/* 消費APと射程の帯。選択中は塗りつぶして文字を反転する */
 .battle-action-foot {
   display: flex;
   align-items: center;
   gap: 14px;
-  width: 100%;
-  margin-top: auto;
+  width: calc(100% + 38px);
+  height: 36px;
+  margin: auto -18px 0 -20px;
+  padding: 0 34px 0 20px;
+  background: color-mix(in srgb, var(--tone) 16%, transparent);
+  transition: background 0.15s ease-out;
+}
+.battle-action-button.is-active .battle-action-foot {
+  background: var(--tone);
+}
+.battle-action-button.is-active .battle-action-cost,
+.battle-action-button.is-active .battle-action-range {
+  color: #08121c;
+}
+.battle-action-button.is-active .battle-action-cost .battle-pips i.is-on {
+  background: #08121c;
 }
 .battle-action-cost {
   display: flex;
