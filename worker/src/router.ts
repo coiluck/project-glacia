@@ -14,6 +14,7 @@ import * as loginBonus from './routes/loginBonus'
 import * as mission from './routes/mission'
 import * as party from './routes/party'
 import * as settings from './routes/settings'
+import * as tutorial from './routes/tutorial'
 import type { Command } from './routes/types'
 
 // 状態を変えるルートのmap
@@ -30,6 +31,7 @@ const COMMANDS: Record<string, Command<unknown>> = {
   '/mission': mission.claim,
   '/base': baseRoute.run,
   '/settings': settings.save,
+  '/tutorial': tutorial.complete,
   '/debug/set': debug.set,
 }
 

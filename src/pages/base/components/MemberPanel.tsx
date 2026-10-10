@@ -78,6 +78,7 @@ export default function MemberPanel({ view, selectedId, heldId, onSelect, grab }
               <button
                 type="button"
                 className={className}
+                data-guide={`member-${id}`}
                 onClick={() => onSelect(id)}
                 {...grab(id, !pending && (placed || !full))}
               >

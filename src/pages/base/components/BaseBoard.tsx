@@ -175,6 +175,7 @@ function MemberSprite({
     return (
       <div
         className={`base-member${state}`}
+        data-key={member.key}
         data-selectable
         style={{ transform: `translate(${p.x}px, ${p.y + FOOT_OFFSET}px)` }}
         {...events}
@@ -363,6 +364,7 @@ export default function BaseBoard({
               <g
                 key={key}
                 className={`base-art is-${art}${idle ? ' is-idle' : ''}`}
+                data-key={key}
                 transform={`translate(${surface[0]}, ${surface[1]})`}
                 data-selectable={isSelectable(tile) || undefined}
                 onClick={isSelectable(tile) ? () => onSelect(key) : undefined}

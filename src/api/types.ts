@@ -4,6 +4,7 @@ import type { BaseBuildingKind } from '../data/base'
 import type { BaseBuilding } from '../features/base/types'
 import type { Axial } from '../features/battle/hex'
 import type { Lang, TextSize, TextSpeed } from '../data/settings'
+import type { TutorialStep } from '../features/tutorial/resolve'
 
 // Cloudflare Workers (D1) が返すユーザーデータ
 export interface UserRow {
@@ -104,6 +105,11 @@ export type EnhancePayload =
 // POST /favorite のリクエスト
 export interface FavoritePayload {
   masterId: string // CharacterMaster.id
+}
+
+// POST /tutorial のリクエスト
+export interface TutorialPayload {
+  step: TutorialStep // 完了したステップ
 }
 
 // POST /settings のリクエスト。全項目をまとめて送る
