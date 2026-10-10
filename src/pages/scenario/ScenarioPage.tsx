@@ -129,12 +129,12 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
       setIsLogOpen(false)
       return
     }
-    if (pendingChoice || advancingRef.current) return
     if (isTyping) {
       typingIdRef.current += 1
       setDisplayedText(snapshot.text)
       return
     }
+    if (pendingChoice || advancingRef.current) return
     advancingRef.current = true
     try {
       const result = await engine.advance()
@@ -257,7 +257,8 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
           </div>
         )}
 
-        {pendingChoice && (
+        {/* 選択肢は同じ行のテキストを表示し終えてから出す */}
+        {pendingChoice && !isTyping && (
           <div className="scenario-choice-container" onClick={(e) => e.stopPropagation()}>
             {pendingChoice.choices.map((c, i) => (
               <button

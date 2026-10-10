@@ -26,10 +26,7 @@ const scenario: ScenarioFile = {
       speaker: 'ラピス',
       commands: [
         { type: 'char', id: 'lapis', pose: 'normal' }
-      ]
-    },
-    {
-      text: '',
+      ],
       choiceId: 'why'
     },
     {
@@ -44,10 +41,7 @@ const scenario: ScenarioFile = {
       speaker: 'ラピス',
       commands: [
         { type: 'char', id: 'lapis', pose: 'smile' }
-      ]
-    },
-    {
-      text: '',
+      ],
       choiceId: 'title'
     },
     {
