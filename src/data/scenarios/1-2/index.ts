@@ -58,7 +58,154 @@ const scenario: ScenarioFile = {
         { type: 'char', id: 'lapis', pose: 'smile' }
       ]
     },
-    // ここから 1-2 の本編
+    {
+      text: 'ラピスが頭を下げたとき、雪を踏む足音が近づいてきた。'
+    },
+    {
+      text: 'そこのふたり、動かないでください！',
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'clarice', pose: 'serious', bounce: true }
+      ]
+    },
+    {
+      text: '雪原の向こうから、外套を着た少女が駆けてくる。外套の胸に、騎士団の紋が縫いつけてあった。'
+    },
+    {
+      text: '帝国騎士団、アルマ隊のクラリスです。',
+      speaker: 'クラリス',
+      commands: [
+        { type: 'char', id: 'clarice', pose: 'normal' }
+      ]
+    },
+    {
+      text: '昨日、見張り台から、境界を出てくる人影が見えたと報告がありました。……あなたですね。',
+      speaker: 'クラリス',
+      commands: [
+        { type: 'char', id: 'clarice', pose: 'serious' }
+      ]
+    },
+    {
+      text: 'ラピスさん。あなたがこの人を運んでいくところも、見張りが見ています。どうして報告してくれなかったんですか。',
+      speaker: 'クラリス'
+    },
+    {
+      text: '……目が覚めるまでは、と思って。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'sad' }
+      ]
+    },
+    {
+      text: 'クラリスは小さく息をついてから、こちらに向き直った。'
+    },
+    {
+      text: '境界から出てきた人を、そのままにはしておけません。野営地まで来てもらいます。取り調べがありますので。',
+      speaker: 'クラリス',
+      commands: [
+        { type: 'char', id: 'clarice', pose: 'serious' }
+      ]
+    },
+    {
+      text: '待ってください。この人、さっきまで起き上がるのもやっとだったんです。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'serious' }
+      ]
+    },
+    {
+      text: 'さっき、川で魔物と戦っていましたよね。',
+      speaker: 'クラリス',
+      commands: [
+        { type: 'char', id: 'clarice', pose: 'normal' }
+      ]
+    },
+    {
+      text: '……それは。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'surprised' }
+      ]
+    },
+    {
+      text: 'お名前と、所属を教えてください。',
+      speaker: 'クラリス',
+      commands: [
+        { type: 'char', id: 'clarice', pose: 'normal' }
+      ],
+      choiceId: 'identity'
+    },
+    {
+      text: 'クラリスは手帳に何か書きつけて、ぱたんと閉じた。'
+    },
+    {
+      text: '詳しい話は、隊長の前で聞きます。ついてきてください。',
+      speaker: 'クラリス',
+      commands: [
+        { type: 'char', id: 'clarice', pose: 'serious' }
+      ]
+    },
+    {
+      text: '……私も行きます。この人を見つけたのは、私ですから。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'serious' }
+      ]
+    },
+    {
+      text: 'クラリスは少し迷うように眉を寄せてから、うなずいた。'
+    },
+    {
+      text: 'ラピスさんなら、隊長も嫌とは言わないと思います。',
+      speaker: 'クラリス',
+      commands: [
+        { type: 'char', id: 'clarice', pose: 'normal' }
+      ]
+    },
+    {
+      text: '野営地は、川沿いに雪原を下った先にあるという。三人で歩き出してしばらくしたころ、クラリスが足を止めた。',
+      commands: [
+        { type: 'bgMove', direction: 'rightToLeft', duration: 4000 }
+      ]
+    },
+    {
+      text: '……止まってください。',
+      speaker: 'クラリス',
+      commands: [
+        { type: 'char', id: 'clarice', pose: 'serious' }
+      ]
+    },
+    {
+      text: '雪の丘の陰から、白くて丸い影がいくつも這い出してくる。その上を、霜をまとった鳥が低く旋回していた。'
+    },
+    {
+      text: 'コオリモチと、シモフクロウです。あの鳥は、離れたところから撃ってきます。',
+      speaker: 'クラリス'
+    },
+    {
+      text: 'クラリスは得物を構えかけて、それから横目でこちらを見た。'
+    },
+    {
+      text: '……さっきの戦い、見張り台から見ていました。',
+      speaker: 'クラリス',
+      commands: [
+        { type: 'char', id: 'clarice', pose: 'normal' }
+      ]
+    },
+    {
+      text: '指揮は、お任せします。どれだけ戦えるのか、取り調べの前に見せてもらいます。',
+      speaker: 'クラリス',
+      commands: [
+        { type: 'char', id: 'clarice', pose: 'serious', bounce: true }
+      ]
+    },
+    {
+      text: '行きましょう、指揮官。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'serious', bounce: true }
+      ]
+    },
   ],
   choices: {
     why: [
@@ -89,6 +236,25 @@ const scenario: ScenarioFile = {
         branch: [
           { text: '部隊がひとりでも、指揮官は指揮官です。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'smile' }] },
           { text: '本当の名前を思い出したら、そっちで呼びますから。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'normal' }] },
+        ],
+      },
+    ],
+    identity: [
+      {
+        buttonText: 'それが、分からない',
+        branch: [
+          { text: '分からない……？', speaker: 'クラリス', commands: [{ type: 'char', id: 'clarice', pose: 'surprised' }] },
+          { text: '本当なんです。名前も、中で何があったのかも、覚えていないって。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'serious' }] },
+          { text: '……そういうことも、記録しておきます。', speaker: 'クラリス', commands: [{ type: 'char', id: 'clarice', pose: 'serious' }] },
+        ],
+      },
+      {
+        buttonText: 'ラピスには、指揮官と呼ばれている',
+        points: { lapisTrust: 1 },
+        branch: [
+          { text: 'しきかん……？ どこの部隊のですか。', speaker: 'クラリス', commands: [{ type: 'char', id: 'clarice', pose: 'surprised' }] },
+          { text: '名前を覚えていないので、私がそう呼んでるんです。部隊は、私ひとりです。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'smile' }] },
+          { text: '……そういうことも、記録しておきます。', speaker: 'クラリス', commands: [{ type: 'char', id: 'clarice', pose: 'serious' }] },
         ],
       },
     ],
