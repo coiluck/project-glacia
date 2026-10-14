@@ -48,8 +48,13 @@ export function useGameEngine(initial: GameState) {
     setSnapshot(engine.getState().snapshot);
   };
 
-  const advance = async (): Promise<AdvanceResult> => {
-    const result = engine.advance();
+  // 今の行が選択肢付きなら選択肢を出す。戻る・ロード後も state から導出し直す。
+  const syncChoice = () => {
+    const choiceId = engine.currentChoiceId();
+    setPendingChoice(choiceId ? { choiceId, choices: engine.getChoices(choiceId) } : null);
+  };
+
+  const present = async (result: AdvanceResult): Promise<AdvanceResult> => {
     if (result.kind === 'line') {
       syncFromState();
       // @char に bounce フラグが付いた立ち絵をはねさせる（話している演出）。
@@ -61,14 +66,12 @@ export function useGameEngine(initial: GameState) {
         bgShake: () => { /* TODO */ },
         showNextChapter: async () => { /* TODO */ },
       });
-    } else if (result.kind === 'choice') {
-      setPendingChoice({
-        choiceId: result.choiceId,
-        choices: engine.getChoices(result.choiceId),
-      });
     }
+    if (result.kind !== 'end') syncChoice();
     return result;
   };
+
+  const advance = (): Promise<AdvanceResult> => present(engine.advance());
 
   /** 既に開始済みなら何もしない。/game に再入したときに先頭から advance しないため。 */
   const start = async () => {
@@ -82,23 +85,23 @@ export function useGameEngine(initial: GameState) {
 
   const goBack = (): boolean => {
     if (!engine.goBack()) return false;
-    setPendingChoice(null);
     syncFromState();
+    syncChoice();
     return true;
   };
 
   const selectChoice = async (choiceId: string, choiceIndex: number): Promise<AdvanceResult> => {
-    engine.selectChoice(choiceId, choiceIndex);
+    const result = engine.selectChoice(choiceId, choiceIndex);
     setPendingChoice(null);
-    return advance();
+    return present(result);
   };
 
   const restore = (saved: GameState) => {
     engine.restore(saved);
     // ロード後に /game で再度 advance されないよう開始済みにする。
     started = true;
-    setPendingChoice(null);
     syncFromState();
+    syncChoice();
   };
 
   return {

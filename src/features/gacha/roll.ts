@@ -1,12 +1,6 @@
 import { RARITIES } from '../../data/characters/const'
 import type { Rarity } from '../../data/characters/types'
-import {
-  CEILING_PULLS,
-  PICK_UP_IDS,
-  PICK_UP_RATE,
-  RARITY_RATES,
-  gachaPool,
-} from '../../data/gacha'
+import { PICK_UP_RATE, RARITY_RATES, gachaPool } from '../../data/gacha'
 
 // 抽選結果1回ぶん
 export interface Pull {
@@ -40,30 +34,20 @@ function rollRarity(): Rarity {
   return candidates[0]
 }
 
-// レアリティの中から1体選ぶ
-function rollCharacter(rarity: Rarity): string {
+function rollCharacter(rarity: Rarity, pickUpIds: string[]): string {
   const candidates = gachaPool[rarity]
-  const pickUps = candidates.filter((id) => PICK_UP_IDS.includes(id))
-  const others = candidates.filter((id) => !PICK_UP_IDS.includes(id))
+  const pickUps = candidates.filter((id) => pickUpIds.includes(id))
+  const others = candidates.filter((id) => !pickUpIds.includes(id))
 
   const isPickUp = pickUps.length > 0 && (others.length === 0 || Math.random() < PICK_UP_RATE)
   const targetArr = isPickUp ? pickUps : others
   return targetArr[Math.floor(Math.random() * targetArr.length)]
 }
 
-// count 回ぶん引く。pityは天井までの回数
-export function rollPulls(count: number, pity: number): { pulls: Pull[]; pity: number } {
-  const pulls: Pull[] = []
-  let counter = pity
-
-  for (let i = 0; i < count; i++) {
-    counter += 1
-
-    const forced = counter >= CEILING_PULLS && gachaPool[3].length > 0
-    const rarity = forced ? 3 : rollRarity()
-    if (rarity === 3) counter = 0
-    pulls.push({ masterId: rollCharacter(rarity), rarity })
-  }
-
-  return { pulls, pity: counter }
+// count 回ぶん引く
+export function rollPulls(count: number, pickUpIds: string[]): Pull[] {
+  return Array.from({ length: count }, () => {
+    const rarity = rollRarity()
+    return { masterId: rollCharacter(rarity, pickUpIds), rarity }
+  })
 }

@@ -1,0 +1,13 @@
+{
+  "battle": "Battle",
+  "party": "Party",
+  "member": "Members",
+  "mission": "Missions",
+  "exchange": "Exchange",
+  "recruit": "Recruit",
+  "base": "Base",
+  "warehouse": "Warehouse",
+  "staminaFull": "Fully recovered",
+  "staminaToNext": "Next point in",
+  "staminaToFull": "Full in"
+}

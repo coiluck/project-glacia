@@ -38,7 +38,7 @@ export default function BaseStatus({ view }: { view: BaseView }) {
     .filter((r) => r.active + r.idle > 0)
 
   return (
-    <section ref={ref} className={`base-heat${open ? ' is-open' : ''}${heatUsed >= heatOutput ? ' is-max' : ''}`}>
+    <section ref={ref} data-guide="heat" className={`base-heat${open ? ' is-open' : ''}${heatUsed >= heatOutput ? ' is-max' : ''}`}>
       <button type="button" className="base-heat-head" aria-expanded={open} onClick={() => setOpen(!open)}>
         <span className="base-heat-tab">
           <span>{t.heat}</span>

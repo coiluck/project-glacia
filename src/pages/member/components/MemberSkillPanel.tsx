@@ -28,6 +28,7 @@ const RANGE_HEX_SIZE = 20
 // キャラが持つスキルの一覧。出撃スキルの切替とスキルレベル上げをここで完結させる
 export default function MemberSkillPanel({ character }: { character: ResolvedCharacter }) {
   const tSkill = useTranslations('characters', SKILL_TRANSLATION_MAPPING)
+  const t = useTranslations('member', { failed: 'failed', skillLevelUp: 'skillLevelUp' })
   const setSelectedSkill = useCharacterStore((s) => s.setSelectedSkill)
   const items = useInventoryStore((s) => s.items)
   const [pending, setPending] = useState(false) // 応答待ち。二重に押させない
@@ -40,7 +41,7 @@ export default function MemberSkillPanel({ character }: { character: ResolvedCha
     try {
       await enhanceCharacter({ kind: 'skill', masterId: character.master.id, skillId })
     } catch (e) {
-      setError(e instanceof Error ? e.message : '失敗した')
+      setError(e instanceof Error ? e.message : t.failed)
     } finally {
       setPending(false)
     }
@@ -87,7 +88,7 @@ export default function MemberSkillPanel({ character }: { character: ResolvedCha
                   disabled={pending || !canLevelUp}
                   onClick={() => levelUpSkill(skill.def.id)}
                 >
-                  Lv上げ
+                  {t.skillLevelUp}
                 </button>
 
                 <MaterialCostList costs={skill.nextLevelCost} />

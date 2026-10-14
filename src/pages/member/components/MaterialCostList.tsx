@@ -11,9 +11,10 @@ const ITEM_TRANSLATION_MAPPING = Object.fromEntries(
 // costsがnullなのは最大までアップデートしてるとき
 export default function MaterialCostList({ costs }: { costs: MaterialCost[] | null }) {
   const tItem = useTranslations('items', ITEM_TRANSLATION_MAPPING)
+  const t = useTranslations('member', { costMax: 'costMax' })
   const owned = useInventoryStore((s) => s.items)
 
-  if (!costs) return <span className="member-detail-cost-empty">上限</span>
+  if (!costs) return <span className="member-detail-cost-empty">{t.costMax}</span>
 
   return (
     <ul className="member-detail-cost-list">

@@ -1,0 +1,13 @@
+{
+  "battle": "戦闘",
+  "party": "編成",
+  "member": "人員",
+  "mission": "任務",
+  "exchange": "取引所",
+  "recruit": "召集",
+  "base": "基地",
+  "warehouse": "倉庫",
+  "staminaFull": "全回復済み",
+  "staminaToNext": "1回復まで",
+  "staminaToFull": "全回復まで"
+}

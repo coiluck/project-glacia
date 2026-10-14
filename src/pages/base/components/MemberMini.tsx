@@ -13,7 +13,7 @@ export default function MemberMini({ view, members, open, onOpen }: Props) {
   const limit = memberLimit(view.clearedStageIds)
 
   return (
-    <button type="button" className={`base-members-mini${open ? ' is-open' : ''}`} onClick={onOpen}>
+    <button type="button" data-guide="members" className={`base-members-mini${open ? ' is-open' : ''}`} onClick={onOpen}>
       <span className="base-members-mini-head">
         <span>{view.t.memberStrip}</span>
       </span>

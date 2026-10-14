@@ -1,8 +1,6 @@
 import { create } from 'zustand'
 import type { UserRow } from '../api/types'
-
-// チュートリアルのステップ
-export type TutorialStep = 'intro' | 'firstBattle' | 'gacha' | 'base'
+import type { TutorialStep } from '../features/tutorial/resolve'
 
 // チュートリアル進行（完了済みステップ）
 export interface TutorialState {

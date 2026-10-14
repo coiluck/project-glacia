@@ -1,69 +1,117 @@
-/* ===== backlog ===== */
-.scenario-log-container {
+.scenario-log {
   position: absolute;
-  inset: calc(80px * var(--scale)) calc(240px * var(--scale));
+  inset: 0;
+  z-index: 3;
+  background: linear-gradient(to bottom, rgba(6, 12, 18, 0.9), rgba(6, 12, 18, 0.8));
+  backdrop-filter: blur(5px);
+  animation: scenarioLogFade 0.25s ease-out both;
+}
+@keyframes scenarioLogFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.scenario-log-list {
+  position: absolute;
+  top: calc(120px * var(--scale));
+  bottom: 0;
+  left: calc(240px * var(--scale));
+  right: calc(240px * var(--scale));
   display: flex;
   flex-direction: column;
-  gap: calc(24px *  var(--scale));
-  padding: calc(48px *  var(--scale));
+  gap: calc(22px * var(--scale));
+  padding: calc(16px * var(--scale)) calc(24px * var(--scale)) calc(80px * var(--scale));
   overflow-y: auto;
-  scrollbar-color: #d8f9f9 transparent;
-  background-color: rgba(7, 6, 24, 0.8);
-  backdrop-filter: blur(4px);
-  z-index: 3;
+  overscroll-behavior: contain;
+  scrollbar-color: #7fe0ff transparent;
 }
-
-.scenario-log-container::-webkit-scrollbar {
+.scenario-log-list::-webkit-scrollbar {
+  width: calc(6px * var(--scale));
   background: transparent;
 }
-.scenario-log-container::-webkit-scrollbar-track {
-  background: transparent;
-  border-radius: 0 !important;
-}
-.scenario-log-container::-webkit-scrollbar-thumb {
-  background-color: #d8f9f9;
-  border-radius: 0 !important;
-  border: none;
-  background-clip: padding-box;
+.scenario-log-list::-webkit-scrollbar-thumb {
+  background: #7fe0ff;
 }
 
-
-
-.scenario-log-line {
+/* 台詞：顔＋カード */
+.scenario-log-say {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: calc(48px *  var(--scale));
+  align-items: flex-start;
+  gap: calc(22px * var(--scale));
+  flex: none;
+}
+/* 同じ話者の続きは詰める */
+.scenario-log-say.is-cont {
+  margin-top: calc(-12px * var(--scale));
 }
 .scenario-log-face {
-  width: calc(96px * var(--scale));
-  height: calc(96px * var(--scale));
-  background-color: aliceblue;
-  object-fit: contain;
-  object-position: bottom;
+  flex: none;
+  width: calc(84px * var(--scale));
+  height: calc(73px * var(--scale));
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+  background: #d9dee2;
 }
-.scenario-log-face-dummy {
-  width: calc(96px * var(--scale));
-  height: calc(24px * var(--scale));
-  background-color: aliceblue;
+.scenario-log-face img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+.scenario-log-face.is-empty {
+  background: rgba(255, 255, 255, 0.12);
+}
+.scenario-log-face.is-cont {
+  visibility: hidden;
+}
+.scenario-log-card {
+  max-width: calc(1100px * var(--scale));
+  padding: calc(12px * var(--scale)) calc(30px * var(--scale)) calc(16px * var(--scale));
+  background: rgba(24, 32, 46, 0.92);
+  border-radius: calc(36px * var(--scale));
+  border-bottom-left-radius: 5px;
+  box-shadow: 0 calc(2px * var(--scale)) calc(4px * var(--scale)) rgba(255, 255, 255, 0.2);
+}
+.scenario-log-name {
+  font-size: calc(20px * var(--scale));
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  color: #b1daff;
 }
 .scenario-log-text {
-  flex: 1;
-  text-align: left;
   font-size: calc(24px * var(--scale));
+  line-height: 1.64;
+  letter-spacing: 0.03em;
 }
 
-/* hr */
-.scenario-log-horizonal-line {
-  flex-shrink: 0;
-  width: 100%;
-  height: calc(3px * var(--scale));
-  border-radius: 50%;
-  background: radial-gradient(
-    ellipse 50% 100% at center,
-    rgba(161, 208, 225, 0.7) 10%,
-    rgba(101, 188, 219, 0.6) 20%,
-    rgba(48, 114, 181, 0.35) 55%,
-    rgba(32, 49, 105, 0) 100%
-  );
+/* 地の文：中央寄せ */
+.scenario-log-note {
+  flex: none;
+  align-self: center;
+  max-width: calc(1000px * var(--scale));
+  padding: calc(4px * var(--scale)) 0;
+  font-size: calc(23px * var(--scale));
+  line-height: 1.8;
+  letter-spacing: 0.05em;
+  text-align: center;
+  color: #c9d2d8;
+}
+
+/* 現在の行 */
+.scenario-log-say.is-current .scenario-log-card {
+  background: linear-gradient(120deg, rgba(127, 224, 255, 0.95), rgba(182, 245, 255, 0.95));
+}
+.scenario-log-say.is-current .scenario-log-name {
+  color: #2a3036;
+}
+.scenario-log-say.is-current .scenario-log-text {
+  color: #282828;
+}
+.scenario-log-note.is-current {
+  color: #b6f5ff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scenario-log {
+    animation: none;
+  }
 }

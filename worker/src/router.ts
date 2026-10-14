@@ -1,7 +1,7 @@
 import { nowSeconds, readToken, type Context, type Env } from './context'
 import { findSessionUserId } from './db/sessions'
 import { loadMe, saveMe } from './db/users'
-import { error, json } from './http'
+import { BadRequest, error, json, readJson } from './http'
 import * as auth from './routes/auth'
 import * as baseRoute from './routes/base'
 import * as battle from './routes/battle'
@@ -14,11 +14,13 @@ import * as loginBonus from './routes/loginBonus'
 import * as mission from './routes/mission'
 import * as party from './routes/party'
 import * as settings from './routes/settings'
+import * as tutorial from './routes/tutorial'
 import type { Command } from './routes/types'
 
 // 状態を変えるルートのmap
 const COMMANDS: Record<string, Command<unknown>> = {
   '/gacha/pull': gacha.pull,
+  '/gacha/exchange': gacha.exchange,
   '/battle/result': battle.result,
   '/battle/skip': battle.skip,
   '/party': party.save,
@@ -29,6 +31,7 @@ const COMMANDS: Record<string, Command<unknown>> = {
   '/mission': mission.claim,
   '/base': baseRoute.run,
   '/settings': settings.save,
+  '/tutorial': tutorial.complete,
   '/debug/set': debug.set,
 }
 
@@ -67,7 +70,13 @@ export async function route(request: Request, env: Env, path: string): Promise<R
   if (request.method !== 'POST') return error('method not allowed', 405)
 
   const before = await loadMe(ctx)
-  const after = command(before, await request.json(), ctx)
+  const body = await readJson(request)
+  let after: ReturnType<typeof command>
+  try {
+    after = command(before, body, ctx)
+  } catch (e) {
+    throw new BadRequest((e as Error).message)
+  }
   await saveMe(ctx, before, after.me)
   return json({ me: after.me, result: after.result })
 }

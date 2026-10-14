@@ -2,7 +2,7 @@ import type { BaseBuildingKind } from '../../../data/base'
 import { items } from '../../../data/items'
 import { outputsOf } from '../../../features/base/board'
 import ItemIcon from '../../../components/common/ItemIcon'
-import { fill } from '../view'
+import { fill } from '../../../i18n'
 import type { BaseView } from '../view'
 
 // 採掘場と書庫で作る物を選ぶ

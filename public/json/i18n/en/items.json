@@ -22,9 +22,9 @@
   "itemSkillBookMedium": "Intermediate Skill Manual",
   "itemSkillBookLarge": "Advanced Skill Manual",
 
-  "itemTrainingRecordSmall": "Basic Training Log",
-  "itemTrainingRecordMedium": "Intermediate Training Log",
-  "itemTrainingRecordLarge": "Advanced Training Log",
+  "itemTrainingRecordSmall": "Training Log I",
+  "itemTrainingRecordMedium": "Training Log Ⅱ",
+  "itemTrainingRecordLarge": "Training Log Ⅲ",
 
   "kindMaterial": "Material",
   "kindBook": "Skill Manual",

@@ -40,7 +40,6 @@
 @import './pages/battle/deploy.css';
 @import './pages/battle/panel.css';
 @import './pages/battle/result.css';
-@import './pages/battle/guide.css';
 @import './pages/member/member.css';
 @import './pages/member/detail.css';
 @import './pages/member/level.css';
@@ -73,6 +72,7 @@
 @import './components/menu-map.css';
 @import './components/bill-icon.css';
 @import './components/gem-icon.css';
+@import './components/guide.css';
 
 
 /* font */

@@ -2,7 +2,7 @@ import { useEffect, useState, type PointerEvent } from 'react'
 import { Navigate, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import Screen from '../../layouts/Screen'
 import { paths } from '../../router/paths'
-import { useTranslations } from '../../i18n'
+import { fill, useTranslations } from '../../i18n'
 import { saveParty } from '../../api/actions/party'
 import { useBackHandler } from '../../hooks/useBackHandler'
 import AttackRangeHex from '../../components/common/AttackRangeHex'
@@ -12,10 +12,9 @@ import { characterMasters } from '../../data/characters'
 import { classIcons } from '../../data/characters/classIcons'
 import { MAX_DUPE, MAX_SKILL_LEVEL, RARITIES } from '../../data/characters/const'
 import { unitClasses } from '../../data/unitClasses'
-import type { DupeBonus } from '../../data/characters/types'
 import { skillReach } from '../../features/battle/battle'
 import { shapeTiles, type Axial } from '../../features/battle/hex'
-import { formatSkillDescription } from '../../features/characters/describe'
+import { describeDupeBonus, formatSkillDescription } from '../../features/characters/describe'
 import { resolveOwned } from '../../features/characters/resolve'
 import { useCharacterStore } from '../../stores/characterStore'
 
@@ -28,10 +27,24 @@ const PANELS = ['detail', 'level', 'skill'] as const
 type PanelId = (typeof PANELS)[number]
 type SubPanelId = Exclude<PanelId, 'detail'>
 
-const PANEL_LABELS: Record<PanelId, string> = {
-  detail: '詳細',
-  level: 'レベル',
-  skill: 'スキル',
+const TRANSLATION_MAPPING = {
+  detail: 'detail',
+  level: 'level',
+  skill: 'skill',
+  back: 'back',
+  enhance: 'enhance',
+  status: 'status',
+  apPerTurn: 'apPerTurn',
+  attack: 'attack',
+  power: 'power',
+  apCost: 'apCost',
+  targets: 'targets',
+  targetsAll: 'targetsAll',
+  targetsCount: 'targetsCount',
+  range: 'range',
+  deploySkill: 'deploySkill',
+  skillList: 'skillList',
+  dupe: 'dupe',
 }
 
 // i18n。キャラ名・スキル名・スキルの説明文はどれも characters.json、
@@ -49,16 +62,6 @@ const CHARACTER_TRANSLATION_MAPPING = Object.fromEntries(
 const CLASS_TRANSLATION_MAPPING = Object.fromEntries(
   Object.values(unitClasses).map((c) => [c.nameKey, c.nameKey]),
 )
-
-// 凸1つ分の効果はここで文にする
-function describeDupeBonus(bonus: DupeBonus): string[] {
-  const parts: string[] = []
-  if (bonus.status?.hp) parts.push(`HP +${bonus.status.hp}`)
-  if (bonus.status?.attack) parts.push(`ATK +${bonus.status.attack}`)
-  if (bonus.status?.defense) parts.push(`DEF +${bonus.status.defense}`)
-  if (bonus.skillApCost) parts.push(`スキルAP ${bonus.skillApCost}`)
-  return parts
-}
 
 // 兵科アイコン
 function ClassIcon({ classId }: { classId: string }) {
@@ -86,6 +89,7 @@ export default function MemberDetailPage() {
   const { characterId } = useParams()
   const tCharacter = useTranslations('characters', CHARACTER_TRANSLATION_MAPPING)
   const tClass = useTranslations('battle', CLASS_TRANSLATION_MAPPING)
+  const t = useTranslations('member', TRANSLATION_MAPPING)
   const owned = useCharacterStore((s) => s.owned)
 
   useEffect(() => () => void saveParty(), [])
@@ -136,8 +140,8 @@ export default function MemberDetailPage() {
   const attackTargets = !unitClass
     ? '--'
     : unitClass.attackTargets === 'infinity'
-      ? '範囲全体'
-      : `${unitClass.attackTargets}体`
+      ? t.targetsAll
+      : fill(t.targetsCount, unitClass.attackTargets)
 
   return (
     <>
@@ -199,7 +203,7 @@ export default function MemberDetailPage() {
               className={`member-detail-panel-link is-strong${panel === 'level' ? ' is-active' : ''}`}
               onClick={() => goPanel('level')}
             >
-              強化
+              {t.enhance}
             </button>
           </div>
 
@@ -213,27 +217,27 @@ export default function MemberDetailPage() {
                 {/* ステータスと通常攻撃。どちらも同じ行リストで、右端に射程を置く */}
                 <section className="member-detail-ability">
                   <div className="member-detail-ability-col">
-                    <h2 className="member-detail-section-title">ステータス</h2>
+                    <h2 className="member-detail-section-title">{t.status}</h2>
                     <dl className="member-detail-stat-rows">
                       <StatRow label="HP" value={character.status.hp} />
                       <StatRow label="ATK" value={character.status.attack} />
                       <StatRow label="DEF" value={character.status.defense} />
-                      <StatRow label="ターンAP" value={unitClass?.apPerTurn ?? '--'} />
+                      <StatRow label={t.apPerTurn} value={unitClass?.apPerTurn ?? '--'} />
                     </dl>
                   </div>
 
                   {/* 通常攻撃は兵科そのものの性能なので育成では変わらない */}
                   <div className="member-detail-ability-col">
-                    <h2 className="member-detail-section-title">通常攻撃</h2>
+                    <h2 className="member-detail-section-title">{t.attack}</h2>
                     <dl className="member-detail-stat-rows">
-                      <StatRow label="威力" value={unitClass?.attackPower ?? '--'} />
-                      <StatRow label="消費AP" value={unitClass?.attackCost ?? '--'} />
-                      <StatRow label="対象" value={attackTargets} />
+                      <StatRow label={t.power} value={unitClass?.attackPower ?? '--'} />
+                      <StatRow label={t.apCost} value={unitClass?.attackCost ?? '--'} />
+                      <StatRow label={t.targets} value={attackTargets} />
                     </dl>
                   </div>
 
                   <div className="member-detail-ability-range">
-                    <h2 className="member-detail-section-title">射程</h2>
+                    <h2 className="member-detail-section-title">{t.range}</h2>
                     <div className="member-detail-range-tile">
                       {unitClass && (
                         <AttackRangeHex
@@ -248,13 +252,13 @@ export default function MemberDetailPage() {
                 {/* 出撃時に使う1つだけを出す。差し替えと Lv 上げはスキルパネル側 */}
                 <section className="member-detail-block">
                   <div className="member-detail-block-head">
-                    <h2 className="member-detail-section-title">出撃スキル</h2>
+                    <h2 className="member-detail-section-title">{t.deploySkill}</h2>
                     <button
                       type="button"
                       className={`member-detail-panel-link${panel === 'skill' ? ' is-active' : ''}`}
                       onClick={() => goPanel('skill')}
                     >
-                      スキル一覧
+                      {t.skillList}
                     </button>
                   </div>
 
@@ -287,7 +291,7 @@ export default function MemberDetailPage() {
                 {/* 凸。ガチャで重ねるものなのでここに操作は無い */}
                 <section className="member-detail-block">
                   <div className="member-detail-block-head">
-                    <h2 className="member-detail-section-title">凸</h2>
+                    <h2 className="member-detail-section-title">{t.dupe}</h2>
                     <span className="member-detail-block-count">
                       {user.dupe}/{MAX_DUPE}
                     </span>
@@ -321,9 +325,9 @@ export default function MemberDetailPage() {
                     className="member-detail-back"
                     onClick={() => goPanel('detail')}
                   >
-                    戻る
+                    {t.back}
                   </button>
-                  <span className="member-detail-subtitle">{PANEL_LABELS[sub]}</span>
+                  <span className="member-detail-subtitle">{t[sub]}</span>
                 </div>
 
                 {sub === 'level' ? (

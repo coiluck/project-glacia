@@ -1,4 +1,4 @@
-// 戦闘中のチュートリアルガイド。台本（data/battleGuides）の型と、操作を通すかの判定
+// 戦闘中のチュートリアルガイド
 import type { UserCharacter } from '../../data/characters/types'
 import type { Axial } from '../battle/hex'
 import type { BattlePhase } from '../battle/types'
@@ -25,7 +25,8 @@ export type GuideActionPattern = {
 
 // 注目させる場所
 // tile: マス / unit: ユニット（マスと絵の両方） / ui: data-guide 属性の値
-export type GuideFocus = { tile: Axial } | { unit: string } | { ui: string }
+// highlight: そのハイライトが付いたマスすべて（枠は付けない）。敵の攻撃範囲を暗くしないため
+export type GuideFocus = { tile: Axial } | { unit: string } | { ui: string } | { highlight: string }
 
 export interface GuideStep {
   speaker?: string // 喋るキャラの CharacterMaster.id。省略すると System
@@ -66,4 +67,19 @@ export function allowsGuide(step: GuideStep, action: GuideAction): boolean {
     }
     return value === expected
   })
+}
+
+// 基地のガイドで注目させる場所。tile: マス / around: そのマスの隣（枠は付けない）/ ui: data-guide 属性の値
+export type BaseGuideFocus = { tile: Axial } | { around: Axial } | { ui: string }
+
+export interface BaseGuideStep {
+  speaker?: string // 喋るキャラの CharacterMaster.id。省略すると System
+  textKey: string // tutorial.json のキー
+  focus?: BaseGuideFocus[] // 先頭に矢印が付く
+  left?: boolean // 吹き出しを左上に出す。右から出るマスの詳細を指すとき
+  dragHint?: boolean // 配置のドラッグのお手本を出すか。wait が place のときだけ使う
+  // tap: 説明（どこかをタップで次へ）/ select: そのマスを押すまで待つ / members: キャラの一覧を開くまで待つ
+  // place: そのキャラをそのマスに立たせるまで待つ
+  // 操作を待つ間は、注目箇所の外は押せない。place の間はマスも押せない（押すと一覧が閉じるので）
+  wait: 'tap' | { select: Axial } | 'members' | { place: string; at: Axial }
 }

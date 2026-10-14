@@ -37,13 +37,13 @@ const scenario: ScenarioFile = {
     },
     {
       text: '私はラピス。あなたは？',
-      speaker: '？？？'
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'normal' }
+      ]
     },
     {
-      text: '答えようとして、言葉が止まった。名前が、出てこない。'
-    },
-    {
-      text: '',
+      text: '答えようとして、言葉が止まった。名前が、出てこない。',
       choiceId: 'name'
     },
     {
@@ -71,10 +71,7 @@ const scenario: ScenarioFile = {
     },
     {
       text: '中で、誰かに会いませんでしたか。',
-      speaker: 'ラピス'
-    },
-    {
-      text: '',
+      speaker: 'ラピス',
       choiceId: 'inside'
     },
     {
@@ -135,10 +132,7 @@ const scenario: ScenarioFile = {
     },
     {
       text: 'だから、ここにいるんです。境界のそばに。',
-      speaker: 'ラピス'
-    },
-    {
-      text: '',
+      speaker: 'ラピス',
       choiceId: 'sister'
     },
     {
@@ -173,10 +167,7 @@ const scenario: ScenarioFile = {
     },
     {
       text: 'あなたはテントに戻っていてください。まだ立つのもやっとでしょう？',
-      speaker: 'ラピス'
-    },
-    {
-      text: '',
+      speaker: 'ラピス',
       choiceId: 'sortie'
     },
     {

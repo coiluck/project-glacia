@@ -5,6 +5,7 @@ import { useBackHandler } from '../../hooks/useBackHandler'
 import { useOutsideClick } from '../../hooks/useOutsideClick'
 import { operateBase } from '../../api/actions/base'
 import type { BasePayload } from '../../api/types'
+import { baseGuide } from '../../data/baseGuide'
 import { characterMasters } from '../../data/characters'
 import type { MaterialCost } from '../../data/characters/types'
 import { items } from '../../data/items'
@@ -17,6 +18,8 @@ import { useProgressStore } from '../../stores/progressStore'
 import { useRankStore } from '../../stores/rankStore'
 import { useResourceStore } from '../../stores/resourceStore'
 import { useStaminaStore } from '../../stores/staminaStore'
+import { useTutorialStore } from '../../stores/tutorialStore'
+import BaseGuide from './components/BaseGuide'
 import BaseBoard from './components/BaseBoard'
 import BaseSnow from './components/BaseSnow'
 import BaseStatus from './components/BaseStatus'
@@ -26,6 +29,7 @@ import MemberGhost from './components/MemberGhost'
 import MemberMini from './components/MemberMini'
 import MemberPanel from './components/MemberPanel'
 import TilePanel from './components/TilePanel'
+import { useBaseGuide } from './useBaseGuide'
 import { useMemberDrag } from './useMemberDrag'
 import { boardMembers, canStand, forecastAt, memberAt, rangeKeysOf, stocksOf } from './view'
 import type { BaseView } from './view'
@@ -109,6 +113,7 @@ const NAME_TRANSLATION_MAPPING = Object.fromEntries(
 const CLASS_TRANSLATION_MAPPING = Object.fromEntries(
   Object.values(unitClasses).map((c) => [c.id, c.nameKey]),
 )
+const TUTORIAL_TRANSLATION_MAPPING = Object.fromEntries(baseGuide.map((s) => [s.textKey, s.textKey]))
 
 const NO_RANGE = new Set<string>()
 
@@ -118,6 +123,7 @@ export default function BasePage() {
   const tItem = useTranslations('items', ITEM_TRANSLATION_MAPPING)
   const tName = useTranslations('characters', NAME_TRANSLATION_MAPPING)
   const tClass = useTranslations('battle', CLASS_TRANSLATION_MAPPING)
+  const tTutorial = useTranslations('tutorial', TUTORIAL_TRANSLATION_MAPPING)
 
   const base = useBaseStore((s) => s.base)
   const owned = useCharacterStore((s) => s.owned)
@@ -134,6 +140,12 @@ export default function BasePage() {
   const [memberId, setMemberId] = useState<string | null>(null) // 一覧で選んでいるキャラ
   const [pending, setPending] = useState(false) // 応答待ち
   const [toast, setToast] = useState<{ id: number; label: string; gains: MaterialCost[] } | null>(null)
+
+  // 初めて基地に入ったときだけチュートリアルを出す
+  const [guideSteps] = useState(() =>
+    useTutorialStore.getState().completedSteps.includes('base') ? null : baseGuide,
+  )
+  const guide = useBaseGuide(guideSteps, { selectedKey, membersOpen, members: base.base_members })
 
   const characters = useMemo(() => Object.values(owned), [owned])
   const analysis = useMemo(() => analyzeBase(base, characters), [base, characters])
@@ -287,7 +299,7 @@ export default function BasePage() {
         <CollectButton view={view} stocks={stocks} onCollect={() => run({ kind: 'collect' })} />
 
         {/* マスを選んだときだけ右から出る */}
-        <aside ref={sideRef} className="base-side">
+        <aside ref={sideRef} className="base-side" data-guide="tile-panel">
           {panelKey && (
             <TilePanel
               key={panelKey}
@@ -305,6 +317,19 @@ export default function BasePage() {
       </div>
 
       <MemberGhost drag={drag} ghostRef={ghostRef} />
+
+      {guide.step && (
+        <BaseGuide
+          step={guide.step}
+          index={guide.index}
+          total={guide.total}
+          text={tTutorial[guide.step.textKey] ?? ''}
+          speakerName={guide.step.speaker ? (tName[guide.step.speaker] ?? '') : 'System'}
+          nudge={guide.nudge}
+          onMiss={guide.miss}
+          onNext={guide.next}
+        />
+      )}
 
       {/* 背景は戦闘と同じ */}
       <Screen viewport={<div className="battle-hud-background" />} />

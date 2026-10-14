@@ -11,7 +11,8 @@ import type { TerrainKind } from '../../../features/battle/terrain'
 import TerrainDefs from '../../battle/components/TerrainDefs'
 import { TERRAIN_STYLES, terrainFill, tileHeight } from '../../battle/terrainStyles'
 import ItemIcon from '../../../components/common/ItemIcon'
-import { chibiUrl, fill, gradeStep } from '../view'
+import { fill } from '../../../i18n'
+import { chibiUrl, gradeStep } from '../view'
 import type { BoardMember, BuildingForecast, Stock } from '../view'
 import type { DragHandlers } from '../useMemberDrag'
 import { ART_TOP, SQUASH } from './art'
@@ -174,6 +175,7 @@ function MemberSprite({
     return (
       <div
         className={`base-member${state}`}
+        data-key={member.key}
         data-selectable
         style={{ transform: `translate(${p.x}px, ${p.y + FOOT_OFFSET}px)` }}
         {...events}
@@ -362,6 +364,7 @@ export default function BaseBoard({
               <g
                 key={key}
                 className={`base-art is-${art}${idle ? ' is-idle' : ''}`}
+                data-key={key}
                 transform={`translate(${surface[0]}, ${surface[1]})`}
                 data-selectable={isSelectable(tile) || undefined}
                 onClick={isSelectable(tile) ? () => onSelect(key) : undefined}

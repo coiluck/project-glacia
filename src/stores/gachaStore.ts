@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import type { UserRow } from '../api/types'
 
-// 天井
+// 天井交換の交換pt
 export interface GachaState {
   pity: number
   hydrate: (row: UserRow) => void

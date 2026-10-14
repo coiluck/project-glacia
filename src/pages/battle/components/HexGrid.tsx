@@ -245,7 +245,12 @@ export default function HexGrid({
                     />
                   </div>
                   {unit.side === 'ally' && (
-                    <ApPips max={unitClasses[unit.classId].apPerTurn} current={unit.ap} size="tiny" />
+                    <ApPips
+                      max={unitClasses[unit.classId].apPerTurn}
+                      current={unit.ap}
+                      size="tiny"
+                      guide={`ap-${unit.id}`}
+                    />
                   )}
                   <div className="battle-unit-name">{getUnitName(unit)}</div>
                 </div>

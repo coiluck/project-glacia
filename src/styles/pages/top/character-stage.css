@@ -15,7 +15,7 @@
 .top-character-text-container {
   position: absolute;
   left: calc(180px * var(--scale));
-  bottom: calc(12vw + 2rem * var(--scale) + 12px * var(--scale));
+  bottom: calc(12vw + 2rem * var(--scale) + 24px * var(--scale));
   padding: calc(12px * var(--scale));
   background: linear-gradient(to right, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.2));
   z-index: 1;

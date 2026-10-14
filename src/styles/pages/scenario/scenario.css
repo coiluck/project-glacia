@@ -89,30 +89,106 @@
   100% { opacity: 1; }
 }
 
-/* ===== メニュー（アイコン未用意のため文字ボタン） ===== */
+/* メニュー */
 .scenario-menu {
   position: absolute;
-  bottom: calc(12px * var(--scale));
-  right: calc(16px * var(--scale));
-  display: flex;
-  gap: calc(16px * var(--scale));
+  right: calc(20px * var(--scale));
+  bottom: calc(18px * var(--scale));
+  width: calc(180px * var(--scale));
+  height: calc(182px * var(--scale));
 }
 .scenario-menu-button {
-  padding: calc(4px * var(--scale)) calc(16px * var(--scale));
-  font-size: calc(18px * var(--scale));
-  letter-spacing: calc(1px * var(--scale));
-  color: #fff;
-  background: rgba(20, 20, 24, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  position: absolute;
+  z-index: 2;
+  width: calc(100px * var(--scale));
+  height: calc(87px * var(--scale));
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+  border: none;
+  background: rgba(6, 8, 39, 0.66);
+  font-family: inherit;
   cursor: pointer;
+  transition: background 0.2s ease-out, transform 0.1s;
 }
-.scenario-menu-button:hover {
-  background: rgba(60, 60, 68, 0.7);
-  border-color: rgba(255, 255, 255, 0.9);
+.scenario-menu-button.at-prev { right: 0; top: 0; }
+.scenario-menu-button.at-log  { right: calc(80px * var(--scale)); top: calc(47px * var(--scale)); }
+.scenario-menu-button.at-skip { right: 0; top: calc(94px * var(--scale)); }
+.scenario-menu-button.at-log { z-index: 4; }
+
+/* 内側の線 */
+.scenario-menu-line {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
 }
-/* auto ON */
+.scenario-menu-line polygon {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.32);
+  stroke-width: 1;
+  transition: stroke 0.2s ease-out;
+}
+
+.scenario-menu-button-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(2px * var(--scale));
+  height: 100%;
+  padding-bottom: calc(4px * var(--scale));
+}
+.scenario-menu-icon {
+  display: block;
+  width: calc(28px * var(--scale));
+  height: calc(28px * var(--scale));
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: square;
+}
+.scenario-menu-label {
+  font-size: calc(15px * var(--scale));
+  line-height: 1.2;
+}
+
+@media (hover: hover) {
+  .scenario-menu-button:hover {
+    background: rgba(30, 40, 80, 0.8);
+  }
+  .scenario-menu-button:hover .scenario-menu-line polygon {
+    stroke: #7fe0ff;
+  }
+}
+.scenario-menu-button:active {
+  transform: scale(0.96);
+  background: rgba(127, 224, 255, 0.35);
+}
+.scenario-menu-button:focus-visible {
+  outline: none;
+}
+.scenario-menu-button:focus-visible .scenario-menu-line polygon {
+  stroke: #7fe0ff;
+  stroke-width: 3;
+}
+/* ログ表示中 */
 .scenario-menu-button.is-on {
+  background: #b6f5ff;
+}
+.scenario-menu-button.is-on .scenario-menu-line polygon {
+  stroke: rgba(40, 40, 40, 0.5);
+}
+.scenario-menu-button.is-on .scenario-menu-icon {
+  stroke: #282828;
+}
+.scenario-menu-button.is-on .scenario-menu-label {
   color: #282828;
-  background: rgba(252, 212, 140, 0.85);
-  border-color: rgba(252, 212, 140, 0.85);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scenario-menu-button,
+  .scenario-menu-line polygon {
+    transition: none;
+  }
 }

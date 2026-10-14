@@ -1,6 +1,7 @@
 import { classIcons } from '../../data/characters/classIcons'
 import { RARITIES } from '../../data/characters/const'
 import type { ResolvedCharacter } from '../../features/characters/resolve'
+import { useTranslations } from '../../i18n'
 
 interface MemberCardProps {
   member: ResolvedCharacter | null // null なら空きスロット
@@ -22,6 +23,8 @@ function ClassIcon({ classId }: { classId: string }) {
 }
 
 export default function MemberCard({ member, name, unitClassName, fontSize = 16, onClick }: MemberCardProps) {
+  const t = useTranslations('common', { emptySlot: 'emptySlot' })
+
   // 空きスロット。並べたときに浮かないよう、枠・斜めバンド・名前帯は埋まっているカードと揃える
   if (!member) {
     return (
@@ -35,7 +38,7 @@ export default function MemberCard({ member, name, unitClassName, fontSize = 16,
         <div className="member-card-info-container">
           {/* 高さそろえ用 */}
           <div className="member-card-level" />
-          <p className="member-card-name">空き</p>
+          <p className="member-card-name">{t.emptySlot}</p>
         </div>
       </div>
     )

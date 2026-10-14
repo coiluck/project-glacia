@@ -1,0 +1,39 @@
+<!doctype html>
+<!-- イベントバナーの元。render.py で同名の .avif に書き出し、public/images/events/ にコピーして使う -->
+<html lang="ja"><head><meta charset="utf-8"><link rel="stylesheet" href="style.css">
+<style>
+  .banner { --accent: #6bbffc; --badge-ink: #0b2340; }
+  .bg { background-image: url('../public/images/scenario/bg/camp_border.png'); background-position: 70% 30%; background-size: 130% auto; filter: saturate(1.05); }
+  .bg-grade {
+    background:
+      linear-gradient(to top, rgba(6, 18, 40, 0.75), transparent 45%),
+      linear-gradient(to right, rgba(6, 20, 46, 0.55), transparent 60%);
+  }
+  .hexes { -webkit-mask-image: radial-gradient(ellipse 520px 300px at 0% 100%, #000, transparent); opacity: 0.9; }
+  .panel { background: linear-gradient(100deg, rgba(8, 24, 54, 0.8) 0%, rgba(10, 32, 70, 0.5) 60%, rgba(10, 32, 70, 0.25) 100%); }
+  .panel-edge { background: var(--accent); }
+  .c-lapis { width: 430px; left: 610px; top: 10px; filter: drop-shadow(-10px 6px 14px rgba(0,0,0,.45)) brightness(0.88); }
+  .c-vermilia { width: 500px; left: 860px; top: -20px; }
+  .c-alma { width: 540px; left: 690px; top: -40px; }
+</style></head>
+<body>
+<div class="banner">
+  <div class="bg"></div>
+  <div class="bg-grade"></div>
+  <img class="chara c-lapis" src="../public/images/character/full_body/lapis.png">
+  <img class="chara c-vermilia" src="../public/images/character/full_body/vermilia.png">
+  <img class="chara c-alma" src="../public/images/character/full_body/alma.png">
+  <div class="panel"></div>
+  <div class="panel-edge"></div>
+  <div class="hexes" data-r="40" data-color="rgba(140,200,255,0.22)"></div>
+  <div class="flare"></div>
+  <div class="snow" data-n="70"></div>
+  <div class="text">
+    <div class="kicker"><span class="badge">開幕</span>メインストーリー　第1章</div>
+    <div class="title">都市の影</div>
+    <div class="sub">物語はここから始まる</div>
+  </div>
+  <div class="frame"></div>
+</div>
+<script src="deco.js"></script>
+</body></html>

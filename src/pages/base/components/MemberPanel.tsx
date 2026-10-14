@@ -2,7 +2,8 @@ import { characterMasters } from '../../../data/characters'
 import { classIcons } from '../../../data/characters/classIcons'
 import { memberLimit } from '../../../features/base/base'
 import type { DragHandlers } from '../useMemberDrag'
-import { boostOf, faceUrl, fill, memberWork } from '../view'
+import { fill } from '../../../i18n'
+import { boostOf, faceUrl, memberWork } from '../view'
 import type { BaseView } from '../view'
 import { EMBLEMS } from './art'
 import { Icon } from './detail'
@@ -77,6 +78,7 @@ export default function MemberPanel({ view, selectedId, heldId, onSelect, grab }
               <button
                 type="button"
                 className={className}
+                data-guide={`member-${id}`}
                 onClick={() => onSelect(id)}
                 {...grab(id, !pending && (placed || !full))}
               >

@@ -1,9 +1,11 @@
+import { fill, useTranslations } from '../../../i18n'
 import { useCharacterStore } from '../../../stores/characterStore'
 
 const FORMATIONS = [1, 2, 3, 4]
 
 // 編成1〜4の切替タブ。選択中の編成は characterStore が持つ
 export default function FormationTabs() {
+  const t = useTranslations('party', { formation: 'formation' })
   const selected = useCharacterStore((s) => s.currentPartySlotIndex)
   const setSelected = useCharacterStore((s) => s.setCurrentPartySlotIndex)
 
@@ -16,7 +18,7 @@ export default function FormationTabs() {
           className={`party-formation-tab${n === selected ? ' selected' : ''}`}
           onClick={() => setSelected(n)}
         >
-          <span className="party-formation-tab-label">編成{n}</span>
+          <span className="party-formation-tab-label">{fill(t.formation, n)}</span>
         </button>
       ))}
     </div>
