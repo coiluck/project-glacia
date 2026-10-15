@@ -1,5 +1,5 @@
 // 召集1回ぶんのサーバー側の処理」
-import type { MeResponse } from '../../api/types'
+import type { MeResponse } from '../contract'
 import { characterMasters } from '../../data/characters'
 import { MAX_DUPE } from '../../data/characters/const'
 import type { UserCharacter } from '../../data/characters/types'

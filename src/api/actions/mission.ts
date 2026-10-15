@@ -1,6 +1,6 @@
 import { apiPost } from '../client'
 import { distribute } from '../sync'
-import type { CommandResponse, MissionPayload, MissionResult } from '../types'
+import type { CommandResponse, MissionPayload, MissionResult } from '../../features/contract'
 
 // 任務の報酬を受け取る。受け取ったジェムの数を返す
 export async function claimMission(payload: MissionPayload): Promise<number> {

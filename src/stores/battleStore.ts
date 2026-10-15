@@ -1,10 +1,10 @@
 // 戦闘の進行状態を持つ zustand ストア。
 // エンジン（battle.ts / ai.ts）は純粋関数なので、set で新しい state に差し替えるだけ
 import { create } from 'zustand';
-import { battleStageRegistry } from '../../data/battleStages';
-import { enemyDefs } from '../../data/enemies';
-import { unitClasses } from '../../data/unitClasses';
-import { actEnemy } from './ai';
+import { battleStageRegistry } from '../data/battleStages';
+import { enemyDefs } from '../data/enemies';
+import { unitClasses } from '../data/unitClasses';
+import { actEnemy } from '../features/battle/ai';
 import {
   attack,
   castSkill,
@@ -14,9 +14,9 @@ import {
   moveUnit,
   startBattle,
   undeployAlly,
-} from './battle';
-import type { Axial } from './hex';
-import type { BattleStageData, BattleState, CharacterDef, SkillDef } from './types';
+} from '../features/battle/battle';
+import type { Axial } from '../features/battle/hex';
+import type { BattleStageData, BattleState, CharacterDef, SkillDef } from '../features/battle/types';
 
 // 敵の行動間の待ち時間（ms）。ユニット移動の transition より少し長くする
 const ENEMY_ACT_DELAY = 550;

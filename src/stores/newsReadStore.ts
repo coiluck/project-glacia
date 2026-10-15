@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { news } from '../../data/news'
+import { news } from '../data/news'
 
 // お知らせの既読は localStorage にだけ持つ
 const STORAGE_KEY = 'glacia:newsRead'

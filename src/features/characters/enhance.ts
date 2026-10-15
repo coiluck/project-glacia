@@ -1,4 +1,4 @@
-import type { MeResponse } from '../../api/types'
+import type { MeResponse } from '../contract'
 import { characterMasters } from '../../data/characters'
 import { CURRENCY_PER_EXP, MAX_SKILL_LEVEL } from '../../data/characters/const'
 import type { CharacterMaster, MaterialCost, UserCharacter } from '../../data/characters/types'

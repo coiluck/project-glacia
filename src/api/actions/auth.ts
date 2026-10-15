@@ -1,7 +1,7 @@
 import { apiPost } from '../client'
 import { clearToken, setToken } from '../session'
 import { distribute, resetAll } from '../sync'
-import type { AuthResult, CommandResponse } from '../types'
+import type { AuthResult, CommandResponse } from '../../features/contract'
 
 async function authenticate(
   path: '/auth/register' | '/auth/login',

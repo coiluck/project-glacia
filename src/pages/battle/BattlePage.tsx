@@ -19,7 +19,7 @@ import {
   skillHitsByEffect,
   unitById,
 } from '../../features/battle/battle'
-import { useBattleStore } from '../../features/battle/battleStore'
+import { useBattleStore } from '../../stores/battleStore'
 import { useBattleResultSubmission } from '../../hooks/useBattleResultSubmission'
 import { calcDamage } from '../../features/battle/damage'
 import { axialKey, effectTiles, shapeAimsAnyDirection, shapeTiles } from '../../features/battle/hex'

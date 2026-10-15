@@ -1,4 +1,4 @@
-import type { UserRow } from '../../api/types'
+import type { UserRow } from '../contract'
 
 // スタミナ1回復にかかる秒数
 export const REGEN_INTERVAL_SECONDS = 300

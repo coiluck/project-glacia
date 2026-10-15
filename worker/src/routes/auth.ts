@@ -1,4 +1,4 @@
-import type { AuthResult } from '../../../src/api/types'
+import type { AuthResult } from '../../../src/features/contract'
 import {
   AUTH_ERROR,
   equalsConstantTime,

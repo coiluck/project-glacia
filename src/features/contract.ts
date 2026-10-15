@@ -1,10 +1,10 @@
 import type { MaterialCost, UserCharacter } from '../data/characters/types'
 import type { MissionEvent } from '../data/missions'
 import type { BaseBuildingKind } from '../data/base'
-import type { BaseBuilding } from '../features/base/types'
-import type { Axial } from '../features/battle/hex'
+import type { BaseBuilding } from './base/types'
+import type { Axial } from './battle/hex'
 import type { Lang, TextSize, TextSpeed } from '../data/settings'
-import type { TutorialStep } from '../features/tutorial/resolve'
+import type { TutorialStep } from './tutorial/resolve'
 
 // Cloudflare Workers (D1) が返すユーザーデータ
 export interface UserRow {

@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { MeResponse } from '../api/types'
+import type { MeResponse } from '../features/contract'
 import type { UserCharacter } from '../data/characters/types'
 
 // お気に入りキャラの初期値

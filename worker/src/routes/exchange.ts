@@ -1,4 +1,4 @@
-import type { ExchangePayload } from '../../../src/api/types'
+import type { ExchangePayload } from '../../../src/features/contract'
 import { buyTokens, claimDaily, trade } from '../../../src/features/exchange/exchange'
 import type { Command } from './types'
 

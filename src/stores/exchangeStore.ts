@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { UserRow } from '../api/types'
+import type { UserRow } from '../features/contract'
 import type { ExchangeBase } from '../features/exchange/exchange'
 
 // 取引所

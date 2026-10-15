@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useGameStore } from '../../../features/scenario/gameStore';
+import { useGameStore } from '../../../stores/gameStore';
 
 // @char の bounce フラグで明示的にはねて、話している雰囲気を演出する立ち絵。
 function SpriteImage({ id }: { id: string }) {

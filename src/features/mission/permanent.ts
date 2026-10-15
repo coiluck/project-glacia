@@ -1,5 +1,5 @@
 // 永続任務
-import type { MeResponse, UserRow } from '../../api/types'
+import type { MeResponse, UserRow } from '../contract'
 import type { UserCharacter } from '../../data/characters/types'
 import { PERMANENT_MISSIONS, type PermanentCondition } from '../../data/missions'
 

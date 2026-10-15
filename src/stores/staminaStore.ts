@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { MeResponse } from '../api/types'
+import type { MeResponse } from '../features/contract'
 import { currentStamina, type StaminaBase } from '../features/stamina/stamina'
 
 const nowSeconds = () => Math.floor(Date.now() / 1000)

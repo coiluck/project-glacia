@@ -1,4 +1,4 @@
-import type { BasePayload } from '../../api/types'
+import type { BasePayload } from '../../features/contract'
 import { baseClassEffects, RESOURCE_GRADES, STORAGE_HOURS } from '../../data/base'
 import { baseTileMap } from '../../data/baseTerrain'
 import { characterMasters } from '../../data/characters'

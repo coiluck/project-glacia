@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { ScenarioEngine, type AdvanceResult } from './ScenarioEngine';
-import { executeTransients } from './CommandExecutor';
-import { scenarioRegistry } from '../../data/scenarios';
-import { useGameStore } from './gameStore';
-import type { Choice, GameState } from './types';
+import { ScenarioEngine, type AdvanceResult } from '../features/scenario/ScenarioEngine';
+import { executeTransients } from '../features/scenario/CommandExecutor';
+import { scenarioRegistry } from '../data/scenarios';
+import { useGameStore } from '../stores/gameStore';
+import type { Choice, GameState } from '../features/scenario/types';
 
 // エンジンと「初回advance済みフラグ」は
 // /game ↔ /settings 等のナビゲーション越しに保つためモジュールスコープで持つ。

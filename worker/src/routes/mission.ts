@@ -1,4 +1,4 @@
-import type { MeResponse, MissionPayload, MissionResult } from '../../../src/api/types'
+import type { MeResponse, MissionPayload, MissionResult } from '../../../src/features/contract'
 import { claimAllDailyMissions, claimDailyMission } from '../../../src/features/mission/daily'
 import {
   claimAllPermanentMissions,

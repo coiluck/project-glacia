@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { BgDirection, Choice, SceneSnapshot } from './types';
+import type { BgDirection, Choice, SceneSnapshot } from '../features/scenario/types';
 
 export type Motion = {
   id: number;

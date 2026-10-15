@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { UserRow } from '../api/types'
+import type { UserRow } from '../features/contract'
 import type { BaseRow } from '../features/base/board'
 import type { BaseBuilding } from '../features/base/types'
 

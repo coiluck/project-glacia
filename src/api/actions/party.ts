@@ -1,7 +1,7 @@
 import { apiPost } from '../client'
 import { distribute } from '../sync'
 import { useCharacterStore } from '../../stores/characterStore'
-import type { CommandResponse, PartyPayload } from '../types'
+import type { CommandResponse, PartyPayload } from '../../features/contract'
 
 // 編成とスキル選択をまとめて保存
 export async function saveParty(): Promise<void> {

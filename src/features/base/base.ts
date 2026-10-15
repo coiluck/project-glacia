@@ -1,4 +1,4 @@
-import type { MeResponse } from '../../api/types'
+import type { MeResponse } from '../contract'
 import {
   BASE_MEMBERS,
   BASE_MEMBERS_AFTER_CHAPTER_1,

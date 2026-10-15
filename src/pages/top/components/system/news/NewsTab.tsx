@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslations } from '../../../../../i18n'
 import { news, type NewsCategory } from '../../../../../data/news'
-import { useNewsReadStore, useUnreadNewsCount } from '../../../../../features/news/newsReadStore'
+import { useNewsReadStore, useUnreadNewsCount } from '../../../../../stores/newsReadStore'
 import { withNumbers } from '../format'
 
 const TEXT_MAPPING = Object.fromEntries(

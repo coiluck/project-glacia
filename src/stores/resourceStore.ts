@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { UserRow } from '../api/types'
+import type { UserRow } from '../features/contract'
 
 // リソース（通貨・ジェムの残高）
 export interface ResourceState {

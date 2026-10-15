@@ -1,6 +1,6 @@
 import { apiPost } from '../client'
 import { distribute } from '../sync'
-import type { CommandResponse, FavoritePayload } from '../types'
+import type { CommandResponse, FavoritePayload } from '../../features/contract'
 
 // お気に入りキャラを変える
 export async function setFavoriteCharacter(masterId: string): Promise<void> {

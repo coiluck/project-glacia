@@ -1,4 +1,4 @@
-import type { TutorialPayload } from '../../../src/api/types'
+import type { TutorialPayload } from '../../../src/features/contract'
 import { completeTutorial } from '../../../src/features/tutorial/resolve'
 import type { Command } from './types'
 

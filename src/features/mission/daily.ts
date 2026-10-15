@@ -1,5 +1,5 @@
 // デイリー任務
-import type { MeResponse, UserRow } from '../../api/types'
+import type { MeResponse, UserRow } from '../contract'
 import {
   DAILY_ALL_CLEAR_GEMS,
   DAILY_POOL,

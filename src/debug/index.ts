@@ -1,7 +1,7 @@
 // 開発用チート
 import { apiGet, apiPost } from '../api/client'
 import { distribute } from '../api/sync'
-import type { CommandResponse, MeResponse, UserRow } from '../api/types'
+import type { CommandResponse, MeResponse, UserRow } from '../features/contract'
 import { addItems } from '../features/inventory/inventory'
 
 const SNAPSHOT_KEY = 'glacia:snapshot'

@@ -1,4 +1,4 @@
-import type { MeResponse, UserRow } from '../../../src/api/types'
+import type { MeResponse, UserRow } from '../../../src/features/contract'
 import { characterMasters } from '../../../src/data/characters'
 import type { UserCharacter } from '../../../src/data/characters/types'
 import { refreshStamina } from '../../../src/features/stamina/stamina'

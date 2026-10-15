@@ -1,4 +1,4 @@
-import type { PartyPayload } from '../../../src/api/types'
+import type { PartyPayload } from '../../../src/features/contract'
 import { resolveSaveParty } from '../../../src/features/characters/resolveParty'
 import type { Command } from './types'
 

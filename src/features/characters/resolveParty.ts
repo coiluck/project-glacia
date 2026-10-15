@@ -1,5 +1,5 @@
 // 編成保存のサーバー側の処理。所持していないキャラや持っていないスキルは弾く
-import type { MeResponse, PartyPayload } from '../../api/types'
+import type { MeResponse, PartyPayload } from '../contract'
 import { characterMasters } from '../../data/characters'
 
 export function resolveSaveParty(me: MeResponse, payload: PartyPayload): MeResponse {

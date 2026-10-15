@@ -1,6 +1,6 @@
 import { apiPost } from '../client'
 import { distribute } from '../sync'
-import type { CommandResponse } from '../types'
+import type { CommandResponse } from '../../features/contract'
 import type { BannerId } from '../../data/gacha'
 import type { PullOutcome } from '../../features/gacha/types'
 
