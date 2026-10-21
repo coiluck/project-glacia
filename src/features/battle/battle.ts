@@ -5,7 +5,7 @@ import { axialKey, effectTiles, reachable, shapeAimsAnyDirection, shapeTiles } f
 import type { AimTile, Axial } from './hex';
 import { canSpendAp, refillApForTurn, spendAp } from './ap';
 import { isPassable } from './terrain';
-import { calcDamage } from './damage';
+import { NORMAL_ATTACK_POWER, calcDamage, calcHeal } from './damage';
 import type {
   BattleStageData,
   BattleState,
@@ -176,7 +176,7 @@ export function attack(
   return removeDead({
     ...next,
     units: next.units.map((u) =>
-      hitIds.has(u.id) ? { ...u, hp: Math.max(0, u.hp - calcDamage(attacker, u, cls.attackPower)) } : u,
+      hitIds.has(u.id) ? { ...u, hp: Math.max(0, u.hp - calcDamage(attacker, u, NORMAL_ATTACK_POWER)) } : u,
     ),
   });
 }
@@ -288,7 +288,7 @@ export function castSkill(
             return { ...u, hp };
           }
           case 'healHp':
-            return { ...u, hp: Math.min(u.maxHp, u.hp + effect.amount) };
+            return { ...u, hp: Math.min(u.maxHp, u.hp + calcHeal(user, effect.amount)) };
           case 'grantAp':
             return { ...u, ap: u.ap + effect.amount };
         }

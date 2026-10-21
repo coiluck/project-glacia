@@ -22,7 +22,6 @@
   "turn": "ターン",
   "partyAp": "パーティAP",
   "normalAttack": "通常攻撃",
-  "power": "威力",
   "skillTriggerHp": "HP{0}%以下で発動",
   "skillTriggerTurns": "{0}ターンごとに発動",
   "victory": "勝利",

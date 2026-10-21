@@ -20,7 +20,7 @@ const alma: CharacterMaster = {
         effect: [
           {
             type: 'damage',
-            power: 85,
+            power: 170,
             target: 'enemy',
             // 狙ったマスと、その1つ奥（術者から見て真っ直ぐ）を貫く
             area: { kind: 'pattern', offsets: [{ q: 0, r: 0 }, { q: 1, r: 0 }] },
@@ -28,7 +28,7 @@ const alma: CharacterMaster = {
         ],
       },
       descriptionKey: 'skillAlmaPiercingThrustDesc',
-      effectGrowth: [9],
+      effectGrowth: [18],
       levelUpCosts: [
         [{ itemId: 'skillBookSmall', count: 2 }],
         [{ itemId: 'skillBookSmall', count: 4 }],
@@ -47,11 +47,11 @@ const alma: CharacterMaster = {
         range: { kind: 'range', min: 0, max: 2 },
         effect: [
           { type: 'grantAp', amount: 2, target: 'ally' },
-          { type: 'healHp', amount: 90, target: 'ally' },
+          { type: 'healHp', amount: 175, target: 'ally' },
         ],
       },
       descriptionKey: 'skillAlmaSilverBannerDesc',
-      effectGrowth: [0, 18],
+      effectGrowth: [0, 15],
       levelUpCosts: [
         [{ itemId: 'skillBookSmall', count: 2 }],
         [{ itemId: 'skillBookSmall', count: 4 }],

@@ -20,14 +20,14 @@ const sylvie: CharacterMaster = {
         effect: [
           {
             type: 'damage',
-            power: 75,
+            power: 188,
             target: 'enemy',
             area: { kind: 'pattern', offsets: [{ q: 0, r: 0 }, { q: 1, r: 0 }] },
           },
         ],
       },
       descriptionKey: 'skillSylviePiercingArrowDesc',
-      effectGrowth: [8],
+      effectGrowth: [20],
       levelUpCosts: [
         [{ itemId: 'skillBookSmall', count: 2 }],
         [{ itemId: 'skillBookSmall', count: 3 }],
@@ -44,10 +44,10 @@ const sylvie: CharacterMaster = {
         nameKey: 'skillSylvieForestMend',
         apCost: 3,
         range: { kind: 'range', min: 0, max: 3 },
-        effect: [{ type: 'healHp', amount: 80, target: 'ally' }],
+        effect: [{ type: 'healHp', amount: 225, target: 'ally' }],
       },
       descriptionKey: 'skillSylvieForestMendDesc',
-      effectGrowth: [15],
+      effectGrowth: [20],
       levelUpCosts: [
         [{ itemId: 'skillBookSmall', count: 2 }],
         [{ itemId: 'skillBookSmall', count: 3 }],

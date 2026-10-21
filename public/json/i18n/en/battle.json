@@ -22,7 +22,6 @@
   "turn": "Turn",
   "partyAp": "Party AP",
   "normalAttack": "Attack",
-  "power": "Power",
   "skillTriggerHp": "Fires at HP {0}% or below",
   "skillTriggerTurns": "Fires every {0} turns",
   "victory": "Victory",

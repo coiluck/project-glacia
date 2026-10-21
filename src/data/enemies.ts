@@ -68,7 +68,7 @@ export const enemyDefs: Record<string, EnemyDef> = {
         apCost: 4,
         range: { kind: 'range', min: 0, max: 3 },
         effect: [
-          { type: 'damage', power: 55, target: 'enemy', area: { kind: 'range', min: 0, max: 1 } },
+          { type: 'damage', power: 92, target: 'enemy', area: { kind: 'range', min: 0, max: 1 } },
         ],
       },
       everyNTurns: 2,

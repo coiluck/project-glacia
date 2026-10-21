@@ -21,14 +21,14 @@ const soleil: CharacterMaster = {
         effect: [
           {
             type: 'damage',
-            power: 80,
+            power: 133,
             target: 'enemy',
             area: { kind: 'range', min: 2, max: 2 },
           },
         ],
       },
       descriptionKey: 'skillSoleilHaloDesc',
-      effectGrowth: [8],
+      effectGrowth: [13],
       levelUpCosts: [
         [{ itemId: 'skillBookSmall', count: 2 }],
         [{ itemId: 'skillBookSmall', count: 4 }],
@@ -46,12 +46,12 @@ const soleil: CharacterMaster = {
         apCost: 4,
         range: { kind: 'range', min: 0, max: 0 },
         effect: [
-          { type: 'healHp', amount: 60, target: 'ally', area: { kind: 'range', min: 0, max: 2 } },
+          { type: 'healHp', amount: 105, target: 'ally', area: { kind: 'range', min: 0, max: 2 } },
           { type: 'grantAp', amount: 2, target: 'ally', area: { kind: 'range', min: 1, max: 2 } },
         ],
       },
       descriptionKey: 'skillSoleilBlessingDesc',
-      effectGrowth: [12, 0],
+      effectGrowth: [10, 0],
       levelUpCosts: [
         [{ itemId: 'skillBookSmall', count: 2 }],
         [{ itemId: 'skillBookSmall', count: 4 }],

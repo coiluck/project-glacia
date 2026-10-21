@@ -7,7 +7,6 @@
   "status": "ステータス",
   "apPerTurn": "ターンAP",
   "attack": "通常攻撃",
-  "power": "威力",
   "apCost": "消費AP",
   "targets": "対象",
   "targetsAll": "範囲全体",

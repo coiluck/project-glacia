@@ -19,11 +19,11 @@ const oboro: CharacterMaster = {
         apCost: 3,
         range: { kind: 'range', min: 0, max: 0 }, // 自分のマスだけを狙う
         effect: [
-          { type: 'damage', power: 70, target: 'enemy', area: { kind: 'range', max: 1 }, drain: 30 },
+          { type: 'damage', power: 175, target: 'enemy', area: { kind: 'range', max: 1 }, drain: 30 },
         ],
       },
       descriptionKey: 'skillOboroWhirlingKunaiDesc',
-      effectGrowth: [7],
+      effectGrowth: [18],
       levelUpCosts: [
         [{ itemId: 'skillBookSmall', count: 2 }],
         [{ itemId: 'skillBookSmall', count: 4 }],
@@ -40,10 +40,10 @@ const oboro: CharacterMaster = {
         nameKey: 'skillOboroShadowStitch',
         apCost: 3,
         range: { kind: 'range', min: 2, max: 4 },
-        effect: [{ type: 'damage', power: 115, target: 'enemy' }],
+        effect: [{ type: 'damage', power: 288, target: 'enemy' }],
       },
       descriptionKey: 'skillOboroShadowStitchDesc',
-      effectGrowth: [12],
+      effectGrowth: [30],
       levelUpCosts: [
         [{ itemId: 'skillBookSmall', count: 2 }],
         [{ itemId: 'skillBookSmall', count: 4 }],

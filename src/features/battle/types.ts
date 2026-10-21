@@ -9,7 +9,6 @@ export interface UnitClassDef {
   id: string;
   nameKey: string; // i18n キー
   attackRange: AttackShape; // 通常攻撃の届く範囲（半径型 or 形指定型）
-  attackPower: number; // 通常攻撃の威力
   attackTargets: TargetCount; // 通常攻撃で選べる対象数
   attackCost: number; // 通常攻撃のAP消費
   apPerTurn: number; // 毎ターン配り直される個人AP
@@ -18,6 +17,7 @@ export interface UnitClassDef {
 // スキル効果
 // いろいろなスキル効果があると思うのでこれらを組み合わせて定義する
 // なるべく固有のスキル効果を定義しない
+// damage の power と healHp の amount は攻撃力に対する%（通常攻撃は100%）
 export type SkillEffect =
   | { type: 'damage'; power: number; target: 'self' | 'ally' | 'enemy'; area?: AttackShape; drain?: number }
   | { type: 'healHp'; amount: number; target: 'self' | 'ally'; area?: AttackShape }

@@ -13,7 +13,7 @@ import {
   unitById,
 } from './battle';
 import { canSpendAp } from './ap';
-import { calcDamage } from './damage';
+import { NORMAL_ATTACK_POWER, calcDamage } from './damage';
 import { DIRECTION_STEPS, axialKey, distance, shapeTiles } from './hex';
 import type { Axial } from './hex';
 import type { BattleStageData, BattleState, TargetCount, Unit, UnitClassDef } from './types';
@@ -209,7 +209,7 @@ function simulateAttacks(
     kills += choice.kills;
     damage += choice.damage;
     for (const t of choice.targets) {
-      hp.set(t.id, Math.max(0, hpOf(t) - calcDamage(unit, t, cls.attackPower)));
+      hp.set(t.id, Math.max(0, hpOf(t) - calcDamage(unit, t, NORMAL_ATTACK_POWER)));
     }
   }
   return { kills, damage };
@@ -239,13 +239,13 @@ function bestAttackFrom(
     const targets = selectTargets(
       inRange,
       countOf(cls.attackTargets, inRange.length),
-      (t) => calcDamage(unit, t, cls.attackPower),
+      (t) => calcDamage(unit, t, NORMAL_ATTACK_POWER),
       hpOf,
     );
     let kills = 0;
     let damage = 0;
     for (const t of targets) {
-      const d = Math.min(calcDamage(unit, t, cls.attackPower), hpOf(t));
+      const d = Math.min(calcDamage(unit, t, NORMAL_ATTACK_POWER), hpOf(t));
       damage += d;
       if (d >= hpOf(t)) kills += 1;
     }
