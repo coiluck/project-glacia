@@ -2,29 +2,15 @@ import type { ScenarioFile } from '../../../features/scenario/types';
 
 // 背景:
 // - bg/camp_border.avif（野営地と、地平線の凍った帝都）
+// - bg/south_road.avif（雪が途切れた南の街道）※未作成
 const scenario: ScenarioFile = {
   id: '2-1',
   lines: [
     {
-      text: '白焔の炎が、最後にひときわ白く燃え上がって、雪の上に崩れた。',
-      commands: [
-        { type: 'bg', file: 'images/scenario/bg/camp_border.avif', transition: 'fade' }
-      ]
-    },
-    {
-      text: 'あとには、雪が溶けて黒く濡れた地面だけが残った。'
-    },
-    {
-      text: '……やった。',
-      speaker: 'クラリス',
-      commands: [
-        { type: 'char', id: 'clarice', pose: 'surprised' }
-      ]
-    },
-    {
       text: '南の端、被害なし！ テントは一張りも燃えていません！',
       speaker: 'クラリス',
       commands: [
+        { type: 'bg', file: 'images/scenario/bg/camp_border.avif', transition: 'fade' },
         { type: 'char', id: 'clarice', pose: 'smile', bounce: true }
       ]
     },
@@ -228,7 +214,252 @@ const scenario: ScenarioFile = {
       text: 'ラピスさまを、頼みます。',
       speaker: 'アルマ'
     },
-    // ここから 2-1 の本編
+    {
+      text: '南の街道を、三日歩いた。',
+      commands: [
+        { type: 'charDelete' },
+        { type: 'bg', file: 'images/scenario/bg/south_road.avif', transition: 'fade' }
+      ]
+    },
+    {
+      text: '足もとの雪は日ごとに薄くなって、四日目の朝には、ところどころ土が見えるようになった。'
+    },
+    {
+      text: '……あったかい。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'surprised' }
+      ]
+    },
+    {
+      text: '境界を離れたの、あの日以来なんです。雪のない地面って、こんな色でしたっけ。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'smile' }
+      ],
+      choiceId: 'warm'
+    },
+    {
+      text: 'しばらく行くと、街道の土の上に、黒い筋が一本、まっすぐ南へ延びていた。',
+      commands: [
+        { type: 'bgMove', direction: 'leftToRight', duration: 4000 }
+      ]
+    },
+    {
+      text: '草も土も、焦げて固まっている。'
+    },
+    {
+      text: 'これ……白焔が通ったあとじゃないですか。野営地の雪を溶かしたのと、同じ焼け方です。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'serious' }
+      ]
+    },
+    {
+      text: '焼け跡は、街道に沿って南の地平線まで続いていた。'
+    },
+    {
+      text: 'あんな遠くから、来たんだ……',
+      speaker: 'ラピス'
+    },
+    {
+      text: 'そこ、踏むな。',
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'vermilia', pose: 'serious' }
+      ]
+    },
+    {
+      text: '焼け跡のそばにしゃがみこんでいた女が、顔も上げずに言った。背中に、身の丈ほどもある大剣を負っている。'
+    },
+    {
+      text: '足跡が消える。白焔のほかにも、何か通ってるかもしれないんだ。',
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'vermilia', pose: 'serious' }
+      ]
+    },
+    {
+      text: '女は焼け跡の土を指でつまんで、においをかいでから立ち上がった。'
+    },
+    {
+      text: '……で、あんたたちは。こんなところで何してる。',
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'vermilia', pose: 'normal' }
+      ]
+    },
+    {
+      text: '北の、境界の野営地から来ました。南へ行くところです。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'normal' }
+      ]
+    },
+    {
+      text: '境界の野営地。じゃあ、この焼け跡の行き先も見てきたのか。白焔は、どっちへ行った。',
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'vermilia', pose: 'serious' }
+      ]
+    },
+    {
+      text: 'どっちって……白焔なら、野営地で倒しました。この人の指揮で。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'smile' }
+      ]
+    },
+    {
+      text: '女の動きが止まった。'
+    },
+    {
+      text: '……倒した？',
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'vermilia', pose: 'surprised' }
+      ]
+    },
+    {
+      text: 'ひと月追いかけてたんだぞ、あれ。南の商人組合が、首に賞金を懸けてた。',
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'vermilia', pose: 'serious' }
+      ],
+      choiceId: 'bounty'
+    },
+    {
+      text: 'ベルミリア。傭兵だ。裂け目の魔物を狩って、食ってる。',
+      speaker: 'ベルミリア',
+      commands: [
+        { type: 'char', id: 'vermilia', pose: 'normal' }
+      ]
+    },
+    {
+      text: 'ラピスです。こっちは、指揮官。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'normal' }
+      ]
+    },
+    {
+      text: '指揮官？ ひとりしか連れてないように見えるけど。',
+      speaker: 'ベルミリア',
+      commands: [
+        { type: 'char', id: 'vermilia', pose: 'normal' }
+      ]
+    },
+    {
+      text: '部隊は、私ひとりです。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'smile' }
+      ]
+    },
+    {
+      text: '……そうか。それで、南のどこへ行く。',
+      speaker: 'ベルミリア'
+    },
+    {
+      text: '陽の聖女さまのところです。帝都を溶かすために、人を集めてるって聞いて。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'serious' }
+      ]
+    },
+    {
+      text: 'ベルミリアは少しのあいだ、ラピスの顔を見ていた。'
+    },
+    {
+      text: '帝都の人間か。',
+      speaker: 'ベルミリア',
+      commands: [
+        { type: 'char', id: 'vermilia', pose: 'serious' }
+      ]
+    },
+    {
+      text: '……はい。帝都に、家族がいます。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'normal' }
+      ]
+    },
+    {
+      text: 'そうか。',
+      speaker: 'ベルミリア'
+    },
+    {
+      text: 'それだけ言って、ベルミリアは街道の南へ目を戻した。'
+    },
+    {
+      text: '聖女の陣なら、焼けた森を抜けた先だ。街道はまっすぐ森に入る。',
+      speaker: 'ベルミリア'
+    },
+    {
+      text: 'やめとけ、とは言わない。ただ、あのあたりは魔物の巣だ。ふたりで抜けられるとは思えないね。',
+      speaker: 'ベルミリア'
+    },
+    {
+      text: 'それにしても、白焔がこんな北まで上がってきたのは初めてだ。',
+      speaker: 'ベルミリア',
+      commands: [
+        { type: 'char', id: 'vermilia', pose: 'serious' }
+      ]
+    },
+    {
+      text: 'あれは、南の焼けた街に巣があった。巣からめったに出てこないやつだったんだ。',
+      speaker: 'ベルミリア'
+    },
+    {
+      text: 'それが、街道をこんな北まで上がってきた。……何かに押し出されたみたいにな。',
+      speaker: 'ベルミリア',
+      choiceId: 'guide'
+    },
+    {
+      text: '……白焔の首を取った腕ってのは、本当か。',
+      speaker: 'ベルミリア',
+      commands: [
+        { type: 'char', id: 'vermilia', pose: 'normal' }
+      ]
+    },
+    {
+      text: '本当なら、森を抜けるまで付き合ってやってもいい。そのかわり、道中で狩った魔物の賞金は、全部私のものだ。',
+      speaker: 'ベルミリア'
+    },
+    {
+      text: '……いいんですか？',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'surprised' }
+      ]
+    },
+    {
+      text: '腕が本当なら、だ。',
+      speaker: 'ベルミリア',
+      commands: [
+        { type: 'char', id: 'vermilia', pose: 'serious' }
+      ]
+    },
+    {
+      text: 'ベルミリアが背中の大剣に手をかけた。'
+    },
+    {
+      text: '街道の先、焼け跡の上で、赤い光がいくつも揺れている。転がるように跳ねながら、こちらへ近づいてくる。'
+    },
+    {
+      text: 'ホムラモチ……！ 白焔のあとを、ついてきたんでしょうか。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'surprised', bounce: true }
+      ]
+    },
+    {
+      text: 'ちょうどいい。見せてもらおうか、指揮官。',
+      speaker: 'ベルミリア',
+      commands: [
+        { type: 'char', id: 'vermilia', pose: 'serious', bounce: true }
+      ]
+    },
   ],
   choices: {
     record: [
@@ -258,8 +489,7 @@ const scenario: ScenarioFile = {
       {
         buttonText: '出るのと入るのは、違うのかもしれない',
         branch: [
-          { text: '違う……。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'serious' }] },
-          { text: 'じゃあ、どうやって出てきたのかが分かれば、入り方も分かるかもしれませんね。', speaker: 'ラピス' },
+          { text: '……じゃあ、指揮官はどうして出てこられたんでしょう。', speaker: 'ラピス' },
         ],
       },
     ],
@@ -275,6 +505,55 @@ const scenario: ScenarioFile = {
         buttonText: '中で何があったのか、確かめたい',
         branch: [
           { text: 'はい。……私も、知りたいです。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'serious' }] },
+        ],
+      },
+    ],
+    warm: [
+      {
+        buttonText: '寒いほうが慣れているか？',
+        branch: [
+          { text: 'ずっと境界のそばにいましたから。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'normal' }] },
+          { text: 'でも、姉はきっと、こっちのほうが好きです。氷の魔法を使うのに、寒がりなんですよ。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'smile' }] },
+        ],
+      },
+      {
+        buttonText: '帰りも、この道を通ろう',
+        points: { lapisTrust: 1 },
+        branch: [
+          { text: '……はい。帰りは、姉と三人で。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'smile' }] },
+        ],
+      },
+    ],
+    bounty: [
+      {
+        buttonText: '横取りしたなら、すまない',
+        branch: [
+          { text: '謝られても、金にはならない。', speaker: 'ベルミリア', commands: [{ type: 'char', id: 'vermilia', pose: 'serious' }] },
+          { text: '……まあいい。倒れたなら、それで。', speaker: 'ベルミリア', commands: [{ type: 'char', id: 'vermilia', pose: 'normal' }] },
+        ],
+      },
+      {
+        buttonText: '賞金なら、野営地の騎士団に言ってくれ',
+        branch: [
+          { text: '騎士団が、傭兵に払う金なんか持ってるもんか。', speaker: 'ベルミリア', commands: [{ type: 'char', id: 'vermilia', pose: 'serious' }] },
+          { text: '……まあいい。倒れたなら、それで。', speaker: 'ベルミリア', commands: [{ type: 'char', id: 'vermilia', pose: 'normal' }] },
+        ],
+      },
+    ],
+    guide: [
+      {
+        buttonText: '森を抜ける道を、案内してくれないか',
+        branch: [
+          { text: '案内料は高いぞ。', speaker: 'ベルミリア', commands: [{ type: 'char', id: 'vermilia', pose: 'normal' }] },
+          { text: 'お金は、あんまり……', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'sad' }] },
+          { text: 'だろうな。', speaker: 'ベルミリア', commands: [{ type: 'char', id: 'vermilia', pose: 'normal' }] },
+        ],
+      },
+      {
+        buttonText: '白焔の巣を、見に行くつもりか',
+        branch: [
+          { text: '……賞金首が一匹とは限らないからな。', speaker: 'ベルミリア', commands: [{ type: 'char', id: 'vermilia', pose: 'serious' }] },
+          { text: 'どうせ、行き先は同じ方向だ。', speaker: 'ベルミリア', commands: [{ type: 'char', id: 'vermilia', pose: 'normal' }] },
         ],
       },
     ],

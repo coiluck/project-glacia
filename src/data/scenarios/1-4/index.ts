@@ -7,15 +7,10 @@ const scenario: ScenarioFile = {
   id: '1-4',
   lines: [
     {
-      text: '最後のカゲロウが、湖の氷の上で崩れて消えた。',
-      commands: [
-        { type: 'bg', file: 'images/scenario/bg/camp_border.avif', transition: 'fade' }
-      ]
-    },
-    {
       text: '荷運びの道は、これで大丈夫です。戻りましょう。',
       speaker: 'クラリス',
       commands: [
+        { type: 'bg', file: 'images/scenario/bg/camp_border.avif', transition: 'fade' },
         { type: 'char', id: 'clarice', pose: 'normal' }
       ]
     },

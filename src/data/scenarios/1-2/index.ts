@@ -6,15 +6,10 @@ const scenario: ScenarioFile = {
   id: '1-2',
   lines: [
     {
-      text: '最後のコオリモチが、浅瀬の手前で崩れて雪に溶けた。',
-      commands: [
-        { type: 'bg', file: 'images/scenario/bg/camp_border.avif', transition: 'fade' }
-      ]
-    },
-    {
       text: '……倒せた。',
       speaker: 'ラピス',
       commands: [
+        { type: 'bg', file: 'images/scenario/bg/camp_border.avif', transition: 'fade' },
         { type: 'char', id: 'lapis', pose: 'surprised' }
       ]
     },

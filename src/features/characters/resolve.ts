@@ -41,12 +41,20 @@ export interface ResolvedCharacter {
   nextLimitBreakCost: MaterialCost[] | null // null なら上限解放を使い切っている
 }
 
+// Lv1 の値にレベルぶんの成長を足す
+// 端数は切り捨てない。最後に足したものをまとめて Math.floor する
+export function statusAtLevel(base: Status, growth: Status, level: number): Status {
+  const levels = level - 1
+  return {
+    hp: base.hp + growth.hp * levels,
+    attack: base.attack + growth.attack * levels,
+    defense: base.defense + growth.defense * levels,
+  }
+}
+
 // レベルぶんの成長と、解放済みの凸のステータスボーナスを足す
 function resolveStatus(master: CharacterMaster, user: UserCharacter, level: number): Status {
-  const levels = level - 1
-  let hp = master.base.hp + master.growth.hp * levels
-  let attack = master.base.attack + master.growth.attack * levels
-  let defense = master.base.defense + master.growth.defense * levels
+  let { hp, attack, defense } = statusAtLevel(master.base, master.growth, level)
 
   for (const bonus of master.dupeBonuses.slice(0, user.dupe)) {
     if (!bonus.status) continue

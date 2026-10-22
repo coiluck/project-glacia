@@ -6,20 +6,11 @@ const scenario: ScenarioFile = {
   id: '1-3',
   lines: [
     {
-      text: '最後のシモフクロウが雪の上に落ちて、白い霜になって散った。',
+      text: 'クラリスは得物を下ろして、しばらく黙っていた。それから、手帳を開く。',
       commands: [
-        { type: 'bg', file: 'images/scenario/bg/camp_border.avif', transition: 'fade' }
-      ]
-    },
-    {
-      text: '……終わりました。',
-      speaker: 'クラリス',
-      commands: [
+        { type: 'bg', file: 'images/scenario/bg/camp_border.avif', transition: 'fade' },
         { type: 'char', id: 'clarice', pose: 'normal' }
       ]
-    },
-    {
-      text: 'クラリスは得物を下ろして、しばらく黙っていた。それから、手帳を開く。'
     },
     {
       text: '腕は、認めます。',
@@ -48,6 +39,42 @@ const scenario: ScenarioFile = {
       speaker: 'ラピス',
       commands: [
         { type: 'char', id: 'lapis', pose: 'normal' }
+      ]
+    },
+    {
+      text: '……記憶がないなら、今がどういうときなのかも、分からないんですよね。',
+      speaker: 'クラリス',
+      commands: [
+        { type: 'char', id: 'clarice', pose: 'normal' }
+      ]
+    },
+    {
+      text: '何年か前から、世界のあちこちで、空に裂け目が開くようになりました。裂け目からは魔物があふれてきて、裂け目の開いた街は、ほとんどが滅びています。',
+      speaker: 'クラリス',
+      commands: [
+        { type: 'char', id: 'clarice', pose: 'serious' }
+      ]
+    },
+    {
+      text: 'このあたりにいる魔物も、よその裂け目から流れてきたものです。',
+      speaker: 'クラリス'
+    },
+    {
+      text: '帝都に裂け目が開いたのは、そのあとでした。ほかの街がどうなったかを知っていたので、帝都は、魔物があふれる前に、一部の人を外へ逃がしたんです。',
+      speaker: 'クラリス'
+    },
+    {
+      text: '帝都が凍った理由は、誰にも分かりません。',
+      speaker: 'クラリス'
+    },
+    {
+      text: 'ただ、凍ってから、帝都の裂け目の魔物は一匹も出てきていません。',
+      speaker: 'クラリス'
+    },
+    {
+      text: 'ラピスは何も言わずに、地平線の尖塔のほうを見ていた。',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'sad' }
       ]
     },
     {

@@ -6,6 +6,7 @@ import type { AimTile, Axial } from './hex';
 import { canSpendAp, refillApForTurn, spendAp } from './ap';
 import { isPassable } from './terrain';
 import { NORMAL_ATTACK_POWER, calcDamage, calcHeal } from './damage';
+import { statusAtLevel } from '../characters/resolve';
 import type {
   BattleStageData,
   BattleState,
@@ -43,15 +44,17 @@ export function createBattleState(
   const units = stage.enemies.map((spawn, i): Unit => {
     const def = enemyDefs[spawn.enemyId];
     if (!def) throw new Error(`Unknown enemy: ${spawn.enemyId}`);
+    const status = statusAtLevel(def.base, def.growth, spawn.level);
+    const hp = Math.floor(status.hp);
     return {
       id: `enemy-${i}-${def.id}`,
       side: 'enemy',
       classId: def.classId,
       pos: spawn.pos,
-      hp: def.hp,
-      maxHp: def.maxHp,
-      attack: def.attack,
-      defense: def.defense,
+      hp,
+      maxHp: hp,
+      attack: Math.floor(status.attack),
+      defense: Math.floor(status.defense),
       ap: 0,
       skill: def.skill?.def,
       skillEveryNTurns: def.skill?.everyNTurns,

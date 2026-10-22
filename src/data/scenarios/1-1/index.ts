@@ -37,10 +37,7 @@ const scenario: ScenarioFile = {
     },
     {
       text: '私はラピス。あなたは？',
-      speaker: '？？？',
-      commands: [
-        { type: 'char', id: 'lapis', pose: 'normal' }
-      ]
+      speaker: '？？？'
     },
     {
       text: '答えようとして、言葉が止まった。名前が、出てこない。',
@@ -120,11 +117,19 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: '……私、帝都に住んでたんです。あの日、外へ逃がしてもらった側でした。',
+      text: '……私、帝都に住んでたんです。',
       speaker: 'ラピス',
       commands: [
         { type: 'char', id: 'lapis', pose: 'sad' }
       ]
+    },
+    {
+      text: 'あの日、帝都の真ん中に、裂け目が開きました。魔物があふれ出す前に、一部の人だけが外へ逃がされて……私も、そのひとりでした。',
+      speaker: 'ラピス'
+    },
+    {
+      text: '帝都が凍ったのは、その夜のうちです。',
+      speaker: 'ラピス'
     },
     {
       text: '逃げる途中で、姉とはぐれました。姉は、今もあの中にいます。',
@@ -229,14 +234,6 @@ const scenario: ScenarioFile = {
       },
     ],
     sister: [
-      {
-        buttonText: 'ひとりで、ずっと？',
-        points: { lapisTrust: 1 },
-        branch: [
-          { text: 'ひとりで待つのは、もう慣れました。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'smile' }] },
-          { text: '……でも、あなたが出てきた。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'normal' }] },
-        ],
-      },
       {
         buttonText: '何か思い出したら、必ず話す',
         branch: [

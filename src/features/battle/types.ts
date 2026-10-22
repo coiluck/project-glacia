@@ -1,5 +1,6 @@
 import type { Axial, AttackShape } from './hex';
 import type { TerrainKind } from './terrain';
+import type { Status } from '../../data/characters/types';
 
 // 攻撃で選べる対象ユニット数。'infinity' は範囲内の全ユニット
 export type TargetCount = number | 'infinity';
@@ -94,15 +95,14 @@ export interface EnemyDef {
   id: string; // EnemySpawn の enemyId と一致
   nameKey: string; // i18n キー
   classId: string; // 敵も兵科を持つ
-  attack: number;
-  defense: number;
-  hp: number;
-  maxHp: number;
+  base: Status; // Lv1 のステータス
+  growth: Status; // 1レベルごとの上昇量・Math.floorするので小数を入れていい
   skill?: EnemySkillUse; // スキルを使わない敵は持たない
 }
 
 export interface EnemySpawn {
   enemyId: string; // data/ 側で定義された敵の ID
+  level: number;
   pos: Axial; // 配置座標
 }
 

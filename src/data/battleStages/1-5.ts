@@ -1,28 +1,31 @@
 import { stageFromMap } from './grid';
 
-// 1-5 火打ちの谷
-// 2本の溶岩の筋で北・中央・南の3筋に分かれる。筋どうしは中央と両端のすき間でしかつながらない
-// ホムラモチは溶岩ごしに隣の筋へ撃てるので、中央の道を進むと北と南の両方から焼かれる
-// 中央の道はイワモチがふさぎ、カゲロウが北と南の筋を回ってくる
+// 1-5 野営地の南の端（1章のボス）
+// 西の端に野営地のテント（通行不可）が並ぶ。白焔は東から雪を融かしながら来ていて、通ったあとが融けた地面になっている
+// 融けた地面のところどころで白い炎がまだ燃えていて（溶岩・通行不可）、白焔の前を細かく区切っている
+// 白焔は2ターンごとに周囲をまとめて焼くので、固まって殴りに行かない。ついてきたホムラモチを先に落とす
 export default stageFromMap({
   terrain: [
-    '    t t d d t t',
-    '   t d d T d d t',
-    '  d d l l d l l l',
-    ' d d d d t d d d d',
-    '  d l l l d l l d',
-    '   t d d d T d t',
-    '    t t d d t t',
+    '    n n n n n n',
+    '   D n n n h h n',
+    '  D n n h h l h n',
+    ' n n n h l h h h h',
+    '  D n n h h l h n',
+    '   n n n n h h n',
+    '    D n n n n n',
   ],
   units: [
     '    . . . . . .',
-    '   @ . . . . i w',
-    '  @ @ . . . . . .',
-    ' @ @ @ . . s . i .',
-    '  . . . . . . . .',
-    '   . . . . . i w',
-    '    . . . . s .',
+    '   . @ . . . i .',
+    '  . @ . . . . . .',
+    ' @ @ . . . . . p .',
+    '  . @ . . . . . .',
+    '   @ . . . . i .',
+    '    . . . . . .',
   ],
-  enemies: { i: 'ignimo', s: 'saximo', w: 'wispwraith' },
+  enemies: {
+    i: { enemyId: 'ignimo', level: 4 },
+    p: { enemyId: 'palefire', level: 5 },
+  },
   partyApPerTurn: 10,
 });

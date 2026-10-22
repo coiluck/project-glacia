@@ -7,14 +7,9 @@ const scenario: ScenarioFile = {
   id: '1-5',
   lines: [
     {
-      text: '最後のイワモチが、境界の手前で砕けた。',
-      commands: [
-        { type: 'bg', file: 'images/scenario/bg/camp_border.avif', transition: 'fade' }
-      ]
-    },
-    {
       text: 'ロザリーは、並べたランタンをひとつずつ確かめるように、指先でそっと撫でた。どれも倒れていなかった。',
       commands: [
+        { type: 'bg', file: 'images/scenario/bg/camp_border.avif', transition: 'fade' },
         { type: 'char', id: 'rosalie', pose: 'normal' }
       ]
     },
@@ -152,6 +147,27 @@ const scenario: ScenarioFile = {
     },
     {
       text: 'ラピスは袖で目をこすって、ブローチをこちらの手に戻した。'
+    },
+    {
+      text: '溶けない氷、という言葉が、頭のどこかに引っかかっていた。テントの外の、境界の氷のことだった。'
+    },
+    {
+      text: '……境界の氷のこと、考えました？',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'normal' }
+      ]
+    },
+    {
+      text: '私も、最初に考えました。でも、違います。帝都ほどの広さを凍らせる魔法なんて、誰にも使えません。姉にも、帝国のどの魔法使いにも。',
+      speaker: 'ラピス',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'serious' }
+      ]
+    },
+    {
+      text: '境界の氷は、裂け目が起こしたものだろうって、みんな言ってます。',
+      speaker: 'ラピス'
     },
     {
       text: 'どうしてあなたが持っていたのかは、分かりません。でも、あなたは中で、姉に会っています。',

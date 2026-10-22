@@ -39,8 +39,8 @@ const stage: BattleStageData = {
   ],
   partyApPerTurn: 10,
   enemies: [
-    { enemyId: 'glacimo', pos: { q: 2, r: -1 } },
-    { enemyId: 'glacimo', pos: { q: 3, r: 0 } },
+    { enemyId: 'glacimo', level: 1, pos: { q: 2, r: -1 } },
+    { enemyId: 'glacimo', level: 1, pos: { q: 3, r: 0 } },
   ],
 };
 
