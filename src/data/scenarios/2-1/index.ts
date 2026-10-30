@@ -2,7 +2,7 @@ import type { ScenarioFile } from '../../../features/scenario/types';
 
 // 背景:
 // - bg/camp_border.avif（野営地と、地平線の凍った帝都）
-// - bg/south_road.avif（雪が途切れた南の街道）※未作成
+// - bg/south_road.avif（雪が途切れた南の街道）
 const scenario: ScenarioFile = {
   id: '2-1',
   lines: [

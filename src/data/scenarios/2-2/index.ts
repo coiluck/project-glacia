@@ -1,7 +1,7 @@
 import type { ScenarioFile } from '../../../features/scenario/types';
 
 // 背景:
-// - bg/south_road.avif（雪が途切れた南の街道。宿場の跡もここで代用）※未作成
+// - bg/south_road.avif（雪が途切れた南の街道。宿場の跡もここで代用）
 // - bg/camp_tent.avif（宿場の跡に張った天幕の中）
 const scenario: ScenarioFile = {
   id: '2-2',

@@ -1,8 +1,8 @@
 import type { ScenarioFile } from '../../../features/scenario/types';
 
 // 背景:
-// - bg/south_road.avif（雪が途切れた南の街道。宿場の跡もここで代用）※未作成
-// - bg/burnt_forest.avif（焼けた森。黒い幹と灰の地面）※未作成
+// - bg/south_road.avif（雪が途切れた南の街道。宿場の跡もここで代用）
+// - bg/burnt_forest.avif（焼けた森。黒い幹と灰の地面）
 const scenario: ScenarioFile = {
   id: '2-3',
   lines: [

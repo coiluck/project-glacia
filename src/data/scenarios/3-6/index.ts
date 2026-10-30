@@ -1,7 +1,7 @@
 import type { ScenarioFile } from '../../../features/scenario/types';
 
 // 背景:
-// - bg/west_border.avif（帝都の西側の境界。白く霞む線の向こうに、凍った外周の街）※未作成
+// - bg/west_border.avif（帝都の西側の境界。白く霞む線の向こうに、凍った外周の街）
 // - bg/camp_tent.avif（ソレイユの天幕の中として使う）
 const scenario: ScenarioFile = {
   id: '3-6',
@@ -67,7 +67,7 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: 'ラピスはうなずいて、袖の中から苦無を取り出した。山道で拾ったものだった。',
+      text: 'ラピスは袖の中から苦無を取り出した。山道で拾ったものだった。',
       commands: [
         { type: 'char', id: 'lapis', pose: 'serious' }
       ]

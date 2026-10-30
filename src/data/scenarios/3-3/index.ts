@@ -1,8 +1,8 @@
 import type { ScenarioFile } from '../../../features/scenario/types';
 
 // 背景:
-// - bg/soleil_camp.avif（山のふもとの聖女の陣。斜面に陽石が並ぶ。夜は陣の上に小さな太陽）※未作成
-// - bg/mountain_path.avif（西の山道。岩場の先に、エルフの谷。夜の山の上もこれで代用）※未作成
+// - bg/soleil_camp.avif（山のふもとの聖女の陣。斜面に陽石が並ぶ。夜は陣の上に小さな太陽）
+// - bg/mountain_path.avif（西の山道。岩場の先に、エルフの谷。夜の山の上もこれで代用）
 const scenario: ScenarioFile = {
   id: '3-3',
   lines: [
@@ -270,7 +270,7 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: 'たぶん。凍る前の何日か、帝都の星はどの星よりも揺れてたもん。',
+      text: 'たぶん。あの日、凍るまでの帝都の星は、どの星よりも揺れてたもん。',
       speaker: 'ステラ',
       commands: [
         { type: 'char', id: 'stella', pose: 'normal' }

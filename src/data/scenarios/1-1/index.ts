@@ -13,7 +13,7 @@ const scenario: ScenarioFile = {
       text: 'それが、最初に思ったことだった。'
     },
     {
-      text: '目を開けると、薄い布の天井が風に揺れていた。布の向こうで、火のはぜる音がする。',
+      text: '目を開けると、薄い布の天井が風に揺れていた。布の向こうで火のはぜる音がする。',
       commands: [
         { type: 'bg', file: 'images/scenario/bg/camp_tent.avif', transition: 'fade' }
       ]
@@ -40,7 +40,7 @@ const scenario: ScenarioFile = {
       speaker: '？？？'
     },
     {
-      text: '答えようとして、言葉が止まった。名前が、出てこない。',
+      text: '答えようとして、言葉が止まった。名前が出てこない。',
       choiceId: 'name'
     },
     {
@@ -51,7 +51,7 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: '境界の、内側から。',
+      text: '境界の内側から。',
       speaker: 'ラピス'
     },
     {
@@ -67,7 +67,7 @@ const scenario: ScenarioFile = {
       speaker: 'ラピス'
     },
     {
-      text: '中で、誰かに会いませんでしたか。',
+      text: '中で誰かに会いませんでしたか。',
       speaker: 'ラピス',
       choiceId: 'inside'
     },
@@ -90,27 +90,27 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: '雪原の先で、景色が白く霞んでいる。空気がそこだけ凍りついたように、一本の線を境に色が変わっていた。'
+      text: '雪原の先で景色が白く霞んでいる。空気がそこだけ凍りついたように、一本の線を境に色が変わっていた。'
     },
     {
       text: 'その奥、地平線のあたりに、凍りついた尖塔の群れが影のように立っている。'
     },
     {
-      text: 'あれが境界です。その向こうが、帝都。',
+      text: 'あれが境界です。その向こうが帝都。',
       speaker: 'ラピス',
       commands: [
         { type: 'char', id: 'lapis', pose: 'serious' }
       ]
     },
     {
-      text: 'ここも寒いですけど、火と装備があれば、人は過ごせます。',
+      text: 'ここも寒いですけど、火と装備があれば人は過ごせます。',
       speaker: 'ラピス',
       commands: [
         { type: 'char', id: 'lapis', pose: 'normal' }
       ]
     },
     {
-      text: 'でも、境界を越えたら、体はすぐに凍ります。中がどうなっているのかも、中の人が生きているのかも、外からは分かりません。',
+      text: 'でも、境界を越えたら体はすぐに凍ります。中がどうなっているのかも、中の人が生きているのかも、外からは分かりません。',
       speaker: 'ラピス',
       commands: [
         { type: 'char', id: 'lapis', pose: 'serious' }
@@ -124,7 +124,7 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: 'あの日、帝都の真ん中に、裂け目が開きました。魔物があふれ出す前に、一部の人だけが外へ逃がされて……私も、そのひとりでした。',
+      text: 'あの日、帝都の真ん中に裂け目が開きました。魔物があふれ出す前に、一部の人だけが外へ逃がされて……私もそのひとりでした。',
       speaker: 'ラピス'
     },
     {
@@ -141,7 +141,7 @@ const scenario: ScenarioFile = {
       choiceId: 'sister'
     },
     {
-      text: '中から出てこられる人がいるなら、姉だって、きっと。',
+      text: '中から出てこられる人がいるなら、姉だってきっと。',
       speaker: 'ラピス',
       commands: [
         { type: 'char', id: 'lapis', pose: 'serious' }
@@ -168,7 +168,7 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: '白くて丸い影がふたつ、川の向こうから、まっすぐこちらへ向かってくる。'
+      text: '白くて丸い影がふたつ、川の向こうからまっすぐこちらへ向かってくる。'
     },
     {
       text: 'あなたはテントに戻っていてください。まだ立つのもやっとでしょう？',
@@ -253,7 +253,7 @@ const scenario: ScenarioFile = {
         buttonText: 'ひとりで行かせられない',
         branch: [
           { text: 'それはこっちの台詞です。せっかく目が覚めたのに。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'normal' }] },
-          { text: '……じゃあ、後ろから指示をください。それなら、いいです。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'serious' }] },
+          { text: '……じゃあ、後ろから指示をください。それならいいです。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'serious' }] },
         ],
       },
     ],

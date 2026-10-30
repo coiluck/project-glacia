@@ -1,9 +1,9 @@
 import type { ScenarioFile } from '../../../features/scenario/types';
 
 // 背景:
-// - bg/burnt_city.avif（焼けた街。煤けた石の家々と、空に開いた裂け目）※未作成
-// - bg/burnt_forest.avif（焼けた森。黒い幹と灰の地面）※未作成
-// - bg/forest_grove.avif（焼け残った木立。泉と古木、南の空に赤い裂け目）※未作成
+// - bg/burnt_city.avif（焼けた街。煤けた石の家々と、空に開いた裂け目）
+// - bg/burnt_forest.avif（焼けた森。黒い幹と灰の地面）
+// - bg/forest_grove.avif（焼け残った木立。泉と古木、南の空に赤い裂け目）
 const scenario: ScenarioFile = {
   id: '2-6',
   lines: [

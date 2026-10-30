@@ -1,9 +1,9 @@
 import type { ScenarioFile } from '../../../features/scenario/types';
 
 // 背景:
-// - bg/mountain_path.avif（西の山道。岩場の先に、エルフの谷）※未作成
-// - bg/soleil_camp.avif（山のふもとの聖女の陣。斜面に陽石が並ぶ。夜は陣の上に小さな太陽）※未作成
-// - bg/west_hill.avif（西へ続くゆるい丘。北へ向かう行列の場面もこれで代用）※未作成
+// - bg/mountain_path.avif（西の山道。岩場の先に、エルフの谷）
+// - bg/soleil_camp.avif（山のふもとの聖女の陣。斜面に陽石が並ぶ。夜は陣の上に小さな太陽）
+// - bg/west_hill.avif（西へ続くゆるい丘。北へ向かう行列の場面もこれで代用）
 const scenario: ScenarioFile = {
   id: '3-4',
   lines: [

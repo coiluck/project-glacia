@@ -1,8 +1,8 @@
 import type { ScenarioFile } from '../../../features/scenario/types';
 
 // 背景:
-// - bg/west_hill.avif（西へ続くゆるい丘。遠くに雪をかぶった山）※未作成
-// - bg/soleil_camp.avif（山のふもとの聖女の陣。斜面に陽石が並ぶ。夜は陣の上に小さな太陽）※未作成
+// - bg/west_hill.avif（西へ続くゆるい丘。遠くに雪をかぶった山）
+// - bg/soleil_camp.avif（山のふもとの聖女の陣。斜面に陽石が並ぶ。夜は陣の上に小さな太陽）
 const scenario: ScenarioFile = {
   id: '3-2',
   lines: [

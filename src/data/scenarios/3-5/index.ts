@@ -1,7 +1,7 @@
 import type { ScenarioFile } from '../../../features/scenario/types';
 
 // 背景:
-// - bg/west_border.avif（帝都の西側の境界。白く霞む線の向こうに、凍った外周の街）※未作成
+// - bg/west_border.avif（帝都の西側の境界。白く霞む線の向こうに、凍った外周の街）
 const scenario: ScenarioFile = {
   id: '3-5',
   lines: [
@@ -162,14 +162,14 @@ const scenario: ScenarioFile = {
       text: 'ラピスの指先で、霞が震えていた。溶かされたぶんを、内側から押し戻そうとするように。'
     },
     {
-      text: '押し返してる……。姉さん、いま、中で溶かされたところを張り直してる。',
+      text: '押し返してる……。溶かされたところを氷が自分で戻そうとしてる。',
       speaker: 'ラピス'
     },
     {
       text: 'ブローチの霜のひびが、また一本増えた。'
     },
     {
-      text: '……こんなの、無理してる。魔法の氷が溶けるのは、かけた人が……',
+      text: '……でも、こんなに溶かされたら。姉さんの氷が溶けるのは、かけた人が……',
       speaker: 'ラピス'
     },
     {

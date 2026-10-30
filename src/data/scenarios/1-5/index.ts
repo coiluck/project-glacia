@@ -7,14 +7,14 @@ const scenario: ScenarioFile = {
   id: '1-5',
   lines: [
     {
-      text: 'ロザリーは、並べたランタンをひとつずつ確かめるように、指先でそっと撫でた。どれも倒れていなかった。',
+      text: 'ロザリーは並べたランタンをひとつずつ確かめるように、指先でそっと撫でた。どれも倒れていなかった。',
       commands: [
         { type: 'bg', file: 'images/scenario/bg/camp_border.avif', transition: 'fade' },
         { type: 'char', id: 'rosalie', pose: 'normal' }
       ]
     },
     {
-      text: 'ありがとうございます。おかげで、今夜も灯りを置けました。',
+      text: 'ありがとうございます。おかげで今夜も灯りを置けました。',
       speaker: 'ロザリー',
       commands: [
         { type: 'char', id: 'rosalie', pose: 'smile' }
@@ -28,7 +28,7 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: 'ええ。明日も、そうします。',
+      text: 'ええ。明日もそうします。',
       speaker: 'ロザリー',
       commands: [
         { type: 'char', id: 'rosalie', pose: 'smile' }
@@ -61,7 +61,7 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: 'さっきのブローチ、もう一度、見せてもらえますか。',
+      text: 'さっきのブローチ、もう一度見せてもらえますか。',
       speaker: 'ラピス',
       commands: [
         { type: 'char', id: 'lapis', pose: 'serious' }
@@ -71,7 +71,7 @@ const scenario: ScenarioFile = {
       text: '手のひらに載せて差し出すと、ラピスは両手で包むように受け取った。'
     },
     {
-      text: '……やっぱり、そうだ。',
+      text: '……やっぱりそうだ。',
       speaker: 'ラピス',
       commands: [
         { type: 'char', id: 'lapis', pose: 'sad' }
@@ -82,11 +82,11 @@ const scenario: ScenarioFile = {
       speaker: 'ラピス'
     },
     {
-      text: '姉がいつも、襟につけていました。母の形見なんです。裏に、小さな傷があって……ほら。',
+      text: '姉がいつも、襟につけていました。母の形見なんです。裏に小さな傷があって……ほら。',
       speaker: 'ラピス'
     },
     {
-      text: 'ラピスが裏返したブローチの、留め金のそばに、細い引っかき傷があった。'
+      text: 'ラピスが裏返したブローチの留め金のそばに、細い引っかき傷があった。'
     },
     {
       text: '私が小さいころに、落として付けた傷です。',
@@ -108,11 +108,11 @@ const scenario: ScenarioFile = {
       speaker: 'ラピス'
     },
     {
-      text: '私も氷の魔法を使うので、分かります。魔法でつくった氷は、火にかざしても溶けません。',
+      text: '私も氷の魔法を使うので、分かります。魔法でつくった氷は、火にかざしてもなかなか溶けません。',
       speaker: 'ラピス'
     },
     {
-      text: '溶けるのは、かけた人が死んだときだけです。',
+      text: '姉くらいの術者の氷なら、火では少しも溶けません。溶けるのは、かけた人が解いたときか死んだときだけです。',
       speaker: 'ラピス'
     },
     {
@@ -137,7 +137,7 @@ const scenario: ScenarioFile = {
       text: '言い終わる前に、ラピスの目から涙がこぼれた。'
     },
     {
-      text: '……ずっと、分からなかったんです。待っても、待っても、何も分からなくて。',
+      text: '……ずっと、分からなかったんです。待っても待っても、何も分からなくて。',
       speaker: 'ラピス'
     },
     {
@@ -149,7 +149,7 @@ const scenario: ScenarioFile = {
       text: 'ラピスは袖で目をこすって、ブローチをこちらの手に戻した。'
     },
     {
-      text: '溶けない氷、という言葉が、頭のどこかに引っかかっていた。テントの外の、境界の氷のことだった。'
+      text: '溶けない氷、という言葉が頭のどこかに引っかかっていた。テントの外の、境界の氷のことだった。'
     },
     {
       text: '……境界の氷のこと、考えました？',
@@ -166,11 +166,11 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: '境界の氷は、裂け目が起こしたものだろうって、みんな言ってます。',
+      text: '境界の氷は裂け目が起こしたものだろうって言う人もいます。',
       speaker: 'ラピス'
     },
     {
-      text: 'どうしてあなたが持っていたのかは、分かりません。でも、あなたは中で、姉に会っています。',
+      text: 'どうしてあなたが持っていたのかは、分かりません。でも、あなたは中で姉に会っています。',
       speaker: 'ラピス',
       commands: [
         { type: 'char', id: 'lapis', pose: 'serious' }
@@ -184,7 +184,7 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: 'そのとき、野営地のどこかで、鐘が激しく打ち鳴らされた。',
+      text: 'そのとき、野営地のどこかで鐘が激しく打ち鳴らされた。',
       commands: [
         { type: 'bgShake', duration: 400, intensity: 6 }
       ]
@@ -211,10 +211,10 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: '炎だった。色の抜けた白い炎が、雪原を焼きながらこちらへ近づいてくる。通ったあとの雪が、音を立てて溶けていく。'
+      text: '炎だった。色の抜けた白い炎が、雪原を焼きながらこちらへ近づいてくる。通ったあとの雪が音を立てて溶けていく。'
     },
     {
-      text: '騎士団の人たちが、避難民をテントの北へ逃がしている。その中から、アルマがこちらへ駆けてきた。'
+      text: '騎士団の人たちが、避難民をテントの北へ逃がしている。その中からアルマがこちらへ駆けてきた。'
     },
     {
       text: '野営地の南の端で食い止めます。あれを、テントに近づけるわけにはいきません。',
@@ -231,7 +231,7 @@ const scenario: ScenarioFile = {
       text: 'アルマは一瞬だけ言葉を切って、こちらをまっすぐに見た。'
     },
     {
-      text: '指揮官。指揮を、お願いできますか。',
+      text: '指揮官。指揮をお願いできますか。',
       speaker: 'アルマ'
     },
     {
@@ -250,7 +250,7 @@ const scenario: ScenarioFile = {
       choiceId: 'command'
     },
     {
-      text: 'ラピスが、ブローチを握ったこちらの手に、自分の手を重ねた。',
+      text: 'ラピスが、ブローチを握ったこちらの手に自分の手を重ねた。',
       commands: [
         { type: 'char', id: 'lapis', pose: 'serious' }
       ]
