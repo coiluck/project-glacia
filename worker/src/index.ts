@@ -4,6 +4,8 @@ import type { Env } from './context'
 import { BadRequest, error, withCors } from './http'
 import { route } from './router'
 
+export { UserQueue } from './userQueue'
+
 export default {
   async fetch(request, env) {
     // vite の proxy 経由だと `/api` が付いたまま来る

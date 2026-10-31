@@ -1,7 +1,7 @@
 import { nowSeconds, readToken, type Context, type Env } from './context'
 import { findSessionUserId } from './db/sessions'
-import { loadMe, saveMe } from './db/users'
-import { BadRequest, error, json, readJson } from './http'
+import { loadMe } from './db/users'
+import { error, json, readJson } from './http'
 import * as auth from './routes/auth'
 import * as baseRoute from './routes/base'
 import * as battle from './routes/battle'
@@ -18,7 +18,7 @@ import * as tutorial from './routes/tutorial'
 import type { Command } from './routes/types'
 
 // 状態を変えるルートのmap
-const COMMANDS: Record<string, Command<unknown>> = {
+export const COMMANDS: Record<string, Command<unknown>> = {
   '/gacha/pull': gacha.pull,
   '/gacha/exchange': gacha.exchange,
   '/battle/result': battle.result,
@@ -65,18 +65,12 @@ export async function route(request: Request, env: Env, path: string): Promise<R
   // デバッグ用のコマンド
   if (path.startsWith('/debug/') && env.DEBUG !== '1') return error(`not found: ${path}`, 404)
 
-  const command = COMMANDS[path]
-  if (!command) return error(`not found: ${path}`, 404)
+  if (!COMMANDS[path]) return error(`not found: ${path}`, 404)
   if (request.method !== 'POST') return error('method not allowed', 405)
 
-  const before = await loadMe(ctx)
+  // 読む -> resolve -> 保存は、ユーザーごとの Durable Object で1本ずつ行う
   const body = await readJson(request)
-  let after: ReturnType<typeof command>
-  try {
-    after = command(before, body, ctx)
-  } catch (e) {
-    throw new BadRequest((e as Error).message)
-  }
-  await saveMe(ctx, before, after.me)
-  return json({ me: after.me, result: after.result })
+  const queue = env.USER_QUEUE.get(env.USER_QUEUE.idFromName(userId))
+  const res = await queue.run(userId, path, body)
+  return new Response(res.body, { status: res.status, headers: { 'Content-Type': 'application/json' } })
 }

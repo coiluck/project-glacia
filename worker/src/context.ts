@@ -1,9 +1,12 @@
+import type { UserQueue } from './userQueue'
+
 // 1リクエストぶんの環境。各ルートはこれだけを受け取る
 export interface Env {
   DB: D1Database
   ALLOWED_ORIGIN: string
   PASSWORD_PEPPER: string // wrangler secret put で入れる。ローカルは .dev.vars
   DEBUG?: string          // '1' のとき /debug/* が開く。ローカルの .dev.vars にだけ書く
+  USER_QUEUE: DurableObjectNamespace<UserQueue> // コマンドをユーザーごとに1本ずつ流す
 }
 
 export interface Context {

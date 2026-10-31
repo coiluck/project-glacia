@@ -20,5 +20,6 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  // test/entry.ts は Worker の中で動くのでここ。test/*.test.ts は node で動くので tests/tsconfig.json
+  "include": ["src", "test/entry.ts"]
 }

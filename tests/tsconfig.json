@@ -23,5 +23,6 @@
   },
   // features のテストはソースの隣に置き、ここで型チェックする（features は worker と共有するので DOM を入れない）
   // node の型は data のテストが画像ファイルの有無を見るのに使う
-  "include": [".", "../src/**/*.test.ts"]
+  // worker/test/*.test.ts は Worker を外から HTTP で叩くだけなので node の型で足りる
+  "include": [".", "../src/**/*.test.ts", "../worker/test/**/*.test.ts"]
 }
