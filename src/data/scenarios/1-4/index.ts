@@ -126,7 +126,10 @@ const scenario: ScenarioFile = {
     },
     {
       text: 'この方は、目を覚ましたばかりと聞いています。責めても、帰ってくる人はいません。',
-      speaker: '？？？'
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'rosalie', pose: 'serious' }
+      ]
     },
     {
       text: 'ロザリーさん……',

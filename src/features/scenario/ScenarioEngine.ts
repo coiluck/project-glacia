@@ -20,10 +20,12 @@ export class ScenarioEngine {
   private hasConsumed = false;
 
   private readonly registry: Record<string, ScenarioFile>;
+  private readonly speakerFaces: Record<string, string>;
 
-  constructor(initial: GameState, registry: Record<string, ScenarioFile>) {
+  constructor(initial: GameState, registry: Record<string, ScenarioFile>, speakerFaces: Record<string, string> = {}) {
     this.state = structuredClone(initial);
     this.registry = registry;
+    this.speakerFaces = speakerFaces;
   }
 
   getState(): GameState {
@@ -155,7 +157,7 @@ export class ScenarioEngine {
   }
 
   private consumeLine(line: ScenarioLine): AdvanceResult {
-    this.state.snapshot = reduceLine(this.state.snapshot, line);
+    this.state.snapshot = reduceLine(this.state.snapshot, line, this.speakerFaces);
     const transients = (line.commands ?? []).filter(isTransient);
     this.incrementCurrent();
     return { kind: 'line', line, transients };

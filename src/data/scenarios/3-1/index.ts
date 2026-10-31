@@ -216,7 +216,10 @@ const scenario: ScenarioFile = {
     },
     {
       text: '伸びたばっかりの裂け目はね、星がいちばん明るいの。……いまなら、当たる！',
-      speaker: '？？？'
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'stella', pose: 'serious' }
+      ]
     },
     {
       text: '少女が杖を振り下ろした。',
@@ -254,7 +257,10 @@ const scenario: ScenarioFile = {
     },
     {
       text: '外れた。',
-      speaker: '？？？'
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'stella', pose: 'sad' }
+      ]
     },
     {
       text: '……何をした、いま。',
@@ -272,7 +278,10 @@ const scenario: ScenarioFile = {
     },
     {
       text: '……ちょっとだけ、東にずれたけど。',
-      speaker: '？？？'
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'stella', pose: 'normal' }
+      ]
     },
     {
       text: 'シルヴィが腕をまっすぐ前に伸ばして、指を立てた。南の地平線で、落ちたあたりがまだ赤く光っている。その光と、空の裂け目とを、指の幅で見比べていた。',
@@ -293,7 +302,10 @@ const scenario: ScenarioFile = {
     },
     {
       text: '分かるの？ ここから？',
-      speaker: '？？？'
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'stella', pose: 'surprised' }
+      ]
     },
     {
       text: '季節が替わるたびに、木のてっぺんから裂け目を測ってたの。指の何本分か、拳の何個分か、って。……東は、私の森があったほうよ。',
@@ -331,7 +343,10 @@ const scenario: ScenarioFile = {
     },
     {
       text: 'ずっと、どれだけずれてるのか分かんなかったの。落ちたところまで見に行ったら、焼けちゃうし。誰も測ってくれないし。',
-      speaker: '？？？'
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'stella', pose: 'serious' }
+      ]
     },
     {
       text: 'ずれが分かれば、直せる。直せば、次は当たる！',

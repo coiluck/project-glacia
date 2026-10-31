@@ -222,7 +222,10 @@ const scenario: ScenarioFile = {
     },
     {
       text: '帝都の真ん中には、殿下がおられます。',
-      speaker: '？？？'
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'oboro', pose: 'normal' }
+      ]
     },
     {
       text: 'ステラは帽子のつばを握って、それ以上は何も言わなかった。',
@@ -239,11 +242,17 @@ const scenario: ScenarioFile = {
     },
     {
       text: '……指揮官殿。',
-      speaker: '？？？'
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'oboro', pose: 'surprised' }
+      ]
     },
     {
       text: 'なぜ外におられるのです。殿下と共に帝都の中央に残られたはずでは。',
-      speaker: '？？？'
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'oboro', pose: 'surprised' }
+      ]
     },
     {
       text: '誰も、すぐには口を開かなかった。'
@@ -268,7 +277,10 @@ const scenario: ScenarioFile = {
     },
     {
       text: '境界を越えた者は、戻らぬはずです。',
-      speaker: '？？？'
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'oboro', pose: 'serious' }
+      ]
     },
     {
       text: '人影はそう言って、膝をついた。',

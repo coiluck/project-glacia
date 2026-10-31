@@ -21,7 +21,10 @@ const scenario: ScenarioFile = {
     },
     {
       text: '警告。機体温度が上限を超えています。',
-      speaker: '？？？'
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'automaton', pose: 'normal' }
+      ]
     },
     {
       text: '……人形？',
@@ -57,7 +60,10 @@ const scenario: ScenarioFile = {
     },
     {
       text: '服は、熱がこもります。冷却効率を優先します。',
-      speaker: '？？？'
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'automaton', pose: 'serious' }
+      ]
     },
     {
       text: 'シャツのボタンが三つ目まで外れたところで、アルマが黙ってこちらの前に立った。目の前がアルマの外套の背中でいっぱいになった。',
@@ -125,7 +131,10 @@ const scenario: ScenarioFile = {
     },
     {
       text: '外に出したはずですが。',
-      speaker: '？？？'
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'automaton', pose: 'surprised' }
+      ]
     },
     {
       text: '……出した？',

@@ -37,7 +37,10 @@ const scenario: ScenarioFile = {
     },
     {
       text: '私はラピス。あなたは？',
-      speaker: '？？？'
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'lapis', pose: 'normal' }
+      ]
     },
     {
       text: '答えようとして、言葉が止まった。名前が出てこない。',

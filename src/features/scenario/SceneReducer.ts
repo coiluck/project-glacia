@@ -30,8 +30,15 @@ export const statefulReducers: Reducers = {
 const isStatefulType = (type: string): type is StatefulCommand['type'] =>
   type in statefulReducers;
 
-/** stateful命令とtext/speakerを適用してsnapshotを更新する。transient命令は無視する。 */
-export function reduceLine(snapshot: SceneSnapshot, line: ScenarioLine): SceneSnapshot {
+/**
+ * stateful命令とtext/speakerを適用してsnapshotを更新する。transient命令は無視する。
+ * speakerFaces は話者名 → キャラ id。char 命令の無い行では、話者のキャラが舞台にいればその顔を出す。
+ */
+export function reduceLine(
+  snapshot: SceneSnapshot,
+  line: ScenarioLine,
+  speakerFaces: Record<string, string> = {},
+): SceneSnapshot {
   let next: SceneSnapshot = {
     ...snapshot,
     text: line.text,
@@ -42,6 +49,10 @@ export function reduceLine(snapshot: SceneSnapshot, line: ScenarioLine): SceneSn
     if (!isStatefulType(cmd.type)) continue;
     const reducer = statefulReducers[cmd.type] as Reducer<StatefulCommand>;
     next = reducer(next, cmd as StatefulCommand);
+  }
+  if (next.faceId === null && line.speaker) {
+    const id = speakerFaces[line.speaker];
+    if (id && next.characters.some(c => c.id === id)) next = { ...next, faceId: id };
   }
   return next;
 }

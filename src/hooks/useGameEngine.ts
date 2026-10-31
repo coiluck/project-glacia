@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ScenarioEngine, type AdvanceResult } from '../features/scenario/ScenarioEngine';
 import { executeTransients } from '../features/scenario/CommandExecutor';
 import { scenarioRegistry } from '../data/scenarios';
+import { speakerFaces } from '../data/scenarios/speakers';
 import { useGameStore } from '../stores/gameStore';
 import type { Choice, GameState } from '../features/scenario/types';
 
@@ -25,7 +26,7 @@ export const createInitialState = (scenarioId: string): GameState => ({
 });
 
 export function resetGameEngine(initial: GameState): void {
-  sharedEngine = new ScenarioEngine(initial, scenarioRegistry);
+  sharedEngine = new ScenarioEngine(initial, scenarioRegistry, speakerFaces);
   started = false;
   useGameStore.getState().reset();
   useGameStore.getState().setSnapshot(initial.snapshot);
@@ -34,7 +35,7 @@ export function resetGameEngine(initial: GameState): void {
 export function useGameEngine(initial: GameState) {
   const [engine] = useState(() => {
     if (!sharedEngine) {
-      sharedEngine = new ScenarioEngine(initial, scenarioRegistry);
+      sharedEngine = new ScenarioEngine(initial, scenarioRegistry, speakerFaces);
     }
     return sharedEngine;
   });
