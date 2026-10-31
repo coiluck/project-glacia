@@ -73,4 +73,26 @@ export const enemyDefs: Record<string, EnemyDef> = {
     base: { hp: 320, attack: 26, defense: 20 },
     growth: { hp: 10.2, attack: 1.2, defense: 0.8 },
   },
+  // 自動人形: 4-2 で1体だけ出てくる。硬くて痛い剣士で、隣に並んだ相手を2回殴る
+  // 3ターンごとと、HP50%を切ったときに、まわり1マスへまとめて熱を吐き出す
+  automaton: {
+    id: 'automaton',
+    nameKey: 'enemyAutomaton',
+    classId: 'soldier',
+    base: { hp: 1200, attack: 28, defense: 24 },
+    growth: { hp: 64, attack: 1.3, defense: 0.9 },
+    skill: {
+      def: {
+        id: 'automatonHeatVent',
+        nameKey: 'skillHeatVent',
+        apCost: 3,
+        range: { kind: 'range', min: 0, max: 0 },
+        effect: [
+          { type: 'damage', power: 80, target: 'enemy', area: { kind: 'range', min: 1, max: 1 } },
+        ],
+      },
+      everyNTurns: 3,
+      hpTriggers: [50],
+    },
+  },
 };

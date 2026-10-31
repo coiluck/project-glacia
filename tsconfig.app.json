@@ -21,5 +21,7 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  // テストは DOM の無い tests/tsconfig.json の側で型チェックする
+  "exclude": ["src/**/*.test.ts"]
 }

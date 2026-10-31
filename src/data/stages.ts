@@ -70,8 +70,16 @@ export const chapters: Chapter[] = [
   {
     id: 4,
     name: 'Chapter 4',
-    titleKey: '',
-    stages: [],
+    titleKey: 'chapter4title',
+    stages: [
+      { id: '4-1', x: 30, y: 66, next: ['4-2'], stamina: 24, reward: { currency: 1100, rankExp: 72 } },
+      { id: '4-2', x: 80, y: 44, next: ['4-3'], stamina: 24, reward: { currency: 1150, rankExp: 74 } },
+      { id: '4-3', x: 128, y: 70, next: ['4-4'], stamina: 25, reward: { currency: 1200, rankExp: 77 } },
+      { id: '4-4', x: 176, y: 42, next: ['4-5'], stamina: 25, reward: { currency: 1250, rankExp: 80 } },
+      { id: '4-5', x: 224, y: 66, next: ['4-6'], stamina: 26, reward: { currency: 1300, rankExp: 83 } },
+      { id: '4-6', x: 272, y: 40, next: ['4-7'], stamina: 26, reward: { currency: 1350, rankExp: 86 } },
+      { id: '4-7', x: 330, y: 58, stamina: 28, reward: { currency: 1450, rankExp: 92 } },
+    ],
   },
 ]
 

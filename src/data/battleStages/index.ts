@@ -17,6 +17,13 @@ import stage3_4 from './3-4';
 import stage3_5 from './3-5';
 import stage3_6 from './3-6';
 import stage3_7 from './3-7';
+import stage4_1 from './4-1';
+import stage4_2 from './4-2';
+import stage4_3 from './4-3';
+import stage4_4 from './4-4';
+import stage4_5 from './4-5';
+import stage4_6 from './4-6';
+import stage4_7 from './4-7';
 
 // 戦闘マップの定義。keyはstages.tsのStage.idと一致させる。
 // 敵の Lv の目安（5章構成）: 1章 1〜5 / 2章 6〜14 / 3章 15〜26 / 4章 27〜38 / 5章 39〜50
@@ -39,4 +46,11 @@ export const battleStageRegistry: Record<string, BattleStageData> = {
   '3-5': stage3_5,
   '3-6': stage3_6,
   '3-7': stage3_7,
+  '4-1': stage4_1,
+  '4-2': stage4_2,
+  '4-3': stage4_3,
+  '4-4': stage4_4,
+  '4-5': stage4_5,
+  '4-6': stage4_6,
+  '4-7': stage4_7,
 };

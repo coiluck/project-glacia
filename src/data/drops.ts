@@ -158,21 +158,12 @@ export const dropTables: Record<string, DropEntry[]> = {
     { itemId: 'refinedSteel', count: 2, rate: 0.4 },
     { itemId: 'skillBookMedium', count: 1, rate: 0.35 },
   ],
-  // 育成記録（大）はここと 4-8 だけ
+  // 育成記録（大）はここだけ
   '4-7': [
     { itemId: 'beastStone', count: 1 },
     { itemId: 'elixirDrop', count: 1 },
     { itemId: 'trainingRecordLarge', count: 1 },
     { itemId: 'temperedLeather', count: 1, rate: 0.4 },
-    { itemId: 'trainingRecordLarge', count: 1, rate: 0.5 },
-  ],
-  '4-8': [
-    { itemId: 'awakenStone', count: 2 },
-    { itemId: 'beastStone', count: 1 },
-    { itemId: 'trainingRecordLarge', count: 2 },
-    { itemId: 'temperedLeather', count: 1, rate: 0.45 },
-    { itemId: 'elixirDrop', count: 1, rate: 0.45 },
-    { itemId: 'skillBookMedium', count: 2, rate: 0.55 },
     { itemId: 'trainingRecordLarge', count: 1, rate: 0.5 },
   ],
 }
