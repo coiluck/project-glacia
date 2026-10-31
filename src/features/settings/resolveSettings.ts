@@ -1,5 +1,5 @@
 // 設定保存のサーバー側の処理
-import type { MeResponse, SettingsPayload } from '../../api/types'
+import type { MeResponse, SettingsPayload } from '../contract'
 import { LANGS, TEXT_SIZES, TEXT_SPEEDS } from '../../data/settings'
 
 const isVolume = (v: unknown) => Number.isInteger(v) && (v as number) >= 0 && (v as number) <= 100

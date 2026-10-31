@@ -1,5 +1,5 @@
 import { apiGet } from './client'
-import type { MeResponse } from './types'
+import type { MeResponse } from '../features/contract'
 import { useAccountStore } from '../stores/accountStore'
 import { useRankStore } from '../stores/rankStore'
 import { useStaminaStore } from '../stores/staminaStore'

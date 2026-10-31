@@ -1,4 +1,4 @@
-import type { FavoritePayload } from '../../../src/api/types'
+import type { FavoritePayload } from '../../../src/features/contract'
 import { resolveFavorite } from '../../../src/features/characters/resolveFavorite'
 import type { Command } from './types'
 

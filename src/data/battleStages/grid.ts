@@ -16,13 +16,14 @@ const TERRAIN_CHARS: Record<string, TerrainKind> = {
   w: 'water',
   l: 'lava',
   v: 'void',
+  h: 'thaw',
 };
 
 export interface StageMap {
   terrain: string[];
   // terrain と同じ形で書く。'.' は何も置かないマス、'@' は味方の初期配置マス、それ以外は enemies の文字
   units: string[];
-  enemies: Record<string, string>; // 文字 -> EnemyDef.id
+  enemies: Record<string, { enemyId: string; level: number }>; // 文字 -> EnemyDef.id とその配置の Lv
   partyApPerTurn: number;
 }
 
@@ -51,9 +52,9 @@ export function stageFromMap(map: StageMap): BattleStageData {
       deployableTiles.push(pos);
       continue;
     }
-    const enemyId = map.enemies[ch];
-    if (!enemyId) throw new Error(`敵の文字が無い: '${ch}'`);
-    enemies.push({ enemyId, pos });
+    const enemy = map.enemies[ch];
+    if (!enemy) throw new Error(`敵の文字が無い: '${ch}'`);
+    enemies.push({ ...enemy, pos });
   }
 
   return { tiles, deployableTiles, partyApPerTurn: map.partyApPerTurn, enemies };

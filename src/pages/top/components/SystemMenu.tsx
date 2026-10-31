@@ -1,7 +1,7 @@
 // 画面下のシステムメニュー
 import { useState, type CSSProperties } from 'react'
 import { useClaimableMailCount } from '../../../features/mail/useMails'
-import { useUnreadNewsCount } from '../../../features/news/newsReadStore'
+import { useUnreadNewsCount } from '../../../stores/newsReadStore'
 import { useTranslations } from '../../../i18n'
 import SystemPanel from './system/SystemPanel'
 import { SYSTEM_TABS, SYSTEM_TAB_LABELS, type SystemTabKey } from './system/tabs'

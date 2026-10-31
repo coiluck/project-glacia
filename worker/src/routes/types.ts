@@ -1,4 +1,4 @@
-import type { MeResponse } from '../../../src/api/types'
+import type { MeResponse } from '../../../src/features/contract'
 import type { Context } from '../context'
 
 // 読む -> resolve -> 保存 -> 全状態を返すを共通化

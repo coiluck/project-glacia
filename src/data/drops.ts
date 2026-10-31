@@ -37,14 +37,6 @@ export const dropTables: Record<string, DropEntry[]> = {
     { itemId: 'steelScrap', count: 2, rate: 0.35 },
     { itemId: 'skillBookSmall', count: 1, rate: 0.3 },
   ],
-  '1-6': [
-    { itemId: 'iceCrystal', count: 3 },
-    { itemId: 'steelScrap', count: 2 },
-    { itemId: 'trainingRecordSmall', count: 3 },
-    { itemId: 'brokenGear', count: 2, rate: 0.45 },
-    { itemId: 'skillBookSmall', count: 1, rate: 0.55 },
-    { itemId: 'trainingRecordSmall', count: 1, rate: 0.5 },
-  ],
 
   // 2章: 獣の牙・丈夫な毛皮・薬草の束・魔石の粉
   '2-1': [
@@ -81,14 +73,6 @@ export const dropTables: Record<string, DropEntry[]> = {
     { itemId: 'trainingRecordSmall', count: 3 },
     { itemId: 'magicDust', count: 2, rate: 0.55 },
     { itemId: 'flint', count: 2, rate: 0.4 },
-    { itemId: 'trainingRecordSmall', count: 1, rate: 0.5 },
-  ],
-  '2-7': [
-    { itemId: 'beastFang', count: 3 },
-    { itemId: 'herbBundle', count: 3 },
-    { itemId: 'trainingRecordSmall', count: 4 },
-    { itemId: 'magicDust', count: 2, rate: 0.5 },
-    { itemId: 'skillBookSmall', count: 2, rate: 0.6 },
     { itemId: 'trainingRecordSmall', count: 1, rate: 0.5 },
   ],
 
@@ -174,21 +158,12 @@ export const dropTables: Record<string, DropEntry[]> = {
     { itemId: 'refinedSteel', count: 2, rate: 0.4 },
     { itemId: 'skillBookMedium', count: 1, rate: 0.35 },
   ],
-  // 育成記録（大）はここと 4-8 だけ
+  // 育成記録（大）はここだけ
   '4-7': [
     { itemId: 'beastStone', count: 1 },
     { itemId: 'elixirDrop', count: 1 },
     { itemId: 'trainingRecordLarge', count: 1 },
     { itemId: 'temperedLeather', count: 1, rate: 0.4 },
-    { itemId: 'trainingRecordLarge', count: 1, rate: 0.5 },
-  ],
-  '4-8': [
-    { itemId: 'awakenStone', count: 2 },
-    { itemId: 'beastStone', count: 1 },
-    { itemId: 'trainingRecordLarge', count: 2 },
-    { itemId: 'temperedLeather', count: 1, rate: 0.45 },
-    { itemId: 'elixirDrop', count: 1, rate: 0.45 },
-    { itemId: 'skillBookMedium', count: 2, rate: 0.55 },
     { itemId: 'trainingRecordLarge', count: 1, rate: 0.5 },
   ],
 }

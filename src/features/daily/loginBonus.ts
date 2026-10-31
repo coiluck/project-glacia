@@ -1,4 +1,4 @@
-import type { MeResponse, UserRow } from '../../api/types'
+import type { MeResponse, UserRow } from '../contract'
 import { LOGIN_BONUS, type LoginReward } from '../../data/loginBonus'
 import { addItems } from '../inventory/inventory'
 import { dayIndex, monthIndex } from './day'

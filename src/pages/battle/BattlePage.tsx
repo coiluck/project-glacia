@@ -19,9 +19,9 @@ import {
   skillHitsByEffect,
   unitById,
 } from '../../features/battle/battle'
-import { useBattleStore } from '../../features/battle/battleStore'
+import { useBattleStore } from '../../stores/battleStore'
 import { useBattleResultSubmission } from '../../hooks/useBattleResultSubmission'
-import { calcDamage } from '../../features/battle/damage'
+import { NORMAL_ATTACK_POWER, calcDamage, calcHeal } from '../../features/battle/damage'
 import { axialKey, effectTiles, shapeAimsAnyDirection, shapeTiles } from '../../features/battle/hex'
 import type { AimTile, Axial } from '../../features/battle/hex'
 import type { Unit } from '../../features/battle/types'
@@ -57,7 +57,6 @@ const BATTLE_TRANSLATION_MAPPING = Object.fromEntries(
     'attack',
     'deselect',
     'normalAttack',
-    'power',
     'skillTriggerHp',
     'skillTriggerTurns',
     'backToMap',
@@ -259,7 +258,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     if (action === 'attack' && focusKey && highlights.get(focusKey) === 'attack') {
       const target = state.units.find((u) => axialKey(u.pos) === focusKey)
       if (target?.side === 'enemy') {
-        const damage = calcDamage(selectedUnit, target, selectedClass.attackPower)
+        const damage = calcDamage(selectedUnit, target, NORMAL_ATTACK_POWER)
         chips.set(target.id, { kind: 'damage', value: damage, lethal: damage >= target.hp })
       }
     }
@@ -285,7 +284,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
               break
             }
             case 'healHp':
-              chips.set(id, { kind: 'heal', value: Math.min(effect.amount, target.maxHp - target.hp) })
+              chips.set(id, { kind: 'heal', value: Math.min(calcHeal(selectedUnit, effect.amount), target.maxHp - target.hp) })
               break
             case 'grantAp':
               chips.set(id, { kind: 'ap', value: effect.amount })
@@ -454,7 +453,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     const cls = classes[unit.classId]
     const range =
       cls.attackRange.kind === 'range' ? ` · RANGE ${cls.attackRange.min ?? 1}–${cls.attackRange.max}` : ''
-    const notes = [`${t.normalAttack} ${t.power} ${cls.attackPower} · ${cls.attackCost} AP${range}`]
+    const notes = [`${t.normalAttack} · ${cls.attackCost} AP${range}`]
     if (unit.skill) {
       const trigger =
         unit.skillHpTriggers && unit.skillHpTriggers.length > 0

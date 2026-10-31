@@ -5,7 +5,8 @@ import { axialKey, effectTiles, reachable, shapeAimsAnyDirection, shapeTiles } f
 import type { AimTile, Axial } from './hex';
 import { canSpendAp, refillApForTurn, spendAp } from './ap';
 import { isPassable } from './terrain';
-import { calcDamage } from './damage';
+import { NORMAL_ATTACK_POWER, calcDamage, calcHeal } from './damage';
+import { statusAtLevel } from '../characters/resolve';
 import type {
   BattleStageData,
   BattleState,
@@ -43,15 +44,17 @@ export function createBattleState(
   const units = stage.enemies.map((spawn, i): Unit => {
     const def = enemyDefs[spawn.enemyId];
     if (!def) throw new Error(`Unknown enemy: ${spawn.enemyId}`);
+    const status = statusAtLevel(def.base, def.growth, spawn.level);
+    const hp = Math.floor(status.hp);
     return {
       id: `enemy-${i}-${def.id}`,
       side: 'enemy',
       classId: def.classId,
       pos: spawn.pos,
-      hp: def.hp,
-      maxHp: def.maxHp,
-      attack: def.attack,
-      defense: def.defense,
+      hp,
+      maxHp: hp,
+      attack: Math.floor(status.attack),
+      defense: Math.floor(status.defense),
       ap: 0,
       skill: def.skill?.def,
       skillEveryNTurns: def.skill?.everyNTurns,
@@ -176,7 +179,7 @@ export function attack(
   return removeDead({
     ...next,
     units: next.units.map((u) =>
-      hitIds.has(u.id) ? { ...u, hp: Math.max(0, u.hp - calcDamage(attacker, u, cls.attackPower)) } : u,
+      hitIds.has(u.id) ? { ...u, hp: Math.max(0, u.hp - calcDamage(attacker, u, NORMAL_ATTACK_POWER)) } : u,
     ),
   });
 }
@@ -288,7 +291,7 @@ export function castSkill(
             return { ...u, hp };
           }
           case 'healHp':
-            return { ...u, hp: Math.min(u.maxHp, u.hp + effect.amount) };
+            return { ...u, hp: Math.min(u.maxHp, u.hp + calcHeal(user, effect.amount)) };
           case 'grantAp':
             return { ...u, ap: u.ap + effect.amount };
         }

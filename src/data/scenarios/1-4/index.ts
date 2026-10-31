@@ -7,15 +7,10 @@ const scenario: ScenarioFile = {
   id: '1-4',
   lines: [
     {
-      text: '最後のカゲロウが、湖の氷の上で崩れて消えた。',
-      commands: [
-        { type: 'bg', file: 'images/scenario/bg/camp_border.avif', transition: 'fade' }
-      ]
-    },
-    {
       text: '荷運びの道は、これで大丈夫です。戻りましょう。',
       speaker: 'クラリス',
       commands: [
+        { type: 'bg', file: 'images/scenario/bg/camp_border.avif', transition: 'fade' },
         { type: 'char', id: 'clarice', pose: 'normal' }
       ]
     },
@@ -26,10 +21,10 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: 'テントのあいだを歩いていると、クラリスがこちらの横に並んで、小声で言った。'
+      text: 'テントのあいだを歩いていると、クラリスがこちらの横に並んで小声で言った。'
     },
     {
-      text: '隊長が、来たばかりの人にあんなふうに任せるのは、珍しいんです。',
+      text: '隊長が来たばかりの人にあんなふうに任せるのは、珍しいんです。',
       speaker: 'クラリス'
     },
     {
@@ -48,7 +43,7 @@ const scenario: ScenarioFile = {
       speaker: '避難民の男'
     },
     {
-      text: '中のやつが、なんで今さら出てくるんだ。',
+      text: '中のやつがなんで今さら出てくるんだ。',
       speaker: '避難民の男'
     },
     {
@@ -84,7 +79,7 @@ const scenario: ScenarioFile = {
       choiceId: 'rumor'
     },
     {
-      text: '野営地の端に、ほかより少し大きなテントがあった。入口に、白い布が下がっている。'
+      text: '野営地の端に、ほかより少し大きなテントがあった。入口に白い布が下がっている。'
     },
     {
       text: 'ここは礼拝所です。亡くなった人や、帝都に残った人のために祈る場所です。',
@@ -101,15 +96,15 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: 'あの、あなたが、境界から出てきた人ですか。',
+      text: 'あの、あなたが境界から出てきた人ですか。',
       speaker: '避難民の女'
     },
     {
-      text: '中に、娘がいるんです。十になる娘です。会いませんでしたか。',
+      text: '中に娘がいるんです。十になる娘です。会いませんでしたか。',
       speaker: '避難民の女'
     },
     {
-      text: '息子が、北の門で衛兵をしておった。何か、知らんか。',
+      text: '息子が、北の門で衛兵をしておった。何か知らんか。',
       speaker: '避難民の老人'
     },
     {
@@ -127,11 +122,14 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: 'テントの奥から、修道服の女性が歩いてきた。目を閉じたまま、人のあいだを迷わずに抜けてくる。'
+      text: 'テントの奥から修道服の女性が歩いてきた。目を閉じたまま、人のあいだを迷わずに抜けてくる。'
     },
     {
       text: 'この方は、目を覚ましたばかりと聞いています。責めても、帰ってくる人はいません。',
-      speaker: '？？？'
+      speaker: '？？？',
+      commands: [
+        { type: 'char', id: 'rosalie', pose: 'serious' }
+      ]
     },
     {
       text: 'ロザリーさん……',
@@ -149,7 +147,7 @@ const scenario: ScenarioFile = {
       choiceId: 'promise'
     },
     {
-      text: 'ロザリーと申します。ここで、祈りの番をしています。',
+      text: 'ロザリーと申します。ここで祈りの番をしています。',
       speaker: 'ロザリー',
       commands: [
         { type: 'char', id: 'rosalie', pose: 'normal' }
@@ -160,7 +158,7 @@ const scenario: ScenarioFile = {
       speaker: 'ロザリー'
     },
     {
-      text: 'テントの奥の柱に、木の札がびっしりと掛けられていた。札の一枚一枚に、名前が刻まれている。'
+      text: 'テントの奥の柱に、木の札がびっしりと掛けられていた。札の一枚一枚に名前が刻まれている。'
     },
     {
       text: '帝都に残った方々のお名前です。ご家族から聞いて、ひとつずつ刻んでいます。',
@@ -180,7 +178,7 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: 'さて。日が沈む前に、灯りを置きに行かなくては。',
+      text: 'さて。日が沈む前に灯りを置きに行かなくては。',
       speaker: 'ロザリー',
       commands: [
         { type: 'char', id: 'rosalie', pose: 'normal' }
@@ -252,7 +250,7 @@ const scenario: ScenarioFile = {
       text: '白く霞む線の手前で、ロザリーがひざをついてランタンを並べている。小さな火が、ひとつ、またひとつと灯っていく。'
     },
     {
-      text: 'その向こうで、雪がぐらりと盛り上がった。',
+      text: 'その向こうで雪がぐらりと盛り上がった。',
       commands: [
         { type: 'bgShake', duration: 400, intensity: 6 }
       ]

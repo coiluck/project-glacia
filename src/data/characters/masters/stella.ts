@@ -18,11 +18,11 @@ const stella: CharacterMaster = {
         apCost: 4,
         range: { kind: 'range', min: 0, max: 2 },
         effect: [
-          { type: 'damage', power: 55, target: 'enemy', area: { kind: 'range', min: 0, max: 1 } },
+          { type: 'damage', power: 92, target: 'enemy', area: { kind: 'range', min: 0, max: 1 } },
         ],
       },
       descriptionKey: 'skillStellaStardustDesc',
-      effectGrowth: [6],
+      effectGrowth: [10],
       levelUpCosts: [
         [{ itemId: 'skillBookSmall', count: 2 }],
         [{ itemId: 'skillBookSmall', count: 3 }],
@@ -40,11 +40,11 @@ const stella: CharacterMaster = {
         apCost: 3,
         range: { kind: 'range', min: 0, max: 2 },
         effect: [
-          { type: 'healHp', amount: 55, target: 'ally', area: { kind: 'range', min: 0, max: 1 } },
+          { type: 'healHp', amount: 125, target: 'ally', area: { kind: 'range', min: 0, max: 1 } },
         ],
       },
       descriptionKey: 'skillStellaStarCharmDesc',
-      effectGrowth: [10],
+      effectGrowth: [15],
       levelUpCosts: [
         [{ itemId: 'skillBookSmall', count: 2 }],
         [{ itemId: 'skillBookSmall', count: 3 }],

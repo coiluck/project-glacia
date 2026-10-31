@@ -1,5 +1,6 @@
 import type { Axial, AttackShape } from './hex';
 import type { TerrainKind } from './terrain';
+import type { Status } from '../../data/characters/types';
 
 // 攻撃で選べる対象ユニット数。'infinity' は範囲内の全ユニット
 export type TargetCount = number | 'infinity';
@@ -9,7 +10,6 @@ export interface UnitClassDef {
   id: string;
   nameKey: string; // i18n キー
   attackRange: AttackShape; // 通常攻撃の届く範囲（半径型 or 形指定型）
-  attackPower: number; // 通常攻撃の威力
   attackTargets: TargetCount; // 通常攻撃で選べる対象数
   attackCost: number; // 通常攻撃のAP消費
   apPerTurn: number; // 毎ターン配り直される個人AP
@@ -18,6 +18,7 @@ export interface UnitClassDef {
 // スキル効果
 // いろいろなスキル効果があると思うのでこれらを組み合わせて定義する
 // なるべく固有のスキル効果を定義しない
+// damage の power と healHp の amount は攻撃力に対する%（通常攻撃は100%）
 export type SkillEffect =
   | { type: 'damage'; power: number; target: 'self' | 'ally' | 'enemy'; area?: AttackShape; drain?: number }
   | { type: 'healHp'; amount: number; target: 'self' | 'ally'; area?: AttackShape }
@@ -94,15 +95,14 @@ export interface EnemyDef {
   id: string; // EnemySpawn の enemyId と一致
   nameKey: string; // i18n キー
   classId: string; // 敵も兵科を持つ
-  attack: number;
-  defense: number;
-  hp: number;
-  maxHp: number;
+  base: Status; // Lv1 のステータス
+  growth: Status; // 1レベルごとの上昇量・Math.floorするので小数を入れていい
   skill?: EnemySkillUse; // スキルを使わない敵は持たない
 }
 
 export interface EnemySpawn {
   enemyId: string; // data/ 側で定義された敵の ID
+  level: number;
   pos: Axial; // 配置座標
 }
 

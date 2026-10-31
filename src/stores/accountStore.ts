@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { UserRow } from '../api/types'
+import type { UserRow } from '../features/contract'
 
 // アカウント情報（ID・ユーザー名）
 export interface AccountState {

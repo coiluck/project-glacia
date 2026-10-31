@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { UserRow } from '../api/types'
+import type { UserRow } from '../features/contract'
 import type { GameState } from '../features/scenario/types'
 
 // シナリオ進行（現在の章・クリア済みステージ・進行中シナリオ）

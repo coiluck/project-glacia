@@ -1,4 +1,4 @@
-import type { MeResponse } from '../../../src/api/types'
+import type { MeResponse } from '../../../src/features/contract'
 import type { Command } from './types'
 
 export const set: Command<null> = (me, body) => {

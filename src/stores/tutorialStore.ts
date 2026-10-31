@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { UserRow } from '../api/types'
+import type { UserRow } from '../features/contract'
 import type { TutorialStep } from '../features/tutorial/resolve'
 
 // チュートリアル進行（完了済みステップ）

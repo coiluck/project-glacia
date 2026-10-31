@@ -1,5 +1,5 @@
 // 戦闘終了時のサーバー側の処理
-import type { MeResponse } from '../../api/types'
+import type { MeResponse } from '../contract'
 import type { MaterialCost } from '../../data/characters/types'
 import { dropTables } from '../../data/drops'
 import { expToNextRank, staminaMaxFor } from '../../data/rank'

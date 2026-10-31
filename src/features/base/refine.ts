@@ -1,4 +1,4 @@
-import type { MeResponse } from '../../api/types'
+import type { MeResponse } from '../contract'
 import { items } from '../../data/items'
 import { addItems, hasItems, spendItems } from '../inventory/inventory'
 

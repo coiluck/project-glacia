@@ -18,11 +18,11 @@ const rosalie: CharacterMaster = {
         apCost: 3,
         range: { kind: 'range', min: 0, max: 0 }, // 自分のマスだけを狙う
         effect: [
-          { type: 'healHp', amount: 50, target: 'ally', area: { kind: 'range', min: 0, max: 1 } },
+          { type: 'healHp', amount: 190, target: 'ally', area: { kind: 'range', min: 0, max: 1 } },
         ],
       },
       descriptionKey: 'skillRosalieSilentPrayerDesc',
-      effectGrowth: [9],
+      effectGrowth: [20],
       levelUpCosts: [
         [{ itemId: 'skillBookSmall', count: 1 }],
         [{ itemId: 'skillBookSmall', count: 2 }],

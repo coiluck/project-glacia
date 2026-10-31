@@ -20,7 +20,7 @@ const clarice: CharacterMaster = {
         effect: [
           {
             type: 'damage',
-            power: 45,
+            power: 113,
             target: 'enemy',
             area: {
               kind: 'pattern',
@@ -30,7 +30,7 @@ const clarice: CharacterMaster = {
         ],
       },
       descriptionKey: 'skillClariceSuppressiveFireDesc',
-      effectGrowth: [5],
+      effectGrowth: [13],
       levelUpCosts: [
         [{ itemId: 'skillBookSmall', count: 1 }],
         [{ itemId: 'skillBookSmall', count: 2 }],

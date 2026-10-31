@@ -1,4 +1,4 @@
-import type { EnhancePayload } from '../../../src/api/types'
+import type { EnhancePayload } from '../../../src/features/contract'
 import { levelUp, limitBreak, skillLevelUp } from '../../../src/features/characters/enhance'
 import type { Command } from './types'
 

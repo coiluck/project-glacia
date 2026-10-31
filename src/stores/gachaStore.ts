@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { UserRow } from '../api/types'
+import type { UserRow } from '../features/contract'
 
 // 天井交換の交換pt
 export interface GachaState {

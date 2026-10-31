@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { UserRow } from '../api/types'
+import type { UserRow } from '../features/contract'
 import type { DailyMissionBase } from '../features/mission/daily'
 
 // 任務

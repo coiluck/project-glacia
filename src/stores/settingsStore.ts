@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { UserRow } from '../api/types'
+import type { UserRow } from '../features/contract'
 import type { Lang, TextSize, TextSpeed } from '../data/settings'
 
 export interface SettingsState {
@@ -19,7 +19,8 @@ const initial = {
   se: 80,
   textSpeed: 'normal' as TextSpeed,
   textSize: 'normal' as TextSize,
-  lang: 'ja' as Lang,
+  // デフォルト言語はブラウザの言語から決める
+  lang: (navigator.language.startsWith('ja') ? 'ja' : 'en') as Lang,
   dirty: false,
 }
 

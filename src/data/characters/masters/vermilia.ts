@@ -20,7 +20,7 @@ const vermilia: CharacterMaster = {
         effect: [
           {
             type: 'damage',
-            power: 160,
+            power: 320,
             target: 'enemy',
             // 狙ったマスと、術者から見たその左右（＝隣接3マスの扇形）
             area: {
@@ -31,7 +31,7 @@ const vermilia: CharacterMaster = {
         ],
       },
       descriptionKey: 'skillVermiliaHeavyCleaveDesc',
-      effectGrowth: [17],
+      effectGrowth: [34],
       levelUpCosts: [
         [{ itemId: 'skillBookSmall', count: 2 }],
         [{ itemId: 'skillBookSmall', count: 4 }],
@@ -48,10 +48,10 @@ const vermilia: CharacterMaster = {
         nameKey: 'skillVermiliaIronStance',
         apCost: 3,
         range: { kind: 'range', min: 0, max: 0 }, // 対象マスを持たない = 自分対象
-        effect: [{ type: 'healHp', amount: 160, target: 'self' }],
+        effect: [{ type: 'healHp', amount: 360, target: 'self' }],
       },
       descriptionKey: 'skillVermiliaIronStanceDesc',
-      effectGrowth: [32],
+      effectGrowth: [35],
       levelUpCosts: [
         [{ itemId: 'skillBookSmall', count: 2 }],
         [{ itemId: 'skillBookSmall', count: 4 }],

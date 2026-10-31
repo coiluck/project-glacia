@@ -1,4 +1,4 @@
-import type { UserRow } from '../../api/types'
+import type { UserRow } from '../contract'
 import {
   baseBuildings,
   baseClassEffects,

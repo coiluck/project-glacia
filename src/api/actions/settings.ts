@@ -1,7 +1,7 @@
 import { apiPost } from '../client'
 import { distribute } from '../sync'
 import { useSettingsStore } from '../../stores/settingsStore'
-import type { CommandResponse, SettingsPayload } from '../types'
+import type { CommandResponse, SettingsPayload } from '../../features/contract'
 
 // 設定をまとめて保存
 export async function saveSettings(): Promise<void> {

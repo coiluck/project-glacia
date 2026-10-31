@@ -1,6 +1,6 @@
 import { apiPost } from '../client'
 import { distribute } from '../sync'
-import type { CommandResponse, LoginBonusResult } from '../types'
+import type { CommandResponse, LoginBonusResult } from '../../features/contract'
 
 // 本日分のログインボーナスを受け取る
 export async function claimLoginBonus(): Promise<number> {

@@ -1,27 +1,31 @@
 import { stageFromMap } from './grid';
 
-// 1-2 雪原の入口
-// 真ん中の岩2つで北・中央・南の3筋に分かれる。コオリモチは北と南の2組で、北の組が先に来る
-// シモフクロウは北の岩の陰から中央を撃つので、中央を抜けるなら先に落とすか、岩を回り込む
+// 1-2 川沿いの雪原
+// 野営地へ川を下る途中。北の端を川が流れ、雪原のあちこちに雪の丘（通行不可）が盛り上がっている
+// コオリモチはそれぞれ丘の陰から這い出してくるので、丘を回り込んでくる順に1体ずつ相手にできる
+// シモフクロウは東の端の丘の裏にいて、丘ごしに撃ってくる。近づくには丘を回り込む
 export default stageFromMap({
   terrain: [
-    '    g g n n n n',
-    '   g g n T n n n',
-    '  g n n n T n n n',
-    ' g g g n n n n n n',
-    '  g g g T n n n n',
-    '   g n T T n n n',
-    '    g g n n n n',
+    '    w w w w w w',
+    '   n n w w w n n',
+    '  n n n n N n n n',
+    ' n n N n n n n N n',
+    '  n n n n n N n n',
+    '   n n N n n n n',
+    '    n n n n n n',
   ],
   units: [
     '    . . . . . .',
     '   @ . . . . g .',
+    '  @ . . . . g . .',
+    ' @ @ . . . . . . o',
     '  @ . . . . . g .',
-    ' @ @ . . . . o . .',
-    '  @ . . . . . . g',
-    '   @ . . . . . g',
+    '   @ . . g . . .',
     '    . . . . . .',
   ],
-  enemies: { g: 'glacimo', o: 'rimeowl' },
+  enemies: {
+    g: { enemyId: 'glacimo', level: 2 },
+    o: { enemyId: 'rimeowl', level: 2 },
+  },
   partyApPerTurn: 10,
 });

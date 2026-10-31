@@ -1,5 +1,5 @@
 // お気に入りキャラ変更のサーバー側の処理。所持していないキャラは弾く
-import type { MeResponse } from '../../api/types'
+import type { MeResponse } from '../contract'
 
 export function resolveFavorite(me: MeResponse, masterId: string): MeResponse {
   if (!me.characters.some((c) => c.masterId === masterId)) {

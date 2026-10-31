@@ -1,4 +1,4 @@
-import type { BasePayload } from '../../../src/api/types'
+import type { BasePayload } from '../../../src/features/contract'
 import {
   buildBase,
   collectBase,

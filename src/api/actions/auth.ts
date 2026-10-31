@@ -1,17 +1,26 @@
 import { apiPost } from '../client'
 import { clearToken, setToken } from '../session'
 import { distribute, resetAll } from '../sync'
-import type { AuthResult, CommandResponse } from '../types'
+import { saveSettings } from './settings'
+import { useSettingsStore } from '../../stores/settingsStore'
+import type { AuthResult, CommandResponse } from '../../features/contract'
 
 async function authenticate(
   path: '/auth/register' | '/auth/login',
   name: string,
   password: string,
 ): Promise<void> {
+  // ログイン前の設定変更も保存する
+  const { bgm, se, textSpeed, textSize, lang, dirty } = useSettingsStore.getState()
   const res = await apiPost<CommandResponse<AuthResult>>(path, { name, password })
 
   setToken(res.result.token)
   distribute(res.me)
+
+  if (path === '/auth/register' || dirty) {
+    useSettingsStore.getState().set({ bgm, se, textSpeed, textSize, lang })
+    await saveSettings().catch(() => undefined)
+  }
 }
 
 // 新規登録

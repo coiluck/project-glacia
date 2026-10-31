@@ -36,7 +36,6 @@ const TRANSLATION_MAPPING = {
   status: 'status',
   apPerTurn: 'apPerTurn',
   attack: 'attack',
-  power: 'power',
   apCost: 'apCost',
   targets: 'targets',
   targetsAll: 'targetsAll',
@@ -230,7 +229,6 @@ export default function MemberDetailPage() {
                   <div className="member-detail-ability-col">
                     <h2 className="member-detail-section-title">{t.attack}</h2>
                     <dl className="member-detail-stat-rows">
-                      <StatRow label={t.power} value={unitClass?.attackPower ?? '--'} />
                       <StatRow label={t.apCost} value={unitClass?.attackCost ?? '--'} />
                       <StatRow label={t.targets} value={attackTargets} />
                     </dl>

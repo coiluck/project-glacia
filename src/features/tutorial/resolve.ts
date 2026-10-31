@@ -1,5 +1,5 @@
 // チュートリアル完了のサーバー側の処理
-import type { MeResponse } from '../../api/types'
+import type { MeResponse } from '../contract'
 
 // チュートリアルのステップ
 export const TUTORIAL_STEPS = ['intro', 'firstBattle', 'gacha', 'base'] as const

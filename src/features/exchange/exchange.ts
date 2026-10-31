@@ -1,4 +1,4 @@
-import type { MeResponse, UserRow } from '../../api/types'
+import type { MeResponse, UserRow } from '../contract'
 import { DAILY_TOKENS, TOKEN_PRICE } from '../../data/exchange'
 import { dayIndex } from '../daily/day'
 import { addItems } from '../inventory/inventory'

@@ -6,23 +6,18 @@ const scenario: ScenarioFile = {
   id: '1-2',
   lines: [
     {
-      text: '最後のコオリモチが、浅瀬の手前で崩れて雪に溶けた。',
-      commands: [
-        { type: 'bg', file: 'images/scenario/bg/camp_border.avif', transition: 'fade' }
-      ]
-    },
-    {
       text: '……倒せた。',
       speaker: 'ラピス',
       commands: [
+        { type: 'bg', file: 'images/scenario/bg/camp_border.avif', transition: 'fade' },
         { type: 'char', id: 'lapis', pose: 'surprised' }
       ]
     },
     {
-      text: 'ラピスは肩で息をしながら、しばらく川の向こうを見ていた。それから、こちらを振り返る。'
+      text: 'ラピスは肩で息をしながら、しばらく川の向こうを見ていた。それからこちらを振り返る。'
     },
     {
-      text: 'どうして、あんなに的確に指示が出せたんですか。記憶、ないんですよね？',
+      text: 'どうしてあんなに的確に指示が出せたんですか。記憶、ないんですよね？',
       speaker: 'ラピス',
       commands: [
         { type: 'char', id: 'lapis', pose: 'normal' }
@@ -52,7 +47,7 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: '……改めて、よろしくお願いします。',
+      text: '……改めてよろしくお願いします。',
       speaker: 'ラピス',
       commands: [
         { type: 'char', id: 'lapis', pose: 'smile' }
@@ -69,7 +64,7 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: '雪原の向こうから、外套を着た少女が駆けてくる。外套の胸に、騎士団の紋が縫いつけてあった。'
+      text: '雪原の向こうから外套を着た少女が駆けてくる。外套の胸に、騎士団の紋が縫いつけてあった。'
     },
     {
       text: '帝国騎士団、アルマ隊のクラリスです。',
@@ -79,7 +74,7 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: '昨日、見張り台から、境界を出てくる人影が見えたと報告がありました。……あなたですね。',
+      text: '昨日、見張り台から境界を出てくる人影が見えたと報告がありました。……あなたですね。',
       speaker: 'クラリス',
       commands: [
         { type: 'char', id: 'clarice', pose: 'serious' }
@@ -114,7 +109,7 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: 'さっき、川で魔物と戦っていましたよね。',
+      text: 'さっき川で魔物と戦っていましたよね。',
       speaker: 'クラリス',
       commands: [
         { type: 'char', id: 'clarice', pose: 'normal' }
@@ -128,7 +123,7 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: 'お名前と、所属を教えてください。',
+      text: 'お名前と所属を教えてください。',
       speaker: 'クラリス',
       commands: [
         { type: 'char', id: 'clarice', pose: 'normal' }
@@ -176,10 +171,10 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: '雪の丘の陰から、白くて丸い影がいくつも這い出してくる。その上を、霜をまとった鳥が低く旋回していた。'
+      text: '雪の丘の陰から白くて丸い影がいくつも這い出してくる。その上を、霜をまとった鳥が低く旋回していた。'
     },
     {
-      text: 'コオリモチと、シモフクロウです。あの鳥は、離れたところから撃ってきます。',
+      text: 'コオリモチとシモフクロウです。あの鳥は、離れたところから撃ってきます。',
       speaker: 'クラリス'
     },
     {
@@ -193,7 +188,7 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: '指揮は、お任せします。どれだけ戦えるのか、取り調べの前に見せてもらいます。',
+      text: '指揮はお任せします。どれだけ戦えるのか、取り調べの前に見せてもらいます。',
       speaker: 'クラリス',
       commands: [
         { type: 'char', id: 'clarice', pose: 'serious', bounce: true }
@@ -220,7 +215,7 @@ const scenario: ScenarioFile = {
         points: { lapisTrust: 1 },
         branch: [
           { text: '……私は、言われた通りに動いただけです。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'normal' }] },
-          { text: 'でも、言われた通りに動いて勝てたのは、初めてかもしれません。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'smile' }] },
+          { text: 'でも、言われた通りに動いて勝てたのは初めてかもしれません。', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'smile' }] },
         ],
       },
     ],

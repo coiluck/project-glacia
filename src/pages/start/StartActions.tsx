@@ -1,5 +1,8 @@
 import { useRef, useState } from 'react'
 import { useTranslations } from '../../i18n'
+import { hasToken } from '../../api/session'
+import { saveSettings } from '../../api/actions/settings'
+import { useSettingsStore } from '../../stores/settingsStore'
 import credits from './credit.md?raw'
 import terms from './terms.md?raw'
 
@@ -20,8 +23,8 @@ export default function StartActions({ buttonText, onClick }: StartActionsProps)
   const [languageOpen, setLanguageOpen] = useState(false)
   const [creditOpen, setCreditOpen] = useState(false)
   const [termsOpen, setTermsOpen] = useState(false)
-  // 表示のみの選択状態（実際の言語切り替えは未実装）
-  const [selectedLang, setSelectedLang] = useState<typeof LANGS[number]['code']>('ja')
+  const selectedLang = useSettingsStore((s) => s.lang)
+  const setSettings = useSettingsStore((s) => s.set)
   const langBtnRef = useRef<HTMLButtonElement>(null)
   const [langPos, setLangPos] = useState({ left: 0, bottom: 0 })
 
@@ -94,8 +97,9 @@ export default function StartActions({ buttonText, onClick }: StartActionsProps)
                 type="button"
                 className="start-actions-lang-option"
                 onClick={() => {
-                  console.log('change language:', l.code)
-                  setSelectedLang(l.code)
+                  setSettings({ lang: l.code })
+                  // ログイン前は保存せず、ログインか登録のときにまとめて保存する（api/actions/auth.ts）
+                  if (hasToken()) void saveSettings().catch(() => undefined)
                   setLanguageOpen(false)
                 }}
               >

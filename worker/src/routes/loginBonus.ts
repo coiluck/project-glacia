@@ -1,4 +1,4 @@
-import type { LoginBonusResult } from '../../../src/api/types'
+import type { LoginBonusResult } from '../../../src/features/contract'
 import { claimLoginBonus } from '../../../src/features/daily/loginBonus'
 import type { Command } from './types'
 

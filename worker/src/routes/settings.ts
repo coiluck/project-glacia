@@ -1,4 +1,4 @@
-import type { SettingsPayload } from '../../../src/api/types'
+import type { SettingsPayload } from '../../../src/features/contract'
 import { resolveSettings } from '../../../src/features/settings/resolveSettings'
 import type { Command } from './types'
 

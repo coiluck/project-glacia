@@ -54,7 +54,7 @@ export type SceneSnapshot = {
   characters: ReadonlyArray<{ id: string; pose: string }>;
   text: string;
   speaker: string;
-  // 現在の行の char 命令で指定されたキャラ id。char 命令が無い行では null
+  // 現在の行の char 命令で指定されたキャラ id。char 命令が無い行では、話者に対応する舞台上のキャラ id か null
   faceId: string | null;
 };
 
