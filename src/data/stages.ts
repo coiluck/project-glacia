@@ -88,6 +88,15 @@ export function isStageUnlocked(stage: Stage, stages: Stage[], clearedIds: strin
   return prereqs.every((s) => clearedIds.includes(s.id))
 }
 
+// 挑めるステージか。章が解放済みで、同じ章の前のステージをすべてクリアしている
+// 章の先頭は前のステージを持たないので、章の解放だけで決まる
+export function isStagePlayable(stageId: string, chapter: number, clearedIds: string[]): boolean {
+  const owner = chapters.find((c) => c.stages.some((s) => s.id === stageId))
+  if (!owner || owner.id > chapter) return false
+  const stage = owner.stages.find((s) => s.id === stageId)!
+  return isStageUnlocked(stage, owner.stages, clearedIds)
+}
+
 // next を持たないステージを全部クリアしていれば章クリア
 export function isChapterCleared(chapter: Chapter, clearedIds: string[]): boolean {
   return chapter.stages.filter((s) => !s.next?.length).every((s) => clearedIds.includes(s.id))

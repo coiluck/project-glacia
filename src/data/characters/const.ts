@@ -4,6 +4,9 @@ import type { Rarity } from './types';
 // ★の一覧（昇順）。★の描画も、レアリティ別の一覧を回すのもこれを使う
 export const RARITIES: Rarity[] = [1, 2, 3];
 
+// 1つの編成に入れられる人数。編成画面・出撃画面の枠の数と、サーバーの編成保存の上限
+export const PARTY_SIZE = 5;
+
 // 凸（ガチャでかぶった時に重ねられる）の上限。上限解放とは別のシステム
 export const MAX_DUPE = 5;
 

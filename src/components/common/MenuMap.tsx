@@ -2,6 +2,7 @@ import type { CSSProperties, ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
 import { paths } from '../../router/paths'
 import { useTranslations } from '../../i18n'
+import { PARTY_SIZE } from '../../data/characters/const'
 import { DAILY_SLOTS } from '../../data/missions'
 import { chapters, isStageUnlocked } from '../../data/stages'
 import { exchangeToday } from '../../features/exchange/exchange'
@@ -17,7 +18,6 @@ import { selectStamina, useStaminaStore } from '../../stores/staminaStore'
 // 全画面共通のメニュー。各項目に遷移先の状態（次のステージ、受け取れる任務など）を出す。
 
 const BASE_URL = import.meta.env.BASE_URL
-const PARTY_SIZE = 5 // PartyPage の SLOTS と同じ
 
 const iconStyle = (path: string) => ({ '--icon': `url(${BASE_URL}images/${path})` }) as CSSProperties
 

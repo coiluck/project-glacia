@@ -8,6 +8,21 @@ binding = "DB"
 database_name = "project-glacia"
 database_id = "f8009b8c-9014-48f5-8bae-cfc19b48bf8d"
 
+# コマンドをユーザーごとに1本ずつ流す（worker/src/userQueue.ts）
+# 無料プランは SQLite 版のクラスしか作れないので new_sqlite_classes。ストレージ自体は使わない
+[[durable_objects.bindings]]
+name = "USER_QUEUE"
+class_name = "UserQueue"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["UserQueue"]
+
+# Workers Logs。console.log をダッシュボードで検索できるようにする
+# 不正の跡（router.ts の unknown_path、userQueue.ts の rejected）を見るのに使う
+[observability]
+enabled = true
+
 # vite.config.ts の proxy 先と揃える。空いていなければ起動時に失敗させる
 [dev]
 port = 8787

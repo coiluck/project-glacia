@@ -1,18 +1,12 @@
 import { apiPost } from '../client'
 import { distribute } from '../sync'
 import type { CommandResponse } from '../../features/contract'
-import type { BattleResult, BattleReward } from '../../features/battle/resolveResult'
+import type { BattleResultPayload, BattleReward } from '../../features/battle/resolveResult'
 
 // 戦闘終了のときに使う
-// スタミナの消費・報酬・クリア記録を送る
-export async function sendBattleResult(
-  stageId: string,
-  result: BattleResult,
-): Promise<BattleReward> {
-  const res = await apiPost<CommandResponse<BattleReward>>('/battle/result', {
-    stageId,
-    result,
-  })
+// 操作ログを送り、サーバーが再生して確かめた勝敗でスタミナの消費・報酬・クリア記録が決まる
+export async function sendBattleResult(payload: BattleResultPayload): Promise<BattleReward> {
+  const res = await apiPost<CommandResponse<BattleReward>>('/battle/result', payload)
   distribute(res.me)
   return res.result
 }
