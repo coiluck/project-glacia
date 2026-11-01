@@ -18,6 +18,11 @@ class_name = "UserQueue"
 tag = "v1"
 new_sqlite_classes = ["UserQueue"]
 
+# Workers Logs。console.log をダッシュボードで検索できるようにする
+# 不正の跡（router.ts の unknown_path、userQueue.ts の rejected）を見るのに使う
+[observability]
+enabled = true
+
 # vite.config.ts の proxy 先と揃える。空いていなければ起動時に失敗させる
 [dev]
 port = 8787

@@ -25,7 +25,10 @@ export class UserQueue extends DurableObject<Env> {
         try {
           after = COMMANDS[path](before, body, ctx)
         } catch (e) {
-          return reply(400, { error: (e as Error).message })
+          // 正規の画面からはほとんど起きないので、改ざんの跡を探せるよう Workers Logs に残す
+          const message = (e as Error).message
+          console.warn({ event: 'rejected', userId, path, error: message })
+          return reply(400, { error: message })
         }
         await saveMe(ctx, before, after.me)
         return reply(200, { me: after.me, result: after.result })

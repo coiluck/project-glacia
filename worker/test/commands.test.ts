@@ -92,6 +92,14 @@ test('無いコマンドは 404', async () => {
   assert.equal((await post('/nope', {}, token)).status, 404)
 })
 
+// /api を外すと Object.prototype のキーになるパス
+test('Object のプロトタイプにあるキーはコマンドとして扱わず 404', async () => {
+  const token = await register()
+  for (const path of ['/apiconstructor', '/apitoString', '/api__proto__']) {
+    assert.equal((await post(path, {}, token)).status, 404, path)
+  }
+})
+
 test('POST 以外は 405', async () => {
   const token = await register()
   const res = await server.fetch('/gacha/pull', { headers: { Authorization: `Bearer ${token}` } })
@@ -144,6 +152,22 @@ test('戦わずに勝利を名乗っても 400 で、何も変わらない', asy
 
   const { user } = await me(token)
   assert.equal(user.stamina, before.user.stamina, 'スタミナは減らない')
+  assert.deepEqual(user.cleared_stage_ids, [])
+})
+
+// 空のログの再生は配置フェーズのまま終わるので、結末に 'deployment' を名乗れば一致してしまう
+test('勝ちでも負けでもない結末を名乗っても 400 で、何も変わらない', async () => {
+  const token = await register()
+  const before = await me(token)
+  for (const [result, actions] of [['deployment', []], ['player', victory1_1.slice(0, 2)]] as const) {
+    const res = await post('/battle/result', { stageId: '1-1', partySlot: 1, result, actions }, token)
+    assert.equal(res.status, 400, result)
+    assert.match(((await res.json()) as { error: string }).error, /結末が不正/, result)
+  }
+
+  const { user } = await me(token)
+  assert.equal(user.stamina, before.user.stamina, 'スタミナは減らない')
+  assert.equal(user.currency, before.user.currency, '通貨は増えない')
   assert.deepEqual(user.cleared_stage_ids, [])
 })
 

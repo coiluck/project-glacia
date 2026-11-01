@@ -4,6 +4,7 @@ import { paths } from '../../router/paths'
 import { useTranslations } from '../../i18n'
 import { chapters } from '../../data/stages'
 import { characterMasters } from '../../data/characters'
+import { PARTY_SIZE } from '../../data/characters/const'
 import { unitClasses } from '../../data/unitClasses'
 import { resolveOwned } from '../../features/characters/resolve'
 import { useCharacterStore } from '../../stores/characterStore'
@@ -23,7 +24,7 @@ const CLASS_TRANSLATION_MAPPING = Object.fromEntries(
 )
 
 // 編成データの長さが固定されていないからこれを使って描画
-const SLOTS = [0, 1, 2, 3, 4]
+const SLOTS = Array.from({ length: PARTY_SIZE }, (_, i) => i)
 
 export default function SortiePage() {
   const { stageId } = useParams<{ stageId: string }>()

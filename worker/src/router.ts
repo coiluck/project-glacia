@@ -35,6 +35,12 @@ export const COMMANDS: Record<string, Command<unknown>> = {
   '/debug/set': debug.set,
 }
 
+// ログイン済みで無いパスに来た。画面からは呼ばないので、Workers Logs に残して後で見る
+function notFound(userId: string, path: string): Response {
+  console.warn({ event: 'unknown_path', userId, path })
+  return error(`not found: ${path}`, 404)
+}
+
 export async function route(request: Request, env: Env, path: string): Promise<Response> {
   const now = nowSeconds()
   const base = { db: env.DB, now, pepper: env.PASSWORD_PEPPER }
@@ -63,9 +69,10 @@ export async function route(request: Request, env: Env, path: string): Promise<R
   }
 
   // デバッグ用のコマンド
-  if (path.startsWith('/debug/') && env.DEBUG !== '1') return error(`not found: ${path}`, 404)
+  if (path.startsWith('/debug/') && env.DEBUG !== '1') return notFound(userId, path)
 
-  if (!COMMANDS[path]) return error(`not found: ${path}`, 404)
+  // COMMANDS[path] だと 'constructor' などの Object.prototype のキーも通る
+  if (!Object.hasOwn(COMMANDS, path)) return notFound(userId, path)
   if (request.method !== 'POST') return error('method not allowed', 405)
 
   // 読む -> resolve -> 保存は、ユーザーごとの Durable Object で1本ずつ行う

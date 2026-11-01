@@ -84,6 +84,8 @@ export function resolveBattleResult(
   now: number,
 ): { me: MeResponse; reward: BattleReward } {
   const { stageId, partySlot, result, actions } = payload
+  // 再生した phase と比べるだけだと、途中の phase（deployment / player）を名乗っても一致してしまう
+  if (result !== 'victory' && result !== 'defeat') throw new Error(`結末が不正: ${result}`)
   const { chapter, cleared_stage_ids: clearedIds } = me.user
   if (!isStagePlayable(stageId, chapter, clearedIds)) throw new Error(`挑めないステージ: ${stageId}`)
 
