@@ -7,6 +7,7 @@ import ViewportLayer from '../../layouts/ViewportLayer'
 import StageNode from './components/StageNode'
 import StageDrops from './components/StageDrops'
 import StageEnemies from './components/StageEnemies'
+import StageBoard from './components/StageBoard'
 import BattleResult from '../battle/components/BattleResult'
 import { useProgressStore } from '../../stores/progressStore'
 import { battleGuideRegistry } from '../../data/battleGuides'
@@ -228,7 +229,7 @@ export default function StoryMapPage() {
           <>
             <div className="story-map-stage-info-container" key={selectedNode.id}>
               <div className="story-map-stage-info-thumbnail-container">
-                <img src={`/project-glacia/images/story/thumbnail/${selectedNode.id}.png`} alt={selectedNode.id} />
+                <StageBoard stageId={selectedNode.id} />
                 <div className="story-map-stage-info-thumbnail-number">{selectedNode.id}</div>
               </div>
 
