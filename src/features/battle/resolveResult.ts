@@ -3,13 +3,23 @@ import type { MeResponse } from '../contract'
 import type { MaterialCost } from '../../data/characters/types'
 import { dropTables } from '../../data/drops'
 import { expToNextRank, staminaMaxFor } from '../../data/rank'
-import { chapters, isChapterCleared } from '../../data/stages'
+import { chapters, isChapterCleared, isStagePlayable } from '../../data/stages'
 import { addItems } from '../inventory/inventory'
 import { bumpMission } from '../mission/daily'
 import { refreshStamina, spendStamina } from '../stamina/stamina'
 import { rollDrops } from './drops'
+import { battlePartyFor, replayBattle, type BattleAction } from './replay'
 
 export type BattleResult = 'victory' | 'defeat'
+
+// POST /battle/result のリクエスト
+// result はフロントが見た結末。サーバーは actions を再生して確かめ、食い違えば受け付けない
+export interface BattleResultPayload {
+  stageId: string
+  partySlot: number // 出撃した編成の番号（1〜4）。中身はサーバーが保存済みの編成から組み立てる
+  result: BattleResult
+  actions: BattleAction[]
+}
 
 // キャラの経験値は戦闘では入らない（強化でのみ得る）
 export interface BattleReward {
@@ -70,10 +80,19 @@ function settle(
 
 export function resolveBattleResult(
   me: MeResponse,
-  stageId: string,
-  result: BattleResult,
+  payload: BattleResultPayload,
   now: number,
 ): { me: MeResponse; reward: BattleReward } {
+  const { stageId, partySlot, result, actions } = payload
+  const { chapter, cleared_stage_ids: clearedIds } = me.user
+  if (!isStagePlayable(stageId, chapter, clearedIds)) throw new Error(`挑めないステージ: ${stageId}`)
+
+  // 勝敗は送られた値ではなく、保存済みの編成で操作ログを再生して決める
+  const owned = Object.fromEntries(me.characters.map((c) => [c.masterId, c]))
+  const party = battlePartyFor(owned, me.party, clearedIds, stageId, partySlot)
+  const replayed = replayBattle(stageId, party, actions).phase
+  if (replayed !== result) throw new Error(`再生した結末（${replayed}）が送られた結末（${result}）と違う`)
+
   const settled = settle(me, stageId, result, now)
   if (result === 'defeat') return settled
 

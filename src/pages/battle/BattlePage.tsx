@@ -8,7 +8,7 @@ import { battleStageRegistry } from '../../data/battleStages'
 import { characterMasters } from '../../data/characters'
 import { enemyDefs } from '../../data/enemies'
 import { unitClasses } from '../../data/unitClasses'
-import { buildParty } from '../../features/characters/build'
+import { battlePartyFor } from '../../features/battle/replay'
 import { useCharacterStore } from '../../stores/characterStore'
 import { useProgressStore } from '../../stores/progressStore'
 import {
@@ -116,14 +116,12 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   })
 
   // 編成中のパーティをマスターデータ＋所持データから組み立てる。
-  // 戦闘中は変わらないので、この戦闘のあいだ固定する
+  // 戦闘中は変わらないので、この戦闘のあいだ固定する。サーバーも同じ関数で組み立てて操作ログを再生する
+  const [partySlot] = useState(() => useCharacterStore.getState().currentPartySlotIndex)
   const [party] = useState(() => {
-    if (guideDef) {
-      const owned = Object.fromEntries(guideDef.party.map((c) => [c.masterId, c]))
-      return buildParty(owned, guideDef.party.map((c) => c.masterId))
-    }
     const s = useCharacterStore.getState()
-    return buildParty(s.owned, s.party[s.currentPartySlotIndex] ?? [])
+    const clearedIds = useProgressStore.getState().clearedStageIds
+    return battlePartyFor(s.owned, s.party, clearedIds, stageId ?? '', partySlot)
   })
   const stage = useBattleStore((s) => s.stage)
   const state = useBattleStore((s) => s.state)
@@ -149,8 +147,11 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   // 決着した時点で結果を一度だけ送る。BattleResult は受け取った内容の表示だけを担当する
   useEffect(() => {
     if (!stageId || !finishedResult || submission) return
-    submit(stageId, finishedResult, () => sendBattleResult(stageId, finishedResult))
-  }, [finishedResult, stageId, submission, submit])
+    const actions = useBattleStore.getState().log
+    submit(stageId, finishedResult, () =>
+      sendBattleResult({ stageId, partySlot, result: finishedResult, actions }),
+    )
+  }, [finishedResult, stageId, partySlot, submission, submit])
 
   if (!stage || !state) {
     // init 前の1フレームは何も描かない。レジストリに無いステージだけ NO DATA を出す

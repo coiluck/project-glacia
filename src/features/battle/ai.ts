@@ -7,6 +7,7 @@ import {
   attack,
   availableAp,
   castSkill,
+  endTurn,
   moveUnit,
   movementRange,
   skillHitsByEffect,
@@ -46,6 +47,24 @@ export function actEnemy(
   }
   // どこへ動いても攻撃できない -> 最寄りの味方に近づく
   return approachNearestAlly(next, stage, unitId);
+}
+
+// 味方の手番を終えてから、次の味方の手番が始まるまで（または決着まで）を1手ずつ返す
+// 敵の行動順はここだけで決める。画面は1手ごとに間を置いて見せ、サーバーの再生は最後まで一気に回す
+export function* enemyPhaseSteps(
+  state: BattleState,
+  stage: BattleStageData,
+  classes: Record<string, UnitClassDef>,
+): Generator<BattleState> {
+  let next = endTurn(state, stage, classes);
+  yield next;
+  for (const id of next.units.filter((u) => u.side === 'enemy').map((u) => u.id)) {
+    if (next.phase !== 'enemy') return;
+    if (!next.units.some((u) => u.id === id)) continue; // 自分の手番の前に倒された
+    next = actEnemy(next, stage, classes, id);
+    yield next;
+  }
+  if (next.phase === 'enemy') yield endTurn(next, stage, classes);
 }
 
 // スキルを使う番か（nターン周期 or HPしきい値）

@@ -52,7 +52,9 @@ async function register(): Promise<string> {
 
 async function me(token: string) {
   const res = await server.fetch('/me', { headers: { Authorization: `Bearer ${token}` } })
-  return (await res.json()) as { user: { gems: number; pity: number } }
+  return (await res.json()) as {
+    user: { gems: number; pity: number; currency: number; stamina: number; cleared_stage_ids: string[] }
+  }
 }
 
 test('同時に送った10連は、ジェムで払える1本だけが通る', async () => {
@@ -108,4 +110,53 @@ test('壊れた JSON は 400', async () => {
 
 test('トークンが無ければ 401', async () => {
   assert.equal((await post('/gacha/pull', { count: 1, banner: 'standard' })).status, 401)
+})
+
+// 1-1 の勝ち筋。src/features/battle/replay.test.ts と同じ列
+const victory1_1 = [
+  { type: 'deploy', charId: 'lapis', pos: { q: -2, r: 0 } },
+  { type: 'start' },
+  { type: 'move', unitId: 'ally-lapis', to: { q: -1, r: 0 } },
+  { type: 'skill', userId: 'ally-lapis', aim: { q: 2, r: -1 } },
+  { type: 'endTurn' },
+  { type: 'attack', attackerId: 'ally-lapis', targetIds: ['enemy-1-glacimo'] },
+]
+
+const battleResult = (token: string, stageId: string, actions: unknown[]) =>
+  post('/battle/result', { stageId, partySlot: 1, result: 'victory', actions }, token)
+
+test('1-1 の勝ち筋を送ると報酬が入り、クリア済みになる', async () => {
+  const token = await register()
+  const before = await me(token)
+  assert.equal((await battleResult(token, '1-1', victory1_1)).status, 200)
+
+  const { user } = await me(token)
+  assert.ok(user.currency > before.user.currency, '通貨が増える')
+  assert.deepEqual(user.cleared_stage_ids, ['1-1'])
+})
+
+test('戦わずに勝利を名乗っても 400 で、何も変わらない', async () => {
+  const token = await register()
+  const before = await me(token)
+  const res = await battleResult(token, '1-1', [])
+  assert.equal(res.status, 400)
+  assert.match(((await res.json()) as { error: string }).error, /再生した結末/)
+
+  const { user } = await me(token)
+  assert.equal(user.stamina, before.user.stamina, 'スタミナは減らない')
+  assert.deepEqual(user.cleared_stage_ids, [])
+})
+
+test('前のステージを残したステージは 400', async () => {
+  const token = await register()
+  const res = await battleResult(token, '1-2', victory1_1)
+  assert.equal(res.status, 400)
+  assert.match(((await res.json()) as { error: string }).error, /挑めないステージ: 1-2/)
+})
+
+test('解放されていない章の先頭のステージは 400', async () => {
+  const token = await register()
+  const res = await battleResult(token, '2-1', victory1_1)
+  assert.equal(res.status, 400)
+  assert.match(((await res.json()) as { error: string }).error, /挑めないステージ: 2-1/)
 })
