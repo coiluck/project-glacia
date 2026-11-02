@@ -60,7 +60,14 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
   const typingIdRef = useRef(0)
   const instantNextRef = useRef(false)
 
-  const [displayedText, setDisplayedText] = useState('')
+  // どの文の何文字目まで打ったか。文が変わったら打った分は 0 として読む。
+  // 進行中セーブから復元する文は最初から全文を出す
+  const [typed, setTyped] = useState(() => {
+    const saved = useProgressStore.getState()
+    const text = !replay && saved.scenarioId === scenarioId ? saved.scenarioState?.snapshot.text ?? '' : ''
+    return { text, count: text.length }
+  })
+  const displayedText = typed.text === snapshot.text ? snapshot.text.slice(0, typed.count) : ''
   const [isLogOpen, setIsLogOpen] = useState(false)
   const [logEntries, setLogEntries] = useState<SceneSnapshot[]>([])
 
@@ -87,25 +94,20 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
     const target = snapshot.text
     const id = ++typingIdRef.current
 
-    if (!target) {
-      setDisplayedText('')
-      return
-    }
+    if (!target) return
 
-    // ホイール skip や goBack 直後はタイピングを省略して即フル表示。
+    // ホイール skip や goBack 直後はタイピングを省略して即フル表示（全文は呼んだ側が typed に入れる）。
     if (instantNextRef.current) {
       instantNextRef.current = false
-      setDisplayedText(target)
       return
     }
 
     const stepMs = TEXT_SPEED_MS[useSettingsStore.getState().textSpeed]
-    setDisplayedText('')
     let i = 0
     const tick = () => {
       if (id !== typingIdRef.current) return
       i += 1
-      setDisplayedText(target.slice(0, i))
+      setTyped({ text: target, count: i })
       if (i < target.length) window.setTimeout(tick, stepMs)
     }
     const timer = window.setTimeout(tick, stepMs)
@@ -133,7 +135,7 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
     }
     if (isTyping) {
       typingIdRef.current += 1
-      setDisplayedText(snapshot.text)
+      setTyped({ text: snapshot.text, count: snapshot.text.length })
       return
     }
     if (pendingChoice || advancingRef.current) return
@@ -152,8 +154,11 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
     e.stopPropagation()
     if (advancingRef.current) return
     instantNextRef.current = true
-    if (engine.goBack()) persistProgress()
-    else instantNextRef.current = false
+    if (engine.goBack()) {
+      const text = engine.getState().snapshot.text
+      setTyped({ text, count: text.length })
+      persistProgress()
+    } else instantNextRef.current = false
   }
 
   // skip: 選択肢ごとシナリオを全部飛ばす。
