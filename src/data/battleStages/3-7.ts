@@ -6,13 +6,13 @@ import { stageFromMap } from './grid';
 // クロガラは移動したターンには攻撃できない。隙間から出てきたところを叩くが、正面の3マスを薙ぐので並んで待たない
 export default stageFromMap({
   terrain: [
-    '    n n s W t T',
-    '   n n n s W t t',
-    '  n n n s W t t T',
+    '    n n s w t T',
+    '   n n n s w t t',
+    '  n n n s w t t T',
     ' n n n n s h t t t',
-    '  n n n s W t t T',
-    '   n n n s W t t',
-    '    n n s W t T',
+    '  n n n s w t t T',
+    '   n n n s w t t',
+    '    n n s w t T',
   ],
   units: [
     '    . . . . . .',

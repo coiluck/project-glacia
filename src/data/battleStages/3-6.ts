@@ -6,7 +6,7 @@ import { stageFromMap } from './grid';
 // イワモチは帯の真ん中をふさぎ、コオリモチはその北と南に分かれて来る。硬いイワモチは後回しにする
 export default stageFromMap({
   terrain: [
-    '    W W W W W W',
+    '    w w w w w w',
     '   n n n n n n n',
     '  n n n T n n n n',
     ' t n n n n n T n n',

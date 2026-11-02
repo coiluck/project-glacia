@@ -40,6 +40,16 @@ const MAX_ROWS = 7;
 const MAX_COL_SPAN = 16;
 const MIN_DEPLOY = 5;
 
+// 水は台地にすると周りの地面より高く見えるので、全ステージで高さを付けない
+it('水のマスに高さが付いていない', () => {
+  const raised = Object.entries(battleStageRegistry).flatMap(([id, stage]) =>
+    stage.tiles
+      .filter((t) => t.terrain === 'water' && (t.elevation ?? 0) > 0)
+      .map((t) => `${id} @ ${axialKey(t.pos)}`),
+  );
+  expect(raised).toEqual([]);
+});
+
 describe.each(CHAPTERS)('%i章', (chapterId) => {
   const stages = stagesOf(chapterId);
 

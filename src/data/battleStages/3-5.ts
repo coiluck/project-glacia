@@ -6,13 +6,13 @@ import { stageFromMap } from './grid';
 // コオリモチは境界のきわから、シモフクロウはその後ろから。穴の北と南のどちらを回るかを選ぶ
 export default stageFromMap({
   terrain: [
-    '    n n n h h W',
-    '   n n n h h h W',
-    '  n n s n h s h W',
-    ' n n n s v s h h W',
-    '  n n s n s h h W',
-    '   n n n h h h W',
-    '    n n n h h W',
+    '    n n n h h w',
+    '   n n n h h h w',
+    '  n n s n h s h w',
+    ' n n n s v s h h w',
+    '  n n s n s h h w',
+    '   n n n h h h w',
+    '    n n n h h w',
   ],
   units: [
     '    . . . . o .',

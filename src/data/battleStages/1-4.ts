@@ -6,13 +6,13 @@ import { stageFromMap } from './grid';
 // 硬いイワモチを正面から崩すか、脇を抜けて両端のコオリモチを先に片付けるか
 export default stageFromMap({
   terrain: [
-    '    n n n n s W',
-    '   n n n n n s W',
-    '  n n t n n n s W',
-    ' n n n n n n n s W',
-    '  n n n t n n s W',
-    '   n n n n n s W',
-    '    n n n n s W',
+    '    n n n n s w',
+    '   n n n n n s w',
+    '  n n t n n n s w',
+    ' n n n n n n n s w',
+    '  n n n t n n s w',
+    '   n n n n n s w',
+    '    n n n n s w',
   ],
   units: [
     '    . . . . g .',
