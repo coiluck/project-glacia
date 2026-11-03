@@ -1,5 +1,3 @@
-import { classIcons } from '../../../data/characters/classIcons';
-import { unitClasses } from '../../../data/unitClasses';
 import { axialKey, hexCorners, hexToPixel } from '../../../features/battle/hex';
 import type { Axial, Pixel } from '../../../features/battle/hex';
 import type { StageTile, Unit } from '../../../features/battle/types';
@@ -91,7 +89,7 @@ interface HexGridProps {
   selectedUnitId?: string | null;
   actedIds?: Set<string>; // このターンもう動けない味方
   getUnitName: (unit: Unit) => string;
-  getUnitChibi: (unit: Unit) => string | null; // 絵がないユニットは null（トークン表示になる）
+  getUnitChibi: (unit: Unit) => string;
   onTileClick?: (pos: Axial) => void;
   onUnitClick?: (unit: Unit) => void;
   onHover?: (key: string | null) => void; // マス・ユニットにポインタが乗った / 離れた
@@ -228,15 +226,7 @@ export default function HexGrid({
                     {chipText(chip)}
                   </div>
                 )}
-                {chibi ? (
-                  <img className="battle-unit-chibi" src={chibi} alt="" draggable={false} />
-                ) : (
-                  <div className="battle-unit-token">
-                    <svg viewBox="0 0 24 24" aria-hidden>
-                      <path d={classIcons[unit.classId]} />
-                    </svg>
-                  </div>
-                )}
+                <img className="battle-unit-chibi" src={chibi} alt="" draggable={false} />
                 <div className="battle-unit-plate">
                   <div className="battle-unit-hp">
                     <div
@@ -246,7 +236,7 @@ export default function HexGrid({
                   </div>
                   {unit.side === 'ally' && (
                     <ApPips
-                      max={unitClasses[unit.classId].apPerTurn}
+                      max={unit.unitClass.apPerTurn}
                       current={unit.ap}
                       size="tiny"
                       guide={`ap-${unit.id}`}

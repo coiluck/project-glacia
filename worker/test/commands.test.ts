@@ -128,6 +128,8 @@ const victory1_1 = [
   { type: 'skill', userId: 'ally-lapis', aim: { q: 2, r: -1 } },
   { type: 'endTurn' },
   { type: 'attack', attackerId: 'ally-lapis', targetIds: ['enemy-1-glacimo'] },
+  { type: 'endTurn' },
+  { type: 'attack', attackerId: 'ally-lapis', targetIds: ['enemy-1-glacimo'] },
 ]
 
 const battleResult = (token: string, stageId: string, actions: unknown[]) =>

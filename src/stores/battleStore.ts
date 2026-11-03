@@ -3,7 +3,6 @@
 import { create } from 'zustand';
 import { battleStageRegistry } from '../data/battleStages';
 import { enemyDefs } from '../data/enemies';
-import { unitClasses } from '../data/unitClasses';
 import { enemyPhaseSteps } from '../features/battle/ai';
 import {
   attack,
@@ -77,7 +76,7 @@ export const useBattleStore = create<BattleStore>((set, get) => ({
 
   doAttack: (attackerId, targetIds) =>
     set((s) => ({
-      state: attack(s.state!, unitClasses, attackerId, targetIds),
+      state: attack(s.state!, attackerId, targetIds),
       log: [...s.log, { type: 'attack', attackerId, targetIds }],
     })),
 
@@ -89,7 +88,7 @@ export const useBattleStore = create<BattleStore>((set, get) => ({
 
   start: () =>
     set((s) => {
-      const next = startBattle(s.state!, s.stage!, unitClasses);
+      const next = startBattle(s.state!, s.stage!);
       const log: BattleAction[] = [...s.log, { type: 'start' }];
       // イミュータブルなので参照を持つだけでOK
       return { state: next, snapshot: next, log, snapshotLogLength: log.length };
@@ -108,7 +107,7 @@ export const useBattleStore = create<BattleStore>((set, get) => ({
     set((s) => ({ log: [...s.log, { type: 'endTurn' }] }));
 
     let shown: BattleState | null = null;
-    for (const next of enemyPhaseSteps(state, stage!, unitClasses)) {
+    for (const next of enemyPhaseSteps(state, stage!)) {
       if (shown) {
         await sleep(ENEMY_ACT_DELAY);
         if (get().state !== shown) return; // 待っている間に戦闘が作り直された

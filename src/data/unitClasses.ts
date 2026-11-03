@@ -1,5 +1,5 @@
-// 兵科の定義。味方キャラ・敵の両方が classId で参照する。
-// 味方が使う兵科は range 型のみ（通常攻撃には向きを決める手段が無いため）。pattern 型は敵専用。
+// 味方の兵科の定義。キャラの classId がこの Record のキーを参照する。敵の通常攻撃と AP は enemies.ts で敵ごとに決める
+// 味方が使う兵科は range 型のみ（通常攻撃には向きを決める手段が無いため）。
 // スキル（SkillDef.range）は狙えるマスと一緒に向きを持ち回るので、味方でも pattern 型を使える。
 import type { UnitClassDef } from '../features/battle/types';
 
@@ -30,22 +30,5 @@ export const unitClasses: Record<string, UnitClassDef> = {
     attackTargets: 1,
     attackCost: 3,
     apPerTurn: 4,
-  },
-  // 略奪兵（敵専用）: 前方3マスの扇形を薙ぎ払う。範囲内の全ユニットに命中
-  raider: {
-    id: 'raider',
-    nameKey: 'classRaider',
-    attackRange: {
-      kind: 'pattern',
-      // 東向き基準: 正面とその両斜め前
-      offsets: [
-        { q: 1, r: 0 },
-        { q: 1, r: -1 },
-        { q: 0, r: 1 },
-      ],
-    },
-    attackTargets: 'infinity',
-    attackCost: 3,
-    apPerTurn: 3,
   },
 };

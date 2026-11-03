@@ -183,9 +183,8 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     )
   }
 
-  const classes = unitClasses
   const selectedUnit = state.units.find((u) => u.id === selectedUnitId) ?? null
-  const selectedClass = selectedUnit ? classes[selectedUnit.classId] : null
+  const selectedClass = selectedUnit?.unitClass ?? null
 
   // createBattleState / deployAlly の `enemy-{i}-{defId}` / `ally-{charId}` という命名規則に依存
   const unitNameKey = (unit: Unit): string => {
@@ -200,6 +199,11 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     unit.side === 'ally'
       ? `${import.meta.env.BASE_URL}images/character/chibi/${unit.id.slice('ally-'.length)}.avif`
       : `${import.meta.env.BASE_URL}images/enemy/${enemyIdOf(unit)}.avif`
+  // 情報パネルの絵。味方は顔、敵は盤面と同じ絵
+  const getUnitPortrait = (unit: Unit): string =>
+    unit.side === 'ally'
+      ? `${import.meta.env.BASE_URL}images/character/face/${unit.id.slice('ally-'.length)}.avif`
+      : getUnitChibi(unit)
 
   const isDeployed = (charId: string) => state.units.some((u) => u.id === `ally-${charId}`)
 
@@ -223,7 +227,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
         moveCosts.set(axialKey(pos), cost)
       }
     } else if (action === 'attack') {
-      for (const pos of shapeTiles(selectedUnit.pos, classes[selectedUnit.classId].attackRange)) {
+      for (const pos of shapeTiles(selectedUnit.pos, selectedUnit.unitClass.attackRange)) {
         if (tileSet.has(axialKey(pos))) highlights.set(axialKey(pos), 'attack')
       }
     } else if (action === 'skill' && selectedUnit.skill) {
@@ -451,7 +455,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
 
   // 敵の補足（通常攻撃の威力と消費AP、スキルの発動条件）
   const enemyNotes = (unit: Unit): string[] => {
-    const cls = classes[unit.classId]
+    const cls = unit.unitClass
     const range =
       cls.attackRange.kind === 'range' ? ` · RANGE ${cls.attackRange.min ?? 1}–${cls.attackRange.max}` : ''
     const notes = [`${t.normalAttack} · ${cls.attackCost} AP${range}`]
@@ -542,8 +546,8 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
             <UnitPanel
               unit={selectedUnit}
               name={getUnitName(selectedUnit)}
-              unitClass={selectedClass}
-              className={t[selectedClass.nameKey]}
+              portrait={getUnitPortrait(selectedUnit)}
+              className={selectedUnit.classId ? t[unitClasses[selectedUnit.classId].nameKey] : undefined}
               ap={selectedUnit.side === 'ally' ? availableAp(state, selectedUnit) : selectedClass.apPerTurn}
               spend={selectedUnit.side === 'ally' ? previewCost : 0}
               notes={selectedUnit.side === 'enemy' ? enemyNotes(selectedUnit) : undefined}

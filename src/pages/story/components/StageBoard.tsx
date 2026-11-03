@@ -8,7 +8,7 @@ export default function StageBoard({ stageId }: { stageId: string }) {
 
   return (
     <div className="story-map-stage-board">
-      <HexGrid tiles={stage.tiles} units={[]} getUnitName={() => ''} getUnitChibi={() => null} />
+      <HexGrid tiles={stage.tiles} units={[]} getUnitName={() => ''} getUnitChibi={() => ''} />
     </div>
   )
 }

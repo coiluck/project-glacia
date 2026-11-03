@@ -17,20 +17,18 @@ import { canSpendAp } from './ap';
 import { NORMAL_ATTACK_POWER, calcDamage } from './damage';
 import { DIRECTION_STEPS, axialKey, distance, shapeTiles } from './hex';
 import type { Axial } from './hex';
-import type { BattleStageData, BattleState, TargetCount, Unit, UnitClassDef } from './types';
+import type { BattleStageData, BattleState, ClassStats, TargetCount, Unit } from './types';
 
 // 敵1体分の行動。行動後の state を返す（すでに倒されていれば state をそのまま返す）
 // UI側で1体ずつ間を置いて見せる
 export function actEnemy(
   state: BattleState,
   stage: BattleStageData,
-  classes: Record<string, UnitClassDef>,
   unitId: string,
 ): BattleState {
   const unit = state.units.find((u) => u.id === unitId);
   if (!unit) return state;
-  const cls = classes[unit.classId];
-  if (!cls) throw new Error(`Unknown unit class: ${unit.classId}`);
+  const cls = unit.unitClass;
 
   let next = state;
   // スキルを使う番なら先に発動を試みる（射程に入れる移動込み）
@@ -43,7 +41,7 @@ export function actEnemy(
   const plan = findBestAttackPlan(next, stage, cls, current);
   if (plan) {
     if (plan.moveCost > 0) next = moveUnit(next, stage, unitId, plan.dest);
-    return executeAttacks(next, classes, cls, unitId);
+    return executeAttacks(next, cls, unitId);
   }
   // どこへ動いても攻撃できない -> 最寄りの味方に近づく
   return approachNearestAlly(next, stage, unitId);
@@ -54,17 +52,16 @@ export function actEnemy(
 export function* enemyPhaseSteps(
   state: BattleState,
   stage: BattleStageData,
-  classes: Record<string, UnitClassDef>,
 ): Generator<BattleState> {
-  let next = endTurn(state, stage, classes);
+  let next = endTurn(state, stage);
   yield next;
   for (const id of next.units.filter((u) => u.side === 'enemy').map((u) => u.id)) {
     if (next.phase !== 'enemy') return;
     if (!next.units.some((u) => u.id === id)) continue; // 自分の手番の前に倒された
-    next = actEnemy(next, stage, classes, id);
+    next = actEnemy(next, stage, id);
     yield next;
   }
-  if (next.phase === 'enemy') yield endTurn(next, stage, classes);
+  if (next.phase === 'enemy') yield endTurn(next, stage);
 }
 
 // スキルを使う番か（nターン周期 or HPしきい値）
@@ -181,7 +178,7 @@ interface AttackPlan {
 function findBestAttackPlan(
   state: BattleState,
   stage: BattleStageData,
-  cls: UnitClassDef,
+  cls: ClassStats,
   unit: Unit,
 ): AttackPlan | undefined {
   const ap = availableAp(state, unit);
@@ -212,7 +209,7 @@ function findBestAttackPlan(
 
 // pos から attackCount 回攻撃したときの戦果を見積もる
 function simulateAttacks(
-  cls: UnitClassDef,
+  cls: ClassStats,
   unit: Unit,
   pos: Axial,
   allies: Unit[],
@@ -243,7 +240,7 @@ interface AttackChoice {
 
 // pos からの1回の攻撃で最も戦果が大きい向きと対象を選ぶ。pattern 型は6方向試す
 function bestAttackFrom(
-  cls: UnitClassDef,
+  cls: ClassStats,
   unit: Unit,
   pos: Axial,
   allies: Unit[],
@@ -278,8 +275,7 @@ function bestAttackFrom(
 // 現在位置からAPが続く限り攻撃する
 function executeAttacks(
   state: BattleState,
-  classes: Record<string, UnitClassDef>,
-  cls: UnitClassDef,
+  cls: ClassStats,
   unitId: string,
 ): BattleState {
   let next = state;
@@ -289,7 +285,7 @@ function executeAttacks(
     const allies = next.units.filter((u) => u.side === 'ally');
     const choice = bestAttackFrom(cls, unit, unit.pos, allies, (t) => t.hp);
     if (!choice) return next;
-    next = attack(next, classes, unitId, choice.targets.map((t) => t.id), choice.direction);
+    next = attack(next, unitId, choice.targets.map((t) => t.id), choice.direction);
   }
 }
 

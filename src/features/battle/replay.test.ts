@@ -4,13 +4,16 @@ import { battlePartyFor, readActions, replayBattle, type BattleAction } from './
 // 1-1 はチュートリアルのステージなので、未クリアならガイドの編成（ラピス Lv1）で戦う
 const party = battlePartyFor({}, {}, [], '1-1', 1);
 
-// 1-1 のガイドどおりに1ターン目を進め、2ターン目に残った敵を通常攻撃で倒す
+// 1-1 のガイドどおりに1ターン目を進め（氷礫で1体目が倒れる）、残った敵は通常攻撃2発で倒す
+// 魔導士の通常攻撃は3APなので1ターンに1発。2ターン目と3ターン目に1発ずつ撃つ
 // worker/test/commands.test.ts にも同じ列がある
 const victory: BattleAction[] = [
   { type: 'deploy', charId: 'lapis', pos: { q: -2, r: 0 } },
   { type: 'start' },
   { type: 'move', unitId: 'ally-lapis', to: { q: -1, r: 0 } },
   { type: 'skill', userId: 'ally-lapis', aim: { q: 2, r: -1 } },
+  { type: 'endTurn' },
+  { type: 'attack', attackerId: 'ally-lapis', targetIds: ['enemy-1-glacimo'] },
   { type: 'endTurn' },
   { type: 'attack', attackerId: 'ally-lapis', targetIds: ['enemy-1-glacimo'] },
 ];

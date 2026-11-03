@@ -5,14 +5,19 @@ import type { Status } from '../../data/characters/types';
 // 攻撃で選べる対象ユニット数。'infinity' は範囲内の全ユニット
 export type TargetCount = number | 'infinity';
 
-// 具体的な兵科の一覧は data/ 側で定義する。
-export interface UnitClassDef {
-  id: string;
-  nameKey: string; // i18n キー
+// 通常攻撃とAPの決まり。戦闘中はユニットごとにこれを持つ
+// 味方は兵科（UnitClassDef）から、敵は敵1種ごと（EnemyDef）に決める
+export interface ClassStats {
   attackRange: AttackShape; // 通常攻撃の届く範囲（半径型 or 形指定型）
   attackTargets: TargetCount; // 通常攻撃で選べる対象数
   attackCost: number; // 通常攻撃のAP消費
   apPerTurn: number; // 毎ターン配り直される個人AP
+}
+
+// 味方の兵科。具体的な一覧は data/unitClasses.ts で定義する
+export interface UnitClassDef extends ClassStats {
+  id: string;
+  nameKey: string; // i18n キー
 }
 
 // スキル効果
@@ -46,7 +51,8 @@ export type Side = 'ally' | 'enemy';
 export interface Unit {
   id: string; // 盤面内で一意
   side: Side;
-  classId: string; // UnitClassDef への参照
+  classId?: string; // 味方の兵科（UnitClassDef）の id。敵は持たない
+  unitClass: ClassStats; // 通常攻撃とAPの決まり
   pos: Axial;
   hp: number;
   maxHp: number;
@@ -83,6 +89,7 @@ export interface CharacterDef {
   id: string;
   nameKey: string; // i18n キー
   classId: string; // UnitClassDef への参照
+  unitClass: ClassStats; // classId の兵科の値
   attack: number;
   defense: number;
   hp: number;
@@ -94,7 +101,7 @@ export interface CharacterDef {
 export interface EnemyDef {
   id: string; // EnemySpawn の enemyId と一致
   nameKey: string; // i18n キー
-  classId: string; // 敵も兵科を持つ
+  unitClass: ClassStats; // 味方の兵科とは別に、敵1種ごとに決める
   base: Status; // Lv1 のステータス
   growth: Status; // 1レベルごとの上昇量・Math.floorするので小数を入れていい
   skill?: EnemySkillUse; // スキルを使わない敵は持たない
