@@ -81,6 +81,17 @@ export const chapters: Chapter[] = [
       { id: '4-7', x: 330, y: 58, stamina: 28, reward: { currency: 1450, rankExp: 92 } },
     ],
   },
+  {
+    id: 5,
+    name: 'Chapter 5',
+    titleKey: 'chapter5title',
+    stages: [
+      { id: '5-1', x: 30, y: 62, next: ['5-2'], stamina: 28, reward: { currency: 1500, rankExp: 95 } },
+      { id: '5-2', x: 82, y: 42, next: ['5-3'], stamina: 29, reward: { currency: 1550, rankExp: 98 } },
+      { id: '5-3', x: 134, y: 70, next: ['5-4'], stamina: 30, reward: { currency: 1600, rankExp: 102 } },
+      { id: '5-4', x: 196, y: 50, stamina: 32, reward: { currency: 1750, rankExp: 110 } },
+    ],
+  },
 ]
 
 export function isStageUnlocked(stage: Stage, stages: Stage[], clearedIds: string[]): boolean {
