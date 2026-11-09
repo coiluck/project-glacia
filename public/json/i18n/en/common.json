@@ -12,5 +12,19 @@
   "chapter2title": "Following the Ashes",
   "chapter3title": "A Little Sun",
   "chapter4title": "Where Time Stood Still",
-  "emptySlot": "Empty"
+  "emptySlot": "Empty",
+  "menuParty": "Party",
+  "menuMember": "Members",
+  "menuFront": "Front",
+  "menuRecruit": "Recruit",
+  "menuMission": "Missions",
+  "menuExchange": "Exchange",
+  "menuBase": "Base",
+  "menuWarehouse": "Warehouse",
+  "menuHome": "Home",
+  "menuHere": "Here",
+  "menuNextStage": "Next op",
+  "menuToday": "Today",
+  "menuTokens": "Exchange material",
+  "menuSupply": "Supply"
 }

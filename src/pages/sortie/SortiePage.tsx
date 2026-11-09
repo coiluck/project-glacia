@@ -23,11 +23,21 @@ const CLASS_TRANSLATION_MAPPING = Object.fromEntries(
   Object.values(unitClasses).map((c) => [c.nameKey, c.nameKey]),
 )
 
+const TRANSLATION_MAPPING = {
+  title: 'title',
+  editParty: 'editParty',
+  emptyParty: 'emptyParty',
+  sortie: 'sortie',
+  staminaNow: 'staminaNow',
+  staminaCost: 'staminaCost',
+}
+
 // 編成データの長さが固定されていないからこれを使って描画
 const SLOTS = Array.from({ length: PARTY_SIZE }, (_, i) => i)
 
 export default function SortiePage() {
   const { stageId } = useParams<{ stageId: string }>()
+  const t = useTranslations('sortie', TRANSLATION_MAPPING)
   const tCharacter = useTranslations('characters', CHARACTER_TRANSLATION_MAPPING)
   const tClass = useTranslations('battle', CLASS_TRANSLATION_MAPPING)
 
@@ -63,11 +73,11 @@ export default function SortiePage() {
       <div className="page page-sortie">
         <div className="sortie-head">
           <div className="sortie-title">
-            <span className="sortie-title-label">出撃準備</span>
+            <span className="sortie-title-label">{t.title}</span>
             <span className="sortie-title-stage">{stageId}</span>
           </div>
           <button type="button" className="sortie-edit" onClick={() => navigate(paths.party)}>
-            編成を変更
+            {t.editParty}
           </button>
         </div>
 
@@ -89,22 +99,22 @@ export default function SortiePage() {
           })}
         </div>
 
-        {isEmpty && <p className="sortie-disabled-reason">編成にメンバーがいません</p>}
+        {isEmpty && <p className="sortie-disabled-reason">{t.emptyParty}</p>}
         <button
           type="button"
           className={`sortie-button${isEmpty ? ' is-disabled' : ''}`}
           onClick={sortie}
         >
-          出撃
+          {t.sortie}
           <span className="sortie-button-cost">
             <span className="sortie-button-cost-item">
-              現在
+              {t.staminaNow}
               <i className="sortie-button-cost-bolt" />
               {stamina}
             </span>
             <span className="sortie-button-cost-separator">/</span>
             <span className="sortie-button-cost-item">
-              消費
+              {t.staminaCost}
               <i className="sortie-button-cost-bolt" />
               {stage.stamina}
             </span>

@@ -15,6 +15,7 @@
   "deploySkill": "Active skill",
   "skillList": "All skills",
   "dupe": "Dupes",
+  "dupeSkillAp": "Skill AP {0}",
 
   "failed": "Failed",
   "cappedNext": "Level cap reached. A limit break raises it to Lv {0}",

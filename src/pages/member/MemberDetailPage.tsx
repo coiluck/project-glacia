@@ -44,6 +44,7 @@ const TRANSLATION_MAPPING = {
   deploySkill: 'deploySkill',
   skillList: 'skillList',
   dupe: 'dupe',
+  dupeSkillAp: 'dupeSkillAp',
 }
 
 // i18n。キャラ名・スキル名・スキルの説明文はどれも characters.json、
@@ -305,7 +306,7 @@ export default function MemberDetailPage() {
                       >
                         <span className="member-detail-dupe-node">{i + 1}</span>
                         <span className="member-detail-dupe-tip" role="tooltip">
-                          {describeDupeBonus(bonus).map((part) => (
+                          {describeDupeBonus(bonus, t.dupeSkillAp).map((part) => (
                             <span key={part}>{part}</span>
                           ))}
                         </span>

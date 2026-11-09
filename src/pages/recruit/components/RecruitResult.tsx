@@ -74,10 +74,11 @@ const hexPoints = ({ x, y }: Point) =>
 
 interface RecruitResultProps {
   outcomes: PullOutcome[]
+  closeLabel: string
   onClose: () => void
 }
 
-export default function RecruitResult({ outcomes, onClose }: RecruitResultProps) {
+export default function RecruitResult({ outcomes, closeLabel, onClose }: RecruitResultProps) {
   const tCharacter = useTranslations('characters', CHARACTER_TRANSLATION_MAPPING)
 
   const points = slotsFor(outcomes.length)
@@ -190,7 +191,7 @@ export default function RecruitResult({ outcomes, onClose }: RecruitResultProps)
 
       <div className="recruit-result-bar">
         <button type="button" className="recruit-result-close" onClick={onClose}>
-          確認
+          {closeLabel}
         </button>
       </div>
 

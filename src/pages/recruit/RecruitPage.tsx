@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Screen from '../../layouts/Screen'
-import { useTranslations } from '../../i18n'
+import { fill, useTranslations } from '../../i18n'
 import { useBackHandler } from '../../hooks/useBackHandler'
 import RecruitResult from './components/RecruitResult'
 import RecruitBanner from './components/RecruitBanner'
@@ -26,16 +26,18 @@ import { useGachaStore } from '../../stores/gachaStore'
 import { useResourceStore } from '../../stores/resourceStore'
 import { formatCompact } from '../../utils/format'
 import { dupeLabel } from './dupe'
+import { RECRUIT_TRANSLATION_MAPPING } from './texts'
 
 // i18n。キャラ名は characters.json にある
 const CHARACTER_TRANSLATION_MAPPING = Object.fromEntries(
   Object.values(characterMasters).map((c) => [c.nameKey, c.nameKey]),
 )
 
-const BANNER_TITLES: Record<BannerId, string> = {
-  pickup: 'ピックアップ召集',
-  standard: '常設召集',
-}
+// 召集名の recruit.json のキー
+const BANNER_TITLE_KEYS = {
+  pickup: 'bannerPickup',
+  standard: 'bannerStandard',
+} as const satisfies Record<BannerId, keyof typeof RECRUIT_TRANSLATION_MAPPING>
 
 // 下の帯の札に出す顔
 const BANNER_FACES: Record<BannerId, string[]> = {
@@ -47,7 +49,9 @@ const BANNER_FACES: Record<BannerId, string[]> = {
 type View = { kind: 'banner' } | { kind: 'exchange'; selected: string }
 
 export default function RecruitPage() {
+  const t = useTranslations('recruit', RECRUIT_TRANSLATION_MAPPING)
   const tCharacter = useTranslations('characters', CHARACTER_TRANSLATION_MAPPING)
+  const bannerTitle = (id: BannerId) => t[BANNER_TITLE_KEYS[id]]
   const nameOf = (id: string) => tCharacter[characterMasters[id].nameKey]
 
   const gems = useResourceStore((s) => s.gems)
@@ -83,7 +87,7 @@ export default function RecruitPage() {
       setOutcomes(await pullGacha(count, banner))
     } catch (e) {
       console.error(e)
-      setError('召集に失敗')
+      setError(t.pullFailed)
     } finally {
       setPending(false)
     }
@@ -100,7 +104,7 @@ export default function RecruitPage() {
       setOutcomes([outcome])
     } catch (e) {
       console.error(e)
-      setError('交換に失敗')
+      setError(t.exchangeFailed)
     } finally {
       setPending(false)
     }
@@ -109,7 +113,7 @@ export default function RecruitPage() {
   if (outcomes !== null) {
     return (
       <>
-        <RecruitResult outcomes={outcomes} onClose={() => setOutcomes(null)} />
+        <RecruitResult outcomes={outcomes} closeLabel={t.resultClose} onClose={() => setOutcomes(null)} />
         <Screen background="images/scenario/bg/camp_border.avif" />
       </>
     )
@@ -120,14 +124,15 @@ export default function RecruitPage() {
       <div className="page page-recruit">
         {/* 絵と左の文字組み*/}
         {view.kind === 'banner' ? (
-          <RecruitBanner key={banner} banner={banner} title={BANNER_TITLES[banner]} nameOf={nameOf} />
+          <RecruitBanner key={banner} banner={banner} title={bannerTitle(banner)} nameOf={nameOf} t={t} />
         ) : (
           <RecruitExchange
             key={view.selected}
             masterId={view.selected}
-            title={BANNER_TITLES[banner]}
+            title={bannerTitle(banner)}
             dupe={dupeOf(view.selected)}
             nameOf={nameOf}
+            t={t}
           />
         )}
 
@@ -151,7 +156,7 @@ export default function RecruitPage() {
                         />
                       ))}
                     </span>
-                    <span className="recruit-tab-label">{BANNER_TITLES[id]}</span>
+                    <span className="recruit-tab-label">{bannerTitle(id)}</span>
                   </button>
                 ))
               : CEILING_TARGETS[banner].map((id) => (
@@ -168,7 +173,7 @@ export default function RecruitPage() {
                       />
                     </span>
                     <span className="recruit-tab-label">{nameOf(id)}</span>
-                    <span className="recruit-tab-dupe">{dupeLabel(dupeOf(id))}</span>
+                    <span className="recruit-tab-dupe">{dupeLabel(dupeOf(id), t)}</span>
                   </button>
                 ))}
           </div>
@@ -176,7 +181,7 @@ export default function RecruitPage() {
           {/* 交換pt */}
           <div className={`recruit-points${full ? ' is-full' : ''}`}>
             <div>
-              <p className="recruit-points-label">交換pt</p>
+              <p className="recruit-points-label">{t.points}</p>
               <p className="recruit-points-value">
                 <b>{points}</b>
                 <span>/ {CEILING_PULLS}</span>
@@ -188,7 +193,7 @@ export default function RecruitPage() {
                 className="recruit-points-link"
                 onClick={() => setView({ kind: 'exchange', selected: CEILING_TARGETS[banner][0] })}
               >
-                {full ? '交換する' : '交換所'}
+                {full ? t.exchange : t.exchangeShop}
               </button>
             )}
           </div>
@@ -203,7 +208,7 @@ export default function RecruitPage() {
                   disabled={pending || gems < PULL_COST_SINGLE}
                   onClick={() => void pull(1, PULL_COST_SINGLE)}
                 >
-                  <span className="recruit-action-label">単発</span>
+                  <span className="recruit-action-label">{t.pullSingle}</span>
                   <span className="recruit-action-cost">
                     <GemIcon className="recruit-action-gem" />
                     {formatCompact(PULL_COST_SINGLE)}
@@ -215,7 +220,7 @@ export default function RecruitPage() {
                   disabled={pending || gems < PULL_COST_MULTI}
                   onClick={() => void pull(MULTI_PULL_COUNT, PULL_COST_MULTI)}
                 >
-                  <span className="recruit-action-label">{MULTI_PULL_COUNT}連</span>
+                  <span className="recruit-action-label">{fill(t.pullMulti, MULTI_PULL_COUNT)}</span>
                   <span className="recruit-action-cost">
                     <GemIcon className="recruit-action-gem" />
                     {formatCompact(PULL_COST_MULTI)}
@@ -230,9 +235,9 @@ export default function RecruitPage() {
                 onClick={() => setConfirming(true)}
               >
                 <span className="recruit-action-label">
-                  {full ? '交換する' : `あと${CEILING_PULLS - points}回召集すると交換できる`}
+                  {full ? t.exchange : fill(t.pullsToExchange, CEILING_PULLS - points)}
                 </span>
-                {full && <span className="recruit-action-cost">交換pt {CEILING_PULLS}</span>}
+                {full && <span className="recruit-action-cost">{fill(t.pointsCost, CEILING_PULLS)}</span>}
               </button>
             )}
           </div>
@@ -247,6 +252,7 @@ export default function RecruitPage() {
             pending={pending}
             onCancel={() => setConfirming(false)}
             onConfirm={() => void exchange(view.selected)}
+            t={t}
           />
         )}
       </div>
