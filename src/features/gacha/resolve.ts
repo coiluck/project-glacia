@@ -1,4 +1,4 @@
-// 召集1回ぶんのサーバー側の処理」
+// 召集と天井交換のサーバー側の処理。Worker の /gacha/pull と /gacha/exchange から呼ぶ
 import type { MeResponse } from '../contract'
 import { characterMasters } from '../../data/characters'
 import { MAX_DUPE } from '../../data/characters/const'
@@ -6,14 +6,14 @@ import type { UserCharacter } from '../../data/characters/types'
 import {
   BANNER_IDS,
   CEILING_PULLS,
-  CEILING_TARGETS,
   DUPE_CONVERT_CURRENCY,
   MULTI_PULL_COUNT,
-  PICK_UP_IDS,
   PULL_COST_MULTI,
   PULL_COST_SINGLE,
+  gachaPool,
   type BannerId,
 } from '../../data/gacha'
+import { pickUpIdsOf, pickUpPeriod } from './pickUp'
 import { rollPulls } from './roll'
 import type { AcquireResult, PullOutcome } from './types'
 
@@ -52,6 +52,7 @@ export function resolvePull(
   me: MeResponse,
   count: number,
   banner: BannerId,
+  now: number,
 ): { me: MeResponse; pulls: PullOutcome[] } {
   if (count !== 1 && count !== MULTI_PULL_COUNT) {
     throw new Error(`召集の回数が不正: ${count}`)
@@ -61,7 +62,7 @@ export function resolvePull(
   const cost = costFor(count)
   if (me.user.gems < cost) throw new Error('ジェムが足りない')
 
-  const rolled = rollPulls(count, banner === 'pickup' ? PICK_UP_IDS : [])
+  const rolled = rollPulls(count, banner === 'pickup' ? pickUpIdsOf(pickUpPeriod(now)) : [])
 
   const owned = new Map(me.characters.map((c) => [c.masterId, c]))
   let converted = 0
@@ -93,7 +94,8 @@ export function resolveCeilingExchange(
   me: MeResponse,
   masterId: string,
 ): { me: MeResponse; outcome: PullOutcome } {
-  if (!CEILING_TARGETS.standard.includes(masterId)) {
+  // 交換ptは共有で常設の交換所には★3が全員並ぶので、★3ならピックアップとか検証しないで交換する
+  if (!gachaPool[3].includes(masterId)) {
     throw new Error(`交換できないキャラ: ${masterId}`)
   }
   if (me.user.pity < CEILING_PULLS) throw new Error('交換ptが足りない')

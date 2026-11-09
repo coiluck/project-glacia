@@ -1,4 +1,5 @@
-import { PICK_UP_ENDS_AT, PICK_UP_IDS, PICK_UP_RATE, type BannerId } from '../../../data/gacha'
+import { PICK_UP_RATE, type BannerId } from '../../../data/gacha'
+import { pickUpEndsAt, pickUpIdsOf, pickUpPeriod } from '../../../features/gacha/pickUp'
 import { rarityRates } from '../../../features/gacha/roll'
 import { useStaminaStore } from '../../../stores/staminaStore'
 import { fill } from '../../../i18n'
@@ -16,8 +17,8 @@ const STANDARD_LINEUP = [
 
 const DAY = 24 * 60 * 60
 
-function endLabel(template: string): string {
-  const d = new Date((PICK_UP_ENDS_AT + 9 * 60 * 60) * 1000)
+function endLabel(template: string, endsAt: number): string {
+  const d = new Date((endsAt + 9 * 60 * 60) * 1000)
   const hh = String(d.getUTCHours()).padStart(2, '0')
   const mm = String(d.getUTCMinutes()).padStart(2, '0')
   return fill(template, d.getUTCMonth() + 1, d.getUTCDate(), hh, mm)
@@ -67,9 +68,12 @@ export default function RecruitBanner({ banner, title, nameOf, t }: RecruitBanne
     )
   }
 
-  const pickUp = PICK_UP_IDS[0]
-  const daysLeft = Math.ceil((PICK_UP_ENDS_AT - now) / DAY)
-  const pickUpRate = (rates[3] * PICK_UP_RATE) / PICK_UP_IDS.length
+  const period = pickUpPeriod(now)
+  const pickUpIds = pickUpIdsOf(period)
+  const pickUp = pickUpIds[0]
+  const endsAt = pickUpEndsAt(now) - 60 // 終了は替わる1分前（04:59）として出す
+  const daysLeft = Math.ceil((endsAt - now) / DAY)
+  const pickUpRate = (rates[3] * PICK_UP_RATE) / pickUpIds.length
 
   return (
     <>
@@ -83,7 +87,7 @@ export default function RecruitBanner({ banner, title, nameOf, t }: RecruitBanne
         <h1 className="recruit-name">{nameOf(pickUp)}</h1>
         <p className="recruit-stars">★★★</p>
         <p className="recruit-line">
-          {endLabel(t.endsAt)}
+          {endLabel(t.endsAt, endsAt)}
           {daysLeft > 0 && fill(t.daysLeft, daysLeft)}
         </p>
         {rateList}

@@ -12,18 +12,18 @@ import { characterMasters } from '../../data/characters'
 import {
   BANNER_IDS,
   CEILING_PULLS,
-  CEILING_TARGETS,
   MULTI_PULL_COUNT,
-  PICK_UP_IDS,
   PULL_COST_MULTI,
   PULL_COST_SINGLE,
   gachaPool,
   type BannerId,
 } from '../../data/gacha'
+import { pickUpIdsOf, pickUpPeriod } from '../../features/gacha/pickUp'
 import type { PullOutcome } from '../../features/gacha/types'
 import { useCharacterStore } from '../../stores/characterStore'
 import { useGachaStore } from '../../stores/gachaStore'
 import { useResourceStore } from '../../stores/resourceStore'
+import { useStaminaStore } from '../../stores/staminaStore'
 import { formatCompact } from '../../utils/format'
 import { dupeLabel } from './dupe'
 import { RECRUIT_TRANSLATION_MAPPING } from './texts'
@@ -39,12 +39,6 @@ const BANNER_TITLE_KEYS = {
   standard: 'bannerStandard',
 } as const satisfies Record<BannerId, keyof typeof RECRUIT_TRANSLATION_MAPPING>
 
-// 下の帯の札に出す顔
-const BANNER_FACES: Record<BannerId, string[]> = {
-  pickup: PICK_UP_IDS,
-  standard: gachaPool[3],
-}
-
 // 召集の画面と、その召集の交換所
 type View = { kind: 'banner' } | { kind: 'exchange'; selected: string }
 
@@ -57,6 +51,12 @@ export default function RecruitPage() {
   const gems = useResourceStore((s) => s.gems)
   const points = useGachaStore((s) => s.pity)
   const owned = useCharacterStore((s) => s.owned)
+  const period = useStaminaStore((s) => pickUpPeriod(s.now))
+
+  const targets: Record<BannerId, string[]> = {
+    pickup: pickUpIdsOf(period),
+    standard: gachaPool[3],
+  }
 
   const [banner, setBanner] = useState<BannerId>('pickup')
   const [view, setView] = useState<View>({ kind: 'banner' })
@@ -148,7 +148,7 @@ export default function RecruitPage() {
                     onClick={() => setBanner(id)}
                   >
                     <span className="recruit-tab-faces">
-                      {BANNER_FACES[id].map((face) => (
+                      {targets[id].map((face) => (
                         <img
                           key={face}
                           src={`${import.meta.env.BASE_URL}images/character/face/${face}.avif`}
@@ -159,7 +159,7 @@ export default function RecruitPage() {
                     <span className="recruit-tab-label">{bannerTitle(id)}</span>
                   </button>
                 ))
-              : CEILING_TARGETS[banner].map((id) => (
+              : targets[banner].map((id) => (
                   <button
                     key={id}
                     type="button"
@@ -191,7 +191,7 @@ export default function RecruitPage() {
               <button
                 type="button"
                 className="recruit-points-link"
-                onClick={() => setView({ kind: 'exchange', selected: CEILING_TARGETS[banner][0] })}
+                onClick={() => setView({ kind: 'exchange', selected: targets[banner][0] })}
               >
                 {full ? t.exchange : t.exchangeShop}
               </button>
