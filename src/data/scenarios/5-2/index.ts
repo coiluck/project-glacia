@@ -38,12 +38,11 @@ const scenario: ScenarioFile = {
       text: '……指が。',
       speaker: 'ネーヴェ',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'automaton', pose: 'surprised' }
       ]
     },
     {
-      text: 'ネーヴェの手が止まっていた。襟をつかんでいた姉の指が、かすかに動いていた。',
+      text: 'ネーヴェの手が止まっていた。襟をつかんでいたラピスの姉の指が、かすかに動いていた。',
       commands: [
         { type: 'charDelete' }
       ]
@@ -81,10 +80,7 @@ const scenario: ScenarioFile = {
       speaker: 'ラピスの姉'
     },
     {
-      text: '誰も何も言わなかった。ラピスは口を開けたまま固まっていた。アルマは姉を抱えたまま、まばたきもしなかった。',
-      commands: [
-        { type: 'charDelete' }
-      ]
+      text: '誰も何も言わなかった。ラピスは口を開けたまま固まっていた。アルマは姉を抱えたまま、まばたきもしなかった。'
     },
     {
       text: '姉がゆっくりと目を開けた。アルマの顔を見上げて、それから自分を見下ろしているいくつもの顔に気づいた。',
@@ -109,7 +105,6 @@ const scenario: ScenarioFile = {
       text: '数年になります、殿下。',
       speaker: 'オボロ',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'oboro', pose: 'serious' }
       ]
     },
@@ -120,7 +115,6 @@ const scenario: ScenarioFile = {
       text: '……数年。',
       speaker: 'ラピスの姉',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'sister', pose: 'sad' }
       ]
     },
@@ -137,7 +131,6 @@ const scenario: ScenarioFile = {
     {
       text: 'ラピスは両手を握りしめた。',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'lapis', pose: 'sad' }
       ]
     },
@@ -155,7 +148,6 @@ const scenario: ScenarioFile = {
     {
       text: '姉はラピスの顔をじっと見ていた。',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'sister', pose: 'surprised' }
       ]
     },
@@ -193,7 +185,6 @@ const scenario: ScenarioFile = {
       text: '……ありがとう、アルマ。',
       speaker: 'ラピスの姉',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'sister', pose: 'normal' }
       ]
     },
@@ -208,7 +199,6 @@ const scenario: ScenarioFile = {
       text: '……はい。',
       speaker: 'アルマ',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'alma', pose: 'serious' }
       ]
     },
@@ -216,15 +206,11 @@ const scenario: ScenarioFile = {
       text: 'もう、そこは否定してくれないと。',
       speaker: 'ラピスの姉',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'sister', pose: 'smile' }
       ]
     },
     {
-      text: '姉の肩に額をつけたまま、ラピスが小さく笑った。',
-      commands: [
-        { type: 'charDelete' }
-      ]
+      text: '姉の肩に額をつけたまま、ラピスが小さく笑った。'
     },
     {
       text: 'やがて姉の目は、こちらの胸もとで止まった。',
@@ -246,7 +232,6 @@ const scenario: ScenarioFile = {
     {
       text: 'ラピスが顔を上げた。',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'lapis', pose: 'sad' }
       ]
     },
@@ -261,7 +246,6 @@ const scenario: ScenarioFile = {
     {
       text: '姉はしばらくこちらの顔を見ていた。',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'sister', pose: 'sad' }
       ]
     },
@@ -292,10 +276,7 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: '姉はブローチをラピスの襟につけた。留め金をとめる指は、もう震えていなかった。',
-      commands: [
-        { type: 'charDelete' }
-      ]
+      text: '姉はブローチをラピスの襟につけた。留め金をとめる指は、もう震えていなかった。'
     },
     {
       text: 'ラピスは襟もとのブローチに指先を当てた。裏の小さな傷のあたりだった。',
@@ -327,7 +308,6 @@ const scenario: ScenarioFile = {
       text: 'はい。殿下のまわりの氷を削ったのは、わたしです。',
       speaker: 'ネーヴェ',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'automaton', pose: 'normal' }
       ]
     },
@@ -339,7 +319,6 @@ const scenario: ScenarioFile = {
       text: '……そうでしたか。',
       speaker: 'ラピスの姉',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'sister', pose: 'smile' }
       ]
     },
@@ -361,7 +340,6 @@ const scenario: ScenarioFile = {
       text: 'これは、熱がこもります。',
       speaker: 'ネーヴェ',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'automaton', pose: 'normal' }
       ]
     },
@@ -369,15 +347,11 @@ const scenario: ScenarioFile = {
       text: 'それがいいのです。',
       speaker: 'ラピスの姉',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'sister', pose: 'serious' }
       ]
     },
     {
-      text: 'ネーヴェが外套を姉の肩にかけた。姉はすぐに襟をかき合わせて、あごまで埋まった。',
-      commands: [
-        { type: 'charDelete' }
-      ]
+      text: 'ネーヴェが外套を姉の肩にかけた。姉はすぐに襟をかき合わせて、あごまで埋まった。'
     },
     {
       text: '……姉さん。',
@@ -390,7 +364,6 @@ const scenario: ScenarioFile = {
       text: '何ですか。',
       speaker: 'ラピスの姉',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'sister', pose: 'normal' }
       ]
     },
@@ -398,7 +371,6 @@ const scenario: ScenarioFile = {
       text: '寒がり、治ってないんだ。',
       speaker: 'ラピス',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'lapis', pose: 'smile' }
       ]
     },
@@ -406,7 +378,6 @@ const scenario: ScenarioFile = {
       text: '治るものではありません。',
       speaker: 'ラピスの姉',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'sister', pose: 'serious' }
       ]
     },
@@ -436,15 +407,11 @@ const scenario: ScenarioFile = {
       text: '私が、自分のまわりを解いたからです。',
       speaker: 'ラピスの姉',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'sister', pose: 'serious' }
       ]
     },
     {
-      text: '姉はアルマの腕を離れて、ひとりで立った。片手をまっすぐ空の裂け目へ向ける。氷の中にいたときと同じ形だった。',
-      commands: [
-        { type: 'charDelete' }
-      ]
+      text: '姉はアルマの腕を離れて、ひとりで立った。片手をまっすぐ空の裂け目へ向ける。氷の中にいたときと同じ形だった。'
     },
     {
       text: '姉の指先から霜が空へ伸びていった。ラピスの霜と重なって、裂け目のふちが白く厚くなる。きしみが少しだけ遠のいた。'
@@ -457,10 +424,7 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: 'ラピスはすぐには手を離さなかった。姉の横顔を見ていた。',
-      commands: [
-        { type: 'charDelete' }
-      ]
+      text: 'ラピスはすぐには手を離さなかった。姉の横顔を見ていた。'
     },
     {
       text: 'ソレイユがかざしていた手を下ろした。肩で息をしていた。陽だまりは、もう一行がやっと入れるほどの広さしかなかった。',

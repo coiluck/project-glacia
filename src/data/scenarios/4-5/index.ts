@@ -98,7 +98,27 @@ const scenario: ScenarioFile = {
       speaker: 'ステラ'
     },
     {
-      text: 'ステラは笑って、それからすぐに真顔に戻った。杖の先から細い光の糸を伸ばして星へ結ぶ。',
+      text: 'ステラは、もう一度上を向いた。裂け目の暗い奥を、しばらく黙って見ていた。'
+    },
+    {
+      text: '……あそこに落とせたら、ふさがるのかな。',
+      speaker: 'ステラ',
+      commands: [
+        { type: 'char', id: 'stella', pose: 'normal' }
+      ]
+    },
+    {
+      text: 'それから、手すりごしに霞の下の屋根を見下ろした。'
+    },
+    {
+      text: '……でも、下にみんないるもんね。',
+      speaker: 'ステラ',
+      commands: [
+        { type: 'char', id: 'stella', pose: 'sad' }
+      ]
+    },
+    {
+      text: 'ステラは帽子のつばを一度引き下ろして、杖の先から細い光の糸を星へ伸ばした。',
       commands: [
         { type: 'char', id: 'stella', pose: 'serious' }
       ]

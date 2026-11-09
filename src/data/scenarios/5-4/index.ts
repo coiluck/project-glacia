@@ -13,7 +13,7 @@ const scenario: ScenarioFile = {
   id: '5-4',
   lines: [
     {
-      text: '落ちてきた獣が砕けると、姉は空へ向けた手を下ろさないまま、こちらを振り返った。',
+      text: '落ちてきた獣が砕けると、ラピスの姉は空へ向けた手を下ろさないまま、こちらを振り返った。',
       commands: [
         { type: 'bg', file: 'images/scenario/bg/frozen_center.avif', transition: 'fade' },
         { type: 'char', id: 'sister', pose: 'serious' }
@@ -35,7 +35,6 @@ const scenario: ScenarioFile = {
       text: 'ラピスがこちらを見た。',
       choiceId: 'unfreeze',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'lapis', pose: 'serious' }
       ]
     },
@@ -43,7 +42,6 @@ const scenario: ScenarioFile = {
       text: '……はい。',
       speaker: 'ラピスの姉',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'sister', pose: 'serious' }
       ]
     },
@@ -55,7 +53,6 @@ const scenario: ScenarioFile = {
     {
       text: 'ソレイユが姉の後ろに立った。',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'soleil', pose: 'serious' }
       ]
     },
@@ -66,7 +63,6 @@ const scenario: ScenarioFile = {
     {
       text: 'ベルミリアがネーヴェの前に立った。',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'vermilia', pose: 'serious' }
       ]
     },
@@ -85,7 +81,6 @@ const scenario: ScenarioFile = {
       text: 'ネーヴェはベルミリアからこちらへ目を移した。',
       choiceId: 'order',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'automaton', pose: 'normal' }
       ]
     },
@@ -103,23 +98,6 @@ const scenario: ScenarioFile = {
       text: 'ネーヴェは駆けだそうとして、一度だけこちらを振り返った。'
     },
     {
-      text: '指揮官。解けたあとのご命令は、どうなりますか。帝都が解けたら、わたしの持ち場はなくなるので。',
-      speaker: 'ネーヴェ',
-      commands: [
-        { type: 'char', id: 'automaton', pose: 'normal' }
-      ]
-    },
-    {
-      text: '終わってから伝える、と答えた。'
-    },
-    {
-      text: '……了解しました。では、終わってから伺います。',
-      speaker: 'ネーヴェ',
-      commands: [
-        { type: 'char', id: 'automaton', pose: 'smile' }
-      ]
-    },
-    {
       text: '外套は殿下にお預けしておきます。',
       speaker: 'ネーヴェ',
       commands: [
@@ -130,15 +108,11 @@ const scenario: ScenarioFile = {
       text: '……助かります。',
       speaker: 'ラピスの姉',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'sister', pose: 'serious' }
       ]
     },
     {
-      text: '姉は真顔のままそう言った。ラピスが横を向いて、小さく吹きだした。',
-      commands: [
-        { type: 'charDelete' }
-      ]
+      text: '姉は真顔のままそう言った。ラピスが横を向いて、小さく吹きだした。'
     },
     {
       text: 'ネーヴェは陽だまりを出て、凍った通りの向こうへ駆けていった。足音はすぐに聞こえなくなった。',
@@ -247,10 +221,7 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: 'けれど、石畳に降りた獣はこちらへ来なかった。殻をきしませながら、西の大通りのほうへ這っていく。人の気配のするほうへ。',
-      commands: [
-        { type: 'charDelete' }
-      ]
+      text: 'けれど、石畳に降りた獣はこちらへ来なかった。殻をきしませながら、西の大通りのほうへ這っていく。人の気配のするほうへ。'
     },
     {
       text: '通りへ行かせるな！',
@@ -287,7 +258,6 @@ const scenario: ScenarioFile = {
     {
       text: 'ラピスは一瞬だけ目を見開いた。それから姉のそばへ駆け寄って、空へ向けた手に自分の手を重ねた。',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'lapis', pose: 'serious' }
       ]
     },
@@ -296,10 +266,7 @@ const scenario: ScenarioFile = {
       speaker: 'ラピス'
     },
     {
-      text: '二人の手から氷が伸びて、裂け目のふちが白く厚くなった。広がりかけた裂け目がそこで止まる。',
-      commands: [
-        { type: 'charDelete' }
-      ]
+      text: '二人の手から氷が伸びて、裂け目のふちが白く厚くなった。広がりかけた裂け目がそこで止まる。'
     },
     {
       text: 'それでも落ちてくる獣は止まらなかった。'
@@ -312,10 +279,7 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: 'アルマは答えずにまた一体を斬った。その横を抜けた獣の背中が大通りの奥へ、列のほうへ小さくなっていく。',
-      commands: [
-        { type: 'charDelete' }
-      ]
+      text: 'アルマは答えずにまた一体を斬った。その横を抜けた獣の背中が大通りの奥へ、列のほうへ小さくなっていく。'
     },
     {
       text: '降っていた雪が、ふいに薄くなった。霞の晴れた大通りが西の門まで見通せた。'
@@ -352,7 +316,6 @@ const scenario: ScenarioFile = {
     {
       text: 'ステラが杖の先から糸を伸ばした。糸は裂け目の真上の星に結ばれて、大きく揺れていた。',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'stella', pose: 'serious' }
       ]
     },
@@ -373,7 +336,6 @@ const scenario: ScenarioFile = {
     {
       text: '姉が空へ手を向けたままステラのほうを見た。',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'sister', pose: 'normal' }
       ]
     },
@@ -385,7 +347,6 @@ const scenario: ScenarioFile = {
       text: '……うん。お姉さんのいるところに、落としかけた。',
       speaker: 'ステラ',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'stella', pose: 'sad' }
       ]
     },
@@ -393,15 +354,11 @@ const scenario: ScenarioFile = {
       text: 'では裂け目に落としてください。落ちてくるものは私とラピスで凍らせて受けます。',
       speaker: 'ラピスの姉',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'sister', pose: 'serious' }
       ]
     },
     {
-      text: 'ステラはオボロを見た。',
-      commands: [
-        { type: 'charDelete' }
-      ]
+      text: 'ステラはオボロを見た。'
     },
     {
       text: '……お止めいたしません。',
@@ -414,7 +371,6 @@ const scenario: ScenarioFile = {
       text: '……うん。',
       speaker: 'ステラ',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'stella', pose: 'serious' }
       ]
     },
@@ -448,10 +404,7 @@ const scenario: ScenarioFile = {
       speaker: 'シルヴィ'
     },
     {
-      text: 'ベルミリアが大通りの入り口から戻ってきて、剣についた殻のかけらを振り払った。何も言わずに、姉とラピスの前に立った。',
-      commands: [
-        { type: 'charDelete' }
-      ]
+      text: 'ベルミリアが大通りの入り口から戻ってきて、剣についた殻のかけらを振り払った。何も言わずに、姉とラピスの前に立った。'
     },
     {
       text: 'クラリスが銃を構えて、アルマの隣に並んだ。',
@@ -467,7 +420,6 @@ const scenario: ScenarioFile = {
       text: '……ええ。帰ってから。',
       speaker: 'アルマ',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'alma', pose: 'smile' }
       ]
     },
@@ -492,7 +444,6 @@ const scenario: ScenarioFile = {
     {
       text: '姉の隣で、ラピスも空へ手を向けていた。襟もとで、霜のない銀のブローチが光っていた。',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'lapis', pose: 'serious' }
       ]
     },
@@ -528,7 +479,7 @@ const scenario: ScenarioFile = {
         buttonText: '殿下は裂け目を。全員で、その下を守れ',
         branch: [
           { text: 'はっ。', speaker: 'アルマ', commands: [{ type: 'char', id: 'alma', pose: 'serious' }] },
-          { text: '……殿下の足もとには、何も寄せつけませぬ。', speaker: 'オボロ', commands: [{ type: 'charDelete' }, { type: 'char', id: 'oboro', pose: 'serious' }] },
+          { text: '……殿下の足もとには、何も寄せつけませぬ。', speaker: 'オボロ', commands: [{ type: 'char', id: 'oboro', pose: 'serious' }] },
         ],
       },
       {

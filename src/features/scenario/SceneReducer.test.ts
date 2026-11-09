@@ -7,8 +7,14 @@ const faces = { 'ラピス': 'lapis' };
 
 describe('reduceLine の顔', () => {
   it('char 命令のキャラの顔を出す', () => {
-    const s = reduceLine(empty, { text: '', commands: [{ type: 'char', id: 'lapis', pose: 'normal' }] }, faces);
+    const s = reduceLine(empty, { text: '', speaker: 'ラピス', commands: [{ type: 'char', id: 'lapis', pose: 'normal' }] }, faces);
     expect(s.faceId).toBe('lapis');
+  });
+
+  it('地の文の char 命令は立ち絵だけ出して、顔は出さない', () => {
+    const s = reduceLine(empty, { text: '', commands: [{ type: 'char', id: 'lapis', pose: 'normal' }] }, faces);
+    expect(s.characters.map(c => c.id)).toEqual(['lapis']);
+    expect(s.faceId).toBeNull();
   });
 
   it('char 命令が無くても、話者のキャラが舞台にいれば顔を出す', () => {

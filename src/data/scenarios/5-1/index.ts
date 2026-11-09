@@ -68,7 +68,6 @@ const scenario: ScenarioFile = {
       text: '何ですか。',
       speaker: 'アルマ',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'alma', pose: 'normal' }
       ]
     },
@@ -76,14 +75,12 @@ const scenario: ScenarioFile = {
       text: '門の人たちが目を覚ましたら、隊長は何て言うんですか。',
       speaker: 'クラリス',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'clarice', pose: 'normal' }
       ]
     },
     {
       text: 'アルマは、すぐには答えなかった。西の門のほうを見ていた。',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'alma', pose: 'serious' }
       ]
     },
@@ -98,7 +95,6 @@ const scenario: ScenarioFile = {
       text: 'それだけですか。',
       speaker: 'クラリス',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'clarice', pose: 'surprised' }
       ]
     },
@@ -106,7 +102,6 @@ const scenario: ScenarioFile = {
       text: 'ほかに言えることがあれば、何年も前に言っています。',
       speaker: 'アルマ',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'alma', pose: 'normal' }
       ]
     },
@@ -168,14 +163,12 @@ const scenario: ScenarioFile = {
       text: '……分かりました。',
       speaker: 'アルマ',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'alma', pose: 'serious' }
       ]
     },
     {
       text: 'ラピスが立ち上がっていた。',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'lapis', pose: 'serious' }
       ]
     },
@@ -187,7 +180,6 @@ const scenario: ScenarioFile = {
       text: 'お伝えしました。とんがった屋根の隣のお店の前に、息子さんがちゃんといました、と。',
       speaker: 'ネーヴェ',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'automaton', pose: 'normal' }
       ]
     },
@@ -206,7 +198,6 @@ const scenario: ScenarioFile = {
     {
       text: 'ラピスは、ヨナス、と小さく繰り返した。',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'lapis', pose: 'smile' }
       ]
     },
@@ -214,14 +205,12 @@ const scenario: ScenarioFile = {
       text: 'エーリクさんは、騎士団のみなさんと一緒に待っています。',
       speaker: 'ネーヴェ',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'automaton', pose: 'normal' }
       ]
     },
     {
       text: 'ロザリーが、籠の底から白木の札を一枚取りだした。まだ何も刻まれていない札だった。',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'rosalie', pose: 'normal' }
       ]
     },
@@ -230,10 +219,7 @@ const scenario: ScenarioFile = {
       speaker: 'ロザリー'
     },
     {
-      text: 'クラリスがロザリーの指を取って、札の上に一文字ずつなぞった。ロザリーは小刀でその跡をたどった。刻み終えると、ロザリーは札の溝を指先で何度も撫でた。',
-      commands: [
-        { type: 'charDelete' }
-      ]
+      text: 'クラリスがロザリーの指を取って、札の上に一文字ずつなぞった。ロザリーは小刀でその跡をたどった。刻み終えると、ロザリーは札の溝を指先で何度も撫でた。'
     },
     {
       text: '……ヨナスさん。',
@@ -264,7 +250,6 @@ const scenario: ScenarioFile = {
     {
       text: 'ラピスが姉の前に立った。姉の頭のすぐ上で、裂け目から落ちてくる獣の爪が止まっている。',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'lapis', pose: 'serious' }
       ]
     },
@@ -276,7 +261,6 @@ const scenario: ScenarioFile = {
       text: '大通りでは、獣一体ぶんでしたね。',
       speaker: 'オボロ',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'oboro', pose: 'serious' }
       ]
     },
@@ -291,15 +275,11 @@ const scenario: ScenarioFile = {
       text: '分かってる。',
       speaker: 'ラピス',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'lapis', pose: 'serious' }
       ]
     },
     {
-      text: 'ラピスは姉の頭の上の、獣の爪を包む氷に両手を当てた。',
-      commands: [
-        { type: 'charDelete' }
-      ]
+      text: 'ラピスは姉の頭の上の、獣の爪を包む氷に両手を当てた。'
     },
     {
       text: '指先から霜が広がっていく。霜は爪から獣の脚へ、脚から殻へと這いあがり、裂け目のふちへ向かって伸びていった。'
@@ -317,7 +297,6 @@ const scenario: ScenarioFile = {
     {
       text: 'ソレイユが姉の背に両手をかざした。手のひらのあたりが陽炎のように揺らいだ。',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'soleil', pose: 'serious' }
       ]
     },
@@ -328,7 +307,6 @@ const scenario: ScenarioFile = {
     {
       text: 'ネーヴェが姉の前に膝をついて、上着のボタンに手をかけた。',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'automaton', pose: 'serious' }
       ]
     },
@@ -336,7 +314,6 @@ const scenario: ScenarioFile = {
       text: '……ネーヴェさん？',
       speaker: 'クラリス',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'clarice', pose: 'surprised' }
       ]
     },
@@ -344,7 +321,6 @@ const scenario: ScenarioFile = {
       text: '全力で削ります。冷えているほど、速く削れます。',
       speaker: 'ネーヴェ',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'automaton', pose: 'serious' }
       ]
     },
@@ -375,15 +351,11 @@ const scenario: ScenarioFile = {
       text: '今日は全力です。',
       speaker: 'ネーヴェ',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'automaton', pose: 'normal' }
       ]
     },
     {
-      text: 'シャツが飛んできた。クラリスの両腕は、もう服でいっぱいだった。',
-      commands: [
-        { type: 'charDelete' }
-      ]
+      text: 'シャツが飛んできた。クラリスの両腕は、もう服でいっぱいだった。'
     },
     {
       text: 'それからブーツがひとつ。もうひとつ。'
@@ -399,7 +371,6 @@ const scenario: ScenarioFile = {
       text: '足の裏から熱が逃げます。',
       speaker: 'ネーヴェ',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'automaton', pose: 'normal' }
       ]
     },
@@ -407,15 +378,11 @@ const scenario: ScenarioFile = {
       text: '衣擦れの音が、ひときわ多うございますね。',
       speaker: 'ロザリー',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'rosalie', pose: 'normal' }
       ]
     },
     {
-      text: 'アルマの背中の向こうで、ネーヴェの手が止まる気配がした。',
-      commands: [
-        { type: 'charDelete' }
-      ]
+      text: 'アルマの背中の向こうで、ネーヴェの手が止まる気配がした。'
     },
     {
       text: '……もう一枚、いけます。',
@@ -428,15 +395,11 @@ const scenario: ScenarioFile = {
       text: 'それはだめです。',
       speaker: 'アルマ',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'alma', pose: 'serious' }
       ]
     },
     {
-      text: 'アルマはこちらに背を向けたまま動かなかった。',
-      commands: [
-        { type: 'charDelete' }
-      ]
+      text: 'アルマはこちらに背を向けたまま動かなかった。'
     },
     {
       text: '……了解しました。',
@@ -467,7 +430,6 @@ const scenario: ScenarioFile = {
     {
       text: 'ひと削りごとに、頭の上で氷がきしんだ。',
       commands: [
-        { type: 'charDelete' },
         { type: 'bgShake', duration: 300, intensity: 3 }
       ]
     },
@@ -492,15 +454,11 @@ const scenario: ScenarioFile = {
       text: '……離しません。',
       speaker: 'ラピス',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'lapis', pose: 'serious' }
       ]
     },
     {
-      text: 'ラピスの額に汗が浮いていた。凍った帝都の中で汗をかいているのは、ラピスとソレイユだけだった。',
-      commands: [
-        { type: 'charDelete' }
-      ]
+      text: 'ラピスの額に汗が浮いていた。凍った帝都の中で汗をかいているのは、ラピスとソレイユだけだった。'
     },
     {
       text: 'クラリスの置いた小石が、いつのまにか陽だまりの外に出ていた。陽だまりのきわは、こちらの靴の先のすぐ前まで来ていた。'
@@ -519,7 +477,6 @@ const scenario: ScenarioFile = {
       text: '止めません。',
       speaker: 'ソレイユ',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'soleil', pose: 'serious' }
       ]
     },
@@ -534,7 +491,6 @@ const scenario: ScenarioFile = {
       text: 'ソレイユさん、もう少し前に出られないんですか。',
       speaker: 'クラリス',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'clarice', pose: 'surprised' }
       ]
     },
@@ -542,7 +498,6 @@ const scenario: ScenarioFile = {
       text: '出られません。ここから先は、裂け目の真下です。陽は裂け目の氷まで溶かします。',
       speaker: 'ソレイユ',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'soleil', pose: 'serious' }
       ]
     },
@@ -550,7 +505,7 @@ const scenario: ScenarioFile = {
       text: 'ネーヴェは何も言わずに、削る手を速めた。',
       choiceId: 'hurry',
       commands: [
-        { type: 'char', id: 'automaton', pose: 'serious' }
+        { type: 'char', id: 'automaton', pose: 'serious' },
         { type: 'charDelete' }
       ]
     },
@@ -588,10 +543,7 @@ const scenario: ScenarioFile = {
       ]
     },
     {
-      text: 'ネーヴェは振り向かずに削りつづけていた。ラピスもソレイユも、手を離さなかった。',
-      commands: [
-        { type: 'charDelete' }
-      ]
+      text: 'ネーヴェは振り向かずに削りつづけていた。ラピスもソレイユも、手を離さなかった。'
     },
     {
       text: '三人ともここから動けません。',
@@ -603,7 +555,6 @@ const scenario: ScenarioFile = {
     {
       text: 'アルマが剣を抜いた。こちらの前に立ったまま、獣のほうへ向きなおった。',
       commands: [
-        { type: 'charDelete' },
         { type: 'char', id: 'alma', pose: 'serious' }
       ]
     },
