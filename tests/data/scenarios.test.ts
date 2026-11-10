@@ -54,3 +54,12 @@ describe('話者と顔', () => {
     expect(missing).toEqual([]);
   });
 });
+
+describe('背景', () => {
+  it.each(Object.keys(scenarioRegistry))('%s: bg 命令の画像が public にある', (id) => {
+    const missing = allLines(scenarioRegistry[id]).flatMap((l) =>
+      (l.commands ?? []).flatMap((c) => (c.type === 'bg' && !existsSync(`public/${c.file}`) ? [`${c.file} / ${l.text}`] : [])),
+    );
+    expect(missing).toEqual([]);
+  });
+});

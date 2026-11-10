@@ -28,6 +28,7 @@ import stage5_1 from './5-1';
 import stage5_2 from './5-2';
 import stage5_3 from './5-3';
 import stage5_4 from './5-4';
+import epilogue from './epilogue';
 
 // key は stages.ts の Stage.id と一致させる。
 export const scenarioRegistry: Record<string, ScenarioFile> = {
@@ -60,4 +61,5 @@ export const scenarioRegistry: Record<string, ScenarioFile> = {
   '5-2': stage5_2,
   '5-3': stage5_3,
   '5-4': stage5_4,
+  epilogue,
 };
