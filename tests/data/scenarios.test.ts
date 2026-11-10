@@ -1,6 +1,8 @@
 import { existsSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { scenarioRegistry } from '../../src/data/scenarios';
+import { afterClearScenarios, scenarioRegistry } from '../../src/data/scenarios';
+import { battleStageRegistry } from '../../src/data/battleStages';
+import { chapters } from '../../src/data/stages';
 import { speakerFaces } from '../../src/data/scenarios/speakers';
 import { reduceLine } from '../../src/features/scenario/SceneReducer';
 import type { ScenarioFile, ScenarioLine, SceneSnapshot } from '../../src/features/scenario/types';
@@ -61,5 +63,17 @@ describe('背景', () => {
       (l.commands ?? []).flatMap((c) => (c.type === 'bg' && !existsSync(`public/${c.file}`) ? [`${c.file} / ${l.text}`] : [])),
     );
     expect(missing).toEqual([]);
+  });
+});
+
+describe('クリア後のシナリオ', () => {
+  const stageIds = chapters.flatMap((c) => c.stages.map((s) => s.id));
+
+  it.each(Object.entries(afterClearScenarios))('%s のあとの %s は、登録済みで戦闘マップを持たない', (stageId, scenarioId) => {
+    expect(stageIds, stageId).toContain(stageId);
+    expect(scenarioRegistry[scenarioId], scenarioId).toBeDefined();
+    expect(scenarioRegistry[scenarioId].id).toBe(scenarioId);
+    // 戦闘マップがあると、シナリオの終わりで同じ id の戦闘へ進んでしまう
+    expect(battleStageRegistry[scenarioId], scenarioId).toBeUndefined();
   });
 });

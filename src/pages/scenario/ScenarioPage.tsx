@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams, useSearchParams, Navigate } from 'react-router-dom'
 import { paths } from '../../router/paths'
 import { scenarioRegistry } from '../../data/scenarios'
+import { battleStageRegistry } from '../../data/battleStages'
 import { createInitialState, resetGameEngine, useGameEngine } from '../../hooks/useGameEngine'
 import { useGameStore } from '../../stores/gameStore'
 import type { SceneSnapshot } from '../../features/scenario/types'
@@ -117,14 +118,14 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
 
   const isTyping = !!snapshot.text && displayedText.length < snapshot.text.length
 
-  // シナリオおしまい -> 戦闘へ。読み返しならトップへ戻る
+  // シナリオおしまい -> 戦闘へ。読み返しと、戦闘マップの無いシナリオ（エピローグ）はトップへ戻る
   const finishScenario = () => {
     if (replay) {
       navigate(paths.top, { replace: true })
       return
     }
     useProgressStore.getState().clearScenario()
-    navigate(paths.battle(scenarioId), { replace: true })
+    navigate(battleStageRegistry[scenarioId] ? paths.battle(scenarioId) : paths.top, { replace: true })
   }
 
   const handleClick = async () => {

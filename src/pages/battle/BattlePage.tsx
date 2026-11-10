@@ -5,6 +5,7 @@ import { sendBattleResult } from '../../api/actions/battle'
 import { fill, useTranslations } from '../../i18n'
 import { battleGuideRegistry } from '../../data/battleGuides'
 import { battleStageRegistry } from '../../data/battleStages'
+import { afterClearScenarios } from '../../data/scenarios'
 import { characterMasters } from '../../data/characters'
 import { enemyDefs } from '../../data/enemies'
 import { unitClasses } from '../../data/unitClasses'
@@ -114,6 +115,8 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     if (useProgressStore.getState().clearedStageIds.includes(stageId)) return undefined
     return battleGuideRegistry[stageId]
   })
+  // 戦闘前に未クリアだったか。この戦闘で初めてクリアしたときだけ、クリア後のシナリオへ進む
+  const [wasCleared] = useState(() => !!stageId && useProgressStore.getState().clearedStageIds.includes(stageId))
 
   // 編成中のパーティをマスターデータ＋所持データから組み立てる。
   // 戦闘中は変わらないので、この戦闘のあいだ固定する。サーバーも同じ関数で組み立てて操作ログを再生する
@@ -615,7 +618,11 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
             rankBefore={submission.rankBefore}
             failed={submission.failed}
             onRetry={retry}
-            onBackToMap={() => navigate(paths.story, { replace: true })}
+            onBackToMap={() => {
+              const after = afterClearScenarios[submission.stageId]
+              const firstClear = !wasCleared && useProgressStore.getState().clearedStageIds.includes(submission.stageId)
+              navigate(after && firstClear ? paths.scenario(after) : paths.story, { replace: true })
+            }}
           />
         )}
       </div>

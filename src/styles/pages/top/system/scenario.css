@@ -49,6 +49,7 @@
   letter-spacing: 0.04em;
 }
 .system-scenario-state {
+  margin-left: auto;
   font-size: 21px;
 }
 .system-panel .system-scenario-row.is-locked * {
