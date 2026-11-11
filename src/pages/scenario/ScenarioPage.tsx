@@ -53,6 +53,7 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
 
   const snapshot = useGameStore((s) => s.snapshot)
   const motion = useGameStore((s) => s.motion)
+  const shake = useGameStore((s) => s.shake)
   const pendingChoice = useGameStore((s) => s.pendingChoice)
   const textSize = useSettingsStore((s) => s.textSize)
   const t = useTranslations('scenario', SCENARIO_TRANSLATION_MAPPING)
@@ -200,7 +201,7 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
   return (
     <ViewportLayer>
       <div className="scenario-page fade-in" onClick={handleClick}>
-        <Background bg={bg} motion={motion} />
+        <Background bg={bg} motion={motion} shake={shake} />
         <CharacterSprite />
         <CharacterFace />
 
