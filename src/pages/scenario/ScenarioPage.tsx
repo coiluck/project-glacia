@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useEffectEvent, useRef, useState } from 'react'
 import { useNavigate, useParams, useSearchParams, Navigate } from 'react-router-dom'
 import { paths } from '../../router/paths'
 import { scenarioRegistry } from '../../data/scenarios'
@@ -18,9 +18,14 @@ import { ScenarioLog } from './components/ScenarioLog'
 
 // log に表示する過去の行数
 const LOG_MAX_LINES = 50
+// auto で、テキストを出し終えてから次の行へ進むまでの時間
+const AUTO_ADVANCE_MS = 750
+// auto の進行時に前の行の進行（wait 命令など）がまだ終わっていなければ、この間隔で待ち直す
+const AUTO_RETRY_MS = 100
 
 const SCENARIO_TRANSLATION_MAPPING = {
   prev: 'prev',
+  auto: 'auto',
   log: 'log',
   skip: 'skip',
   close: 'close',
@@ -71,6 +76,7 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
   })
   const displayedText = typed.text === snapshot.text ? snapshot.text.slice(0, typed.count) : ''
   const [isLogOpen, setIsLogOpen] = useState(false)
+  const [auto, setAuto] = useState(false)
   const [logEntries, setLogEntries] = useState<SceneSnapshot[]>([])
 
   // 進行位置を progressStore に保存する（スロット無しの単一セーブ）。
@@ -140,6 +146,11 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
       setTyped({ text: snapshot.text, count: snapshot.text.length })
       return
     }
+    await advanceLine()
+  }
+
+  // 次の行へ進める。クリックと auto で共通
+  const advanceLine = async () => {
     if (pendingChoice || advancingRef.current) return
     advancingRef.current = true
     try {
@@ -151,6 +162,25 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
     }
   }
 
+  // auto: テキストを出し終えてから AUTO_ADVANCE_MS 後に次の行へ。選択肢とログ表示中は止まる。
+  // 同じテキストの行が続いても進むよう、snapshot ごとに数え直す
+  const autoAdvance = useEffectEvent(() => {
+    void advanceLine()
+  })
+  useEffect(() => {
+    if (!auto || isTyping || pendingChoice || isLogOpen) return
+    let timer = 0
+    const tick = () => {
+      if (advancingRef.current) {
+        timer = window.setTimeout(tick, AUTO_RETRY_MS)
+        return
+      }
+      autoAdvance()
+    }
+    timer = window.setTimeout(tick, AUTO_ADVANCE_MS)
+    return () => window.clearTimeout(timer)
+  }, [auto, isTyping, pendingChoice, isLogOpen, snapshot])
+
   // prev: 1個前の状態に戻す
   const handlePrev = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -161,6 +191,11 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
       setTyped({ text, count: text.length })
       persistProgress()
     } else instantNextRef.current = false
+  }
+
+  const handleAutoToggle = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setAuto((v) => !v)
   }
 
   // skip: 選択肢ごとシナリオを全部飛ばす。
@@ -217,8 +252,10 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
 
         <ScenarioMenu
           isLogOpen={isLogOpen}
+          auto={auto}
           labels={t}
           onPrev={handlePrev}
+          onAuto={handleAutoToggle}
           onLog={handleLogToggle}
           onSkip={handleSkip}
         />
