@@ -58,7 +58,6 @@ const BATTLE_TRANSLATION_MAPPING = Object.fromEntries(
     'attack',
     'deselect',
     'normalAttack',
-    'skillTriggerHp',
     'skillTriggerTurns',
     'backToMap',
     'emptyParty',
@@ -463,12 +462,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
       cls.attackRange.kind === 'range' ? ` · RANGE ${cls.attackRange.min ?? 1}–${cls.attackRange.max}` : ''
     const notes = [`${t.normalAttack} · ${cls.attackCost} AP${range}`]
     if (unit.skill) {
-      const trigger =
-        unit.skillHpTriggers && unit.skillHpTriggers.length > 0
-          ? fill(t.skillTriggerHp, Math.max(...unit.skillHpTriggers))
-          : unit.skillEveryNTurns !== undefined
-            ? fill(t.skillTriggerTurns, unit.skillEveryNTurns)
-            : ''
+      const trigger = unit.skillEveryNTurns !== undefined ? fill(t.skillTriggerTurns, unit.skillEveryNTurns) : ''
       notes.push(`${t[unit.skill.nameKey]} ${trigger}`.trim())
     }
     return notes

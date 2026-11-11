@@ -50,11 +50,13 @@ export function coordsInRange(center: Axial, radius: number): Axial[] {
 }
 
 // 移動範囲（各マスへの必要歩数 cost つき）
-// 盤面に存在するか・他ユニットが居ないかの判定は呼び出し側がisPassableに含めて渡す。
+// 盤面に存在するか・他ユニットが居ないかの判定は呼び出し側が渡す。
+// isPassable は通り抜けられるか、canStop はそこで止まれるか。通り抜けられても止まれないマスは結果に入れない
 export function reachable(
   start: Axial,
   move: number,
   isPassable: (c: Axial) => boolean,
+  canStop: (c: Axial) => boolean = () => true,
 ): { pos: Axial; cost: number }[] {
   const visited = new Set<string>([axialKey(start)]);
   const result: { pos: Axial; cost: number }[] = [];
@@ -66,7 +68,7 @@ export function reachable(
         const key = axialKey(n);
         if (visited.has(key) || !isPassable(n)) continue;
         visited.add(key);
-        result.push({ pos: n, cost: step });
+        if (canStop(n)) result.push({ pos: n, cost: step });
         next.push(n);
       }
     }

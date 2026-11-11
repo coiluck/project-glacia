@@ -21,11 +21,11 @@ export default stageFromMap({
     ' g . . @ @ @ . . g',
     '  . . . @ @ . . .',
     '   o . . . . . o',
-    '    . g . g . .',
+    '    . . . . . .',
   ],
   enemies: {
-    g: { enemyId: 'glacimo', level: 20 },
-    o: { enemyId: 'rimeowl', level: 20 },
+    g: { enemyId: 'glacimo', level: 14 },
+    o: { enemyId: 'rimeowl', level: 14 },
   },
   partyApPerTurn: 10,
 });

@@ -12,17 +12,17 @@ export default stageFromMap({
     '    t t t t t t',
   ],
   units: [
-    '    . . . k . k',
+    '    . . . . . .',
     '   . . . . . . k',
-    '  @ @ . . k . . .',
-    ' @ @ @ . . . . b .',
-    '  @ @ . . k . . .',
+    '  @ @ . . . . . .',
+    ' @ @ @ . . . . k a',
+    '  @ @ . . . . . .',
     '   . . . . . . k',
     '    . . . k . k',
   ],
   enemies: {
-    k: { enemyId: 'duskshell', level: 48 },
-    b: { enemyId: 'duskshell', level: 50 },
+    k: { enemyId: 'duskshell', level: 33 },
+    a: { enemyId: 'skyshell', level: 33 },
   },
   partyApPerTurn: 10,
 });

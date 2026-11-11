@@ -4,6 +4,7 @@ import { stageFromMap } from './grid';
 // 北は陽石を並べた段々の斜面（砂の色のマス）で、段の間の石垣（通行不可）は階段のところでしか越えられない
 // 南は陣へ上る道。真ん中に、逃げてきた人が置いていった荷車（通行不可）がある
 // カゲロウは道を上ってくる組と、段の上を回って階段から降りてくる組に分かれる
+// 東の奥にはトモシビがいて、2ターンごとにまわり2マスのカゲロウの傷を治す。奥まで攻めて先に落とすか、トモシビから離れたところで戦う
 export default stageFromMap({
   terrain: [
     '    s s s s s s',
@@ -15,16 +16,17 @@ export default stageFromMap({
     '    g g g g g g',
   ],
   units: [
-    '    . . . . . .',
+    '    . . . w . .',
     '   . . . . . . .',
     '  @ . . . . . w .',
-    ' . . . . . . . . w',
+    ' . . . . . . . . l',
     '  @ @ . . . . . w',
     '   @ @ . . . w .',
     '    @ . . . . w',
   ],
   enemies: {
-    w: { enemyId: 'wispwraith', level: 21 },
+    w: { enemyId: 'wispwraith', level: 13 },
+    l: { enemyId: 'lanternwisp', level: 13 },
   },
   partyApPerTurn: 10,
 });

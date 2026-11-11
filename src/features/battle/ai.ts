@@ -1,7 +1,7 @@
 // 敵手番の自動行動
 // 移動先ごとに「移動後の残りAPで攻撃したとき倒せる数・削れる総HP」をスコアにし、
 // スコアが最大・同点ならAP消費が最小の位置へ移動してから攻撃する。
-// スキルは nターン周期 / HPしきい値 のルールに従って発動する
+// スキルは nターン周期のルールに従って発動する
 import {
   aimableTilesOnBoard,
   attack,
@@ -64,32 +64,17 @@ export function* enemyPhaseSteps(
   if (next.phase === 'enemy') yield endTurn(next, stage);
 }
 
-// スキルを使う番か（nターン周期 or HPしきい値）
+// スキルを使う番か（nターン周期）
 function isSkillDue(state: BattleState, unit: Unit): boolean {
-  if (!unit.skill) return false;
-  if (
-    unit.skillEveryNTurns !== undefined &&
-    state.turn - (unit.lastSkillTurn ?? 0) >= unit.skillEveryNTurns
-  ) {
-    return true;
-  }
-  const hpPercent = (unit.hp / unit.maxHp) * 100;
-  return (unit.skillHpTriggers ?? []).some((t) => hpPercent <= t);
+  if (!unit.skill || unit.skillEveryNTurns === undefined) return false;
+  return state.turn - (unit.lastSkillTurn ?? 0) >= unit.skillEveryNTurns;
 }
 
-// 敵のスキル使用。hpPercentは効果適用前のHP
-function markSkillUsed(state: BattleState, unitId: string, hpPercent: number): BattleState {
+// 敵のスキル使用を記録する
+function markSkillUsed(state: BattleState, unitId: string): BattleState {
   return {
     ...state,
-    units: state.units.map((u) =>
-      u.id === unitId
-        ? {
-            ...u,
-            lastSkillTurn: state.turn,
-            skillHpTriggers: u.skillHpTriggers?.filter((t) => hpPercent > t),
-          }
-        : u,
-    ),
+    units: state.units.map((u) => (u.id === unitId ? { ...u, lastSkillTurn: state.turn } : u)),
   };
 }
 
@@ -100,14 +85,13 @@ function trySkill(state: BattleState, stage: BattleStageData, unitId: string): B
   if (!skill) return state;
   const ap = availableAp(state, unit);
   if (ap < skill.apCost) return state;
-  const hpPercentBefore = (unit.hp / unit.maxHp) * 100;
 
   const hasDamage = skill.effect.some((e) => e.type === 'damage');
 
   // 攻撃系でないスキルならいまでも使える（自分のマスを狙う）
   if (!hasDamage) {
     const next = castSkill(state, stage, unitId, unit.pos);
-    return markSkillUsed(next, unitId, hpPercentBefore);
+    return markSkillUsed(next, unitId);
   }
 
   if (!state.units.some((u) => u.side === 'ally')) return state;
@@ -162,7 +146,7 @@ function trySkill(state: BattleState, stage: BattleStageData, unitId: string): B
   let next = state;
   if (best.cost > 0) next = moveUnit(next, stage, unitId, best.dest);
   next = castSkill(next, stage, unitId, best.aim);
-  return markSkillUsed(next, unitId, hpPercentBefore);
+  return markSkillUsed(next, unitId);
 }
 
 // 通常攻撃

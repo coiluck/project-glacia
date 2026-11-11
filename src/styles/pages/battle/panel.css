@@ -95,6 +95,11 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+.battle-unit-panel-level {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
 .battle-unit-panel-side {
   margin-left: auto;
   color: var(--tone);

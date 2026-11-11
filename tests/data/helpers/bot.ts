@@ -18,7 +18,7 @@ import { NORMAL_ATTACK_POWER, calcDamage } from '../../../src/features/battle/da
 import { axialKey, distance, neighbors, shapeTiles, type Axial } from '../../../src/features/battle/hex';
 import { isPassable } from '../../../src/features/battle/terrain';
 import type { BattleStageData, BattleState, Unit } from '../../../src/features/battle/types';
-import { toCharacterDef } from '../../../src/features/characters/build';
+import { toCharacterDef, type PartyMember } from '../../../src/features/characters/build';
 import { resolveCharacter } from '../../../src/features/characters/resolve';
 
 // 難易度を見るために、味方を貪欲に動かして戦闘を最後まで回すボット
@@ -43,21 +43,21 @@ function allyAt(masterId: string, level: number) {
     selectedSkillId: master.skills[0].def.id,
     skillLevels: {},
   });
-  return { def: toCharacterDef(resolved), skill: resolved.selectedSkill.def };
+  return { character: toCharacterDef(resolved), skill: resolved.selectedSkill.def };
 }
 
 // 剣士・魔導士・弓兵の順に、敵に近い配置マスから置く
 const CLASS_ORDER: Record<string, number> = { soldier: 0, mage: 1, archer: 2 };
 
-function deploy(stage: BattleStageData, party: string[], level: number): BattleState {
+function deploy(stage: BattleStageData, party: PartyMember[]): BattleState {
   let state = createBattleState(stage, enemyDefs);
   const toEnemy = (p: Axial) => Math.min(...stage.enemies.map((e) => distance(p, e.pos)));
   const tiles = [...stage.deployableTiles].sort((a, b) => toEnemy(a) - toEnemy(b));
-  const members = party
-    .map((id) => allyAt(id, level))
-    .sort((a, b) => CLASS_ORDER[a.def.classId] - CLASS_ORDER[b.def.classId] || b.def.hp - a.def.hp);
+  const members = [...party].sort(
+    (a, b) => CLASS_ORDER[a.character.classId] - CLASS_ORDER[b.character.classId] || b.character.hp - a.character.hp,
+  );
   members.forEach((m, i) => {
-    state = deployAlly(state, stage, m.def, m.skill, tiles[i]);
+    state = deployAlly(state, stage, m.character, m.skill, tiles[i]);
   });
   return startBattle(state, stage);
 }
@@ -172,7 +172,12 @@ export interface BotResult {
 
 // party（キャラの id）を全員 level にして、maxTurns ターンまで戦う。決着しなければ負け
 export function playWithBot(stage: BattleStageData, party: string[], level: number, maxTurns = 30): BotResult {
-  let state = deploy(stage, party, level);
+  return playParty(stage, party.map((id) => allyAt(id, level)), maxTurns);
+}
+
+// 組み終えた編成で戦う。tests/level-design/ が所持データ（凸・スキル Lv 込み）の編成を渡す
+export function playParty(stage: BattleStageData, party: PartyMember[], maxTurns = 30): BotResult {
+  let state = deploy(stage, party);
   let stalledTurns = 0;
   while (state.phase === 'player' && state.turn <= maxTurns) {
     const turn = playerTurn(state, stage, stalledTurns >= 2);

@@ -26,6 +26,10 @@ export default function UnitPanel({ unit, name, portrait, className, ap, spend, 
       <div className="battle-unit-panel-main">
         <div className="battle-unit-panel-head">
           <span className="battle-unit-panel-name">{name}</span>
+          <span className="battle-unit-panel-level">
+            <span className="battle-label">LV</span>
+            <span className="battle-num">{unit.level}</span>
+          </span>
           {unit.classId && (
             <span className="battle-unit-panel-class">
               <svg viewBox="0 0 24 24" aria-hidden>

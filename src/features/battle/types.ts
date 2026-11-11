@@ -41,7 +41,6 @@ export interface SkillDef {
 export interface EnemySkillUse {
   def: SkillDef;
   everyNTurns?: number; // nターンに1度使う
-  hpTriggers?: number[]; // HPがこの%以下になったら使う（再発させないために消してく）
 }
 
 // ユニット
@@ -53,6 +52,7 @@ export interface Unit {
   side: Side;
   classId?: string; // 味方の兵科（UnitClassDef）の id。敵は持たない
   unitClass: ClassStats; // 通常攻撃とAPの決まり
+  level: number; // 画面に出すだけ。ステータスは生成のときに Lv から計算済み
   pos: Axial;
   hp: number;
   maxHp: number;
@@ -62,7 +62,6 @@ export interface Unit {
   skill?: SkillDef; // 本来は3つのスキルがあるが、編成画面で1つに選ぶ・敵はないかも
   // 敵AI用のスキル使用ルールと発動記録。味方は持たない
   skillEveryNTurns?: number; // EnemySkillUse.everyNTurns のコピー
-  skillHpTriggers?: number[]; // 未発動のしきい値（%）。発動したら取り除く
   lastSkillTurn?: number; // 最後にスキルを使ったターン
 }
 
@@ -90,6 +89,7 @@ export interface CharacterDef {
   nameKey: string; // i18n キー
   classId: string; // UnitClassDef への参照
   unitClass: ClassStats; // classId の兵科の値
+  level: number; // 画面に出すだけ。戦闘の計算には使わない
   attack: number;
   defense: number;
   hp: number;

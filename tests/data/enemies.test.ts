@@ -12,10 +12,11 @@ import { resolveCharacter, statusAtLevel } from '../../src/features/characters/r
 // ここでは、どちらの通常攻撃も1発で相手を倒さないことだけを見る。味方は凸0、Lv はその敵と同じ
 
 // calcDamage が見るのは攻撃と防御だけなので、それ以外は埋めておく
-const unit = (side: Unit['side'], unitClass: ClassStats, hp: number, attack: number, defense: number): Unit => ({
+const unit = (side: Unit['side'], unitClass: ClassStats, level: number, hp: number, attack: number, defense: number): Unit => ({
   id: side,
   side,
   unitClass,
+  level,
   pos: { q: 0, r: 0 },
   hp,
   maxHp: hp,
@@ -37,13 +38,13 @@ const allyAt = (masterId: string, level: number) => {
     skillLevels: {},
   });
   const def = toCharacterDef(resolved);
-  return unit('ally', def.unitClass, def.hp, def.attack, def.defense);
+  return unit('ally', def.unitClass, def.level, def.hp, def.attack, def.defense);
 };
 
 const enemyAt = (enemyId: string, level: number) => {
   const def = enemyDefs[enemyId];
   const s = statusAtLevel(def.base, def.growth, level);
-  return unit('enemy', def.unitClass, Math.floor(s.hp), Math.floor(s.attack), Math.floor(s.defense));
+  return unit('enemy', def.unitClass, level, Math.floor(s.hp), Math.floor(s.attack), Math.floor(s.defense));
 };
 
 // ステージに出てくる敵と Lv の組み合わせ（重複なし）

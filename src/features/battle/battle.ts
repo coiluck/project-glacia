@@ -49,6 +49,7 @@ export function createBattleState(
       id: `enemy-${i}-${def.id}`,
       side: 'enemy',
       unitClass: def.unitClass,
+      level: spawn.level,
       pos: spawn.pos,
       hp,
       maxHp: hp,
@@ -57,7 +58,6 @@ export function createBattleState(
       ap: 0,
       skill: def.skill?.def,
       skillEveryNTurns: def.skill?.everyNTurns,
-      skillHpTriggers: def.skill?.hpTriggers ? [...def.skill.hpTriggers] : undefined,
     };
   });
   return { phase: 'deployment', turn: 0, partyAp: 0, units };
@@ -83,6 +83,7 @@ export function deployAlly(
     side: 'ally',
     classId: character.classId,
     unitClass: character.unitClass,
+    level: character.level,
     pos,
     hp: character.hp,
     maxHp: character.maxHp,
@@ -110,17 +111,21 @@ export function startBattle(state: BattleState, stage: BattleStageData): BattleS
 
 // 移動
 // 必要APと移動できるマス
+// 自分の側のユニットが居るマスは通り抜けられるが止まれない。相手の側のユニットが居るマスは通れない
 export function movementRange(
   state: BattleState,
   stage: BattleStageData,
   unit: Unit,
 ): { pos: Axial; cost: number }[] {
   const tiles = new Set(stage.tiles.filter(isPassable).map((t) => axialKey(t.pos)));
-  const occupied = new Set(state.units.map((u) => axialKey(u.pos)));
-  return reachable(unit.pos, availableAp(state, unit), (c) => {
-    const key = axialKey(c);
-    return tiles.has(key) && !occupied.has(key);
-  });
+  const own = new Set(state.units.filter((u) => u.side === unit.side).map((u) => axialKey(u.pos)));
+  const opposing = new Set(state.units.filter((u) => u.side !== unit.side).map((u) => axialKey(u.pos)));
+  return reachable(
+    unit.pos,
+    availableAp(state, unit),
+    (c) => tiles.has(axialKey(c)) && !opposing.has(axialKey(c)),
+    (c) => !own.has(axialKey(c)),
+  );
 }
 
 // 移動して歩数分のAPを消費

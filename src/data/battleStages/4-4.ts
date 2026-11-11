@@ -25,8 +25,8 @@ export default stageFromMap({
     '    . g . . g .',
   ],
   enemies: {
-    g: { enemyId: 'glacimo', level: 32 },
-    w: { enemyId: 'wispwraith', level: 33 },
+    g: { enemyId: 'glacimo', level: 20 },
+    w: { enemyId: 'wispwraith', level: 21 },
   },
   partyApPerTurn: 10,
 });

@@ -22,6 +22,7 @@ export function toCharacterDef(resolved: ResolvedCharacter): CharacterDef {
     nameKey: master.nameKey,
     classId: master.classId,
     unitClass,
+    level: resolved.level,
     attack: status.attack,
     defense: status.defense,
     hp: status.hp,

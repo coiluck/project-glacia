@@ -17,16 +17,16 @@ export default stageFromMap({
   units: [
     '    . . . . . .',
     '   @ . . . . . k',
-    '  @ @ . . . k . .',
+    '  @ @ . . . k k .',
     ' @ @ . . b k . . .',
-    '  @ @ . . . k . .',
+    '  @ @ . . . k k .',
     '   @ . . . . . k',
     '    . . . . . .',
   ],
   enemies: {
     // 先に氷を割って出てきた1体だけ Lv が高い
-    b: { enemyId: 'duskshell', level: 26 },
-    k: { enemyId: 'duskshell', level: 24 },
+    b: { enemyId: 'duskshell', level: 17 },
+    k: { enemyId: 'duskshell', level: 16 },
   },
   partyApPerTurn: 10,
 });

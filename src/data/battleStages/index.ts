@@ -30,7 +30,8 @@ import stage5_3 from './5-3';
 import stage5_4 from './5-4';
 
 // 戦闘マップの定義。keyはstages.tsのStage.idと一致させる。
-// 敵の Lv の目安（5章構成）: 1章 1〜5 / 2章 6〜14 / 3章 15〜26 / 4章 27〜38 / 5章 39〜50
+// 敵の Lv の目安（5章構成）: 1章 1〜5 / 2章 5〜10 / 3章 11〜17 / 4章 17〜27 / 5章 27〜33
+// ステージの敵の最高 Lv は、そのステージをクリアするころのプレイヤーの Lv の 8/7 倍（Lv35 で Lv40 に勝つくらい）に合わせてある
 export const battleStageRegistry: Record<string, BattleStageData> = {
   '1-1': stage1_1,
   '1-2': stage1_2,
