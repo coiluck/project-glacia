@@ -30,6 +30,7 @@ interface BattleStore {
   snapshotLogLength: number; // snapshot の時点の log の長さ。やり直しはここまで切り詰める
 
   init: (stageId: string | undefined) => void;
+  reset: () => void;
   deploy: (character: CharacterDef, skill: SkillDef | undefined, pos: Axial) => void;
   undeploy: (unitId: string) => void;
   start: () => void;
@@ -57,6 +58,9 @@ export const useBattleStore = create<BattleStore>((set, get) => ({
       snapshotLogLength: 0,
     });
   },
+
+  // 戦闘画面を抜けたら空にする。決着した state が残ると、次の戦闘の最初の描画でその結末を送ってしまう
+  reset: () => set({ stage: null, state: null, snapshot: null, log: [], snapshotLogLength: 0 }),
 
   // エンジンが throw したら set されないので、通った操作だけがログに残る
   deploy: (character, skill, pos) =>

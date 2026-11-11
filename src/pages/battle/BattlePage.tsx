@@ -128,6 +128,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   const stage = useBattleStore((s) => s.stage)
   const state = useBattleStore((s) => s.state)
   const init = useBattleStore((s) => s.init)
+  const reset = useBattleStore((s) => s.reset)
   const deploy = useBattleStore((s) => s.deploy)
   const undeploy = useBattleStore((s) => s.undeploy)
   const start = useBattleStore((s) => s.start)
@@ -139,10 +140,11 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   const guide = useBattleGuide(guideDef, state?.phase)
   const { submission, submit, retry } = useBattleResultSubmission()
 
-  // マウント時に戦闘状態を作り直す
+  // マウント時に戦闘状態を作り直し、アンマウント時に空にする
   useEffect(() => {
     init(stageId)
-  }, [stageId, init])
+    return reset
+  }, [stageId, init, reset])
 
   const finishedResult = state?.phase === 'victory' || state?.phase === 'defeat' ? state.phase : null
 
