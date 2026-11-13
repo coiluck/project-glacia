@@ -230,6 +230,7 @@
   top: 100%;
 }
 .battle-unit-hp {
+  position: relative;
   width: 76px;
   height: 6px;
   overflow: hidden;
@@ -237,10 +238,21 @@
   outline: 1px solid rgba(255, 255, 255, 0.35);
   clip-path: polygon(2px 0, 100% 0, calc(100% - 2px) 100%, 0 100%);
 }
-.battle-unit-hp-fill {
+.battle-unit-hp-fill,
+.battle-unit-hp-lag {
+  position: absolute;
+  top: 0;
+  left: 0;
   height: 100%;
+}
+.battle-unit-hp-fill {
   background: var(--ally);
   transition: width 0.3s ease;
+}
+/* 減った分を白く残し、少し遅れて追いかける */
+.battle-unit-hp-lag {
+  background: rgba(255, 255, 255, 0.85);
+  transition: width 0.35s ease 0.35s;
 }
 .battle-unit.enemy .battle-unit-hp-fill {
   background: var(--enemy);

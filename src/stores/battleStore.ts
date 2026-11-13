@@ -17,10 +17,17 @@ import type { Axial } from '../features/battle/hex';
 import type { BattleAction } from '../features/battle/replay';
 import type { BattleStageData, BattleState, CharacterDef, SkillDef } from '../features/battle/types';
 
-// 敵の行動間の待ち時間（ms）。ユニット移動の transition より少し長くする
-const ENEMY_ACT_DELAY = 550;
+// 敵の行動間の待ち時間（ms）。移動だけならユニット移動の transition より少し長く、
+// HP が動いた手は攻撃演出（pages/battle/attackFx.ts。移動してから撃つと着弾まで最長 0.9s ほど）が見えるまで待つ
+const ENEMY_MOVE_DELAY = 550;
+const ENEMY_ATTACK_DELAY = 1100;
 
 const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+// その1手で誰かの HP が動いたか（倒れて盤面から消えたユニットも含む）
+function changesHp(prev: BattleState, next: BattleState): boolean {
+  return prev.units.some((u) => next.units.find((n) => n.id === u.id)?.hp !== u.hp);
+}
 
 interface BattleStore {
   stage: BattleStageData | null;
@@ -111,9 +118,10 @@ export const useBattleStore = create<BattleStore>((set, get) => ({
     set((s) => ({ log: [...s.log, { type: 'endTurn' }] }));
 
     let shown: BattleState | null = null;
+    let delay = 0;
     for (const next of enemyPhaseSteps(state, stage!)) {
       if (shown) {
-        await sleep(ENEMY_ACT_DELAY);
+        await sleep(delay);
         if (get().state !== shown) return; // 待っている間に戦闘が作り直された
       }
       set(
@@ -121,6 +129,7 @@ export const useBattleStore = create<BattleStore>((set, get) => ({
           ? { state: next, snapshot: next, snapshotLogLength: get().log.length }
           : { state: next },
       );
+      delay = changesHp(shown ?? state, next) ? ENEMY_ATTACK_DELAY : ENEMY_MOVE_DELAY;
       shown = next;
     }
   },

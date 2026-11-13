@@ -26,6 +26,7 @@ import { NORMAL_ATTACK_POWER, calcDamage, calcHeal } from '../../features/battle
 import { axialKey, effectTiles, shapeAimsAnyDirection, shapeTiles } from '../../features/battle/hex'
 import type { AimTile, Axial } from '../../features/battle/hex'
 import type { Unit } from '../../features/battle/types'
+import { useAttackFx } from './useAttackFx'
 import { useBattleGuide } from './useBattleGuide'
 import ActionDock from './components/ActionDock'
 import BattleGuide from './components/BattleGuide'
@@ -127,6 +128,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   })
   const stage = useBattleStore((s) => s.stage)
   const state = useBattleStore((s) => s.state)
+  const log = useBattleStore((s) => s.log)
   const init = useBattleStore((s) => s.init)
   const reset = useBattleStore((s) => s.reset)
   const deploy = useBattleStore((s) => s.deploy)
@@ -139,6 +141,8 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   const endPlayerTurn = useBattleStore((s) => s.endPlayerTurn)
   const guide = useBattleGuide(guideDef, state?.phase)
   const { submission, submit, retry } = useBattleResultSubmission()
+  const fx = useAttackFx(state, stage, log)
+  const fxPlaying = fx.length > 0
 
   // マウント時に戦闘状態を作り直し、アンマウント時に空にする
   useEffect(() => {
@@ -486,8 +490,9 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
 
 
       <div className="page-battle">
-        {/* 盤面。リザルトの暗幕はセーフエリアの下（ビューポート層）にあり盤面を覆えないので、決着後は描かない */}
-        {inBattle && (
+        {/* 盤面。リザルトの暗幕はセーフエリアの下（ビューポート層）にあり盤面を覆えないので、決着後は描かない。
+            ただし決着の一撃の演出が終わるまでは残す */}
+        {(inBattle || fxPlaying) && (
           <div className="battle-board-area">
             <HexGrid
               tiles={stage.tiles}
@@ -504,6 +509,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
               onTileClick={handleTileClick}
               onUnitClick={handleUnitClick}
               onHover={setHoverKey}
+              fx={fx}
             />
           </div>
         )}
@@ -605,8 +611,8 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
           />
         )}
 
-        {/* 勝敗 */}
-        {submission && (
+        {/* 勝敗。送信は決着した時点で済ませ、表示は演出が終わってから */}
+        {submission && !fxPlaying && (
           <BattleResult
             stageId={submission.stageId}
             result={submission.result}
