@@ -158,12 +158,42 @@ export const dropTables: Record<string, DropEntry[]> = {
     { itemId: 'refinedSteel', count: 2, rate: 0.4 },
     { itemId: 'skillBookMedium', count: 1, rate: 0.35 },
   ],
-  // 育成記録（大）はここだけ
+  // 育成記録（大）はここから
   '4-7': [
     { itemId: 'beastStone', count: 1 },
     { itemId: 'elixirDrop', count: 1 },
     { itemId: 'trainingRecordLarge', count: 1 },
     { itemId: 'temperedLeather', count: 1, rate: 0.4 },
     { itemId: 'trainingRecordLarge', count: 1, rate: 0.5 },
+  ],
+
+  // 5章: 覚醒輝石・魔導核・英雄の遺物（★3の初出）
+  '5-1': [
+    { itemId: 'awakenStone', count: 1 },
+    { itemId: 'trainingRecordLarge', count: 1 },
+    { itemId: 'refinedSteel', count: 1, rate: 0.4 },
+    { itemId: 'radiantStone', count: 1, rate: 0.15 },
+  ],
+  '5-2': [
+    { itemId: 'beastStone', count: 1 },
+    { itemId: 'trainingRecordLarge', count: 1 },
+    { itemId: 'elixirDrop', count: 1, rate: 0.35 },
+    { itemId: 'arcaneCore', count: 1, rate: 0.15 },
+    { itemId: 'skillBookMedium', count: 1, rate: 0.4 },
+  ],
+  '5-3': [
+    { itemId: 'temperedLeather', count: 1 },
+    { itemId: 'trainingRecordLarge', count: 1 },
+    { itemId: 'awakenStone', count: 1, rate: 0.4 },
+    { itemId: 'heroRelic', count: 1, rate: 0.15 },
+    { itemId: 'trainingRecordLarge', count: 1, rate: 0.5 },
+  ],
+  // ★3の素材が確定枠に入るのはここだけ
+  '5-4': [
+    { itemId: 'radiantStone', count: 1 },
+    { itemId: 'trainingRecordLarge', count: 2 },
+    { itemId: 'arcaneCore', count: 1, rate: 0.3 },
+    { itemId: 'heroRelic', count: 1, rate: 0.3 },
+    { itemId: 'skillBookLarge', count: 1, rate: 0.25 },
   ],
 }

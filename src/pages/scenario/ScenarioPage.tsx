@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useEffectEvent, useRef, useState } from 'react'
 import { useNavigate, useParams, useSearchParams, Navigate } from 'react-router-dom'
 import { paths } from '../../router/paths'
 import { scenarioRegistry } from '../../data/scenarios'
+import { battleStageRegistry } from '../../data/battleStages'
 import { createInitialState, resetGameEngine, useGameEngine } from '../../hooks/useGameEngine'
 import { useGameStore } from '../../stores/gameStore'
 import type { SceneSnapshot } from '../../features/scenario/types'
@@ -17,9 +18,14 @@ import { ScenarioLog } from './components/ScenarioLog'
 
 // log に表示する過去の行数
 const LOG_MAX_LINES = 50
+// auto で、テキストを出し終えてから次の行へ進むまでの時間
+const AUTO_ADVANCE_MS = 750
+// auto の進行時に前の行の進行（wait 命令など）がまだ終わっていなければ、この間隔で待ち直す
+const AUTO_RETRY_MS = 100
 
 const SCENARIO_TRANSLATION_MAPPING = {
   prev: 'prev',
+  auto: 'auto',
   log: 'log',
   skip: 'skip',
   close: 'close',
@@ -52,6 +58,7 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
 
   const snapshot = useGameStore((s) => s.snapshot)
   const motion = useGameStore((s) => s.motion)
+  const shake = useGameStore((s) => s.shake)
   const pendingChoice = useGameStore((s) => s.pendingChoice)
   const textSize = useSettingsStore((s) => s.textSize)
   const t = useTranslations('scenario', SCENARIO_TRANSLATION_MAPPING)
@@ -60,8 +67,16 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
   const typingIdRef = useRef(0)
   const instantNextRef = useRef(false)
 
-  const [displayedText, setDisplayedText] = useState('')
+  // どの文の何文字目まで打ったか。文が変わったら打った分は 0 として読む。
+  // 進行中セーブから復元する文は最初から全文を出す
+  const [typed, setTyped] = useState(() => {
+    const saved = useProgressStore.getState()
+    const text = !replay && saved.scenarioId === scenarioId ? saved.scenarioState?.snapshot.text ?? '' : ''
+    return { text, count: text.length }
+  })
+  const displayedText = typed.text === snapshot.text ? snapshot.text.slice(0, typed.count) : ''
   const [isLogOpen, setIsLogOpen] = useState(false)
+  const [auto, setAuto] = useState(false)
   const [logEntries, setLogEntries] = useState<SceneSnapshot[]>([])
 
   // 進行位置を progressStore に保存する（スロット無しの単一セーブ）。
@@ -87,25 +102,20 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
     const target = snapshot.text
     const id = ++typingIdRef.current
 
-    if (!target) {
-      setDisplayedText('')
-      return
-    }
+    if (!target) return
 
-    // ホイール skip や goBack 直後はタイピングを省略して即フル表示。
+    // ホイール skip や goBack 直後はタイピングを省略して即フル表示（全文は呼んだ側が typed に入れる）。
     if (instantNextRef.current) {
       instantNextRef.current = false
-      setDisplayedText(target)
       return
     }
 
     const stepMs = TEXT_SPEED_MS[useSettingsStore.getState().textSpeed]
-    setDisplayedText('')
     let i = 0
     const tick = () => {
       if (id !== typingIdRef.current) return
       i += 1
-      setDisplayedText(target.slice(0, i))
+      setTyped({ text: target, count: i })
       if (i < target.length) window.setTimeout(tick, stepMs)
     }
     const timer = window.setTimeout(tick, stepMs)
@@ -115,14 +125,14 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
 
   const isTyping = !!snapshot.text && displayedText.length < snapshot.text.length
 
-  // シナリオおしまい -> 戦闘へ。読み返しならトップへ戻る
+  // シナリオおしまい -> 戦闘へ。読み返しと、戦闘マップの無いシナリオ（エピローグ）はトップへ戻る
   const finishScenario = () => {
     if (replay) {
       navigate(paths.top, { replace: true })
       return
     }
     useProgressStore.getState().clearScenario()
-    navigate(paths.battle(scenarioId), { replace: true })
+    navigate(battleStageRegistry[scenarioId] ? paths.battle(scenarioId) : paths.top, { replace: true })
   }
 
   const handleClick = async () => {
@@ -133,9 +143,14 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
     }
     if (isTyping) {
       typingIdRef.current += 1
-      setDisplayedText(snapshot.text)
+      setTyped({ text: snapshot.text, count: snapshot.text.length })
       return
     }
+    await advanceLine()
+  }
+
+  // 次の行へ進める。クリックと auto で共通
+  const advanceLine = async () => {
     if (pendingChoice || advancingRef.current) return
     advancingRef.current = true
     try {
@@ -147,13 +162,40 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
     }
   }
 
+  // auto: テキストを出し終えてから AUTO_ADVANCE_MS 後に次の行へ。選択肢とログ表示中は止まる。
+  // 同じテキストの行が続いても進むよう、snapshot ごとに数え直す
+  const autoAdvance = useEffectEvent(() => {
+    void advanceLine()
+  })
+  useEffect(() => {
+    if (!auto || isTyping || pendingChoice || isLogOpen) return
+    let timer = 0
+    const tick = () => {
+      if (advancingRef.current) {
+        timer = window.setTimeout(tick, AUTO_RETRY_MS)
+        return
+      }
+      autoAdvance()
+    }
+    timer = window.setTimeout(tick, AUTO_ADVANCE_MS)
+    return () => window.clearTimeout(timer)
+  }, [auto, isTyping, pendingChoice, isLogOpen, snapshot])
+
   // prev: 1個前の状態に戻す
   const handlePrev = (e: React.MouseEvent) => {
     e.stopPropagation()
     if (advancingRef.current) return
     instantNextRef.current = true
-    if (engine.goBack()) persistProgress()
-    else instantNextRef.current = false
+    if (engine.goBack()) {
+      const text = engine.getState().snapshot.text
+      setTyped({ text, count: text.length })
+      persistProgress()
+    } else instantNextRef.current = false
+  }
+
+  const handleAutoToggle = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setAuto((v) => !v)
   }
 
   // skip: 選択肢ごとシナリオを全部飛ばす。
@@ -194,7 +236,7 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
   return (
     <ViewportLayer>
       <div className="scenario-page fade-in" onClick={handleClick}>
-        <Background bg={bg} motion={motion} />
+        <Background bg={bg} motion={motion} shake={shake} />
         <CharacterSprite />
         <CharacterFace />
 
@@ -210,8 +252,10 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
 
         <ScenarioMenu
           isLogOpen={isLogOpen}
+          auto={auto}
           labels={t}
           onPrev={handlePrev}
+          onAuto={handleAutoToggle}
           onLog={handleLogToggle}
           onSkip={handleSkip}
         />

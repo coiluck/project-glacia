@@ -24,8 +24,13 @@ import stage4_4 from './4-4';
 import stage4_5 from './4-5';
 import stage4_6 from './4-6';
 import stage4_7 from './4-7';
+import stage5_1 from './5-1';
+import stage5_2 from './5-2';
+import stage5_3 from './5-3';
+import stage5_4 from './5-4';
+import epilogue from './epilogue';
 
-// key は stages.ts の Stage.id と一致させる。
+// key は stages.ts の Stage.id と一致させる。ステージに属さないシナリオ（epilogue）は戦闘へ進まない。
 export const scenarioRegistry: Record<string, ScenarioFile> = {
   '1-1': stage1_1,
   '1-2': stage1_2,
@@ -52,4 +57,14 @@ export const scenarioRegistry: Record<string, ScenarioFile> = {
   '4-5': stage4_5,
   '4-6': stage4_6,
   '4-7': stage4_7,
+  '5-1': stage5_1,
+  '5-2': stage5_2,
+  '5-3': stage5_3,
+  '5-4': stage5_4,
+  epilogue,
+};
+
+// ステージを初めてクリアした戦闘のあとに流すシナリオ。key は Stage.id、値は scenarioRegistry の key
+export const afterClearScenarios: Record<string, string> = {
+  '5-4': 'epilogue',
 };

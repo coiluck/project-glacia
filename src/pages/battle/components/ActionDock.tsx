@@ -1,7 +1,7 @@
 import AttackRangeHex from '../../../components/common/AttackRangeHex'
 import { skillReach } from '../../../features/battle/battle'
 import type { AttackShape } from '../../../features/battle/hex'
-import type { SkillDef, UnitClassDef } from '../../../features/battle/types'
+import type { ClassStats, SkillDef } from '../../../features/battle/types'
 import type { ActionMode } from '../BattlePage'
 import ApPips from './ApPips'
 
@@ -13,7 +13,7 @@ function rangeText(shape: AttackShape): string {
 }
 
 interface ActionDockProps {
-  unitClass: UnitClassDef
+  unitClass: ClassStats
   skill?: SkillDef
   skillName: string
   attackLabel: string

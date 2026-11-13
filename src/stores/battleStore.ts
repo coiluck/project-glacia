@@ -3,7 +3,6 @@
 import { create } from 'zustand';
 import { battleStageRegistry } from '../data/battleStages';
 import { enemyDefs } from '../data/enemies';
-import { unitClasses } from '../data/unitClasses';
 import { enemyPhaseSteps } from '../features/battle/ai';
 import {
   attack,
@@ -18,10 +17,17 @@ import type { Axial } from '../features/battle/hex';
 import type { BattleAction } from '../features/battle/replay';
 import type { BattleStageData, BattleState, CharacterDef, SkillDef } from '../features/battle/types';
 
-// 敵の行動間の待ち時間（ms）。ユニット移動の transition より少し長くする
-const ENEMY_ACT_DELAY = 550;
+// 敵の行動間の待ち時間（ms）。移動だけならユニット移動の transition より少し長く、
+// HP が動いた手は攻撃演出（pages/battle/attackFx.ts。移動してから撃つと着弾まで最長 0.9s ほど）が見えるまで待つ
+const ENEMY_MOVE_DELAY = 550;
+const ENEMY_ATTACK_DELAY = 1100;
 
 const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+// その1手で誰かの HP が動いたか（倒れて盤面から消えたユニットも含む）
+function changesHp(prev: BattleState, next: BattleState): boolean {
+  return prev.units.some((u) => next.units.find((n) => n.id === u.id)?.hp !== u.hp);
+}
 
 interface BattleStore {
   stage: BattleStageData | null;
@@ -31,6 +37,7 @@ interface BattleStore {
   snapshotLogLength: number; // snapshot の時点の log の長さ。やり直しはここまで切り詰める
 
   init: (stageId: string | undefined) => void;
+  reset: () => void;
   deploy: (character: CharacterDef, skill: SkillDef | undefined, pos: Axial) => void;
   undeploy: (unitId: string) => void;
   start: () => void;
@@ -59,6 +66,9 @@ export const useBattleStore = create<BattleStore>((set, get) => ({
     });
   },
 
+  // 戦闘画面を抜けたら空にする。決着した state が残ると、次の戦闘の最初の描画でその結末を送ってしまう
+  reset: () => set({ stage: null, state: null, snapshot: null, log: [], snapshotLogLength: 0 }),
+
   // エンジンが throw したら set されないので、通った操作だけがログに残る
   deploy: (character, skill, pos) =>
     set((s) => ({
@@ -77,7 +87,7 @@ export const useBattleStore = create<BattleStore>((set, get) => ({
 
   doAttack: (attackerId, targetIds) =>
     set((s) => ({
-      state: attack(s.state!, unitClasses, attackerId, targetIds),
+      state: attack(s.state!, attackerId, targetIds),
       log: [...s.log, { type: 'attack', attackerId, targetIds }],
     })),
 
@@ -89,7 +99,7 @@ export const useBattleStore = create<BattleStore>((set, get) => ({
 
   start: () =>
     set((s) => {
-      const next = startBattle(s.state!, s.stage!, unitClasses);
+      const next = startBattle(s.state!, s.stage!);
       const log: BattleAction[] = [...s.log, { type: 'start' }];
       // イミュータブルなので参照を持つだけでOK
       return { state: next, snapshot: next, log, snapshotLogLength: log.length };
@@ -108,9 +118,10 @@ export const useBattleStore = create<BattleStore>((set, get) => ({
     set((s) => ({ log: [...s.log, { type: 'endTurn' }] }));
 
     let shown: BattleState | null = null;
-    for (const next of enemyPhaseSteps(state, stage!, unitClasses)) {
+    let delay = 0;
+    for (const next of enemyPhaseSteps(state, stage!)) {
       if (shown) {
-        await sleep(ENEMY_ACT_DELAY);
+        await sleep(delay);
         if (get().state !== shown) return; // 待っている間に戦闘が作り直された
       }
       set(
@@ -118,6 +129,7 @@ export const useBattleStore = create<BattleStore>((set, get) => ({
           ? { state: next, snapshot: next, snapshotLogLength: get().log.length }
           : { state: next },
       );
+      delay = changesHp(shown ?? state, next) ? ENEMY_ATTACK_DELAY : ENEMY_MOVE_DELAY;
       shown = next;
     }
   },

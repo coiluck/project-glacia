@@ -2,7 +2,6 @@ import { battleStageRegistry } from '../../../src/data/battleStages';
 import { characterMasters } from '../../../src/data/characters';
 import { enemyDefs } from '../../../src/data/enemies';
 import { chapters, type Chapter, type Stage } from '../../../src/data/stages';
-import { unitClasses } from '../../../src/data/unitClasses';
 import { createBattleState, deployAlly, endTurn, startBattle } from '../../../src/features/battle/battle';
 import { actEnemy } from '../../../src/features/battle/ai';
 import { axialKey, neighbors } from '../../../src/features/battle/hex';
@@ -83,15 +82,15 @@ export function soloEnemyReachesAllies(stage: BattleStageData, spawn: EnemySpawn
     ...state,
     units: state.units.map((u) => (u.side === 'ally' ? { ...u, hp: 1e6, maxHp: 1e6 } : u)),
   };
-  state = startBattle(state, solo, unitClasses);
+  state = startBattle(state, solo);
 
   for (let turn = 0; turn < maxTurns; turn++) {
-    state = endTurn(state, solo, unitClasses);
+    state = endTurn(state, solo);
     const before = allyHp(state);
     const enemy = state.units.find((u) => u.side === 'enemy')!;
-    state = actEnemy(state, solo, unitClasses, enemy.id);
+    state = actEnemy(state, solo, enemy.id);
     if (allyHp(state) < before) return true;
-    state = endTurn(state, solo, unitClasses);
+    state = endTurn(state, solo);
   }
   return false;
 }

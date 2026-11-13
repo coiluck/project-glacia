@@ -24,8 +24,8 @@ export default stageFromMap({
     '    . . . . . .',
   ],
   enemies: {
-    i: { enemyId: 'ignimo', level: 12 },
-    p: { enemyId: 'palefire', level: 14 },
+    i: { enemyId: 'ignimo', level: 9 },
+    p: { enemyId: 'palefire', level: 10 },
   },
   partyApPerTurn: 10,
 });

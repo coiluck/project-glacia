@@ -10,7 +10,13 @@ const ITEM_TRANSLATION_MAPPING = Object.fromEntries(
   Object.values(items).map((i) => [i.nameKey, i.nameKey]),
 )
 
-export default function StageDrops({ stageId, reward }: { stageId: string; reward: Stage['reward'] }) {
+type Props = {
+  stageId: string
+  reward: Stage['reward']
+  labels: { guaranteed: string; chance: string; currency: string }
+}
+
+export default function StageDrops({ stageId, reward, labels }: Props) {
   const tItem = useTranslations('items', ITEM_TRANSLATION_MAPPING)
   const rows = dropTables[stageId] ?? []
   const guaranteed = rows.filter((r) => r.rate === undefined)
@@ -43,15 +49,15 @@ export default function StageDrops({ stageId, reward }: { stageId: string; rewar
   return (
     <div className="story-map-stage-drops">
       <div className="story-map-stage-drop-group">
-        <span className="story-map-stage-drop-group-label">確定</span>
+        <span className="story-map-stage-drop-group-label">{labels.guaranteed}</span>
         <ul className="story-map-stage-drop-list">
-          {cell('currency', 1, <BillIcon className="story-map-stage-drop-bill" />, '紙幣', reward.currency)}
+          {cell('currency', 1, <BillIcon className="story-map-stage-drop-bill" />, labels.currency, reward.currency)}
           {itemCells(guaranteed)}
         </ul>
       </div>
       {chance.length > 0 && (
         <div className="story-map-stage-drop-group">
-          <span className="story-map-stage-drop-group-label">確率</span>
+          <span className="story-map-stage-drop-group-label">{labels.chance}</span>
           <ul className="story-map-stage-drop-list">{itemCells(chance)}</ul>
         </div>
       )}

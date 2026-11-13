@@ -5,6 +5,7 @@ import { sendBattleResult } from '../../api/actions/battle'
 import { fill, useTranslations } from '../../i18n'
 import { battleGuideRegistry } from '../../data/battleGuides'
 import { battleStageRegistry } from '../../data/battleStages'
+import { afterClearScenarios } from '../../data/scenarios'
 import { characterMasters } from '../../data/characters'
 import { enemyDefs } from '../../data/enemies'
 import { unitClasses } from '../../data/unitClasses'
@@ -25,6 +26,7 @@ import { NORMAL_ATTACK_POWER, calcDamage, calcHeal } from '../../features/battle
 import { axialKey, effectTiles, shapeAimsAnyDirection, shapeTiles } from '../../features/battle/hex'
 import type { AimTile, Axial } from '../../features/battle/hex'
 import type { Unit } from '../../features/battle/types'
+import { useAttackFx } from './useAttackFx'
 import { useBattleGuide } from './useBattleGuide'
 import ActionDock from './components/ActionDock'
 import BattleGuide from './components/BattleGuide'
@@ -57,7 +59,6 @@ const BATTLE_TRANSLATION_MAPPING = Object.fromEntries(
     'attack',
     'deselect',
     'normalAttack',
-    'skillTriggerHp',
     'skillTriggerTurns',
     'backToMap',
     'emptyParty',
@@ -114,6 +115,8 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     if (useProgressStore.getState().clearedStageIds.includes(stageId)) return undefined
     return battleGuideRegistry[stageId]
   })
+  // 戦闘前に未クリアだったか。この戦闘で初めてクリアしたときだけ、クリア後のシナリオへ進む
+  const [wasCleared] = useState(() => !!stageId && useProgressStore.getState().clearedStageIds.includes(stageId))
 
   // 編成中のパーティをマスターデータ＋所持データから組み立てる。
   // 戦闘中は変わらないので、この戦闘のあいだ固定する。サーバーも同じ関数で組み立てて操作ログを再生する
@@ -125,7 +128,9 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   })
   const stage = useBattleStore((s) => s.stage)
   const state = useBattleStore((s) => s.state)
+  const log = useBattleStore((s) => s.log)
   const init = useBattleStore((s) => s.init)
+  const reset = useBattleStore((s) => s.reset)
   const deploy = useBattleStore((s) => s.deploy)
   const undeploy = useBattleStore((s) => s.undeploy)
   const start = useBattleStore((s) => s.start)
@@ -136,11 +141,14 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   const endPlayerTurn = useBattleStore((s) => s.endPlayerTurn)
   const guide = useBattleGuide(guideDef, state?.phase)
   const { submission, submit, retry } = useBattleResultSubmission()
+  const fx = useAttackFx(state, stage, log)
+  const fxPlaying = fx.length > 0
 
-  // マウント時に戦闘状態を作り直す
+  // マウント時に戦闘状態を作り直し、アンマウント時に空にする
   useEffect(() => {
     init(stageId)
-  }, [stageId, init])
+    return reset
+  }, [stageId, init, reset])
 
   const finishedResult = state?.phase === 'victory' || state?.phase === 'defeat' ? state.phase : null
 
@@ -183,9 +191,8 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     )
   }
 
-  const classes = unitClasses
   const selectedUnit = state.units.find((u) => u.id === selectedUnitId) ?? null
-  const selectedClass = selectedUnit ? classes[selectedUnit.classId] : null
+  const selectedClass = selectedUnit?.unitClass ?? null
 
   // createBattleState / deployAlly の `enemy-{i}-{defId}` / `ally-{charId}` という命名規則に依存
   const unitNameKey = (unit: Unit): string => {
@@ -200,6 +207,11 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
     unit.side === 'ally'
       ? `${import.meta.env.BASE_URL}images/character/chibi/${unit.id.slice('ally-'.length)}.avif`
       : `${import.meta.env.BASE_URL}images/enemy/${enemyIdOf(unit)}.avif`
+  // 情報パネルの絵。味方は顔、敵は盤面と同じ絵
+  const getUnitPortrait = (unit: Unit): string =>
+    unit.side === 'ally'
+      ? `${import.meta.env.BASE_URL}images/character/face/${unit.id.slice('ally-'.length)}.avif`
+      : getUnitChibi(unit)
 
   const isDeployed = (charId: string) => state.units.some((u) => u.id === `ally-${charId}`)
 
@@ -223,7 +235,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
         moveCosts.set(axialKey(pos), cost)
       }
     } else if (action === 'attack') {
-      for (const pos of shapeTiles(selectedUnit.pos, classes[selectedUnit.classId].attackRange)) {
+      for (const pos of shapeTiles(selectedUnit.pos, selectedUnit.unitClass.attackRange)) {
         if (tileSet.has(axialKey(pos))) highlights.set(axialKey(pos), 'attack')
       }
     } else if (action === 'skill' && selectedUnit.skill) {
@@ -451,17 +463,12 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
 
   // 敵の補足（通常攻撃の威力と消費AP、スキルの発動条件）
   const enemyNotes = (unit: Unit): string[] => {
-    const cls = classes[unit.classId]
+    const cls = unit.unitClass
     const range =
       cls.attackRange.kind === 'range' ? ` · RANGE ${cls.attackRange.min ?? 1}–${cls.attackRange.max}` : ''
     const notes = [`${t.normalAttack} · ${cls.attackCost} AP${range}`]
     if (unit.skill) {
-      const trigger =
-        unit.skillHpTriggers && unit.skillHpTriggers.length > 0
-          ? fill(t.skillTriggerHp, Math.max(...unit.skillHpTriggers))
-          : unit.skillEveryNTurns !== undefined
-            ? fill(t.skillTriggerTurns, unit.skillEveryNTurns)
-            : ''
+      const trigger = unit.skillEveryNTurns !== undefined ? fill(t.skillTriggerTurns, unit.skillEveryNTurns) : ''
       notes.push(`${t[unit.skill.nameKey]} ${trigger}`.trim())
     }
     return notes
@@ -483,8 +490,9 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
 
 
       <div className="page-battle">
-        {/* 盤面。リザルトの暗幕はセーフエリアの下（ビューポート層）にあり盤面を覆えないので、決着後は描かない */}
-        {inBattle && (
+        {/* 盤面。リザルトの暗幕はセーフエリアの下（ビューポート層）にあり盤面を覆えないので、決着後は描かない。
+            ただし決着の一撃の演出が終わるまでは残す */}
+        {(inBattle || fxPlaying) && (
           <div className="battle-board-area">
             <HexGrid
               tiles={stage.tiles}
@@ -501,6 +509,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
               onTileClick={handleTileClick}
               onUnitClick={handleUnitClick}
               onHover={setHoverKey}
+              fx={fx}
             />
           </div>
         )}
@@ -542,8 +551,8 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
             <UnitPanel
               unit={selectedUnit}
               name={getUnitName(selectedUnit)}
-              unitClass={selectedClass}
-              className={t[selectedClass.nameKey]}
+              portrait={getUnitPortrait(selectedUnit)}
+              className={selectedUnit.classId ? t[unitClasses[selectedUnit.classId].nameKey] : undefined}
               ap={selectedUnit.side === 'ally' ? availableAp(state, selectedUnit) : selectedClass.apPerTurn}
               spend={selectedUnit.side === 'ally' ? previewCost : 0}
               notes={selectedUnit.side === 'enemy' ? enemyNotes(selectedUnit) : undefined}
@@ -602,8 +611,8 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
           />
         )}
 
-        {/* 勝敗 */}
-        {submission && (
+        {/* 勝敗。送信は決着した時点で済ませ、表示は演出が終わってから */}
+        {submission && !fxPlaying && (
           <BattleResult
             stageId={submission.stageId}
             result={submission.result}
@@ -611,7 +620,11 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
             rankBefore={submission.rankBefore}
             failed={submission.failed}
             onRetry={retry}
-            onBackToMap={() => navigate(paths.story, { replace: true })}
+            onBackToMap={() => {
+              const after = afterClearScenarios[submission.stageId]
+              const firstClear = !wasCleared && useProgressStore.getState().clearedStageIds.includes(submission.stageId)
+              navigate(after && firstClear ? paths.scenario(after) : paths.story, { replace: true })
+            }}
           />
         )}
       </div>

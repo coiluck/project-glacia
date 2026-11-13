@@ -16,6 +16,7 @@ import {
   soloEnemyReachesAllies,
   stagesOf,
 } from './helpers/stage';
+import { playWithBot } from './helpers/bot';
 
 // 翻訳のキーがあるか。JSON の型ではキーが固定されるので、文字列で引けるようにして見る
 const hasText = (dict: object, key: string) => {
@@ -23,22 +24,39 @@ const hasText = (dict: object, key: string) => {
   return typeof value === 'string' && value !== '';
 };
 
-// 検証する章。ひとまず4章だけ
-const CHAPTERS = [4];
+// 検証する章。3章から
+const CHAPTERS = [3, 4, 5];
 
 // 敵の Lv の目安。src/data/battleStages/index.ts のコメントと合わせる
 const LEVEL_RANGE: Record<number, [number, number]> = {
   1: [1, 5],
-  2: [6, 14],
-  3: [15, 26],
-  4: [27, 38],
-  5: [39, 50],
+  2: [5, 10],
+  3: [11, 17],
+  4: [17, 27],
+  5: [27, 33],
 };
 
 // 盤面の表示に収まる大きさ。今あるマップはすべて7段・幅16
 const MAX_ROWS = 7;
 const MAX_COL_SPAN = 16;
 const MIN_DEPLOY = 5;
+
+// 難易度の下限。剣士2・魔導士1・弓兵2の編成を、そのステージの敵の最高 Lv より LEVEL_MARGIN 低くしてボットに動かさせる
+// 敵の最高 Lv はクリアするころのプレイヤーの Lv の 8/7 倍なので、この Lv はほぼ「ちょうど勝てる」ところになる
+// 4章と5章は、Lv をそろえた5人編成126通りのうち29通りがこの Lv で全ステージに勝てる（負けるのは 4-6・5-1・5-3 が多い）
+// 難易度曲線は tests/level-design/curve.sim.ts で見る
+const STANDARD_PARTY = ['alma', 'vermilia', 'lapis', 'oboro', 'sylvie'];
+const LEVEL_MARGIN = 4;
+
+// 水は台地にすると周りの地面より高く見えるので、全ステージで高さを付けない
+it('水のマスに高さが付いていない', () => {
+  const raised = Object.entries(battleStageRegistry).flatMap(([id, stage]) =>
+    stage.tiles
+      .filter((t) => t.terrain === 'water' && (t.elevation ?? 0) > 0)
+      .map((t) => `${id} @ ${axialKey(t.pos)}`),
+  );
+  expect(raised).toEqual([]);
+});
 
 describe.each(CHAPTERS)('%i章', (chapterId) => {
   const stages = stagesOf(chapterId);
@@ -114,6 +132,12 @@ describe.each(CHAPTERS)('%i章', (chapterId) => {
       for (const enemy of stage.enemies) {
         expect(soloEnemyReachesAllies(stage, enemy), `${enemy.enemyId} @ ${axialKey(enemy.pos)}`).toBe(true);
       }
+    });
+
+    it(`敵の最高 Lv より${LEVEL_MARGIN}低い標準の編成でも、ボットが動かして勝てる`, () => {
+      const level = Math.max(...stage.enemies.map((e) => e.level)) - LEVEL_MARGIN;
+      const result = playWithBot(stage, STANDARD_PARTY, level);
+      expect(result.victory, `Lv${level} ${JSON.stringify(result)}`).toBe(true);
     });
   });
 });

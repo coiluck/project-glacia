@@ -42,6 +42,7 @@ export function useGameEngine(initial: GameState) {
 
   const setSnapshot = useGameStore((s) => s.setSnapshot);
   const fireMotion = useGameStore((s) => s.fireMotion);
+  const fireShake = useGameStore((s) => s.fireShake);
   const fireBounce = useGameStore((s) => s.fireBounce);
   const setPendingChoice = useGameStore((s) => s.setPendingChoice);
 
@@ -64,7 +65,7 @@ export function useGameEngine(initial: GameState) {
       }
       await executeTransients(result.transients, {
         bgMotion: (cmd) => fireMotion({ direction: cmd.direction, duration: cmd.duration }),
-        bgShake: () => { /* TODO */ },
+        bgShake: (cmd) => fireShake({ duration: cmd.duration, intensity: cmd.intensity }),
         showNextChapter: async () => { /* TODO */ },
       });
     }

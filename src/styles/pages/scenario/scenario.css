@@ -110,6 +110,7 @@
   transition: background 0.2s ease-out, transform 0.1s;
 }
 .scenario-menu-button.at-prev { right: 0; top: 0; }
+.scenario-menu-button.at-auto { right: calc(80px * var(--scale)); top: calc(-47px * var(--scale)); }
 .scenario-menu-button.at-log  { right: calc(80px * var(--scale)); top: calc(47px * var(--scale)); }
 .scenario-menu-button.at-skip { right: 0; top: calc(94px * var(--scale)); }
 .scenario-menu-button.at-log { z-index: 4; }
@@ -172,6 +173,23 @@
   stroke: #7fe0ff;
   stroke-width: 3;
 }
+/* auto の再生アイコンは塗りの三角 */
+.scenario-menu-button.at-auto .scenario-menu-icon {
+  fill: #fff;
+  stroke-linejoin: round;
+}
+/* auto 実行中。hover と同じく線も水色にする */
+.scenario-menu-button.is-active .scenario-menu-line polygon {
+  stroke: #7fe0ff;
+}
+.scenario-menu-button.is-active .scenario-menu-icon {
+  fill: #7fe0ff;
+  stroke: #7fe0ff;
+}
+.scenario-menu-button.is-active .scenario-menu-label {
+  color: #7fe0ff;
+}
+
 /* ログ表示中 */
 .scenario-menu-button.is-on {
   background: #b6f5ff;

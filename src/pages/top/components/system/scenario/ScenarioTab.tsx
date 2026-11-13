@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useTranslations } from '../../../../../i18n'
 import { chapters } from '../../../../../data/stages'
-import { scenarioRegistry } from '../../../../../data/scenarios'
+import { afterClearScenarios, scenarioRegistry } from '../../../../../data/scenarios'
 import { paths } from '../../../../../router/paths'
 import { useProgressStore } from '../../../../../stores/progressStore'
 import { withNumbers } from '../format'
@@ -11,6 +11,9 @@ const CHAPTERS = chapters
   .map((c) => ({ ...c, stages: c.stages.filter((s) => scenarioRegistry[s.id]) }))
   .filter((c) => c.stages.length > 0)
 
+// クリア後に流すシナリオは、章のあとにそれぞれ1つの節として並べる。そのステージのクリアで解放
+const AFTER_CLEAR = Object.entries(afterClearScenarios).map(([stageId, scenarioId]) => ({ stageId, scenarioId }))
+
 const CHAPTER_TITLES = Object.fromEntries(CHAPTERS.map((c) => [c.titleKey, c.titleKey]))
 
 export default function ScenarioTab() {
@@ -18,7 +21,10 @@ export default function ScenarioTab() {
     chapter: 'scenarioChapter',
     read: 'scenarioRead',
     locked: 'scenarioLocked',
+    epilogue: 'scenarioEpilogue',
   })
+  // クリア後のシナリオの節の見出し
+  const names: Record<string, string> = { epilogue: t.epilogue }
   const titles = useTranslations('common', CHAPTER_TITLES)
   const clearedIds = useProgressStore((s) => s.clearedStageIds)
   const navigate = useNavigate()
@@ -50,6 +56,26 @@ export default function ScenarioTab() {
           </div>
         </section>
       ))}
+      {AFTER_CLEAR.map((a) => {
+        const cleared = clearedIds.includes(a.stageId)
+        return (
+          <section key={a.scenarioId} className="system-scenario-chapter">
+            <h3>
+              <span>{names[a.scenarioId]}</span>
+            </h3>
+            <div className="system-scenario-grid">
+              <button
+                type="button"
+                className={`system-scenario-row system-notch${cleared ? '' : ' is-locked'}`}
+                disabled={!cleared}
+                onClick={() => navigate(paths.scenarioReplay(a.scenarioId))}
+              >
+                <span className="system-scenario-state">{cleared ? t.read : t.locked}</span>
+              </button>
+            </div>
+          </section>
+        )
+      })}
     </div>
   )
 }

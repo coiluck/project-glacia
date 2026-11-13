@@ -24,12 +24,12 @@ export function formatSkillDescription(template: string, skill: ResolvedSkill): 
   return fill(template, ...skill.def.effect.map(effectValue))
 }
 
-// 凸1つ分の効果を項目ごとの文にする
-export function describeDupeBonus(bonus: DupeBonus): string[] {
+// 凸1つ分の効果を項目ごとの文にする。skillApTemplate は i18n の「スキルAP {0}」
+export function describeDupeBonus(bonus: DupeBonus, skillApTemplate: string): string[] {
   const parts: string[] = []
   if (bonus.status?.hp) parts.push(`HP +${bonus.status.hp}`)
   if (bonus.status?.attack) parts.push(`ATK +${bonus.status.attack}`)
   if (bonus.status?.defense) parts.push(`DEF +${bonus.status.defense}`)
-  if (bonus.skillApCost) parts.push(`スキルAP ${bonus.skillApCost}`)
+  if (bonus.skillApCost) parts.push(fill(skillApTemplate, bonus.skillApCost))
   return parts
 }

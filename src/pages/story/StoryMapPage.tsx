@@ -7,17 +7,41 @@ import ViewportLayer from '../../layouts/ViewportLayer'
 import StageNode from './components/StageNode'
 import StageDrops from './components/StageDrops'
 import StageEnemies from './components/StageEnemies'
+import StageBoard from './components/StageBoard'
 import BattleResult from '../battle/components/BattleResult'
 import { useProgressStore } from '../../stores/progressStore'
 import { battleGuideRegistry } from '../../data/battleGuides'
 import { selectStamina, useStaminaStore } from '../../stores/staminaStore'
 import { chapters, isStageUnlocked, type Chapter, type ChapterStatus, type Stage, type StageStatus } from '../../data/stages'
 import { useBattleResultSubmission } from '../../hooks/useBattleResultSubmission'
+import { useTranslations } from '../../i18n'
 
 // マップ描画用にstatusを付与
 export type StageNodeData = Stage & { status: StageStatus }
 
+const TRANSLATION_MAPPING = {
+  chapterSelect: 'chapterSelect',
+  currentChapter: 'currentChapter',
+  enemies: 'enemies',
+  drops: 'drops',
+  guaranteed: 'guaranteed',
+  chance: 'chance',
+  skip: 'skip',
+  locked: 'locked',
+  sortie: 'sortie',
+  staminaNow: 'staminaNow',
+  staminaCost: 'staminaCost',
+}
+
+// i18n。章のタイトルと紙幣は common.json にある
+const COMMON_TRANSLATION_MAPPING: Record<string, string> = {
+  currency: 'currency',
+  ...Object.fromEntries(chapters.map((c) => [c.titleKey, c.titleKey])),
+}
+
 export default function StoryMapPage() {
+  const t = useTranslations('story', TRANSLATION_MAPPING)
+  const tCommon = useTranslations('common', COMMON_TRANSLATION_MAPPING)
   const [selectedNode, setSelectedNode] = useState<StageNodeData | null>(null)
   const [isChapterSelectOpen, setIsChapterSelectOpen] = useState(false)
   const [isSkip, setIsSkip] = useState(true)
@@ -158,7 +182,7 @@ export default function StoryMapPage() {
             <span className="story-map-chapter-select-header-text">{current.name}</span>
           </div>
           <div className="story-map-chapter-select-main">
-            <div className="story-map-chapter-select-main-title">都市の影</div>
+            <div className="story-map-chapter-select-main-title">{tCommon[current.titleKey]}</div>
             <div className="story-map-chapter-select-main-progress">
               <div className="story-map-chapter-select-main-progress-bar">
                 <div className="story-map-chapter-select-main-progress-bar-fill" style={{ width: `${clearRate}%` }}></div>
@@ -172,7 +196,7 @@ export default function StoryMapPage() {
         {isChapterSelectOpen && (
           <div className="story-map-chapter-select-modal">
             <div className="story-map-chapter-select-modal-content-header">
-              <span className="story-map-chapter-select-modal-content-header-text">チャプター選択</span>
+              <span className="story-map-chapter-select-modal-content-header-text">{t.chapterSelect}</span>
             </div>
             <div className="story-map-chapter-select-modal-content-body">
               {chapters.map((chapter) => {
@@ -209,7 +233,7 @@ export default function StoryMapPage() {
                       )}
                     </div>
                     {status === 'current' && (
-                      <div className="story-map-chapter-select-modal-content-body-item-badge">現在地</div>
+                      <div className="story-map-chapter-select-modal-content-body-item-badge">{t.currentChapter}</div>
                     )}
                     {status === 'locked' && (
                       <svg className="story-map-chapter-select-modal-content-body-item-lock" viewBox="0 0 24 24" aria-hidden>
@@ -228,18 +252,22 @@ export default function StoryMapPage() {
           <>
             <div className="story-map-stage-info-container" key={selectedNode.id}>
               <div className="story-map-stage-info-thumbnail-container">
-                <img src={`/project-glacia/images/story/thumbnail/${selectedNode.id}.png`} alt={selectedNode.id} />
+                <StageBoard stageId={selectedNode.id} />
                 <div className="story-map-stage-info-thumbnail-number">{selectedNode.id}</div>
               </div>
 
               <div className="story-map-stage-info-description-container">
                 <section className="story-map-stage-info-item">
-                  <div className="story-map-stage-info-item-title">敵</div>
+                  <div className="story-map-stage-info-item-title">{t.enemies}</div>
                   <StageEnemies stageId={selectedNode.id} />
                 </section>
                 <section className="story-map-stage-info-item">
-                  <div className="story-map-stage-info-item-title">ドロップ</div>
-                  <StageDrops stageId={selectedNode.id} reward={selectedNode.reward} />
+                  <div className="story-map-stage-info-item-title">{t.drops}</div>
+                  <StageDrops
+                    stageId={selectedNode.id}
+                    reward={selectedNode.reward}
+                    labels={{ guaranteed: t.guaranteed, chance: t.chance, currency: tCommon.currency }}
+                  />
                 </section>
               </div>
 
@@ -251,15 +279,15 @@ export default function StoryMapPage() {
                       checked={isSkip}
                       onChange={(e) => setIsSkip(e.target.checked)}
                     />
-                    スキップ
+                    {t.skip}
                   </label>
                 )}
                 {selectedNode.status === 'locked' ? (
-                  <div className="story-map-stage-info-button locked">未解放</div>
+                  <div className="story-map-stage-info-button locked">{t.locked}</div>
                 ) : stamina < selectedNode.stamina ? (
                   <div className="story-map-stage-info-button sortie is-short">
-                    出撃
-                    <StaminaCost current={stamina} cost={selectedNode.stamina} />
+                    {t.sortie}
+                    <StaminaCost current={stamina} cost={selectedNode.stamina} labels={t} />
                   </div>
                 ) : (
                   <div
@@ -280,8 +308,8 @@ export default function StoryMapPage() {
                       )
                     }}
                   >
-                    出撃
-                    <StaminaCost current={stamina} cost={selectedNode.stamina} />
+                    {t.sortie}
+                    <StaminaCost current={stamina} cost={selectedNode.stamina} labels={t} />
                   </div>
                 )}
               </div>
@@ -296,17 +324,25 @@ export default function StoryMapPage() {
 }
 
 // 出撃ボタン右下のスタミナ表示
-function StaminaCost({ current, cost }: { current: number; cost: number }) {
+function StaminaCost({
+  current,
+  cost,
+  labels,
+}: {
+  current: number
+  cost: number
+  labels: { staminaNow: string; staminaCost: string }
+}) {
   return (
     <span className={`story-map-stage-info-cost${current < cost ? ' is-short' : ''}`}>
       <span className="story-map-stage-info-cost-item">
-        現在
+        {labels.staminaNow}
         <i className="story-map-stage-info-cost-bolt" />
         <span className="story-map-stage-info-cost-value">{current}</span>
       </span>
       <span className="story-map-stage-info-cost-separator">/</span>
       <span className="story-map-stage-info-cost-item">
-        消費
+        {labels.staminaCost}
         <i className="story-map-stage-info-cost-bolt" />
         {cost}
       </span>

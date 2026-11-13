@@ -3,8 +3,8 @@ import { dropTables } from '../../src/data/drops';
 import { items } from '../../src/data/items';
 import { stagesOf } from './helpers/stage';
 
-// 検証する章。ひとまず4章だけ
-const CHAPTERS = [4];
+// 検証する章。4章から
+const CHAPTERS = [4, 5];
 
 describe.each(CHAPTERS)('%i章のドロップ', (chapterId) => {
   const stages = stagesOf(chapterId);

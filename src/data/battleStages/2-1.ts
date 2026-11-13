@@ -24,7 +24,7 @@ export default stageFromMap({
     '    . . . . . .',
   ],
   enemies: {
-    i: { enemyId: 'ignimo', level: 6 },
+    i: { enemyId: 'ignimo', level: 5 },
   },
   partyApPerTurn: 10,
 });

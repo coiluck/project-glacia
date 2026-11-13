@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useMemo, useSyncExternalStore } from 'react'
 import { useSettingsStore } from '../stores/settingsStore'
 
 export const AVAILABLE_LANGS = ['en', 'ja'] as const
@@ -6,23 +6,37 @@ type Lang = typeof AVAILABLE_LANGS[number]
 
 const DEFAULT_LANG: Lang = AVAILABLE_LANGS[0] // 'en'
 type Namespace = Record<string, string> // key, 翻訳テキスト
+type Cache = ReadonlyMap<string, Namespace> // key: `${lang}/${ns}`
 
 // ── internal ──────────────────────────────────────────────
-const cache = new Map<string, Namespace>() // key: `${lang}/${ns}`
+// 名前空間が届くたびに新しい Map に差し替え、購読しているフックを再レンダーさせる
+let cache: Cache = new Map()
 const inflight = new Map<string, Promise<Namespace>>()
+const listeners = new Set<() => void>()
+const warned = new Set<string>() // 同じ不正キーの警告はレンダーごとに出さない
 
-async function loadNamespace(lang: Lang, ns: string): Promise<Namespace> {
+function subscribe(listener: () => void) {
+  listeners.add(listener)
+  return () => {
+    listeners.delete(listener)
+  }
+}
+
+const getCache = () => cache
+
+function loadNamespace(lang: Lang, ns: string): Promise<Namespace> {
   const cacheKey = `${lang}/${ns}`
   const cached = cache.get(cacheKey)
-  if (cached) return cached
+  if (cached) return Promise.resolve(cached)
 
   let promise = inflight.get(cacheKey)
   if (!promise) {
     promise = fetch(`${import.meta.env.BASE_URL}json/i18n/${lang}/${ns}.json`)
       .then(res => res.json() as Promise<Namespace>)
       .then(data => {
-        cache.set(cacheKey, data)
+        cache = new Map(cache).set(cacheKey, data)
         inflight.delete(cacheKey)
+        listeners.forEach(l => l())
         return data
       })
     inflight.set(cacheKey, promise)
@@ -30,16 +44,23 @@ async function loadNamespace(lang: Lang, ns: string): Promise<Namespace> {
   return promise
 }
 
-async function getTranslatedText(ns: string, key: string, lang: Lang): Promise<string> {
-  const data = await loadNamespace(lang, ns)
-  if (key in data) return data[key]
+// 読み込み前は ''
+function translate(data: Cache, ns: string, key: string, lang: Lang): string {
+  const texts = data.get(`${lang}/${ns}`)
+  if (!texts) return ''
+  if (key in texts) return texts[key]
 
   // jsonにない -> フォールバック
   if (lang !== DEFAULT_LANG) {
-    const fallback = await loadNamespace(DEFAULT_LANG, ns)
+    const fallback = data.get(`${DEFAULT_LANG}/${ns}`)
+    if (!fallback) return ''
     if (key in fallback) return fallback[key]
   }
-  console.warn(`Invalid translation key: ${ns}:${key}`)
+  const warnKey = `${ns}:${key}`
+  if (!warned.has(warnKey)) {
+    warned.add(warnKey)
+    console.warn(`Invalid translation key: ${warnKey}`)
+  }
   return ''
 }
 
@@ -47,27 +68,23 @@ export function useTranslations<T extends Record<string, string>>(
   ns: string, // ページ名（= JSONのファイル名）
   mapping: T
 ): T {
-  const localKeys = Object.keys(mapping) as (keyof T)[]
-  const translationKeys = Object.values(mapping) as string[]
-
   const lang = useSettingsStore(s => s.lang)
+  const data = useSyncExternalStore(subscribe, getCache)
 
-  const [translations, setTranslations] = useState<T>(
-    () => Object.fromEntries(localKeys.map(k => [k, ''])) as T
-  )
-
+  // 足りないキーがあるときだけフォールバックの名前空間も読む
   useEffect(() => {
-    let cancelled = false
-    Promise.all(translationKeys.map(key => getTranslatedText(ns, key, lang))).then(values => {
-      if (cancelled) return // lang 連打時の古い結果の上書きを防止
-      setTranslations(Object.fromEntries(localKeys.map((k, i) => [k, values[i]])) as T)
+    void loadNamespace(lang, ns).then(texts => {
+      if (lang === DEFAULT_LANG) return
+      if (Object.values(mapping).some(key => !(key in texts))) void loadNamespace(DEFAULT_LANG, ns)
     })
-    return () => {
-      cancelled = true
-    }
-  }, [lang, ns])
+  }, [lang, ns, mapping])
 
-  return translations
+  return useMemo(
+    () => Object.fromEntries(
+      Object.entries(mapping).map(([name, key]) => [name, translate(data, ns, key, lang)])
+    ) as T,
+    [data, ns, mapping, lang]
+  )
 }
 
 export { fill } from './fill'

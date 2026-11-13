@@ -8,8 +8,7 @@ export interface Pull {
   rarity: Rarity
 }
 
-// 実際の排出率
-// キャラのいないレアリティは0
+// 抽選と画面表示に使う排出率（%）。キャラが1人もいないレアリティを0にして、残りの RARITY_RATES を合計100%に割り直す
 export function rarityRates(): Record<Rarity, number> {
   const available = RARITIES.filter((r) => gachaPool[r].length > 0)
   const total = available.reduce((sum, r) => sum + RARITY_RATES[r], 0)
@@ -30,7 +29,7 @@ function rollRarity(): Rarity {
     point -= rates[rarity]
     if (point < 0) return rarity
   }
-  // なんか型エラーになるので返す
+  // 浮動小数の誤差で point が0未満にならずにループを抜けたときの保険。これが無いと戻り値の型エラーにもなる
   return candidates[0]
 }
 

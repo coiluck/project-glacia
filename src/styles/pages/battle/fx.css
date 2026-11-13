@@ -1,0 +1,403 @@
+/* 攻撃側の動き1: 相手へ踏み込んで戻る。向きは --dx --dy */
+.battle-unit-chibi.fx-lunge {
+  animation: fx-lunge 380ms cubic-bezier(0.3, 0, 0.3, 1);
+}
+@keyframes fx-lunge {
+  0% {
+    transform: translate(0, 0);
+  }
+  15% {
+    transform: translate(calc(var(--dx) * -0.25), calc(var(--dy) * -0.25)); /* 溜め */
+  }
+  35% {
+    transform: translate(var(--dx), var(--dy));
+  }
+  55% {
+    transform: translate(var(--dx), var(--dy));
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* 攻撃側の動き2: その場で縮んで光る（撃つ・魔法・回復） */
+.battle-unit-chibi.fx-cast {
+  animation: fx-cast 320ms ease-out;
+}
+.battle-unit.ally .battle-unit-chibi.fx-cast {
+  --glow: var(--ally);
+}
+.battle-unit.enemy .battle-unit-chibi.fx-cast {
+  --glow: var(--enemy);
+}
+@keyframes fx-cast {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: translate(calc(var(--dx) * -0.15), calc(var(--dy) * -0.15)) scale(0.94, 1.04);
+    filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 14px var(--glow)) brightness(1.35);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* 当たった側: 白く光って揺れる。揺れの向きは --kx */
+.battle-unit-chibi.fx-hit {
+  animation: fx-hit 320ms linear;
+}
+@keyframes fx-hit {
+  0% {
+    transform: translateX(0);
+    filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.55)) brightness(3) saturate(0);
+  }
+  20% {
+    transform: translateX(var(--kx));
+  }
+  40% {
+    transform: translateX(calc(var(--kx) * -0.6));
+    filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.55)) brightness(1.4);
+  }
+  60% {
+    transform: translateX(calc(var(--kx) * 0.35));
+  }
+  80% {
+    transform: translateX(calc(var(--kx) * -0.15));
+  }
+  100% {
+    transform: translateX(0);
+    filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.55));
+  }
+}
+
+/* 回復された側 */
+.battle-unit-chibi.fx-healed {
+  animation: fx-healed 520ms ease-out;
+}
+@keyframes fx-healed {
+  0% {
+    filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.55));
+  }
+  35% {
+    filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 16px var(--heal)) brightness(1.3);
+  }
+  100% {
+    filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.55));
+  }
+}
+
+/* 倒れる。state からは消えているユニットを、倒れ終わるまで描いている */
+.battle-unit.is-dying {
+  pointer-events: none;
+}
+.battle-unit.is-dying .battle-unit-body {
+  animation: fx-die 520ms ease-in var(--die-delay) forwards;
+}
+@keyframes fx-die {
+  0% {
+    opacity: 1;
+    filter: none;
+  }
+  30% {
+    opacity: 1;
+    filter: brightness(2) saturate(0);
+  }
+  100% {
+    opacity: 0;
+    filter: brightness(0.6) saturate(0);
+    transform: translate(-50%, -88%) scaleY(0.85);
+  }
+}
+
+/* 範囲スキルの効果範囲 */
+.fx-area {
+  pointer-events: none;
+}
+.fx-area.is-ally {
+  --tone: var(--ally);
+}
+.fx-area.is-enemy {
+  --tone: var(--enemy);
+}
+.fx-area polygon {
+  fill: var(--tone);
+  fill-opacity: 0.25;
+  stroke: var(--tone);
+  stroke-width: 3;
+  opacity: 0;
+  animation: fx-area 520ms ease-out var(--delay) forwards;
+}
+@keyframes fx-area {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* 演出レイヤ */
+.fx-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+/* --delay までは見せない */
+.fx {
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  animation: fx-show 1ms var(--delay) forwards;
+}
+@keyframes fx-show {
+  to {
+    visibility: visible;
+  }
+}
+.fx.is-ally {
+  --tone: var(--ally);
+}
+.fx.is-enemy {
+  --tone: var(--enemy);
+}
+
+/* 飛び道具: 始点 --x0 --y0 から終点 --x1 --y1 へ。向きは --a。着いたら消す */
+.fx-projectile {
+  animation:
+    fx-show 1ms var(--delay) forwards,
+    fx-fly var(--dur) linear var(--delay) forwards;
+}
+@keyframes fx-fly {
+  from {
+    transform: translate(var(--x0), var(--y0)) rotate(var(--a));
+  }
+  99% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--x1), var(--y1)) rotate(var(--a));
+  }
+}
+.fx-arrow {
+  width: 96px;
+  height: 10px;
+  margin: -5px 0 0 -86px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 45%, #fff 80%, #fff 100%);
+  clip-path: polygon(0 40%, 82% 40%, 82% 0, 100% 50%, 82% 100%, 82% 60%, 0 60%);
+  filter: drop-shadow(0 0 6px var(--tone)) drop-shadow(0 0 2px #fff);
+}
+.fx-orb {
+  width: 30px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0%, #fff 25%, var(--tone) 60%, rgba(0, 0, 0, 0) 72%);
+  box-shadow:
+    0 0 18px 6px var(--tone),
+    -22px 0 18px -4px var(--tone),
+    -44px 0 16px -8px var(--tone);
+}
+
+/* 着弾: 斬撃の弧。--a は攻撃の向き */
+.fx-slash {
+  transform: translate(var(--x1), var(--y1)) rotate(var(--a));
+}
+.fx-slash svg {
+  position: absolute;
+  top: -90px;
+  left: -90px;
+  overflow: visible;
+}
+.fx-slash path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-dasharray: 260;
+  stroke-dashoffset: 260;
+  animation: fx-slash-draw 260ms cubic-bezier(0.2, 0.7, 0.3, 1) var(--delay) forwards;
+}
+.fx-slash .fx-slash-glow {
+  stroke: var(--tone);
+  stroke-width: 16;
+  opacity: 0.55;
+  filter: blur(5px);
+}
+.fx-slash .fx-slash-core {
+  stroke: #fff;
+  stroke-width: 5;
+}
+@keyframes fx-slash-draw {
+  0% {
+    stroke-dashoffset: 260;
+  }
+  55% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: -60;
+    opacity: 0;
+  }
+}
+
+/* 着弾: 小さな火花（撃つ） */
+.fx-spark {
+  transform: translate(var(--x1), var(--y1)) rotate(var(--a));
+}
+.fx-spark i {
+  position: absolute;
+  top: -2px;
+  left: 0;
+  width: 34px;
+  height: 4px;
+  background: linear-gradient(90deg, #fff, var(--tone) 60%, rgba(0, 0, 0, 0));
+  transform-origin: 0 50%;
+  animation: fx-spark 240ms ease-out var(--delay) forwards;
+}
+@keyframes fx-spark {
+  from {
+    opacity: 1;
+    transform: rotate(var(--r)) translateX(4px) scaleX(0.3);
+  }
+  to {
+    opacity: 0;
+    transform: rotate(var(--r)) translateX(26px) scaleX(1);
+  }
+}
+
+/* 着弾: 爆発の円（魔法）。輪は盤面に合わせて縦を潰す */
+.fx-burst {
+  transform: translate(var(--x1), var(--y1));
+}
+.fx-burst i {
+  position: absolute;
+  top: -60px;
+  left: -60px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+}
+.fx-burst .fx-burst-core {
+  background: radial-gradient(circle, #fff 0%, var(--tone) 40%, rgba(0, 0, 0, 0) 70%);
+  animation: fx-burst-core 320ms ease-out var(--delay) forwards;
+}
+.fx-burst .fx-burst-ring {
+  border: 4px solid var(--tone);
+  box-shadow:
+    0 0 16px var(--tone),
+    inset 0 0 12px var(--tone);
+  animation: fx-burst-ring 420ms ease-out var(--delay) forwards;
+}
+@keyframes fx-burst-core {
+  from {
+    opacity: 1;
+    transform: scale(0.2);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+@keyframes fx-burst-ring {
+  from {
+    opacity: 1;
+    transform: scale(0.3, 0.21);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.5, 1.05);
+  }
+}
+
+/* 着弾: 回復。足元の輪と上がる光の粒 */
+.fx-heal {
+  transform: translate(var(--x1), var(--y1));
+}
+.fx-heal .fx-heal-ring {
+  position: absolute;
+  top: -60px;
+  left: -60px;
+  width: 120px;
+  height: 120px;
+  border: 3px solid var(--heal);
+  border-radius: 50%;
+  box-shadow: 0 0 14px var(--heal);
+  opacity: 0;
+  animation: fx-heal-ring 560ms ease-out var(--delay) forwards;
+}
+@keyframes fx-heal-ring {
+  from {
+    opacity: 1;
+    transform: translateY(60px) scale(0.3, 0.2);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(60px) scale(1, 0.7);
+  }
+}
+.fx-heal .fx-heal-mote {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  margin: -4px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 10px 3px var(--heal);
+  opacity: 0;
+  animation: fx-heal-mote 640ms ease-out calc(var(--delay) + var(--i) * 70ms) forwards;
+}
+@keyframes fx-heal-mote {
+  from {
+    opacity: 0;
+    transform: translate(var(--mx), 50px);
+  }
+  30% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--mx), -50px);
+  }
+}
+
+/* ダメージ・回復の数字。頭の上に出して浮かせる */
+.fx-number {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--rose);
+  white-space: nowrap;
+  text-shadow:
+    0 2px 0 #000,
+    0 0 8px rgba(0, 0, 0, 0.9);
+  animation:
+    fx-show 1ms var(--delay) forwards,
+    fx-number 820ms cubic-bezier(0.2, 0.8, 0.3, 1) var(--delay) forwards;
+}
+.fx-number.is-heal {
+  color: var(--heal);
+}
+@keyframes fx-number {
+  0% {
+    opacity: 0;
+    transform: translate(var(--x1), var(--y1)) translate(-50%, 0) scale(1.6);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(var(--x1), var(--y1)) translate(-50%, -18px) scale(1);
+  }
+  70% {
+    opacity: 1;
+    transform: translate(var(--x1), var(--y1)) translate(-50%, -42px);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--x1), var(--y1)) translate(-50%, -54px);
+  }
+}

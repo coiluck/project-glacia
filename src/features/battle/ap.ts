@@ -1,19 +1,16 @@
 // AP（行動ポイント）の配布・消費
-import type { BattleState, Side, Unit, UnitClassDef } from './types';
+import type { BattleState, Side, Unit } from './types';
 
 // 手番開始時に呼ぶ
 // その陣営のユニットの個人APを配り直す
 export function refillApForTurn(
   state: BattleState,
   side: Side,
-  classes: Record<string, UnitClassDef>,
   partyApPerTurn: number,
 ): BattleState {
   const units = state.units.map((unit) => {
     if (unit.side !== side) return unit;
-    const cls = classes[unit.classId];
-    if (!cls) throw new Error(`Unknown unit class: ${unit.classId}`);
-    return { ...unit, ap: cls.apPerTurn };
+    return { ...unit, ap: unit.unitClass.apPerTurn };
   });
   return { ...state, units, partyAp: side === 'ally' ? partyApPerTurn : state.partyAp };
 }

@@ -25,6 +25,25 @@ const iconStyle = (path: string) => ({ '--icon': `url(${BASE_URL}images/${path})
 const latestChapter = (reached: number) =>
   chapters.filter((c) => c.id <= reached && c.stages.length > 0).at(-1) ?? chapters[0]
 
+// i18n。章のタイトルも common.json にある
+const TRANSLATION_MAPPING: Record<string, string> = {
+  menuParty: 'menuParty',
+  menuMember: 'menuMember',
+  menuFront: 'menuFront',
+  menuRecruit: 'menuRecruit',
+  menuMission: 'menuMission',
+  menuExchange: 'menuExchange',
+  menuBase: 'menuBase',
+  menuWarehouse: 'menuWarehouse',
+  menuHome: 'menuHome',
+  menuHere: 'menuHere',
+  menuNextStage: 'menuNextStage',
+  menuToday: 'menuToday',
+  menuTokens: 'menuTokens',
+  menuSupply: 'menuSupply',
+  ...Object.fromEntries(chapters.map((c) => [c.titleKey, c.titleKey])),
+}
+
 type Props = {
   onSelect: (to: string) => void
 }
@@ -45,7 +64,7 @@ export default function MenuMap({ onSelect }: Props) {
   const exchangeBase = useExchangeStore((s) => s.base)
 
   const chapter = latestChapter(reachedChapter)
-  const t = useTranslations('common', { chapterTitle: chapter.titleKey })
+  const t = useTranslations('common', TRANSLATION_MAPPING)
 
   // 前線
   const cleared = chapter.stages.filter((s) => clearedStageIds.includes(s.id)).length
@@ -109,7 +128,7 @@ export default function MenuMap({ onSelect }: Props) {
             {options.badge}
           </span>
         )}
-        {current && <span className="menu-map-here">現在地</span>}
+        {current && <span className="menu-map-here">{t.menuHere}</span>}
       </button>
     )
   }
@@ -119,7 +138,7 @@ export default function MenuMap({ onSelect }: Props) {
       {oneColumn(
         tile(
           paths.party,
-          '編成',
+          t.menuParty,
           'top/menu-main/knight.svg',
           <span className="menu-map-faces">
             {Array.from({ length: PARTY_SIZE }, (_, i) =>
@@ -137,7 +156,7 @@ export default function MenuMap({ onSelect }: Props) {
         ),
         tile(
           paths.member,
-          '人員',
+          t.menuMember,
           'top/menu-main/team.svg',
           null,
         ),
@@ -156,7 +175,7 @@ export default function MenuMap({ onSelect }: Props) {
           style={{ '--map': `url(${BASE_URL}images/story/1.avif)` } as CSSProperties}
         />
         <div className="menu-map-front-head">
-          <span className="menu-map-item-label">前線</span>
+          <span className="menu-map-item-label">{t.menuFront}</span>
           <span className="menu-map-stamina">
             <i style={iconStyle('top/menu-main/bolt.svg')} />
             <b>
@@ -168,10 +187,10 @@ export default function MenuMap({ onSelect }: Props) {
         <div className="menu-map-front-body">
           <div className="menu-map-front-chapter">
             <small>CHAPTER {chapter.id}</small>
-            {t.chapterTitle}
+            {t[chapter.titleKey]}
           </div>
           <div className="menu-map-front-next">
-            <small>次の作戦</small>
+            <small>{t.menuNextStage}</small>
             <b>{nextStage?.id ?? '—'}</b>
           </div>
           <div className="menu-map-front-progress">
@@ -183,22 +202,22 @@ export default function MenuMap({ onSelect }: Props) {
             </span>
           </div>
         </div>
-        {frontCurrent && <span className="menu-map-here">現在地</span>}
+        {frontCurrent && <span className="menu-map-here">{t.menuHere}</span>}
       </button>
 
       {oneColumn(
         tile(
           paths.recruit,
-          '召集',
+          t.menuRecruit,
           'top/menu-main/graduation_hat.svg',
           null,
         ),
         tile(
           paths.mission,
-          '任務',
+          t.menuMission,
           'top/menu-main/mission.svg',
           <>
-            <small>本日</small>
+            <small>{t.menuToday}</small>
             <span className="menu-map-pips">
               {DAILY_SLOTS.map((_, i) => (
                 <i key={i} className={`menu-map-pip${i < dailyClaimed ? ' is-on' : ''}`} />
@@ -211,16 +230,16 @@ export default function MenuMap({ onSelect }: Props) {
       {oneColumn(
         tile(
           paths.exchange,
-          '取引所',
+          t.menuExchange,
           'top/menu-main/exchange.svg',
           <>
-            <small>交換材料</small>
+            <small>{t.menuTokens}</small>
             <b>{exchangeBase.exchange_tokens}</b>
           </>,
-          { notice: !supplyClaimed, badge: supplyClaimed ? undefined : '配給' },
+          { notice: !supplyClaimed, badge: supplyClaimed ? undefined : t.menuSupply },
         ),
         tile(
-          paths.base, '基地',
+          paths.base, t.menuBase,
           'top/menu-main/base.svg',
           null,
         ),
@@ -228,13 +247,13 @@ export default function MenuMap({ onSelect }: Props) {
       {oneColumn(
         tile(
           paths.warehouse,
-          '倉庫',
+          t.menuWarehouse,
           'top/menu-main/warehouse.svg',
           null,
         ),
         tile(
           paths.top,
-          'ホーム',
+          t.menuHome,
           'component/resource-bar/home.svg',
           null,
         ),

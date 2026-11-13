@@ -2,8 +2,10 @@ import type { MouseEvent } from 'react';
 
 type Props = {
   isLogOpen: boolean;
-  labels: { prev: string; log: string; skip: string; close: string };
+  auto: boolean;
+  labels: { prev: string; auto: string; log: string; skip: string; close: string };
   onPrev: (e: MouseEvent) => void;
+  onAuto: (e: MouseEvent) => void;
   onLog: (e: MouseEvent) => void;
   onSkip: (e: MouseEvent) => void;
 };
@@ -19,6 +21,7 @@ function HexLine() {
 
 const ICON_PATHS = {
   prev: ['M8 4 3 9l5 5', 'M3 9h11a6 6 0 0 1 0 12h-4'],
+  auto: ['M18.27 12 7.33 5.44v13.12z'],
   log: ['M3 5h2M9 5h12M3 12h2M9 12h12M3 19h2M9 19h12'],
   skip: ['M4 5l7 7-7 7', 'M12 5l7 7-7 7'],
   close: ['M5 5l14 14M19 5 5 19'],
@@ -32,7 +35,7 @@ function Icon({ name }: { name: keyof typeof ICON_PATHS }) {
   );
 }
 
-export function ScenarioMenu({ isLogOpen, labels, onPrev, onLog, onSkip }: Props) {
+export function ScenarioMenu({ isLogOpen, auto, labels, onPrev, onAuto, onLog, onSkip }: Props) {
   return (
     <nav className="scenario-menu">
       <button className="scenario-menu-button at-prev" onClick={onPrev}>
@@ -40,6 +43,13 @@ export function ScenarioMenu({ isLogOpen, labels, onPrev, onLog, onSkip }: Props
         <span className="scenario-menu-button-inner">
           <Icon name="prev" />
           <span className="scenario-menu-label">{labels.prev}</span>
+        </span>
+      </button>
+      <button className={`scenario-menu-button at-auto${auto ? ' is-active' : ''}`} onClick={onAuto}>
+        <HexLine />
+        <span className="scenario-menu-button-inner">
+          <Icon name="auto" />
+          <span className="scenario-menu-label">{labels.auto}</span>
         </span>
       </button>
       <button className={`scenario-menu-button at-log${isLogOpen ? ' is-on' : ''}`} onClick={onLog}>

@@ -12,5 +12,20 @@
   "chapter2title": "焼け跡をたどって",
   "chapter3title": "小さな太陽",
   "chapter4title": "止まった時の中で",
-  "emptySlot": "空き"
+  "chapter5title": "動きだす時",
+  "emptySlot": "空き",
+  "menuParty": "編成",
+  "menuMember": "人員",
+  "menuFront": "前線",
+  "menuRecruit": "召集",
+  "menuMission": "任務",
+  "menuExchange": "取引所",
+  "menuBase": "基地",
+  "menuWarehouse": "倉庫",
+  "menuHome": "ホーム",
+  "menuHere": "現在地",
+  "menuNextStage": "次の作戦",
+  "menuToday": "本日",
+  "menuTokens": "交換材料",
+  "menuSupply": "配給"
 }

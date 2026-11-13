@@ -2,6 +2,7 @@
 // 成長・凸ボーナス・スキルレベルの計算は resolve.ts 側にある。
 import type { CharacterDef, SkillDef } from '../battle/types'
 import type { UserCharacter } from '../../data/characters/types'
+import { unitClasses } from '../../data/unitClasses'
 import type { ResolvedCharacter } from './resolve'
 import { resolveOwned } from './resolve'
 
@@ -14,10 +15,14 @@ export interface PartyMember {
 // 解決済みキャラを戦闘用データに変換する
 export function toCharacterDef(resolved: ResolvedCharacter): CharacterDef {
   const { master, status, skills } = resolved
+  const unitClass = unitClasses[master.classId]
+  if (!unitClass) throw new Error(`Unknown unit class: ${master.classId}`)
   return {
     id: master.id,
     nameKey: master.nameKey,
     classId: master.classId,
+    unitClass,
+    level: resolved.level,
     attack: status.attack,
     defense: status.defense,
     hp: status.hp,

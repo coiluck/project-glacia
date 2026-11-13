@@ -1,11 +1,12 @@
-import { classIcons } from '../../../data/characters/classIcons';
-import { unitClasses } from '../../../data/unitClasses';
+import type { CSSProperties } from 'react';
 import { axialKey, hexCorners, hexToPixel } from '../../../features/battle/hex';
 import type { Axial, Pixel } from '../../../features/battle/hex';
 import type { StageTile, Unit } from '../../../features/battle/types';
+import type { FxBatch } from '../attackFx';
 import type { HighlightKind, MarkKind, UnitChip } from '../BattlePage';
 import { TERRAIN_STYLES, terrainFill, tileHeight, tileLayers } from '../terrainStyles';
 import ApPips from './ApPips';
+import FxLayer from './FxLayer';
 import HexTile from './HexTile';
 import TerrainDefs from './TerrainDefs';
 
@@ -17,6 +18,13 @@ const PADDING = 24; // 盤面外周の余白
 
 // HPバーがこの割合以下で色を変える
 const LOW_HP_RATIO = 0.3;
+// HPバーの減った分を白く残す時間。着弾からこれだけ遅れて追いかける
+const HP_LAG_DELAY = 350;
+
+// 攻撃演出でちびキャラが動く量
+const LUNGE_REACH = 46; // 踏み込み
+const CAST_REACH = 20; // 構えるときに引く量の元
+const HIT_SHAKE = 10; // 被弾の揺れ
 
 // 全タイル共通の頂点座標（縦圧縮込み）
 const CORNERS = hexCorners(SIZE).map((c) => ({ x: c.x, y: c.y * SQUASH }));
@@ -91,10 +99,11 @@ interface HexGridProps {
   selectedUnitId?: string | null;
   actedIds?: Set<string>; // このターンもう動けない味方
   getUnitName: (unit: Unit) => string;
-  getUnitChibi: (unit: Unit) => string | null; // 絵がないユニットは null（トークン表示になる）
+  getUnitChibi: (unit: Unit) => string;
   onTileClick?: (pos: Axial) => void;
   onUnitClick?: (unit: Unit) => void;
   onHover?: (key: string | null) => void; // マス・ユニットにポインタが乗った / 離れた
+  fx?: FxBatch[]; // 再生中の攻撃演出
 }
 
 export default function HexGrid({
@@ -112,6 +121,7 @@ export default function HexGrid({
   onTileClick,
   onUnitClick,
   onHover,
+  fx = [],
 }: HexGridProps) {
   // 盤面全体をPADDING内に
   const centers = tiles.map((t) => tileCenter(t.pos));
@@ -132,8 +142,54 @@ export default function HexGrid({
     .map((_, i) => i)
     .sort((a, b) => tiles[a].pos.r - tiles[b].pos.r || tiles[a].pos.q - tiles[b].pos.q);
 
+  // 盤面内のピクセル座標（タイル中心）
+  const boardPx = (pos: Axial): Pixel => {
+    const c = tileCenter(pos);
+    return { x: c.x - minX, y: c.y - minY };
+  };
+  const tileByKey = new Map(tiles.map((t) => [axialKey(t.pos), t]));
+
+  // 攻撃演出のうちユニット側に出るもの。ちびキャラの動き、HPバーの遅れ、倒れたユニット
+  // ちびキャラは演出ごとに key を変えて作り直し、同じ動きが続いても頭から再生させる
+  const unitFx = new Map<string, { className: string; key: string; style: CSSProperties }>();
+  const hpDelay = new Map<string, number>();
+  const dieAt = new Map<string, number>();
+  const ghosts: Unit[] = [];
+  for (const b of fx) {
+    const from = boardPx(b.actorPos);
+    const to = boardPx(b.toward);
+    const len = Math.hypot(to.x - from.x, to.y - from.y) || 1;
+    const reach = b.motion === 'lunge' ? LUNGE_REACH : CAST_REACH;
+    unitFx.set(b.actorId, {
+      className: `fx-${b.motion}`,
+      key: `fx-${b.id}`,
+      style: {
+        animationDelay: `${b.start}ms`,
+        '--dx': `${((to.x - from.x) / len) * reach}px`,
+        '--dy': `${((to.y - from.y) / len) * reach}px`,
+      } as CSSProperties,
+    });
+    for (const hit of b.hits) {
+      hpDelay.set(hit.unitId, b.hitAt);
+      if (hit.unitId === b.actorId) continue; // 吸収で自分も回復するときは攻撃の動きを優先
+      unitFx.set(hit.unitId, {
+        className: hit.value < 0 ? 'fx-hit' : 'fx-healed',
+        key: `fx-${b.id}`,
+        style: {
+          animationDelay: `${b.hitAt}ms`,
+          '--kx': `${boardPx(hit.pos).x >= from.x ? HIT_SHAKE : -HIT_SHAKE}px`, // 飛んできた向きへ揺れる
+        } as CSSProperties,
+      });
+    }
+    for (const ghost of b.ghosts) {
+      if (!dieAt.has(ghost.id) && !units.some((u) => u.id === ghost.id)) ghosts.push(ghost);
+      dieAt.set(ghost.id, b.dieAt);
+    }
+  }
+  const ghostIds = new Set(ghosts.map((g) => g.id));
+
   // 手前のユニットが上に描かれるように並べる
-  const sortedUnits = [...units].sort((a, b) => a.pos.r - b.pos.r || a.pos.q - b.pos.q);
+  const sortedUnits = [...units, ...ghosts].sort((a, b) => a.pos.r - b.pos.r || a.pos.q - b.pos.q);
 
   return (
     <div className="hex-board" style={{ width, height }}>
@@ -194,19 +250,47 @@ export default function HexGrid({
             </g>
           );
         })}
+        {/* 範囲スキルの効果範囲。着弾と同時に光らせる */}
+        {fx.map(
+          (b) =>
+            b.area.length > 0 && (
+              <g
+                key={b.id}
+                className={`fx-area is-${b.side}`}
+                style={{ '--delay': `${b.hitAt}ms` } as CSSProperties}
+              >
+                {b.area.map((pos) => {
+                  const tile = tileByKey.get(axialKey(pos));
+                  if (!tile) return null;
+                  const c = tileCenter(pos);
+                  const layers = layerGeometry(tile, c.y);
+                  return (
+                    <polygon
+                      key={axialKey(pos)}
+                      points={tilePoints({ x: c.x, y: layers[layers.length - 1].top })}
+                    />
+                  );
+                })}
+              </g>
+            ),
+        )}
       </svg>
 
       {/* ユニットレイヤー */}
       <div className="hex-units">
         {sortedUnits.map((unit) => {
-          const c = tileCenter(unit.pos);
+          const c = boardPx(unit.pos);
           const chibi = getUnitChibi(unit);
           const chip = chips?.get(unit.id);
+          const ghost = ghostIds.has(unit.id);
+          const motion = unitFx.get(unit.id);
+          const delay = hpDelay.get(unit.id);
           const className = [
             'battle-unit',
             unit.side,
             unit.id === selectedUnitId && 'is-selected',
             actedIds?.has(unit.id) && 'is-acted',
+            ghost && 'is-dying',
           ]
             .filter(Boolean)
             .join(' ');
@@ -215,10 +299,15 @@ export default function HexGrid({
               key={unit.id}
               className={className}
               data-unit-id={unit.id}
-              style={{ transform: `translate(${c.x - minX}px, ${c.y - minY}px)` }}
-              onClick={onUnitClick ? () => onUnitClick(unit) : undefined}
-              onPointerEnter={onHover ? () => onHover(axialKey(unit.pos)) : undefined}
-              onPointerLeave={onHover ? () => onHover(null) : undefined}
+              style={
+                {
+                  transform: `translate(${c.x}px, ${c.y}px)`,
+                  '--die-delay': ghost ? `${dieAt.get(unit.id)}ms` : undefined,
+                } as CSSProperties
+              }
+              onClick={onUnitClick && !ghost ? () => onUnitClick(unit) : undefined}
+              onPointerEnter={onHover && !ghost ? () => onHover(axialKey(unit.pos)) : undefined}
+              onPointerLeave={onHover && !ghost ? () => onHover(null) : undefined}
             >
               <div className="battle-unit-body">
                 {chip && (
@@ -228,25 +317,35 @@ export default function HexGrid({
                     {chipText(chip)}
                   </div>
                 )}
-                {chibi ? (
-                  <img className="battle-unit-chibi" src={chibi} alt="" draggable={false} />
-                ) : (
-                  <div className="battle-unit-token">
-                    <svg viewBox="0 0 24 24" aria-hidden>
-                      <path d={classIcons[unit.classId]} />
-                    </svg>
-                  </div>
-                )}
+                <img
+                  key={motion?.key ?? 'idle'}
+                  className={`battle-unit-chibi${motion ? ` ${motion.className}` : ''}`}
+                  style={motion?.style}
+                  src={chibi}
+                  alt=""
+                  draggable={false}
+                />
                 <div className="battle-unit-plate">
                   <div className="battle-unit-hp">
+                    {/* 減った分を白く残し、少し遅れて追いかける */}
+                    <div
+                      className="battle-unit-hp-lag"
+                      style={{
+                        width: `${(unit.hp / unit.maxHp) * 100}%`,
+                        transitionDelay: delay !== undefined ? `${delay + HP_LAG_DELAY}ms` : undefined,
+                      }}
+                    />
                     <div
                       className={`battle-unit-hp-fill${unit.hp / unit.maxHp <= LOW_HP_RATIO ? ' is-low' : ''}`}
-                      style={{ width: `${(unit.hp / unit.maxHp) * 100}%` }}
+                      style={{
+                        width: `${(unit.hp / unit.maxHp) * 100}%`,
+                        transitionDelay: delay !== undefined ? `${delay}ms` : undefined,
+                      }}
                     />
                   </div>
                   {unit.side === 'ally' && (
                     <ApPips
-                      max={unitClasses[unit.classId].apPerTurn}
+                      max={unit.unitClass.apPerTurn}
                       current={unit.ap}
                       size="tiny"
                       guide={`ap-${unit.id}`}
@@ -259,6 +358,8 @@ export default function HexGrid({
           );
         })}
       </div>
+
+      <FxLayer batches={fx} toPx={boardPx} />
     </div>
   );
 }

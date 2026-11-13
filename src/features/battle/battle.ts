@@ -15,7 +15,6 @@ import type {
   SkillDef,
   SkillEffect,
   Unit,
-  UnitClassDef,
 } from './types';
 
 // 指定座標に居るユニット
@@ -49,7 +48,8 @@ export function createBattleState(
     return {
       id: `enemy-${i}-${def.id}`,
       side: 'enemy',
-      classId: def.classId,
+      unitClass: def.unitClass,
+      level: spawn.level,
       pos: spawn.pos,
       hp,
       maxHp: hp,
@@ -58,7 +58,6 @@ export function createBattleState(
       ap: 0,
       skill: def.skill?.def,
       skillEveryNTurns: def.skill?.everyNTurns,
-      skillHpTriggers: def.skill?.hpTriggers ? [...def.skill.hpTriggers] : undefined,
     };
   });
   return { phase: 'deployment', turn: 0, partyAp: 0, units };
@@ -83,6 +82,8 @@ export function deployAlly(
     id,
     side: 'ally',
     classId: character.classId,
+    unitClass: character.unitClass,
+    level: character.level,
     pos,
     hp: character.hp,
     maxHp: character.maxHp,
@@ -102,34 +103,29 @@ export function undeployAlly(state: BattleState, unitId: string): BattleState {
 }
 
 // 配置を確定して戦闘を開始
-export function startBattle(
-  state: BattleState,
-  stage: BattleStageData,
-  classes: Record<string, UnitClassDef>,
-): BattleState {
+export function startBattle(state: BattleState, stage: BattleStageData): BattleState {
   if (state.phase !== 'deployment') throw new Error(`Not in deployment phase: ${state.phase}`);
   if (!state.units.some((u) => u.side === 'ally')) throw new Error('No allies deployed');
-  return refillApForTurn(
-    { ...state, phase: 'player', turn: 1 },
-    'ally',
-    classes,
-    stage.partyApPerTurn,
-  );
+  return refillApForTurn({ ...state, phase: 'player', turn: 1 }, 'ally', stage.partyApPerTurn);
 }
 
 // 移動
 // 必要APと移動できるマス
+// 自分の側のユニットが居るマスは通り抜けられるが止まれない。相手の側のユニットが居るマスは通れない
 export function movementRange(
   state: BattleState,
   stage: BattleStageData,
   unit: Unit,
 ): { pos: Axial; cost: number }[] {
   const tiles = new Set(stage.tiles.filter(isPassable).map((t) => axialKey(t.pos)));
-  const occupied = new Set(state.units.map((u) => axialKey(u.pos)));
-  return reachable(unit.pos, availableAp(state, unit), (c) => {
-    const key = axialKey(c);
-    return tiles.has(key) && !occupied.has(key);
-  });
+  const own = new Set(state.units.filter((u) => u.side === unit.side).map((u) => axialKey(u.pos)));
+  const opposing = new Set(state.units.filter((u) => u.side !== unit.side).map((u) => axialKey(u.pos)));
+  return reachable(
+    unit.pos,
+    availableAp(state, unit),
+    (c) => tiles.has(axialKey(c)) && !opposing.has(axialKey(c)),
+    (c) => !own.has(axialKey(c)),
+  );
 }
 
 // 移動して歩数分のAPを消費
@@ -155,14 +151,12 @@ export function moveUnit(
 // targetIds は攻撃範囲内からUI側で選んだ相手。pattern型の範囲は direction（0〜5）で回転
 export function attack(
   state: BattleState,
-  classes: Record<string, UnitClassDef>,
   attackerId: string,
   targetIds: string[],
   direction = 0,
 ): BattleState {
   const attacker = unitById(state, attackerId);
-  const cls = classes[attacker.classId];
-  if (!cls) throw new Error(`Unknown unit class: ${attacker.classId}`);
+  const cls = attacker.unitClass;
   if (!canSpendAp(state, attacker, cls.attackCost)) throw new Error('Not enough AP');
   if (typeof cls.attackTargets === 'number' && targetIds.length > cls.attackTargets) {
     throw new Error(`Too many targets: ${targetIds.length} > ${cls.attackTargets}`);
@@ -314,19 +308,14 @@ export function castSkill(
 }
 
 // ターン進行
-export function endTurn(
-  state: BattleState,
-  stage: BattleStageData,
-  classes: Record<string, UnitClassDef>,
-): BattleState {
+export function endTurn(state: BattleState, stage: BattleStageData): BattleState {
   if (state.phase === 'player') {
-    return refillApForTurn({ ...state, phase: 'enemy' }, 'enemy', classes, stage.partyApPerTurn);
+    return refillApForTurn({ ...state, phase: 'enemy' }, 'enemy', stage.partyApPerTurn);
   }
   if (state.phase === 'enemy') {
     return refillApForTurn(
       { ...state, phase: 'player', turn: state.turn + 1 },
       'ally',
-      classes,
       stage.partyApPerTurn,
     );
   }

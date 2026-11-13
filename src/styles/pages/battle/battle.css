@@ -217,40 +217,6 @@
   filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.55)) saturate(0.35) brightness(0.8);
 }
 
-/* 絵のない敵のトークン。兵科アイコンを六角形に収める */
-.battle-unit-token {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 64px;
-  height: 74px;
-  margin-bottom: 10px;
-  background: linear-gradient(170deg, #4a1a26 0%, #2a0d14 100%);
-  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.55));
-}
-.battle-unit-token::before {
-  content: '';
-  position: absolute;
-  inset: 2px;
-  background: linear-gradient(170deg, #1a0a10 0%, #0d0508 100%);
-  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-}
-.battle-unit-token svg {
-  position: relative;
-  width: 34px;
-  height: 34px;
-  fill: none;
-  stroke: var(--enemy);
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.battle-unit.is-selected .battle-unit-token {
-  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 10px rgba(255, 107, 122, 0.9));
-}
-
 /* 足元のプレート（HP・AP・名前） */
 .battle-unit-plate {
   display: flex;
@@ -264,6 +230,7 @@
   top: 100%;
 }
 .battle-unit-hp {
+  position: relative;
   width: 76px;
   height: 6px;
   overflow: hidden;
@@ -271,10 +238,21 @@
   outline: 1px solid rgba(255, 255, 255, 0.35);
   clip-path: polygon(2px 0, 100% 0, calc(100% - 2px) 100%, 0 100%);
 }
-.battle-unit-hp-fill {
+.battle-unit-hp-fill,
+.battle-unit-hp-lag {
+  position: absolute;
+  top: 0;
+  left: 0;
   height: 100%;
+}
+.battle-unit-hp-fill {
   background: var(--ally);
   transition: width 0.3s ease;
+}
+/* 減った分を白く残し、少し遅れて追いかける */
+.battle-unit-hp-lag {
+  background: rgba(255, 255, 255, 0.85);
+  transition: width 0.35s ease 0.35s;
 }
 .battle-unit.enemy .battle-unit-hp-fill {
   background: var(--enemy);

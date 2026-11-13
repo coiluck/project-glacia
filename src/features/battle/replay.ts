@@ -5,7 +5,6 @@ import { battleGuideRegistry } from '../../data/battleGuides';
 import { battleStageRegistry } from '../../data/battleStages';
 import type { UserCharacter } from '../../data/characters/types';
 import { enemyDefs } from '../../data/enemies';
-import { unitClasses } from '../../data/unitClasses';
 import { buildParty, type PartyMember } from '../characters/build';
 import { enemyPhaseSteps } from './ai';
 import {
@@ -136,17 +135,17 @@ function apply(
     case 'undeploy':
       return undeployAlly(state, action.unitId);
     case 'start':
-      return startBattle(state, stage, unitClasses);
+      return startBattle(state, stage);
     case 'move':
       return moveUnit(state, stage, ownUnit(state, action.unitId), action.to);
     case 'attack':
-      return attack(state, unitClasses, ownUnit(state, action.attackerId), action.targetIds);
+      return attack(state, ownUnit(state, action.attackerId), action.targetIds);
     case 'skill':
       return castSkill(state, stage, ownUnit(state, action.userId), action.aim);
     case 'endTurn': {
       if (state.phase !== 'player') throw new Error(`味方の手番でない: ${state.phase}`);
       let next = state;
-      for (const step of enemyPhaseSteps(state, stage, unitClasses)) next = step;
+      for (const step of enemyPhaseSteps(state, stage)) next = step;
       return next;
     }
   }

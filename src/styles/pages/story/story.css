@@ -47,7 +47,7 @@
   right: -1px;
   transform: translateX(100%);
   width: calc(540px * var(--scale));
-  z-index: 5;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   gap: calc(12px * var(--scale));
@@ -71,10 +71,18 @@
   aspect-ratio: 2 / 1;
   background-color: #555555;
 }
-.story-map-stage-info-thumbnail-container img {
+/* 盤面のプレビュー */
+.story-map-stage-board {
+  position: absolute;
+  inset: calc(16px * var(--scale));
+}
+.story-map-stage-board .hex-board {
+  width: 100% !important;
+  height: 100% !important;
+}
+.story-map-stage-board .hex-board-svg {
   width: 100%;
   height: 100%;
-  object-fit: cover;
 }
 .story-map-stage-info-thumbnail-number {
   position: absolute;

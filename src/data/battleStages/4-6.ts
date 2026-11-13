@@ -18,15 +18,15 @@ export default stageFromMap({
   units: [
     '    . . . . . o',
     '   . . . . . . k',
-    '  @ @ . . . . k .',
-    ' @ @ @ . . . . k .',
-    '  @ @ . . . . k .',
+    '  @ @ . . . . k k',
+    ' @ @ @ . . . . k o',
+    '  @ @ . . . . k k',
     '   . . . . . . k',
     '    . . . . . o',
   ],
   enemies: {
-    k: { enemyId: 'duskshell', level: 35 },
-    o: { enemyId: 'rimeowl', level: 36 },
+    k: { enemyId: 'duskshell', level: 24 },
+    o: { enemyId: 'rimeowl', level: 25 },
   },
   partyApPerTurn: 10,
 });
