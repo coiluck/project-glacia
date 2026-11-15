@@ -1,0 +1,242 @@
+.stamina-recover {
+  --ink: #282828;
+  --ink-sub: #6b737a;
+  --dark: #2a2f35;
+  position: absolute;
+  inset: 0;
+  z-index: 20; /* リソースバーより上 */
+}
+.stamina-recover-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 8, 39, 0.6);
+  backdrop-filter: blur(6px);
+}
+.stamina-recover-safe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--design-w);
+  height: var(--design-h);
+  transform: translate(-50%, -50%) scale(var(--scale));
+  pointer-events: none;
+}
+
+.stamina-recover-dialog {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 980px;
+  transform: translate(-50%, -50%);
+  background: rgba(232, 236, 240, 0.96);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 28px), calc(100% - 28px) 100%, 0 100%);
+  pointer-events: auto;
+  animation: stamina-recover-open 0.22s ease-out both;
+}
+@keyframes stamina-recover-open {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 24px));
+  }
+}
+.stamina-recover-dialog * {
+  color: var(--ink);
+}
+.stamina-recover-num {
+  font-family: 'CaviarDreams', sans-serif;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* 見出しと回復までの時間 */
+.stamina-recover-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 76px;
+  padding: 0 36px;
+  background: var(--dark);
+}
+.stamina-recover-head * {
+  color: #fff;
+}
+.stamina-recover-head i {
+  width: 30px;
+  height: 30px;
+  background: #7fe0ff;
+  mask: url('/project-glacia/images/top/menu-main/bolt.svg') center / contain no-repeat;
+}
+.stamina-recover-head h2 {
+  font-size: 26px;
+  letter-spacing: 0.12em;
+}
+.stamina-recover-head dl {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-left: auto;
+}
+.stamina-recover-head dt {
+  font-size: 18px;
+  color: #9aa3ab;
+}
+.stamina-recover-head dd {
+  margin-right: 20px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+}
+.stamina-recover-head dd:last-child {
+  margin-right: 0;
+  color: #7fe0ff;
+}
+/* 全回復済み */
+.stamina-recover-head dt:only-child {
+  font-size: 20px;
+  color: #7fe0ff;
+}
+
+.stamina-recover-main {
+  padding: 36px 44px 0;
+}
+
+/* 今の値 → 使ったあとの値 */
+.stamina-recover-value {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+}
+.stamina-recover-value .now,
+.stamina-recover-value .after {
+  font-size: 84px;
+}
+.stamina-recover-value .after {
+  color: #1d7fb8;
+}
+.stamina-recover-value .arrow {
+  align-self: center;
+  width: 44px;
+  height: 22px;
+  background: var(--ink-sub);
+  clip-path: polygon(0 35%, 60% 35%, 60% 0, 100% 50%, 60% 100%, 60% 65%, 0 65%);
+}
+.stamina-recover-value .max {
+  font-size: 30px;
+  color: var(--ink-sub);
+}
+.stamina-recover-value .gain {
+  margin-left: auto;
+  padding: 6px 18px;
+  font-size: 30px;
+  color: #1e2b33;
+  background: linear-gradient(to right, rgb(107, 191, 252), rgb(102, 255, 255));
+}
+
+/* 使うアイテムと個数 */
+.stamina-recover-item {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-top: 32px;
+  padding: 18px 24px 18px 18px;
+  background: #fff;
+}
+.stamina-recover-item-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  height: 96px;
+  background: var(--dark);
+}
+.stamina-recover-item-icon {
+  width: 60px;
+  height: 60px;
+}
+.stamina-recover-item-icon path {
+  fill: none;
+  stroke: #7fe0ff;
+  stroke-width: 1.3;
+  stroke-linejoin: round;
+}
+.stamina-recover-item-name {
+  font-size: 26px;
+  line-height: 1.3;
+}
+.stamina-recover-item-info {
+  font-size: 20px;
+  color: var(--ink-sub);
+}
+.stamina-recover-item-info b {
+  margin: 0 4px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.stamina-recover-stepper {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+.stamina-recover-stepper button {
+  width: 56px;
+  height: 56px;
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1;
+  color: #fff;
+  background: var(--dark);
+  border: none;
+  cursor: pointer;
+}
+.stamina-recover-stepper button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.stamina-recover-stepper .stamina-recover-num {
+  width: 84px;
+  font-size: 34px;
+  text-align: center;
+}
+.stamina-recover-stepper button.is-max {
+  width: auto;
+  margin-left: 10px;
+  padding: 0 18px;
+  font-family: inherit;
+  font-size: 20px;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+  background: #d5dbe0;
+}
+
+.stamina-recover-foot {
+  display: flex;
+  justify-content: space-between;
+  padding: 32px 44px 40px;
+}
+.stamina-recover-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  min-width: 220px;
+  padding: 0 36px;
+  font: inherit;
+  font-size: 24px;
+  letter-spacing: 0.14em;
+  color: #fff;
+  background: var(--dark);
+  border: none;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+  cursor: pointer;
+}
+.stamina-recover-button.is-primary {
+  color: #1e2b33;
+  background: linear-gradient(to right, rgb(107, 191, 252), rgb(102, 255, 255));
+}
+.stamina-recover-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}

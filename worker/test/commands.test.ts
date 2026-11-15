@@ -53,9 +53,48 @@ async function register(): Promise<string> {
 async function me(token: string) {
   const res = await server.fetch('/me', { headers: { Authorization: `Bearer ${token}` } })
   return (await res.json()) as {
-    user: { gems: number; pity: number; currency: number; stamina: number; cleared_stage_ids: string[] }
+    user: {
+      gems: number
+      pity: number
+      currency: number
+      stamina: number
+      cleared_stage_ids: string[]
+      items: Record<string, number>
+      mail_claimed: string[]
+    }
   }
 }
+
+test('リリース記念のメールを受け取り、携行食を使うとスタミナが50増える', async () => {
+  const token = await register()
+  const before = await me(token)
+
+  assert.equal((await post('/mail', { kind: 'claim', id: 'release' }, token)).status, 200)
+  const claimed = await me(token)
+  assert.deepEqual(claimed.user.items, { fieldRation: 12 })
+  assert.deepEqual(claimed.user.mail_claimed, ['release'], '受取済みが保存されている')
+
+  assert.equal((await post('/stamina/recover', { itemId: 'fieldRation', count: 1 }, token)).status, 200)
+  const { user } = await me(token)
+  assert.equal(user.stamina, before.user.stamina + 50, '上限を超えて増える')
+  assert.deepEqual(user.items, { fieldRation: 11 })
+})
+
+test('同時に送ったメールの受け取りは1本だけが通る', async () => {
+  const token = await register()
+  const responses = await Promise.all(
+    Array.from({ length: 4 }, () => post('/mail', { kind: 'claimAll' }, token)),
+  )
+  assert.deepEqual(responses.map((r) => r.status).sort(), [200, 400, 400, 400])
+  assert.deepEqual((await me(token)).user.items, { fieldRation: 12 })
+})
+
+test('持っていない携行食は使えず 400', async () => {
+  const token = await register()
+  const res = await post('/stamina/recover', { itemId: 'fieldRation', count: 1 }, token)
+  assert.equal(res.status, 400)
+  assert.match(((await res.json()) as { error: string }).error, /アイテムが足りない/)
+})
 
 test('同時に送った10連は、ジェムで払える1本だけが通る', async () => {
   const token = await register()

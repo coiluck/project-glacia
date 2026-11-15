@@ -105,7 +105,7 @@ function newMe(now: number): MeResponse {
       chapter: 1, cleared_stage_ids: [], tutorial_steps: [], items: {},
       exchange_tokens: 0, exchange_claimed_day: 0, exchange_bought_day: 0, exchange_bought: [],
       login_claimed_day: 0, login_count: 0,
-      mission_day: 0, mission_counts: {}, mission_claimed: [], mission_done: [],
+      mission_day: 0, mission_counts: {}, mission_claimed: [], mission_done: [], mail_claimed: [],
       favorite_character_id: 'lapis',
       base_board: {}, base_members: {}, base_tower_level: 1, base_collected_at: now,
       settings_bgm: 80, settings_se: 80, settings_text_speed: 'normal', settings_text_size: 'normal', settings_lang: 'ja',

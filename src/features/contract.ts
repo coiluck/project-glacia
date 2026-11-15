@@ -56,6 +56,9 @@ export interface UserRow {
   mission_claimed: number[] // その日に受け取ったデイリーの枠（dailyMissionsFor の添字）
   mission_done: string[] // 受け取った永続任務の id
 
+  // --- メール ---
+  mail_claimed: string[] // 受け取ったメールの id（data/mails.ts）
+
   // --- お気に入りキャラ（characterStore）---
   favorite_character_id: string // CharacterMaster.id
 
@@ -142,6 +145,17 @@ export type MissionPayload =
 // POST /mission の result
 export interface MissionResult {
   gems: number // 受け取ったジェム。全達成ボーナスを含む
+}
+
+// POST /mail のリクエスト
+export type MailPayload =
+  | { kind: 'claim'; id: string } // data/mails.ts の id
+  | { kind: 'claimAll' } // 受け取れるメールを全部
+
+// POST /stamina/recover のリクエスト
+export interface StaminaRecoverPayload {
+  itemId: string // kind が 'stamina' のアイテム
+  count: number
 }
 
 // POST /base のリクエスト。pos は盤面の axial 座標

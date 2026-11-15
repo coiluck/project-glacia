@@ -9,5 +9,10 @@
   "warehouse": "倉庫",
   "staminaFull": "全回復済み",
   "staminaToNext": "1回復まで",
-  "staminaToFull": "全回復まで"
+  "staminaToFull": "全回復まで",
+  "staminaRecover": "スタミナ回復",
+  "staminaItemInfo": "スタミナ+{0}　所持{1}",
+  "staminaCountMax": "最大",
+  "staminaCancel": "やめる",
+  "staminaUse": "使う"
 }

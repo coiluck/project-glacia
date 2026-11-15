@@ -26,7 +26,10 @@
   "itemTrainingRecordMedium": "中級訓練記録",
   "itemTrainingRecordLarge": "上級訓練記録",
 
+  "itemFieldRation": "携行食",
+
   "kindMaterial": "素材",
   "kindBook": "強化書",
-  "kindExp": "育成記録"
+  "kindExp": "育成記録",
+  "kindStamina": "スタミナ回復"
 }

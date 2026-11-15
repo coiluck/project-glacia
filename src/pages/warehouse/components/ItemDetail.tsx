@@ -10,7 +10,12 @@ import { chapterOf, dropSources, type DropSource } from '../dropSources'
 import { growthUses, productsOf } from '../usage'
 import HexIcon from './HexIcon'
 
-const KIND_LABEL: Record<ItemKind, string> = { material: 'kindMaterial', book: 'kindBook', exp: 'kindExp' }
+const KIND_LABEL: Record<ItemKind, string> = {
+  material: 'kindMaterial',
+  book: 'kindBook',
+  exp: 'kindExp',
+  stamina: 'kindStamina',
+}
 
 const ITEM_TRANSLATION_MAPPING = Object.fromEntries([
   ...Object.values(items).map((i) => [i.nameKey, i.nameKey]),

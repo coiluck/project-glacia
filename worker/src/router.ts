@@ -11,9 +11,11 @@ import * as exchange from './routes/exchange'
 import * as favorite from './routes/favorite'
 import * as gacha from './routes/gacha'
 import * as loginBonus from './routes/loginBonus'
+import * as mail from './routes/mail'
 import * as mission from './routes/mission'
 import * as party from './routes/party'
 import * as settings from './routes/settings'
+import * as stamina from './routes/stamina'
 import * as tutorial from './routes/tutorial'
 import type { Command } from './routes/types'
 
@@ -29,6 +31,8 @@ export const COMMANDS: Record<string, Command<unknown>> = {
   '/favorite': favorite.set,
   '/login-bonus': loginBonus.claim,
   '/mission': mission.claim,
+  '/mail': mail.claim,
+  '/stamina/recover': stamina.recover,
   '/base': baseRoute.run,
   '/settings': settings.save,
   '/tutorial': tutorial.complete,

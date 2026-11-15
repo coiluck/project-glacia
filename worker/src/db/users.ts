@@ -13,6 +13,7 @@ type UserTableRow = Omit<
   | 'mission_counts'
   | 'mission_claimed'
   | 'mission_done'
+  | 'mail_claimed'
   | 'base_board'
   | 'base_members'
 > & {
@@ -23,6 +24,7 @@ type UserTableRow = Omit<
   mission_counts: string
   mission_claimed: string
   mission_done: string
+  mail_claimed: string
   base_board: string
   base_members: string
   // SELECT * で一緒に来るが、レスポンスには含めない
@@ -123,6 +125,7 @@ export async function loadMe({ db, userId, now }: Context): Promise<MeResponse> 
         mission_counts: JSON.parse(user.mission_counts),
         mission_claimed: JSON.parse(user.mission_claimed),
         mission_done: JSON.parse(user.mission_done),
+        mail_claimed: JSON.parse(user.mail_claimed),
         base_board: JSON.parse(user.base_board),
         base_members: JSON.parse(user.base_members),
       },
@@ -164,6 +167,7 @@ export async function saveMe(
            exchange_tokens = ?, exchange_claimed_day = ?, exchange_bought_day = ?, exchange_bought = ?,
            login_claimed_day = ?, login_count = ?,
            mission_day = ?, mission_counts = ?, mission_claimed = ?, mission_done = ?,
+           mail_claimed = ?,
            favorite_character_id = ?,
            base_board = ?, base_members = ?, base_tower_level = ?, base_collected_at = ?,
            settings_bgm = ?, settings_se = ?, settings_text_speed = ?, settings_text_size = ?, settings_lang = ?
@@ -194,6 +198,7 @@ export async function saveMe(
         JSON.stringify(u.mission_counts),
         JSON.stringify(u.mission_claimed),
         JSON.stringify(u.mission_done),
+        JSON.stringify(u.mail_claimed),
         u.favorite_character_id,
         JSON.stringify(u.base_board),
         JSON.stringify(u.base_members),

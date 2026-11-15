@@ -4,7 +4,8 @@ import { ICONS } from './icons';
 export type ItemKind =
   | 'material' // 素材: 上限解放・スキルLv上げで使う共通素材
   | 'book' // 強化書: スキルLv上げ
-  | 'exp'; // 経験値: キャラのレベル上げ
+  | 'exp' // 経験値: キャラのレベル上げ
+  | 'stamina'; // スタミナ回復: 使うとスタミナが増える。倉庫の一覧と交換所には並ばない
 
 export interface ItemDef {
   id: string;
@@ -14,6 +15,7 @@ export interface ItemDef {
   icon: string;
   recipe?: MaterialCost[];
   exp?: number; // kind が 'exp' のときだけ。使うと入る経験値
+  stamina?: number; // kind が 'stamina' のときだけ。使うと回復するスタミナ
 }
 
 // 素材
@@ -238,5 +240,16 @@ export const items: Record<string, ItemDef> = {
     rarity: 3,
     icon: ICONS.record,
     exp: 250,
+  },
+
+  // スタミナ回復
+  // 携行食
+  fieldRation: {
+    id: 'fieldRation',
+    nameKey: 'itemFieldRation',
+    kind: 'stamina',
+    rarity: 3,
+    icon: ICONS.ration,
+    stamina: 50,
   },
 };

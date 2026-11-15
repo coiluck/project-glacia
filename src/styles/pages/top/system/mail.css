@@ -1,6 +1,14 @@
-.system-mail-list {
+.system-mail {
   flex: 1;
   min-height: 0;
+  display: grid;
+  grid-template-columns: 35% 1fr;
+  grid-template-rows: minmax(0, 1fr);
+  gap: 28px;
+}
+
+/* 一覧 */
+.system-mail-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -9,61 +17,206 @@
 }
 .system-mail-row {
   flex-shrink: 0;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
-  gap: 20px;
-  padding: 16px 24px;
+  column-gap: 16px;
+  row-gap: 4px;
+  padding: 16px 22px;
+  font: inherit;
+  text-align: left;
   background: var(--row);
+  border: none;
+  cursor: pointer;
 }
-.system-mail-row.is-claimed {
-  opacity: 0.45;
-}
-.system-mail-main {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-.system-panel .system-mail-from {
-  font-size: 18px;
-  color: var(--ink-sub);
-}
-.system-mail-subject {
+.system-mail-row-title {
+  grid-column: 1;
   font-size: 22px;
   line-height: 1.4;
 }
-.system-panel .system-mail-limit {
-  width: 140px;
+.system-mail-row-sub {
+  grid-column: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-size: 18px;
-  text-align: right;
-  color: var(--ink-sub);
 }
-.system-panel .system-mail-limit.is-soon,
-.system-panel .system-mail-limit.is-soon * {
-  color: #c97f22;
+.system-panel .system-mail-row-sub .is-soon {
+  color: #c0660f;
+}
+.system-mail-row-sub .system-dot.is-off {
+  display: none;
 }
 
-/* 添付の札 */
-.system-mail-reward {
-  flex-shrink: 0;
+.system-mail-row-rewards {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: flex;
+  gap: 6px;
+}
+.system-mail-chip {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 80px;
-  height: 80px;
+  gap: 2px;
+  width: 62px;
+  height: 62px;
+  background: #e3e8ec;
+}
+.system-mail-chip-icon {
+  width: 30px;
+  height: 30px;
+}
+.system-panel .system-mail-chip-icon * {
+  color: #1d7fb8;
+}
+svg.system-mail-chip-icon path,
+svg.system-mail-tile-icon path {
+  fill: none;
+  stroke: #1d7fb8;
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+.system-mail-chip b {
+  font-family: 'CaviarDreams', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.system-mail-row.is-selected {
+  background: var(--row-active);
+}
+.system-panel .system-mail-row.is-selected .system-mail-row-sub * {
+  color: #b9c2ca;
+}
+.system-panel .system-mail-row.is-selected .system-mail-row-sub .is-soon {
+  color: #fcd48c;
+}
+.system-panel .system-mail-row.is-selected .system-mail-chip-icon * {
+  color: #7fe0ff;
+}
+.system-mail-row.is-selected svg.system-mail-chip-icon path {
+  stroke: #7fe0ff;
+}
+
+/* 受け取り済み */
+.system-mail-row.is-claimed:not(.is-selected) {
+  background: rgba(255, 255, 255, 0.5);
+}
+/* 選んだ1通 */
+.system-mail-body {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  grid-template-rows: minmax(0, 1fr);
+  min-height: 0;
+  background: var(--row);
+}
+.system-mail-letter {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 36px 40px;
+}
+.system-panel .system-mail-from {
+  font-size: 19px;
+  color: var(--ink-sub);
+}
+.system-mail-letter h3 {
+  font-size: 26px;
+  line-height: 1.45;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--ink);
+}
+.system-mail-text {
+  flex: 1;
+  min-height: 0;
+  font-size: 22px;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.system-mail-attach {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 0;
+  padding: 28px 26px;
   background: var(--dark);
 }
-.system-panel .system-mail-reward * {
+.system-panel .system-mail-attach * {
   color: #fff;
 }
-.system-mail-reward-icon {
-  width: 34px;
-  height: 34px;
+.system-mail-rewards {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  scrollbar-width: none;
 }
-.system-mail-reward b {
+.system-mail-tile {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 84px;
+  padding: 0 18px;
+  background: rgba(255, 255, 255, 0.1);
+}
+.system-mail-tile-icon {
+  width: 44px;
+  height: 44px;
+}
+.system-panel .system-mail-tile-icon * {
+  color: #7fe0ff;
+}
+.system-mail-attach svg.system-mail-tile-icon path {
+  stroke: #7fe0ff;
+}
+.system-mail-tile-name {
+  font-size: 21px;
+  line-height: 1.2;
+}
+.system-mail-tile b {
+  margin-left: auto;
   font-family: 'CaviarDreams', sans-serif;
-  font-size: 20px;
+  font-size: 30px;
   font-weight: 600;
-  line-height: 1.1;
+  line-height: 1;
+}
+.system-mail-foot {
+  display: flex;
+  flex-direction: column;
+}
+.system-panel .system-mail-expires {
+  font-size: 18px;
+  text-align: end;
+  color: #b9c2ca;
+}
+.system-mail-claim {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+  font: inherit;
+  font-size: 26px;
+  letter-spacing: 0.14em;
+  border: none;
+  cursor: pointer;
+}
+.system-panel .system-mail-claim {
+  color: #1e2b33;
+  background: linear-gradient(to right, rgb(107, 191, 252), rgb(102, 255, 255));
+}
+.system-panel .system-mail-claim:disabled {
+  color: #b9c2ca;
+  background: rgba(255, 255, 255, 0.12);
+  cursor: default;
 }

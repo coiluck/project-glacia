@@ -9,5 +9,10 @@
   "warehouse": "Warehouse",
   "staminaFull": "Fully recovered",
   "staminaToNext": "Next point in",
-  "staminaToFull": "Full in"
+  "staminaToFull": "Full in",
+  "staminaRecover": "Restore Stamina",
+  "staminaItemInfo": "Stamina +{0}   Owned {1}",
+  "staminaCountMax": "Max",
+  "staminaCancel": "Cancel",
+  "staminaUse": "Use"
 }
