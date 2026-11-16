@@ -28,7 +28,6 @@ const MISSION_TRANSLATION_MAPPING = Object.fromEntries(
     'inProgress',
     'claimAll',
     'allClearLabel',
-    'earnedToday',
     'earnedTotal',
     'doneCount',
     'claimed',

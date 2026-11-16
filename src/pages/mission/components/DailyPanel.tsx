@@ -66,7 +66,6 @@ export default function DailyPanel({ base, now, pending, t, onClaim, onClaimAll 
 
       <div className="mission-foot is-tier-bonus">
         <div className="mission-foot-summary">
-          <span className="mission-row-caption">ALL CLEAR //</span>
           <span className="mission-foot-label">
             {t.allClearLabel.replace('{0}', String(DAILY_SLOTS.length))}
           </span>

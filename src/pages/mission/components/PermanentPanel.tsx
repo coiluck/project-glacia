@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import GemIcon from '../../../components/common/GemIcon'
 import { PERMANENT_MISSIONS, type PermanentCondition } from '../../../data/missions'
 import { permanentProgress, type PermanentBase } from '../../../features/mission/permanent'
@@ -78,6 +79,22 @@ export default function PermanentPanel({
     .filter((r) => isClaimable(r.row))
     .reduce((sum, r) => sum + r.row.gems, 0)
 
+  // まだ下にスクロールできるときだけ、一覧の下端をぼかす
+  const listRef = useRef<HTMLUListElement>(null)
+  const [hasMore, setHasMore] = useState(false)
+  const updateMore = () => {
+    const el = listRef.current
+    if (el) setHasMore(el.scrollHeight - el.scrollTop - el.clientHeight > 1)
+  }
+  useEffect(() => {
+    updateMore()
+    const el = listRef.current
+    if (!el) return
+    const ro = new ResizeObserver(updateMore)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [shown.length, category])
+
   return (
     <>
       <div className="mission-head">
@@ -105,7 +122,11 @@ export default function PermanentPanel({
         </ul>
       </div>
 
-      <ul className="mission-list">
+      <ul
+        ref={listRef}
+        className={`mission-list${hasMore ? ' has-more' : ''}`}
+        onScroll={updateMore}
+      >
         {shown.map(({ row }, index) => (
           <MissionRow
             key={row.key}
@@ -120,7 +141,6 @@ export default function PermanentPanel({
 
       <div className="mission-foot">
         <div className="mission-foot-summary">
-          <span className="mission-row-caption">PROGRESS //</span>
           <span className="mission-foot-label">
             {t.doneCount} <b>{claimedRows.length}</b> / {rows.length}
           </span>

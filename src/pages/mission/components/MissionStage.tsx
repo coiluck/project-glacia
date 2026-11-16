@@ -7,7 +7,6 @@ type Props = {
 export default function MissionStage({ name, line }: Props) {
   return (
     <div className="mission-stage">
-      <span className="mission-stage-mark">MISSION</span>
       <img
         className="mission-stage-art"
         src={`${import.meta.env.BASE_URL}images/character/full_body/lapis.avif`}
