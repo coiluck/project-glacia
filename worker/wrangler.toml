@@ -18,6 +18,12 @@ class_name = "UserQueue"
 tag = "v1"
 new_sqlite_classes = ["UserQueue"]
 
+# POST /auth/login の IP ごとの回数制限
+[[ratelimits]]
+name = "LOGIN_LIMITER"
+namespace_id = "2001"
+simple = { limit = 5, period = 60 }
+
 # Workers Logs。console.log をダッシュボードで検索できるようにする
 # 不正の跡（router.ts の unknown_path、userQueue.ts の rejected）を見るのに使う
 [observability]

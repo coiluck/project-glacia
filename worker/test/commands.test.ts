@@ -21,6 +21,7 @@ const server = createTestHarness({
         d1_databases: real.d1_databases,
         durable_objects: real.durable_objects,
         migrations: real.migrations,
+        ratelimits: real.ratelimits,
         vars: { ALLOWED_ORIGIN: 'http://localhost', PASSWORD_PEPPER: 'test-pepper' },
       },
     },
@@ -224,4 +225,22 @@ test('解放されていない章の先頭のステージは 400', async () => {
   const res = await battleResult(token, '2-1', victory1_1)
   assert.equal(res.status, 400)
   assert.match(((await res.json()) as { error: string }).error, /挑めないステージ: 2-1/)
+})
+
+const login = (ip: string) =>
+  server.fetch('/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'CF-Connecting-IP': ip },
+    body: JSON.stringify({ name: 'nobody', password: 'password123' }),
+  })
+
+test('同じ IP からのログインは60秒に5回まで通り、6回目からは 429', async () => {
+  const statuses: number[] = []
+  for (let i = 0; i < 7; i++) statuses.push((await login('203.0.113.1')).status)
+  assert.deepEqual(statuses, [401, 401, 401, 401, 401, 429, 429])
+
+  const blocked = await login('203.0.113.1')
+  assert.equal(((await blocked.json()) as { error: string }).error, 'auth/too-many-attempts')
+
+  assert.equal((await login('203.0.113.2')).status, 401, '別の IP は数えられていない')
 })

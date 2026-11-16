@@ -9,6 +9,7 @@ export const AUTH_ERROR = {
   passwordLength: 'auth/password-length',
   nameTaken: 'auth/name-taken',
   badCredentials: 'auth/bad-credentials',
+  tooManyAttempts: 'auth/too-many-attempts',
 } as const
 
 // セッションの有効期間（秒） = 30日

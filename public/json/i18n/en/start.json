@@ -19,5 +19,6 @@
   "errorPasswordLength": "Password must be {0}-{1} characters",
   "errorNameTaken": "That username is already taken",
   "errorBadCredentials": "Incorrect username or password",
+  "errorTooManyAttempts": "Too many login attempts. Please wait a moment and try again",
   "errorUnknown": "Connection failed"
 }

@@ -1,3 +1,4 @@
+import { AUTH_ERROR } from '../../src/features/auth/auth'
 import { nowSeconds, readToken, type Context, type Env } from './context'
 import { findSessionUserId } from './db/sessions'
 import { loadMe } from './db/users'
@@ -52,7 +53,13 @@ export async function route(request: Request, env: Env, path: string): Promise<R
   if (path === '/auth/register' || path === '/auth/login') {
     if (request.method !== 'POST') return error('method not allowed', 405)
     const ctx: Context = { ...base, userId: '' } // まだ誰か分からない
-    return path === '/auth/register' ? auth.register(request, ctx) : auth.login(request, ctx)
+    if (path === '/auth/register') return auth.register(request, ctx)
+
+    // 総当たり対策。本番では CF-Connecting-IP が必ず付く
+    const ip = request.headers.get('CF-Connecting-IP') ?? ''
+    const { success } = await env.LOGIN_LIMITER.limit({ key: ip })
+    if (!success) return error(AUTH_ERROR.tooManyAttempts, 429)
+    return auth.login(request, ctx)
   }
 
   // ここから先はセッションが要る
