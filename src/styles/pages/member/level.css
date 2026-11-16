@@ -212,17 +212,7 @@
 .member-detail-record-icon {
   width: 36px;
   height: 36px;
-  fill: none;
-  stroke: #8fb8d6;
-  stroke-width: 1.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.member-detail-record-icon.is-rarity-2 {
-  stroke: #c58cff;
-}
-.member-detail-record-icon.is-rarity-3 {
-  stroke: #ffc861;
+  color: #8fb8d6;
 }
 .member-detail-record-name {
   width: 140px;
@@ -250,7 +240,8 @@
 }
 /* 1つも持っていない */
 .member-detail-record.is-empty .member-detail-record-icon {
-  stroke: #3d4750;
+  opacity: 0.35;
+  filter: grayscale(1);
 }
 .member-detail-record.is-empty .member-detail-record-name,
 .member-detail-record.is-empty .member-detail-record-exp {

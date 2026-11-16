@@ -38,7 +38,7 @@
   --accent: #7d868e;
 }
 .login-bonus .is-rarity-2 {
-  --accent: #7f9fb3;
+  --accent: #7fb38c;
 }
 .login-bonus .is-rarity-3 {
   --accent: #c9a860;
@@ -59,11 +59,7 @@
 
 /* アイコン */
 .login-bonus .is-item {
-  fill: none;
-  stroke: #cfd6dc;
-  stroke-width: 1.3;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  color: #cfd6dc;
 }
 .login-bonus .is-gem {
   --glow: 8px;

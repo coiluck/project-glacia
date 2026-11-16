@@ -1,5 +1,4 @@
 import type { MaterialCost, Rarity } from '../characters/types';
-import { ICONS } from './icons';
 
 export type ItemKind =
   | 'material' // 素材: 上限解放・スキルLv上げで使う共通素材
@@ -12,7 +11,6 @@ export interface ItemDef {
   nameKey: string; // i18n キー（items.json）
   kind: ItemKind;
   rarity: Rarity; // 3段階
-  icon: string;
   recipe?: MaterialCost[];
   exp?: number; // kind が 'exp' のときだけ。使うと入る経験値
   stamina?: number; // kind が 'stamina' のときだけ。使うと回復するスタミナ
@@ -27,7 +25,6 @@ export const items: Record<string, ItemDef> = {
     nameKey: 'itemIceCrystal',
     kind: 'material',
     rarity: 1,
-    icon: ICONS.crystal,
   },
   // 鋼の欠片
   steelScrap: {
@@ -35,7 +32,6 @@ export const items: Record<string, ItemDef> = {
     nameKey: 'itemSteelScrap',
     kind: 'material',
     rarity: 1,
-    icon: ICONS.scrap,
   },
   // 火打石
   flint: {
@@ -43,7 +39,6 @@ export const items: Record<string, ItemDef> = {
     nameKey: 'itemFlint',
     kind: 'material',
     rarity: 1,
-    icon: ICONS.flint,
   },
   // 壊れた歯車
   brokenGear: {
@@ -51,7 +46,6 @@ export const items: Record<string, ItemDef> = {
     nameKey: 'itemBrokenGear',
     kind: 'material',
     rarity: 1,
-    icon: ICONS.gear,
   },
   // 獣の牙
   beastFang: {
@@ -59,7 +53,6 @@ export const items: Record<string, ItemDef> = {
     nameKey: 'itemBeastFang',
     kind: 'material',
     rarity: 1,
-    icon: ICONS.fang,
   },
   // 丈夫な毛皮
   toughHide: {
@@ -67,7 +60,6 @@ export const items: Record<string, ItemDef> = {
     nameKey: 'itemToughHide',
     kind: 'material',
     rarity: 1,
-    icon: ICONS.hide,
   },
   // 薬草の束
   herbBundle: {
@@ -75,7 +67,6 @@ export const items: Record<string, ItemDef> = {
     nameKey: 'itemHerbBundle',
     kind: 'material',
     rarity: 1,
-    icon: ICONS.herb,
   },
   // 魔石の粉
   magicDust: {
@@ -83,7 +74,6 @@ export const items: Record<string, ItemDef> = {
     nameKey: 'itemMagicDust',
     kind: 'material',
     rarity: 1,
-    icon: ICONS.dust,
   },
 
   // 素材（★2）
@@ -93,7 +83,6 @@ export const items: Record<string, ItemDef> = {
     nameKey: 'itemAwakenStone',
     kind: 'material',
     rarity: 2,
-    icon: ICONS.stone,
     recipe: [
       { itemId: 'iceCrystal', count: 3 },
       { itemId: 'steelScrap', count: 2 },
@@ -105,7 +94,6 @@ export const items: Record<string, ItemDef> = {
     nameKey: 'itemRefinedSteel',
     kind: 'material',
     rarity: 2,
-    icon: ICONS.ingot,
     recipe: [
       { itemId: 'steelScrap', count: 2 },
       { itemId: 'brokenGear', count: 1 },
@@ -118,7 +106,6 @@ export const items: Record<string, ItemDef> = {
     nameKey: 'itemBeastStone',
     kind: 'material',
     rarity: 2,
-    icon: ICONS.core,
     recipe: [
       { itemId: 'beastFang', count: 3 },
       { itemId: 'magicDust', count: 2 },
@@ -130,7 +117,6 @@ export const items: Record<string, ItemDef> = {
     nameKey: 'itemTemperedLeather',
     kind: 'material',
     rarity: 2,
-    icon: ICONS.leather,
     recipe: [
       { itemId: 'toughHide', count: 3 },
       { itemId: 'herbBundle', count: 2 },
@@ -142,7 +128,6 @@ export const items: Record<string, ItemDef> = {
     nameKey: 'itemElixirDrop',
     kind: 'material',
     rarity: 2,
-    icon: ICONS.flask,
     recipe: [
       { itemId: 'herbBundle', count: 3 },
       { itemId: 'magicDust', count: 2 },
@@ -155,7 +140,6 @@ export const items: Record<string, ItemDef> = {
     nameKey: 'itemRadiantStone',
     kind: 'material',
     rarity: 3,
-    icon: ICONS.radiant,
     recipe: [
       { itemId: 'awakenStone', count: 2 },
       { itemId: 'refinedSteel', count: 1 },
@@ -167,7 +151,6 @@ export const items: Record<string, ItemDef> = {
     nameKey: 'itemArcaneCore',
     kind: 'material',
     rarity: 3,
-    icon: ICONS.arcane,
     recipe: [
       { itemId: 'beastStone', count: 2 },
       { itemId: 'elixirDrop', count: 1 },
@@ -179,7 +162,6 @@ export const items: Record<string, ItemDef> = {
     nameKey: 'itemHeroRelic',
     kind: 'material',
     rarity: 3,
-    icon: ICONS.relic,
     recipe: [
       { itemId: 'temperedLeather', count: 2 },
       { itemId: 'awakenStone', count: 1 },
@@ -193,14 +175,12 @@ export const items: Record<string, ItemDef> = {
     nameKey: 'itemSkillBookSmall',
     kind: 'book',
     rarity: 1,
-    icon: ICONS.book,
   },
   skillBookMedium: {
     id: 'skillBookMedium',
     nameKey: 'itemSkillBookMedium',
     kind: 'book',
     rarity: 2,
-    icon: ICONS.book,
     recipe: [
       { itemId: 'skillBookSmall', count: 3 },
     ],
@@ -210,7 +190,6 @@ export const items: Record<string, ItemDef> = {
     nameKey: 'itemSkillBookLarge',
     kind: 'book',
     rarity: 3,
-    icon: ICONS.book,
     recipe: [
       { itemId: 'skillBookMedium', count: 3 },
     ],
@@ -222,7 +201,6 @@ export const items: Record<string, ItemDef> = {
     nameKey: 'itemTrainingRecordSmall',
     kind: 'exp',
     rarity: 1,
-    icon: ICONS.record,
     exp: 50,
   },
   trainingRecordMedium: {
@@ -230,7 +208,6 @@ export const items: Record<string, ItemDef> = {
     nameKey: 'itemTrainingRecordMedium',
     kind: 'exp',
     rarity: 2,
-    icon: ICONS.record,
     exp: 150,
   },
   trainingRecordLarge: {
@@ -238,7 +215,6 @@ export const items: Record<string, ItemDef> = {
     nameKey: 'itemTrainingRecordLarge',
     kind: 'exp',
     rarity: 3,
-    icon: ICONS.record,
     exp: 250,
   },
 
@@ -249,7 +225,6 @@ export const items: Record<string, ItemDef> = {
     nameKey: 'itemFieldRation',
     kind: 'stamina',
     rarity: 3,
-    icon: ICONS.ration,
     stamina: 50,
   },
 };

@@ -22,7 +22,7 @@
   --rarity: #7d868e;
 }
 .page-warehouse .is-rarity-2 {
-  --rarity: #7f9fb3;
+  --rarity: #7fb38c;
 }
 .page-warehouse .is-rarity-3 {
   --rarity: #c9a860;
@@ -59,11 +59,7 @@
 }
 .warehouse-hex svg {
   position: relative;
-  fill: none;
-  stroke: #cfd6dc;
-  stroke-width: 1.3;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  color: #cfd6dc;
 }
 
 

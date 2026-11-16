@@ -23,7 +23,7 @@
   --rarity: #7d868e;
 }
 .page-base .is-rarity-2 {
-  --rarity: #7f9fb3;
+  --rarity: #7fb38c;
 }
 .page-base .is-rarity-3 {
   --rarity: #c9a860;
@@ -46,11 +46,7 @@
   flex-shrink: 0;
   width: 28px;
   height: 28px;
-  fill: none;
-  stroke: #cfd6dc;
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  color: #cfd6dc;
 }
 
 /* 盤面の置き場 */
@@ -428,11 +424,7 @@
 .base-collect-icon {
   width: 28px;
   height: 28px;
-  fill: none;
-  stroke: #1b1a14;
-  stroke-width: 1.7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  color: #1b1a14;
 }
 .base-collect-items b {
   font-family: 'CaviarDreams', sans-serif;

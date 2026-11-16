@@ -6,7 +6,8 @@ import { useRankStore } from '../../../stores/rankStore'
 import { formatCompact } from '../../../utils/format'
 import ViewportLayer from '../../../layouts/ViewportLayer'
 import BillIcon from '../../../components/common/BillIcon'
-import { items } from '../../../data/items'
+import ItemIcon from '../../../components/common/ItemIcon'
+import { items, type ItemDef } from '../../../data/items'
 
 const TRANSLATION_MAPPING = Object.fromEntries(
   [
@@ -32,7 +33,7 @@ interface ResultItem {
   key: string
   name: string
   count: number
-  icon?: string
+  item?: ItemDef
   rare?: boolean
 }
 
@@ -89,7 +90,7 @@ export default function BattleResult({
               key: drop.itemId,
               name: tItem[item.nameKey],
               count: drop.count,
-              icon: item.icon,
+              item,
               rare: item.rarity === 3,
             },
           ]
@@ -158,10 +159,8 @@ export default function BattleResult({
                     style={{ '--i': i } as CSSProperties}
                   >
                     <span className="battle-result-item-cell">
-                      {item.icon ? (
-                        <svg viewBox="0 0 24 24" aria-hidden>
-                          <path d={item.icon} />
-                        </svg>
+                      {item.item ? (
+                        <ItemIcon item={item.item} className="battle-result-item-icon" />
                       ) : (
                         <BillIcon className="battle-result-bill" />
                       )}

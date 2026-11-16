@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { fill, useTranslations } from '../../../i18n'
 import MaterialCostList from './MaterialCostList'
 import BillIcon from '../../../components/common/BillIcon'
+import ItemIcon from '../../../components/common/ItemIcon'
 import { enhanceCharacter } from '../../../api/actions/characters'
 import type { EnhancePayload } from '../../../features/contract'
 import { LIMIT_BREAK_LEVELS, MAX_LEVEL } from '../../../data/characters/const'
@@ -239,13 +240,7 @@ export default function MemberLevelPanel({ character }: { character: ResolvedCha
                       key={r.id}
                       className={`member-detail-record${have ? '' : ' is-empty'}`}
                     >
-                      <svg
-                        className={`member-detail-record-icon is-rarity-${r.rarity}`}
-                        viewBox="0 0 24 24"
-                        aria-hidden
-                      >
-                        <path d={r.icon} />
-                      </svg>
+                      <ItemIcon item={r} className="member-detail-record-icon" />
                       <span className="member-detail-record-name">{tItem[r.nameKey]}</span>
                       <span className="member-detail-record-exp">+{r.exp}</span>
                       <span className="member-detail-record-owned">

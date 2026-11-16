@@ -71,12 +71,8 @@
 .system-panel .system-mail-chip-icon * {
   color: #1d7fb8;
 }
-svg.system-mail-chip-icon path,
-svg.system-mail-tile-icon path {
-  fill: none;
-  stroke: #1d7fb8;
-  stroke-width: 1.4;
-  stroke-linejoin: round;
+.system-panel svg.system-mail-chip-icon {
+  color: #1d7fb8;
 }
 .system-mail-chip b {
   font-family: 'CaviarDreams', sans-serif;
@@ -97,8 +93,8 @@ svg.system-mail-tile-icon path {
 .system-panel .system-mail-row.is-selected .system-mail-chip-icon * {
   color: #7fe0ff;
 }
-.system-mail-row.is-selected svg.system-mail-chip-icon path {
-  stroke: #7fe0ff;
+.system-panel .system-mail-row.is-selected svg.system-mail-chip-icon {
+  color: #7fe0ff;
 }
 
 /* 受け取り済み */
@@ -176,8 +172,8 @@ svg.system-mail-tile-icon path {
 .system-panel .system-mail-tile-icon * {
   color: #7fe0ff;
 }
-.system-mail-attach svg.system-mail-tile-icon path {
-  stroke: #7fe0ff;
+.system-panel svg.system-mail-tile-icon {
+  color: #7fe0ff;
 }
 .system-mail-tile-name {
   font-size: 21px;
