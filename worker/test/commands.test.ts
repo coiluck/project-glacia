@@ -21,6 +21,7 @@ const server = createTestHarness({
         d1_databases: real.d1_databases,
         durable_objects: real.durable_objects,
         migrations: real.migrations,
+        ratelimits: real.ratelimits,
         vars: { ALLOWED_ORIGIN: 'http://localhost', PASSWORD_PEPPER: 'test-pepper' },
       },
     },
@@ -53,9 +54,48 @@ async function register(): Promise<string> {
 async function me(token: string) {
   const res = await server.fetch('/me', { headers: { Authorization: `Bearer ${token}` } })
   return (await res.json()) as {
-    user: { gems: number; pity: number; currency: number; stamina: number; cleared_stage_ids: string[] }
+    user: {
+      gems: number
+      pity: number
+      currency: number
+      stamina: number
+      cleared_stage_ids: string[]
+      items: Record<string, number>
+      mail_claimed: string[]
+    }
   }
 }
+
+test('リリース記念のメールを受け取り、携行食を使うとスタミナが50増える', async () => {
+  const token = await register()
+  const before = await me(token)
+
+  assert.equal((await post('/mail', { kind: 'claim', id: 'release' }, token)).status, 200)
+  const claimed = await me(token)
+  assert.deepEqual(claimed.user.items, { fieldRation: 12 })
+  assert.deepEqual(claimed.user.mail_claimed, ['release'], '受取済みが保存されている')
+
+  assert.equal((await post('/stamina/recover', { itemId: 'fieldRation', count: 1 }, token)).status, 200)
+  const { user } = await me(token)
+  assert.equal(user.stamina, before.user.stamina + 50, '上限を超えて増える')
+  assert.deepEqual(user.items, { fieldRation: 11 })
+})
+
+test('同時に送ったメールの受け取りは1本だけが通る', async () => {
+  const token = await register()
+  const responses = await Promise.all(
+    Array.from({ length: 4 }, () => post('/mail', { kind: 'claimAll' }, token)),
+  )
+  assert.deepEqual(responses.map((r) => r.status).sort(), [200, 400, 400, 400])
+  assert.deepEqual((await me(token)).user.items, { fieldRation: 12 })
+})
+
+test('持っていない携行食は使えず 400', async () => {
+  const token = await register()
+  const res = await post('/stamina/recover', { itemId: 'fieldRation', count: 1 }, token)
+  assert.equal(res.status, 400)
+  assert.match(((await res.json()) as { error: string }).error, /アイテムが足りない/)
+})
 
 test('同時に送った10連は、ジェムで払える1本だけが通る', async () => {
   const token = await register()
@@ -185,4 +225,22 @@ test('解放されていない章の先頭のステージは 400', async () => {
   const res = await battleResult(token, '2-1', victory1_1)
   assert.equal(res.status, 400)
   assert.match(((await res.json()) as { error: string }).error, /挑めないステージ: 2-1/)
+})
+
+const login = (ip: string) =>
+  server.fetch('/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'CF-Connecting-IP': ip },
+    body: JSON.stringify({ name: 'nobody', password: 'password123' }),
+  })
+
+test('同じ IP からのログインは60秒に5回まで通り、6回目からは 429', async () => {
+  const statuses: number[] = []
+  for (let i = 0; i < 7; i++) statuses.push((await login('203.0.113.1')).status)
+  assert.deepEqual(statuses, [401, 401, 401, 401, 401, 429, 429])
+
+  const blocked = await login('203.0.113.1')
+  assert.equal(((await blocked.json()) as { error: string }).error, 'auth/too-many-attempts')
+
+  assert.equal((await login('203.0.113.2')).status, 401, '別の IP は数えられていない')
 })

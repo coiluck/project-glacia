@@ -38,7 +38,7 @@ export default function MissionRow({ row, index, disabled, labels, onClaim }: Pr
 
   return (
     <li className={className} style={{ '--i': index } as CSSProperties}>
-      <span className="mission-row-caption">{row.caption} //</span>
+      <span className="mission-row-caption">// {row.caption}</span>
       <div className="mission-row-main">
         <span className="mission-row-text">
           {before}

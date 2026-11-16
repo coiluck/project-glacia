@@ -16,7 +16,8 @@ export function loginCountThisMonth(base: LoginBase, now: number): number {
   return monthIndex(base.login_claimed_day) === monthIndex(dayIndex(now)) ? base.login_count : 0
 }
 
-function grant(user: UserRow, reward: LoginReward): UserRow {
+// 報酬を1つ渡す。メールの報酬も同じ型なのでここを使う
+export function grant(user: UserRow, reward: LoginReward): UserRow {
   switch (reward.kind) {
     case 'gems':
       return { ...user, gems: user.gems + reward.amount }

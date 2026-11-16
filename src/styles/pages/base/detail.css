@@ -22,8 +22,7 @@
   color: var(--accent-soft);
 }
 .bp-card .base-item-icon {
-  stroke: #e4eef7;
-  stroke-width: 1.7;
+  color: #e4eef7;
 }
 
 /* 見出し */

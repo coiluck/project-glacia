@@ -10,8 +10,9 @@ export type StaminaBase = Pick<UserRow, 'stamina' | 'stamina_max' | 'stamina_upd
 function regenerate(user: StaminaBase, now: number): { stamina: number; updatedAt: number } {
   // 満タンの間は回復しない
   // 減った瞬間から数え始められるよう時刻だけ進めておく
+  // アイテムで上限を超えたぶんは削らずに残す
   if (user.stamina >= user.stamina_max) {
-    return { stamina: user.stamina_max, updatedAt: now }
+    return { stamina: user.stamina, updatedAt: now }
   }
 
   const elapsed = Math.max(0, now - user.stamina_updated_at)

@@ -383,11 +383,7 @@
 .base-stock-icon {
   width: 30px;
   height: 30px;
-  fill: none;
-  stroke: #e4eef7;
-  stroke-width: 1.7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  color: #e4eef7;
 }
 .base-stock b {
   margin-left: -10px;
@@ -410,7 +406,7 @@
   background: radial-gradient(circle at 35% 30%, #fff1c2, #e3b04f 80%);
 }
 .base-stock.is-full .base-stock-icon {
-  stroke: #2a1d08;
+  color: #2a1d08;
 }
 .base-stock.is-full b {
   color: #1b1a14;

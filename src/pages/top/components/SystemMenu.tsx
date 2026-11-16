@@ -1,6 +1,6 @@
 // 画面下のシステムメニュー
 import { useState, type CSSProperties } from 'react'
-import { useClaimableMailCount } from '../../../features/mail/useMails'
+import { useClaimableMailCount } from '../../../hooks/useMails'
 import { useUnreadNewsCount } from '../../../stores/newsReadStore'
 import { useTranslations } from '../../../i18n'
 import SystemPanel from './system/SystemPanel'

@@ -1,3 +1,4 @@
+import ItemIcon from '../../../components/common/ItemIcon'
 import type { MaterialCost } from '../../../data/characters/types'
 import { items } from '../../../data/items'
 import { useTranslations } from '../../../i18n'
@@ -27,11 +28,7 @@ export default function MaterialCostList({ costs }: { costs: MaterialCost[] | nu
             key={cost.itemId}
             className={`member-detail-cost-item${have < cost.count ? ' is-short' : ''}`}
           >
-            {item && (
-              <svg className="member-detail-cost-icon" viewBox="0 0 24 24" aria-hidden>
-                <path d={item.icon} />
-              </svg>
-            )}
+            {item && <ItemIcon item={item} className="member-detail-cost-icon" />}
             <span className="member-detail-cost-name">
               {item ? tItem[item.nameKey] : cost.itemId}
             </span>

@@ -14,10 +14,10 @@ export default defineConfig({
       injectRegister: 'auto',
       manifest: {
         name: 'Project Glacia',
-        short_name: 'Glacia',
+        short_name: '氷途',
         description: '',
         theme_color: '#000000',
-        background_color: '#000000',
+        background_color: '#ffffff',
         display: 'fullscreen',
         orientation: 'landscape',
         icons: [

@@ -12,6 +12,7 @@ import { useInventoryStore } from '../stores/inventoryStore'
 import { useExchangeStore } from '../stores/exchangeStore'
 import { useLoginBonusStore } from '../stores/loginBonusStore'
 import { useMissionStore } from '../stores/missionStore'
+import { useMailStore } from '../stores/mailStore'
 import { useBaseStore } from '../stores/baseStore'
 import { useSettingsStore } from '../stores/settingsStore'
 
@@ -35,6 +36,7 @@ export function distribute(me: MeResponse) {
   useExchangeStore.getState().hydrate(me.user)
   useLoginBonusStore.getState().hydrate(me.user)
   useMissionStore.getState().hydrate(me.user)
+  useMailStore.getState().hydrate(me.user)
   useBaseStore.getState().hydrate(me.user)
   useSettingsStore.getState().hydrate(me.user)
   useCharacterStore.getState().hydrate(me)
@@ -53,6 +55,7 @@ export function resetAll() {
   useExchangeStore.getState().reset()
   useLoginBonusStore.getState().reset()
   useMissionStore.getState().reset()
+  useMailStore.getState().reset()
   useBaseStore.getState().reset()
   useSettingsStore.getState().reset()
   useCharacterStore.getState().reset()

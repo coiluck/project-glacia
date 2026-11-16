@@ -7,6 +7,7 @@ export interface Env {
   PASSWORD_PEPPER: string // wrangler secret put で入れる。ローカルは .dev.vars
   DEBUG?: string          // '1' のとき /debug/* が開く。ローカルの .dev.vars にだけ書く
   USER_QUEUE: DurableObjectNamespace<UserQueue> // コマンドをユーザーごとに1本ずつ流す
+  LOGIN_LIMITER: RateLimit // POST /auth/login の IP ごとの回数制限
 }
 
 export interface Context {

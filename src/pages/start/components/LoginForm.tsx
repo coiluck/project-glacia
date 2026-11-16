@@ -30,6 +30,7 @@ export default function LoginForm({ onDone, onClose }: LoginFormProps) {
     errorPasswordLength: 'errorPasswordLength',
     errorNameTaken: 'errorNameTaken',
     errorBadCredentials: 'errorBadCredentials',
+    errorTooManyAttempts: 'errorTooManyAttempts',
     errorUnknown: 'errorUnknown',
   })
 
@@ -67,6 +68,8 @@ export default function LoginForm({ onDone, onClose }: LoginFormProps) {
         return t.errorNameTaken
       case AUTH_ERROR.badCredentials:
         return t.errorBadCredentials
+      case AUTH_ERROR.tooManyAttempts:
+        return t.errorTooManyAttempts
       default:
         return t.errorUnknown
     }

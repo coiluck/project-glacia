@@ -9,15 +9,19 @@ export const TOKEN_PRICE = 15;
 // 1日に並ぶ枠の数
 export const LINEUP_SIZE = 8;
 
+// 交換所に並ぶ種別。スタミナ回復は並べない
+export type ExchangeKind = Exclude<ItemKind, 'stamina'>;
+type ExchangeItem = ItemDef & { kind: ExchangeKind };
+
 // 種別ごとの1個あたりの基準価格。枠の価格はこれに個数を掛ける
-export const BASE_PRICE: Record<ItemKind, number> = {
+export const BASE_PRICE: Record<ExchangeKind, number> = {
   material: 15,
   book: 100,
   exp: 15,
 };
 
 // 種別ごとの1枠の個数（min〜max）
-export const OFFER_COUNT: Record<ItemKind, { min: number; max: number }> = {
+export const OFFER_COUNT: Record<ExchangeKind, { min: number; max: number }> = {
   material: { min: 2, max: 3 },
   book: { min: 2, max: 2 },
   exp: { min: 3, max: 3 },
@@ -29,4 +33,6 @@ export const PRICE_MAX = 1.25;
 export const PRICE_STEP = 5; // 価格はこの単位に丸める
 
 // ★1だけ
-export const exchangePool: ItemDef[] = Object.values(items).filter((i) => i.rarity === 1);
+export const exchangePool: ExchangeItem[] = Object.values(items).filter(
+  (i): i is ExchangeItem => i.rarity === 1 && i.kind !== 'stamina',
+);

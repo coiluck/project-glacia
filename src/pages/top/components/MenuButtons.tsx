@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useTranslations } from '../../../i18n'
 import { paths } from '../../../router/paths'
 import { selectStamina, useStaminaStore } from '../../../stores/staminaStore'
-import { formatHms } from '../../../utils/format'
+import StaminaRecover from './StaminaRecover'
 
 const TRANSLATION_MAPPING = {
   battle: 'battle',
@@ -14,9 +14,6 @@ const TRANSLATION_MAPPING = {
   recruit: 'recruit',
   base: 'base',
   warehouse: 'warehouse',
-  staminaFull: 'staminaFull',
-  staminaToNext: 'staminaToNext',
-  staminaToFull: 'staminaToFull',
 }
 
 // Top画面右のメインメニュー
@@ -24,12 +21,11 @@ export default function MenuButtons() {
   const t = useTranslations('top', TRANSLATION_MAPPING)
   const stamina = useStaminaStore((s) => selectStamina(s).stamina)
   const staminaMax = useStaminaStore((s) => s.base.stamina_max)
-  const toNext = useStaminaStore((s) => selectStamina(s).stamina_recovering_seconds)
-  const toFull = useStaminaStore((s) => selectStamina(s).stamina_recovering_seconds_max)
 
   const [isStaminaOpen, setIsStaminaOpen] = useState(false)
 
   return (
+    <>
     <nav className="top-menu-buttons">
       <div className="top-menu-buttons-row">
         <Link to={paths.story} className="top-menu-button-battle">
@@ -45,28 +41,14 @@ export default function MenuButtons() {
               {/* Link の中にあるので遷移させない */}
               <button
                 type="button"
-                className={`top-menu-button-stamina-button${isStaminaOpen ? ' is-open' : ''}`}
+                className="top-menu-button-stamina-button"
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
-                  setIsStaminaOpen(!isStaminaOpen)
+                  setIsStaminaOpen(true)
                 }}
               />
             </div>
-            {isStaminaOpen && (
-              <dl className="top-menu-button-stamina-modal">
-                {stamina >= staminaMax ? (
-                  <dt>{t.staminaFull}</dt>
-                ) : (
-                  <>
-                    <dt>{t.staminaToNext}</dt>
-                    <dd>{formatHms(toNext)}</dd>
-                    <dt>{t.staminaToFull}</dt>
-                    <dd>{formatHms(toFull)}</dd>
-                  </>
-                )}
-              </dl>
-            )}
           </div>
 
           <span>{t.battle}</span>
@@ -107,5 +89,7 @@ export default function MenuButtons() {
         <Link to={paths.warehouse} className="top-menu-button-store">{t.warehouse}</Link>
       </div>
     </nav>
+    {isStaminaOpen && <StaminaRecover onClose={() => setIsStaminaOpen(false)} />}
+    </>
   )
 }

@@ -26,7 +26,10 @@
   "itemTrainingRecordMedium": "Training Log Ⅱ",
   "itemTrainingRecordLarge": "Training Log Ⅲ",
 
+  "itemFieldRation": "Field Ration",
+
   "kindMaterial": "Material",
   "kindBook": "Skill Manual",
-  "kindExp": "Training Log"
+  "kindExp": "Training Log",
+  "kindStamina": "Stamina Recovery"
 }

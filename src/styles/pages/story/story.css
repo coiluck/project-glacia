@@ -250,11 +250,7 @@
   width: calc(48px * var(--scale));
   height: calc(48px * var(--scale));
   margin-bottom: calc(12px * var(--scale));
-  fill: none;
-  stroke: #263544;
-  stroke-width: 1.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  color: #263544;
 }
 .story-map-stage-drop-bill {
   width: calc(42px * var(--scale));

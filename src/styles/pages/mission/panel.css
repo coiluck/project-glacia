@@ -44,14 +44,18 @@
   scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
 }
 
+.mission-list.has-more {
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 96px), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 96px), transparent);
+}
+
 /* 全達成ボーナス / 達成数とまとめて受け取る */
 .mission-foot {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 28px;
-  height: 144px;
-  padding: 20px 20px 0 30px;
+  padding: 20px;
   background: rgba(5, 7, 20, 0.7);
   border-top: 2px solid #5c646b;
   animation: mission-rise 0.4s ease-out 0.15s both;

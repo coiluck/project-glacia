@@ -19,5 +19,6 @@
   "errorPasswordLength": "パスワードは{0}〜{1}文字にしてください",
   "errorNameTaken": "そのユーザー名は使われています",
   "errorBadCredentials": "ユーザー名またはパスワードが違います",
+  "errorTooManyAttempts": "ログインの試行が多すぎます。しばらく待ってからやり直してください",
   "errorUnknown": "通信に失敗しました"
 }

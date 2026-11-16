@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS users (
   mission_counts                 TEXT    NOT NULL DEFAULT '{}',
   mission_claimed                TEXT    NOT NULL DEFAULT '[]',
   mission_done                   TEXT    NOT NULL DEFAULT '[]',
+  mail_claimed                   TEXT    NOT NULL DEFAULT '[]',
   favorite_character_id          TEXT    NOT NULL DEFAULT 'lapis',
   base_board                     TEXT    NOT NULL DEFAULT '{}',
   base_members                   TEXT    NOT NULL DEFAULT '{}',

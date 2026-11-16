@@ -22,6 +22,7 @@
 @import './pages/top/system/scenario.css';
 @import './pages/top/system/settings.css';
 @import './pages/top/menu-buttons.css';
+@import './pages/top/stamina-recover.css';
 @import './pages/top/login-bonus.css';
 @import './pages/party/party.css';
 @import './pages/party/formation-tabs.css';
@@ -73,6 +74,7 @@
 @import './components/menu-map.css';
 @import './components/bill-icon.css';
 @import './components/gem-icon.css';
+@import './components/item-icon.css';
 @import './components/guide.css';
 
 

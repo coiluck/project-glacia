@@ -126,7 +126,7 @@
 
 .system-panel-foot {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   margin-top: auto;
   padding-top: 18px;
 }

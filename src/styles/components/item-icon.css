@@ -1,0 +1,47 @@
+.item-icon {
+  --item-tint: #7d868e;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.item-icon.is-rarity-2 {
+  --item-tint: #7fb38c;
+}
+.item-icon.is-rarity-3 {
+  --item-tint: #c9a860;
+}
+/* svg の color を継がせる */
+.item-icon g,
+.item-icon path {
+  color: inherit;
+}
+
+.item-icon-tint {
+  fill: var(--item-tint);
+  fill-opacity: 0.45;
+  stroke: none;
+}
+.item-icon-line,
+.item-icon-thin,
+.item-icon-dash,
+.item-icon-cord {
+  fill: none;
+  stroke: currentColor;
+}
+.item-icon-line {
+  stroke-width: 1.5;
+}
+.item-icon-cord {
+  stroke-width: 1.2;
+}
+.item-icon-thin,
+.item-icon-dash {
+  stroke-width: 1;
+  stroke-opacity: 0.7;
+}
+.item-icon-dash {
+  stroke-dasharray: 1.2 1.4;
+}
+.item-icon-solid {
+  fill: currentColor;
+  stroke: none;
+}

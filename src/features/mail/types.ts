@@ -1,13 +1,9 @@
 import type { LoginReward } from '../../data/loginBonus'
+import type { MailDef } from '../../data/mails'
 
 export type MailReward = LoginReward
 
-// サーバーから届くメール1通。時刻は秒（staminaStore.now と同じ単位）
-export interface MailEntry {
-  id: string
-  from: string
-  subject: string
-  rewards: MailReward[]
-  expiresAt: number
+// 画面に出すメール1通。差出人・件名・本文は i18n の mail.json（`<id>.from` など）
+export interface MailEntry extends MailDef {
   claimed: boolean
 }
