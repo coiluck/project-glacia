@@ -20,7 +20,7 @@ function effectValue(effect: SkillEffect): number {
 
 // 説明文の {0} {1} … を def.effect の同じ添字の効果量で埋める。
 // 添字の並びは effectGrowth と同じ（どちらも def.effect 基準）
-export function formatSkillDescription(template: string, skill: ResolvedSkill): string {
+export function formatSkillDescription(template: string, skill: Pick<ResolvedSkill, 'def'>): string {
   return fill(template, ...skill.def.effect.map(effectValue))
 }
 

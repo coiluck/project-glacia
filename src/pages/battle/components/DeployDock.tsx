@@ -105,7 +105,8 @@ export default function DeployDock({
   const holding = drag ? party[drag.index] : null
 
   return (
-    <div className="battle-deploy-layer">
+    <div className="battle-deploy-row">
+      <div />
       <div className="battle-deploy-dock battle-panel">
         <p className="battle-deploy-hint">{hint}</p>
         <div className="battle-deploy-faces">

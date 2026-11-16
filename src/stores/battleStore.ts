@@ -29,12 +29,16 @@ function changesHp(prev: BattleState, next: BattleState): boolean {
   return prev.units.some((u) => next.units.find((n) => n.id === u.id)?.hp !== u.hp);
 }
 
+interface UndoEntry {
+  state: BattleState;
+  logLength: number; // その時点の log の長さ。やり直しはここまで切り詰める
+}
+
 interface BattleStore {
   stage: BattleStageData | null;
   state: BattleState | null;
-  snapshot: BattleState | null; // 味方ターン開始時点。やり直しはここへ戻す
+  history: UndoEntry[]; // このターンの操作1手ごとの、操作する直前の状態。やり直しは末尾から1手ずつ戻す
   log: BattleAction[]; // 決着したら /battle/result に送る操作ログ。サーバーが再生して勝敗を確かめる
-  snapshotLogLength: number; // snapshot の時点の log の長さ。やり直しはここまで切り詰める
 
   init: (stageId: string | undefined) => void;
   reset: () => void;
@@ -51,23 +55,21 @@ interface BattleStore {
 export const useBattleStore = create<BattleStore>((set, get) => ({
   stage: null,
   state: null,
-  snapshot: null,
+  history: [],
   log: [],
-  snapshotLogLength: 0,
 
   init: (stageId) => {
     const stage = stageId ? battleStageRegistry[stageId] : undefined;
     set({
       stage: stage ?? null,
       state: stage ? createBattleState(stage, enemyDefs) : null,
-      snapshot: null,
+      history: [],
       log: [],
-      snapshotLogLength: 0,
     });
   },
 
   // 戦闘画面を抜けたら空にする。決着した state が残ると、次の戦闘の最初の描画でその結末を送ってしまう
-  reset: () => set({ stage: null, state: null, snapshot: null, log: [], snapshotLogLength: 0 }),
+  reset: () => set({ stage: null, state: null, history: [], log: [] }),
 
   // エンジンが throw したら set されないので、通った操作だけがログに残る
   deploy: (character, skill, pos) =>
@@ -83,18 +85,21 @@ export const useBattleStore = create<BattleStore>((set, get) => ({
     set((s) => ({
       state: moveUnit(s.state!, s.stage!, unitId, dest),
       log: [...s.log, { type: 'move', unitId, to: dest }],
+      history: [...s.history, { state: s.state!, logLength: s.log.length }],
     })),
 
   doAttack: (attackerId, targetIds) =>
     set((s) => ({
       state: attack(s.state!, attackerId, targetIds),
       log: [...s.log, { type: 'attack', attackerId, targetIds }],
+      history: [...s.history, { state: s.state!, logLength: s.log.length }],
     })),
 
   doSkill: (userId, aim) =>
     set((s) => ({
       state: castSkill(s.state!, s.stage!, userId, aim),
       log: [...s.log, { type: 'skill', userId, aim }],
+      history: [...s.history, { state: s.state!, logLength: s.log.length }],
     })),
 
   start: () =>
@@ -102,13 +107,14 @@ export const useBattleStore = create<BattleStore>((set, get) => ({
       const next = startBattle(s.state!, s.stage!);
       const log: BattleAction[] = [...s.log, { type: 'start' }];
       // イミュータブルなので参照を持つだけでOK
-      return { state: next, snapshot: next, log, snapshotLogLength: log.length };
+      return { state: next, history: [], log };
     }),
 
   undoTurn: () => {
-    const { snapshot, state, log, snapshotLogLength } = get();
-    if (!snapshot || state?.phase !== 'player') return;
-    set({ state: snapshot, log: log.slice(0, snapshotLogLength) }); // structuredClone不要
+    const { history, state, log } = get();
+    const last = history[history.length - 1];
+    if (!last || state?.phase !== 'player') return;
+    set({ state: last.state, history: history.slice(0, -1), log: log.slice(0, last.logLength) }); // structuredClone不要
   },
 
   // 敵の行動順は enemyPhaseSteps が決める。ここは1手ごとに間を置いて見せるだけ
@@ -126,7 +132,7 @@ export const useBattleStore = create<BattleStore>((set, get) => ({
       }
       set(
         next.phase === 'player'
-          ? { state: next, snapshot: next, snapshotLogLength: get().log.length }
+          ? { state: next, history: [] }
           : { state: next },
       );
       delay = changesHp(shown ?? state, next) ? ENEMY_ATTACK_DELAY : ENEMY_MOVE_DELAY;

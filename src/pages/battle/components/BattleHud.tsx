@@ -16,20 +16,20 @@ interface BattleHudProps {
   partyAp: number
   partyApMax: number
   spend: number // 予告中の消費AP
+  turnLabel: string
+  partyApLabel: string
 }
 
-export default function BattleHud({ phase, turn, partyAp, partyApMax, spend }: BattleHudProps) {
+export default function BattleHud({ phase, turn, partyAp, partyApMax, spend, turnLabel, partyApLabel }: BattleHudProps) {
   return (
     <div className="battle-hud">
-      <div className="battle-hud-row">
-        <div className="battle-hud-turn">
-          <span className="battle-label">TURN</span>
-          <span className="battle-num">{pad2(turn)}</span>
-        </div>
+      <div className="battle-hud-turn">
+        <span className="battle-hud-turn-label">{turnLabel}</span>
+        <span className="battle-num">{pad2(turn)}</span>
         <div className={`battle-hud-phase is-${phase}`}>{PHASE_LABEL[phase]}</div>
       </div>
-      <div className="battle-hud-ap battle-panel" data-guide="party-ap">
-        <span className="battle-label">PARTY AP</span>
+      <div className="battle-hud-ap" data-guide="party-ap">
+        <span className="battle-hud-ap-label">{partyApLabel}</span>
         <ApPips max={partyApMax} current={partyAp} spend={spend} />
         <span className="battle-num">
           {partyAp}

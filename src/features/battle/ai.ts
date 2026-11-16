@@ -65,7 +65,7 @@ export function* enemyPhaseSteps(
 }
 
 // スキルを使う番か（nターン周期）
-function isSkillDue(state: BattleState, unit: Unit): boolean {
+export function isSkillDue(state: BattleState, unit: Unit): boolean {
   if (!unit.skill || unit.skillEveryNTurns === undefined) return false;
   return state.turn - (unit.lastSkillTurn ?? 0) >= unit.skillEveryNTurns;
 }

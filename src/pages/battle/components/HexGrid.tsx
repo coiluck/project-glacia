@@ -101,8 +101,7 @@ interface HexGridProps {
   getUnitName: (unit: Unit) => string;
   getUnitChibi: (unit: Unit) => string;
   onTileClick?: (pos: Axial) => void;
-  onUnitClick?: (unit: Unit) => void;
-  onHover?: (key: string | null) => void; // マス・ユニットにポインタが乗った / 離れた
+  onHover?: (key: string | null) => void; // マスにポインタが乗った / 離れた
   fx?: FxBatch[]; // 再生中の攻撃演出
 }
 
@@ -119,7 +118,6 @@ export default function HexGrid({
   getUnitName,
   getUnitChibi,
   onTileClick,
-  onUnitClick,
   onHover,
   fx = [],
 }: HexGridProps) {
@@ -305,9 +303,6 @@ export default function HexGrid({
                   '--die-delay': ghost ? `${dieAt.get(unit.id)}ms` : undefined,
                 } as CSSProperties
               }
-              onClick={onUnitClick && !ghost ? () => onUnitClick(unit) : undefined}
-              onPointerEnter={onHover && !ghost ? () => onHover(axialKey(unit.pos)) : undefined}
-              onPointerLeave={onHover && !ghost ? () => onHover(null) : undefined}
             >
               <div className="battle-unit-body">
                 {chip && (

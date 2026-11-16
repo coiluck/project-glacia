@@ -1,370 +1,336 @@
-/* ユニットカード */
-.battle-unit-panel {
-  --tone: var(--ally);
+.battle-command {
+  --panel-h: 176px;
   position: absolute;
-  bottom: 40px;
-  left: 48px;
+  right: 0;
+  bottom: 0;
+  left: 0;
   z-index: 2;
-  display: flex;
-  gap: 24px;
-  width: 620px;
-  padding: 22px 28px 24px 22px;
-  text-align: left;
-  animation: battle-panel-in 0.22s ease-out;
+  height: 0;
+  pointer-events: none;
+  transform: translateY(calc(var(--panel-h) * var(--scale)));
+  transition: transform 0.3s ease-out;
 }
-.battle-unit-panel.is-enemy {
-  --tone: var(--enemy);
+.battle-command.is-open {
+  transform: none;
 }
-@keyframes battle-panel-in {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+.battle-command-bg {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: calc(var(--panel-h) * var(--scale));
+  background: rgba(232, 236, 240, 0.97);
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.35);
+  pointer-events: auto;
+}
+.battle-command-safe {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: var(--design-w);
+  pointer-events: none;
+  transform: translateX(-50%) scale(var(--scale));
+  transform-origin: 50% 100%;
 }
 
-/* 顔。敵は盤面と同じ絵 */
-.battle-unit-panel-portrait {
-  position: relative;
-  flex-shrink: 0;
-  width: 132px;
-  height: 132px;
+/* ターン操作 */
+.battle-command-controls {
+  pointer-events: none;
+}
+.battle-turn-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  padding: 0 48px 32px 0;
+}
+.battle-turn-controls > * {
+  pointer-events: auto;
+}
+
+.battle-command-panel {
+  --c-ink: #282828;
+  --c-sub: #6b737a;
+  --c-dark: #2a2f35;
+  --c-ice: #7fe0ff;
+  --c-rose: #e5586a;
+  height: var(--panel-h);
+  pointer-events: auto;
+  text-align: left;
+}
+.battle-command-panel * {
+  color: var(--c-ink);
+}
+.battle-command-panel .battle-pips i {
+  background: #c3cad1;
+  outline: none;
+}
+.battle-command-panel .battle-pips i.is-on {
+  background: #2a8fb0;
+  box-shadow: none;
+}
+.battle-command-panel .battle-pips i.is-spend {
+  background: #f0a030;
+  box-shadow: none;
+}
+
+.battle-command-unit {
+  display: flex;
+  height: 100%;
+}
+
+/* 顔 */
+.battle-command-portrait {
+  flex: none;
+  width: 176px;
   overflow: hidden;
-  background: radial-gradient(circle at 50% 30%, #2c4256 0%, #101820 70%);
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%);
+  background: radial-gradient(circle at 50% 28%, #cfe6f0 0%, #9fb6c4 80%);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 26px) 100%, 0 100%);
 }
-.battle-unit-panel.is-enemy .battle-unit-panel-portrait {
-  background: radial-gradient(circle at 50% 30%, #3a1420 0%, #150810 70%);
+.battle-command-unit.is-enemy .battle-command-portrait {
+  background: radial-gradient(circle at 50% 28%, #f1d3d8 0%, #b98a93 80%);
 }
-.battle-unit-panel-portrait img {
+.battle-command-portrait img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-.battle-unit-panel-portrait::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background: var(--tone);
+  object-position: 50% 12%;
 }
 
-.battle-unit-panel-main {
-  flex: 1;
-  min-width: 0;
+.battle-command-info {
+  flex: none;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  justify-content: center;
+  gap: 12px;
+  width: 480px;
+  padding: 0 28px 0 14px;
 }
-.battle-unit-panel-head {
+.battle-command-name-row {
   display: flex;
-  align-items: center;
-  gap: 14px;
+  align-items: baseline;
+  gap: 18px;
 }
-.battle-unit-panel-name {
-  font-size: 30px;
-  line-height: 1.1;
+.battle-command-name {
+  font-size: 34px;
+  line-height: 1.2;
   letter-spacing: 0.06em;
-  color: #fff;
 }
-/* 兵科バッジ */
-.battle-unit-panel-class {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  height: 26px;
-  padding: 0 12px 0 8px;
-  font-size: 14px;
-  letter-spacing: 0.1em;
-  color: var(--ink);
-  background: var(--fill);
-  box-shadow: inset 0 0 0 1px var(--line);
-}
-.battle-unit-panel-class svg {
-  width: 16px;
-  height: 16px;
-  fill: none;
-  stroke: var(--tone);
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.battle-unit-panel-level {
+.battle-command-level {
   display: inline-flex;
   align-items: baseline;
   gap: 6px;
+  font-size: 20px;
+  color: var(--c-sub);
 }
-.battle-unit-panel-side {
-  margin-left: auto;
-  color: var(--tone);
+.battle-command-panel .battle-command-level {
+  color: var(--c-sub);
 }
-
-.battle-unit-panel-hp {
+.battle-command-level .battle-num {
+  font-size: 30px;
+}
+.battle-command-hp {
   display: flex;
   align-items: center;
   gap: 14px;
 }
-.battle-unit-panel-hp-bar {
+.battle-command-bar {
   flex: 1;
   height: 12px;
-  background: rgba(255, 255, 255, 0.08);
-  clip-path: polygon(3px 0, 100% 0, calc(100% - 3px) 100%, 0 100%);
+  background: #c3cad1;
+  clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
 }
-.battle-unit-panel-hp-fill {
+.battle-command-bar i {
+  display: block;
   height: 100%;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--tone) 70%, #fff) 0%, var(--tone) 100%);
+  background: #2a8fb0;
   transition: width 0.3s ease;
 }
-.battle-unit-panel-hp-fill.is-low {
-  background: linear-gradient(90deg, #ffd58a 0%, var(--spend) 100%);
+.battle-command-bar i.is-low {
+  background: #f0a030;
 }
-.battle-unit-panel-hp .battle-num {
+.battle-command-unit.is-enemy .battle-command-bar i {
+  background: var(--c-rose);
+}
+.battle-command-hp .battle-num {
   min-width: 130px;
-  font-size: 22px;
+  font-size: 26px;
   text-align: right;
 }
-.battle-unit-panel-hp .battle-num small {
+.battle-command-panel .battle-command-hp .battle-num small {
   font-family: inherit;
-  font-size: 15px;
-  color: var(--ink-dim);
+  font-size: 18px;
+  color: var(--c-sub);
 }
-
-.battle-unit-panel-row {
+.battle-command-stats {
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: 24px;
 }
-.battle-unit-panel-ap {
-  display: flex;
+.battle-command-ap,
+.battle-command-stat {
+  display: inline-flex;
   align-items: center;
   gap: 10px;
+  font-size: 20px;
+  color: var(--c-sub);
+}
+.battle-command-panel .battle-command-ap,
+.battle-command-panel .battle-command-stat {
+  color: var(--c-sub);
+}
+.battle-command-ap {
   margin-right: auto;
 }
-.battle-unit-panel-ap .battle-num {
-  font-size: 22px;
-}
-.battle-unit-panel-ap .battle-num small {
-  font-family: inherit;
-  font-size: 14px;
-  color: var(--ink-dim);
-}
-.battle-unit-panel.is-enemy .battle-pips i.is-on {
-  background: var(--tone);
-  box-shadow: 0 0 10px rgba(255, 107, 122, 0.5);
-}
-.battle-unit-panel-stat {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-}
-.battle-unit-panel-stat .battle-num {
-  font-size: 22px;
+.battle-command-ap .battle-num,
+.battle-command-stat .battle-num {
+  font-size: 26px;
 }
 
-/* 敵の補足（通常攻撃・スキル） */
-.battle-unit-panel-note {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  font-size: 14px;
-  letter-spacing: 0.06em;
-  color: var(--ink-dim);
+/* 通常攻撃・スキルのカード */
+.battle-command-cards {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 12px 28px 12px 0;
 }
-
-
-/* 行動ボタン */
-.battle-action-dock {
-  position: absolute;
-  right: 48px;
-  bottom: 132px; /* ターン操作の上 */
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 12px;
-  animation: battle-panel-in 0.22s ease-out;
-}
-.battle-action-row {
-  display: flex;
-  gap: 12px;
-}
-.battle-action-button {
-  --tone: var(--rose);
+.battle-command-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  width: 270px;
-  height: 118px;
-  padding: 14px 18px 0 20px;
+  gap: 6px;
+  min-width: 0;
+  padding: 12px 18px 12px 20px;
   font-family: inherit;
   text-align: left;
   cursor: pointer;
-  background: var(--panel);
+  background: #fff;
   border: none;
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
   transition: background 0.15s ease-out;
 }
-.battle-action-button.is-skill {
-  --tone: var(--gold);
+.battle-command-card.is-info {
+  cursor: default;
+  background: #f6f8fa;
 }
-.battle-action-button::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  border: 1px solid var(--line);
-  clip-path: inherit;
-  transition: border-color 0.15s ease-out;
+@media (hover: hover) {
+  .battle-command-card:hover:not(.is-active):not(:disabled):not(.is-info) {
+    background: #f1f8fb;
+  }
 }
-.battle-action-button:hover:not(:disabled) {
-  background: rgba(20, 30, 40, 0.92);
-}
-.battle-action-button:hover:not(:disabled)::before {
-  border-color: rgba(255, 255, 255, 0.4);
-}
-.battle-action-button.is-active {
-  background: color-mix(in srgb, var(--tone) 14%, var(--panel));
-}
-.battle-action-button.is-active::before {
-  border-color: var(--tone);
-  box-shadow: inset 0 0 24px color-mix(in srgb, var(--tone) 25%, transparent);
-}
-/* AP不足 */
-.battle-action-button:disabled {
+.battle-command-card:disabled {
   cursor: default;
 }
-.battle-action-button:disabled > * {
-  opacity: 0.4;
+.battle-command-card:disabled > * {
+  opacity: 0.45;
 }
-.battle-action-button:disabled .battle-action-cost {
-  color: var(--rose);
-  opacity: 1;
+.battle-command-card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
-.battle-action-button:disabled .battle-action-cost .battle-pips i.is-on {
-  background: rgba(255, 107, 122, 0.5);
-  box-shadow: none;
-}
-.battle-action-button:disabled .battle-action-foot {
-  background: rgba(255, 107, 122, 0.1);
-}
-
-.battle-action-kind {
-  font-family: 'CaviarDreams', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.26em;
-  color: var(--tone);
-}
-.battle-action-name {
-  font-size: 26px;
-  line-height: 1.1;
-  letter-spacing: 0.06em;
+.battle-command-panel .battle-command-card-kind {
+  height: 26px;
+  padding: 0 10px;
+  font-size: 17px;
+  line-height: 26px;
+  letter-spacing: 0.08em;
   color: #fff;
+  background: var(--c-sub);
 }
-/* 消費APと射程の帯。選択中は塗りつぶして文字を反転する */
-.battle-action-foot {
+.battle-command-card-name {
+  font-size: 24px;
+  letter-spacing: 0.05em;
+}
+.battle-command-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+.battle-command-card-cost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+}
+.battle-command-card-cost .battle-num {
+  font-size: 24px;
+}
+.battle-command-panel .battle-command-card-range {
+  font-size: 18px;
+  color: var(--c-sub);
+}
+.battle-command-card-body {
+  flex: 1;
   display: flex;
   align-items: center;
   gap: 14px;
-  width: calc(100% + 38px);
-  height: 36px;
-  margin: auto -18px 0 -20px;
-  padding: 0 34px 0 20px;
-  background: color-mix(in srgb, var(--tone) 16%, transparent);
-  transition: background 0.15s ease-out;
+  min-height: 0;
 }
-.battle-action-button.is-active .battle-action-foot {
-  background: var(--tone);
+.battle-command-card-desc {
+  flex: 1;
+  font-size: 20px;
+  line-height: 1.45;
+  color: #3b4147;
+  text-wrap: pretty;
 }
-.battle-action-button.is-active .battle-action-cost,
-.battle-action-button.is-active .battle-action-range {
-  color: #08121c;
+.battle-command-panel .battle-command-card-desc {
+  color: #3b4147;
 }
-.battle-action-button.is-active .battle-action-cost .battle-pips i.is-on {
-  background: #08121c;
-}
-.battle-action-cost {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'CaviarDreams', sans-serif;
+.battle-command-card-note {
+  display: block;
   font-size: 18px;
-  font-weight: 600;
-  line-height: 1;
-  color: var(--ink);
 }
-.battle-action-cost .battle-pips {
-  gap: 3px;
+.battle-command-panel .battle-command-card-note {
+  color: var(--c-sub);
 }
-.battle-action-cost .battle-pips i {
-  width: 14px;
-  height: 8px;
-}
-.battle-action-cost .battle-pips i.is-on {
-  box-shadow: none;
-}
-.battle-action-range {
-  margin-left: auto;
-  font-family: 'CaviarDreams', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  color: var(--ink-dim);
-}
-/* スキルの形 */
-.battle-action-shape {
-  position: absolute;
-  top: 14px;
-  right: 18px;
-  width: 64px;
-  height: 64px;
+/* 効果範囲 */
+.battle-command-card-reach {
+  flex: none;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 64px;
+  height: 64px;
 }
-.battle-action-shape .attack-range-hex {
+.battle-command-card-reach .attack-range-hex {
   max-width: 100%;
   max-height: 100%;
   width: auto;
   height: auto;
 }
-.battle-action-shape .attack-range-hex-origin {
-  fill: var(--ink);
+.battle-command-card-reach .attack-range-hex-origin {
+  fill: #2a8fb0;
 }
-.battle-action-shape .attack-range-hex-tile {
-  fill: color-mix(in srgb, var(--tone) 45%, transparent);
-  stroke: var(--tone);
+.battle-command-card-reach .attack-range-hex-tile {
+  fill: rgba(229, 88, 106, 0.45);
+  stroke: var(--c-rose);
 }
 
-.battle-action-deselect {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  height: 36px;
-  padding: 0 16px;
-  font-family: inherit;
-  font-size: 15px;
-  letter-spacing: 0.14em;
-  color: var(--ink-dim);
-  cursor: pointer;
-  background: none;
-  border: 1px solid var(--line);
-  transition: color 0.15s ease-out, border-color 0.15s ease-out;
+/* 選択中 */
+.battle-command-card.is-active {
+  background: var(--c-dark);
 }
-.battle-action-deselect::before {
-  content: '×';
-  font-family: 'CaviarDreams', sans-serif;
-  font-size: 18px;
+.battle-command-card.is-active * {
+  color: #fff;
 }
-.battle-action-deselect:hover {
-  color: var(--ink);
-  border-color: rgba(255, 255, 255, 0.5);
+.battle-command-panel .battle-command-card.is-active .battle-command-card-kind {
+  color: #12303a;
+  background: var(--c-ice);
+}
+.battle-command-panel .battle-command-card.is-active .battle-command-card-range,
+.battle-command-panel .battle-command-card.is-active .battle-command-card-note {
+  color: #aeb8c0;
+}
+.battle-command-panel .battle-command-card.is-active .battle-pips i {
+  background: rgba(255, 255, 255, 0.25);
+}
+.battle-command-panel .battle-command-card.is-active .battle-pips i.is-on {
+  background: var(--c-ice);
+}
+.battle-command-card.is-active .attack-range-hex-origin {
+  fill: var(--c-ice);
 }

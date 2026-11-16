@@ -1,36 +1,42 @@
-/* 左上：ターン・フェーズ・パーティAP */
 .battle-hud {
   position: absolute;
-  top: 36px;
+  top: 40px;
   left: 48px;
   z-index: 2;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 14px;
+  align-items: stretch;
   text-align: left;
-}
-.battle-hud-row {
-  display: flex;
-  align-items: flex-end;
-  gap: 22px;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
 }
 .battle-hud-turn {
+  position: relative;
   display: flex;
   align-items: baseline;
   gap: 12px;
+  padding: 14px 30px 18px 26px;
+  background: #2a2f35;
+}
+.battle-hud-turn-label {
+  font-size: 20px;
+  letter-spacing: 0.1em;
+  color: #b9c2ca;
 }
 .battle-hud-turn .battle-num {
-  font-size: 66px;
+  font-size: 52px;
+  color: #fff;
 }
-/* フェーズのタグ */
+/* フェーズの札 */
 .battle-hud-phase {
+  position: absolute;
+  top: 100%;
+  left: 18px;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   gap: 10px;
   height: 30px;
-  margin-bottom: 10px;
   padding: 0 16px 0 12px;
+  white-space: nowrap;
   font-family: 'CaviarDreams', sans-serif;
   font-size: 15px;
   font-weight: 600;
@@ -38,6 +44,7 @@
   color: #08121c;
   background: var(--accent);
   clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+  transform: translateY(-50%);
 }
 .battle-hud-phase::before {
   content: '';
@@ -55,21 +62,38 @@
 }
 
 .battle-hud-ap {
-  --cut: 12px;
   display: flex;
   align-items: center;
-  gap: 18px;
-  padding: 12px 22px 12px 18px;
+  gap: 16px;
+  padding: 0 28px 0 24px;
+  background: rgba(232, 236, 240, 0.97);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%);
+}
+.battle-hud-ap-label {
+  font-size: 20px;
+  color: #6b737a;
 }
 .battle-hud-ap .battle-num {
-  font-size: 30px;
+  font-size: 32px;
+  color: #282828;
 }
 .battle-hud-ap .battle-num small {
   font-family: inherit;
-  font-size: 16px;
-  color: var(--ink-dim);
+  font-size: 20px;
+  color: #6b737a;
 }
-
+.battle-hud-ap .battle-pips i {
+  background: #c3cad1;
+  outline: none;
+}
+.battle-hud-ap .battle-pips i.is-on {
+  background: #2a8fb0;
+  box-shadow: none;
+}
+.battle-hud-ap .battle-pips i.is-spend {
+  background: #f0a030;
+  box-shadow: none;
+}
 
 /* フェーズ告知 */
 .battle-phase-banner {

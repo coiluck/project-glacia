@@ -20,6 +20,8 @@ const TRANSLATION_MAPPING = Object.fromEntries(
     'resultFailed',
     'retry',
     'backToMap',
+    'stage',
+    'nextRank',
   ].map((k) => [k, k]),
 )
 
@@ -101,7 +103,7 @@ export default function BattleResult({
   const rankRow = (
     <div className={`battle-result-rank${isRankUp ? ' is-rankup' : ''}`}>
       <div className="battle-result-rank-value">
-        <span className="battle-result-rank-label">RANK</span>
+        <span className="battle-result-rank-label">{t.rank}</span>
         <span className={`battle-result-rank-current${rankUpShown ? ' is-up' : ''}`}>
           {pad2(isRankUp && !rankUpShown ? rankBefore.rank : rank)}
         </span>
@@ -119,7 +121,9 @@ export default function BattleResult({
           />
         </span>
         <span className="battle-result-rank-exp-text">
-          EXP {expInRank} / {expToNext}
+          <span className="battle-num">
+            {expInRank} / {expToNext}
+          </span>
         </span>
       </div>
       <span className="battle-result-rank-gain">+{reward?.rankExp ?? 0}</span>
@@ -129,71 +133,68 @@ export default function BattleResult({
   const pending = <div className="battle-result-none is-pending">— — —</div>
 
   return (
-    <div className={`battle-result fade-in${result === 'defeat' ? ' is-defeat' : ''}`}>
-      <div className="battle-result-side">
-        <div className="battle-result-head">
-          <div className="battle-result-stage">STAGE {stageId}</div>
-          <div className="battle-result-title">{result === 'victory' ? t.victory : t.defeat}</div>
-        </div>
-      </div>
-
-      <div className="battle-result-main">
-        <div className="battle-result-sections">
-          <div className="battle-result-section">
-            <div className="battle-result-section-title">{t.rank}</div>
-            {reward ? rankRow : pending}
+    <ViewportLayer>
+      <div className={`battle-result fade-in${result === 'defeat' ? ' is-defeat' : ''}`}>
+        <div className="battle-result-head-bg" />
+        <div className="battle-result-safe">
+          <div className="battle-result-head">
+            <span className="battle-result-title">{result === 'victory' ? t.victory : t.defeat}</span>
+            <span className="battle-result-stage">
+              {t.stage}
+              <span className="battle-num">{stageId}</span>
+            </span>
           </div>
 
-          <div className="battle-result-section">
-            <div className="battle-result-section-title">{t.gained}</div>
-            {!reward ? (
-              pending
-            ) : result === 'defeat' ? (
-              <div className="battle-result-none">{t.noGain}</div>
-            ) : (
-              <ul className="battle-result-item-list">
-                {resultItems.map((item, i) => (
-                  <li
-                    key={item.key}
-                    className={`battle-result-item${item.rare ? ' is-rare' : ''}`}
-                    style={{ '--i': i } as CSSProperties}
-                  >
-                    <span className="battle-result-item-cell">
-                      {item.item ? (
-                        <ItemIcon item={item.item} className="battle-result-item-icon" />
-                      ) : (
-                        <BillIcon className="battle-result-bill" />
-                      )}
-                      <span className="battle-result-item-count">×{formatCompact(item.count)}</span>
-                    </span>
-                    <span className="battle-result-item-name">{item.name}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
+          <div className="battle-result-main">
+            <div className="battle-result-section">{reward ? rankRow : pending}</div>
 
-        <div className="battle-result-bar">
-          {failed ? (
-            <div className="battle-result-failed">
-              <span>{t.resultFailed}</span>
-              <button type="button" className="battle-result-retry" onClick={onRetry}>
-                {t.retry}
-              </button>
+            <div className="battle-result-section is-items">
+              <div className="battle-result-section-title">{t.gained}</div>
+              {!reward ? (
+                pending
+              ) : result === 'defeat' ? (
+                <div className="battle-result-none">{t.noGain}</div>
+              ) : (
+                <ul className="battle-result-item-list">
+                  {resultItems.map((item, i) => (
+                    <li
+                      key={item.key}
+                      className={`battle-result-item${item.rare ? ' is-rare' : ''}`}
+                      style={{ '--i': i } as CSSProperties}
+                    >
+                      <span className="battle-result-item-cell">
+                        {item.item ? (
+                          <ItemIcon item={item.item} className="battle-result-item-icon" />
+                        ) : (
+                          <BillIcon className="battle-result-bill" />
+                        )}
+                        <span className="battle-result-item-count">×{formatCompact(item.count)}</span>
+                      </span>
+                      <span className="battle-result-item-name">{item.name}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
-          ) : (
-            <div />
-          )}
-          <button type="button" className="battle-result-button" onClick={onBackToMap}>
-            {t.backToMap}
-          </button>
+          </div>
+
+          <div className="battle-result-bar">
+            {failed ? (
+              <div className="battle-result-failed">
+                <span>{t.resultFailed}</span>
+                <button type="button" className="battle-result-retry" onClick={onRetry}>
+                  {t.retry}
+                </button>
+              </div>
+            ) : (
+              <div />
+            )}
+            <button type="button" className="battle-result-button" onClick={onBackToMap}>
+              {t.backToMap}
+            </button>
+          </div>
         </div>
       </div>
-
-      <ViewportLayer>
-        <div className="battle-result-background" />
-      </ViewportLayer>
-    </div>
+    </ViewportLayer>
   )
 }

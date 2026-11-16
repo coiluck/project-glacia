@@ -18,24 +18,28 @@ import {
   movementRange,
   skillHitsAnyone,
   skillHitsByEffect,
+  skillReach,
   unitById,
 } from '../../features/battle/battle'
 import { useBattleStore } from '../../stores/battleStore'
 import { useBattleResultSubmission } from '../../hooks/useBattleResultSubmission'
 import { NORMAL_ATTACK_POWER, calcDamage, calcHeal } from '../../features/battle/damage'
 import { axialKey, effectTiles, shapeAimsAnyDirection, shapeTiles } from '../../features/battle/hex'
-import type { AimTile, Axial } from '../../features/battle/hex'
+import type { AimTile, AttackShape, Axial } from '../../features/battle/hex'
 import type { Unit } from '../../features/battle/types'
+import { formatSkillDescription } from '../../features/characters/describe'
+import { isSkillDue } from '../../features/battle/ai'
 import { useAttackFx } from './useAttackFx'
 import { useBattleGuide } from './useBattleGuide'
-import ActionDock from './components/ActionDock'
 import BattleGuide from './components/BattleGuide'
 import BattleHud from './components/BattleHud'
 import BattleResult from './components/BattleResult'
+import CommandBar from './components/CommandBar'
 import DeployDock from './components/DeployDock'
 import HexGrid from './components/HexGrid'
 import PhaseBanner from './components/PhaseBanner'
-import UnitPanel from './components/UnitPanel'
+import UnitCommand from './components/UnitCommand'
+import type { ActionCardInfo } from './components/UnitCommand'
 import ViewportLayer from '../../layouts/ViewportLayer'
 
 // i18n。キャラ名とスキル名は characters.json、それ以外は battle.json にある
@@ -43,6 +47,7 @@ const CHARACTER_TRANSLATION_MAPPING = Object.fromEntries(
   [
     ...Object.values(characterMasters).map((c) => c.nameKey),
     ...Object.values(characterMasters).flatMap((c) => c.skills.map((s) => s.def.nameKey)),
+    ...Object.values(characterMasters).flatMap((c) => c.skills.map((s) => s.descriptionKey)),
   ].map((k) => [k, k]),
 )
 
@@ -50,7 +55,7 @@ const BATTLE_TRANSLATION_MAPPING = Object.fromEntries(
   [
     ...Object.values(unitClasses).map((c) => c.nameKey),
     ...Object.values(enemyDefs).map((e) => e.nameKey),
-    ...Object.values(enemyDefs).flatMap((e) => (e.skill ? [e.skill.def.nameKey] : [])),
+    ...Object.values(enemyDefs).flatMap((e) => (e.skill ? [e.skill.def.nameKey, `${e.skill.def.nameKey}Desc`] : [])),
     'deployHint',
     'deployed',
     'startBattle',
@@ -60,6 +65,17 @@ const BATTLE_TRANSLATION_MAPPING = Object.fromEntries(
     'deselect',
     'normalAttack',
     'skillTriggerTurns',
+    'normalAttackDesc',
+    'normalAttackDescAll',
+    'rangeLabel',
+    'rangeSelf',
+    'turn',
+    'partyAp',
+    'lv',
+    'statAttack',
+    'statDefense',
+    'kindAttack',
+    'skill',
     'backToMap',
     'emptyParty',
   ].map((k) => [k, k]),
@@ -362,8 +378,13 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
 
   // 配置フェーズの配置は DeployDock のドラッグが担当する
   const handleTileClick = (pos: Axial) => {
-    if (state.phase !== 'player') return
     const key = axialKey(pos)
+    const standing = state.units.find((u) => axialKey(u.pos) === key)
+    if (standing) {
+      handleUnitClick(standing)
+      return
+    }
+    if (state.phase !== 'player') return
     if (selectedUnit?.side === 'ally' && action === 'move' && moveCosts.has(key)) {
       if (!confirmOrPreview(key)) return
       guide.act({ type: 'move', unitId: selectedUnit.id, to: pos }, () => {
@@ -461,17 +482,51 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
   const canSkill =
     selectedUnit?.skill != null && availableAp(state, selectedUnit) >= selectedUnit.skill.apCost
 
-  // 敵の補足（通常攻撃の威力と消費AP、スキルの発動条件）
-  const enemyNotes = (unit: Unit): string[] => {
+  // 射程の表記
+  const rangeText = (shape: AttackShape): string => {
+    if (shape.kind !== 'range') return ''
+    if (shape.max === 0) return t.rangeSelf
+    const min = shape.min ?? 1
+    return fill(t.rangeLabel, min === shape.max ? String(min) : `${min}–${shape.max}`)
+  }
+
+  // 下のパネルに出す通常攻撃とスキルの説明
+  const attackCardOf = (unit: Unit): ActionCardInfo => {
     const cls = unit.unitClass
-    const range =
-      cls.attackRange.kind === 'range' ? ` · RANGE ${cls.attackRange.min ?? 1}–${cls.attackRange.max}` : ''
-    const notes = [`${t.normalAttack} · ${cls.attackCost} AP${range}`]
-    if (unit.skill) {
-      const trigger = unit.skillEveryNTurns !== undefined ? fill(t.skillTriggerTurns, unit.skillEveryNTurns) : ''
-      notes.push(`${t[unit.skill.nameKey]} ${trigger}`.trim())
+    return {
+      name: t.normalAttack,
+      desc:
+        cls.attackTargets === 'infinity'
+          ? fill(t.normalAttackDescAll, NORMAL_ATTACK_POWER)
+          : fill(t.normalAttackDesc, cls.attackTargets, NORMAL_ATTACK_POWER),
+      cost: cls.attackCost,
+      range: rangeText(cls.attackRange),
+      reach: shapeTiles({ q: 0, r: 0 }, cls.attackRange),
     }
-    return notes
+  }
+  const skillCardOf = (unit: Unit): ActionCardInfo | undefined => {
+    const skill = unit.skill
+    if (!skill) return undefined
+    const isAlly = unit.side === 'ally'
+    // 味方の説明文のキーはマスターデータ、敵は「スキル名のキー＋Desc」
+    const descKey = isAlly
+      ? characterMasters[unit.id.slice('ally-'.length)]?.skills.find((s) => s.def.id === skill.id)?.descriptionKey
+      : `${skill.nameKey}Desc`
+    return {
+      name: t[skill.nameKey] ?? '',
+      desc: formatSkillDescription(t[descKey ?? ''] ?? '', { def: skill }),
+      cost: isAlly ? skill.apCost : undefined,
+      range: rangeText(skill.range),
+      reach: skillReach(skill),
+      note: unit.skillEveryNTurns !== undefined ? fill(t.skillTriggerTurns, unit.skillEveryNTurns) : undefined,
+    }
+  }
+
+  const enemySkillDue = selectedUnit?.side === 'enemy' && isSkillDue(state, selectedUnit)
+
+  const handleBlankClick = (e: { target: EventTarget }) => {
+    if (selectedUnitId === null || (e.target as Element).closest('.hex-tile')) return
+    guide.act({ type: 'deselect' }, deselect)
   }
 
   const inBattle = state.phase !== 'victory' && state.phase !== 'defeat'
@@ -485,7 +540,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
         }
 
         {/* 背景 */}
-        <div className="battle-hud-background" />
+        <div className="battle-hud-background" onClick={handleBlankClick} />
       </ViewportLayer>
 
 
@@ -493,7 +548,7 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
         {/* 盤面。リザルトの暗幕はセーフエリアの下（ビューポート層）にあり盤面を覆えないので、決着後は描かない。
             ただし決着の一撃の演出が終わるまでは残す */}
         {(inBattle || fxPlaying) && (
-          <div className="battle-board-area">
+          <div className="battle-board-area" onClick={handleBlankClick}>
             <HexGrid
               tiles={stage.tiles}
               units={state.units}
@@ -507,7 +562,6 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
               getUnitName={getUnitName}
               getUnitChibi={getUnitChibi}
               onTileClick={handleTileClick}
-              onUnitClick={handleUnitClick}
               onHover={setHoverKey}
               fx={fx}
             />
@@ -522,71 +576,63 @@ function BattleScreen({ stageId }: { stageId: string | undefined }) {
             partyAp={state.partyAp}
             partyApMax={stage.partyApPerTurn}
             spend={previewCost}
+            turnLabel={t.turn}
+            partyApLabel={t.partyAp}
           />
         )}
 
-        {/* 配置フェーズ用 */}
-        {state.phase === 'deployment' && (
-          <DeployDock
-            party={party}
-            isDeployed={isDeployed}
-            getName={(charId) => t[characterMasters[charId]?.nameKey ?? ''] ?? ''}
-            hint={t.deployHint}
-            deployedLabel={t.deployed}
-            startLabel={t.startBattle}
-            canStart={state.units.some((u) => u.side === 'ally')}
-            onStart={() => guide.act({ type: 'startBattle' }, start)}
-            onDeploy={(member, pos) =>
-              guide.act({ type: 'deploy', charId: member.character.id, pos }, () =>
-                deploy(member.character, member.skill, pos),
+        {/* 選択中ユニットの情報 */}
+        {(state.phase === 'player' || state.phase === 'deployment') && (
+          <CommandBar
+            open={!!selectedUnit && !!selectedClass}
+            controls={
+              state.phase === 'deployment' ? (
+                <DeployDock
+                  party={party}
+                  isDeployed={isDeployed}
+                  getName={(charId) => t[characterMasters[charId]?.nameKey ?? ''] ?? ''}
+                  hint={t.deployHint}
+                  deployedLabel={t.deployed}
+                  startLabel={t.startBattle}
+                  canStart={state.units.some((u) => u.side === 'ally')}
+                  onStart={() => guide.act({ type: 'startBattle' }, start)}
+                  onDeploy={(member, pos) =>
+                    guide.act({ type: 'deploy', charId: member.character.id, pos }, () =>
+                      deploy(member.character, member.skill, pos),
+                    )
+                  }
+                />
+              ) : (
+                <div className="battle-turn-controls">
+                  <button className="battle-button-ghost" onClick={handleUndoTurn}>
+                    {t.undoTurn}
+                  </button>
+                  <button className="battle-button-primary" data-guide="end-turn" onClick={handleEndTurn}>
+                    {t.endTurn}
+                  </button>
+                </div>
               )
             }
-          />
-        )}
-
-        {/* 選択中ユニットの情報（配置中は敵の下見にも使う） */}
-        {(state.phase === 'player' || state.phase === 'deployment') &&
-          selectedUnit &&
-          selectedClass && (
-            <UnitPanel
-              unit={selectedUnit}
-              name={getUnitName(selectedUnit)}
-              portrait={getUnitPortrait(selectedUnit)}
-              className={selectedUnit.classId ? t[unitClasses[selectedUnit.classId].nameKey] : undefined}
-              ap={selectedUnit.side === 'ally' ? availableAp(state, selectedUnit) : selectedClass.apPerTurn}
-              spend={selectedUnit.side === 'ally' ? previewCost : 0}
-              notes={selectedUnit.side === 'enemy' ? enemyNotes(selectedUnit) : undefined}
-            />
-          )}
-
-        {/* 味方の行動 */}
-        {state.phase === 'player' && selectedUnit?.side === 'ally' && selectedClass && (
-          <ActionDock
-            unitClass={selectedClass}
-            skill={selectedUnit.skill}
-            skillName={selectedUnit.skill ? t[selectedUnit.skill.nameKey] : ''}
-            attackLabel={t.attack}
-            deselectLabel={t.deselect}
-            action={action}
-            canAttack={canAttack}
-            canSkill={canSkill}
-            onAttack={handleAttackButton}
-            onSkill={handleSkillButton}
-            onDeselect={() => guide.act({ type: 'deselect' }, deselect)}
-            onHover={setHoverButton}
-          />
-        )}
-
-        {/* 味方ターンの操作 */}
-        {state.phase === 'player' && (
-          <div className="battle-turn-controls">
-            <button className="battle-button-ghost" onClick={handleUndoTurn}>
-              {t.undoTurn}
-            </button>
-            <button className="battle-button-primary" data-guide="end-turn" onClick={handleEndTurn}>
-              {t.endTurn}
-            </button>
-          </div>
+          >
+            {selectedUnit && selectedClass && (
+              <UnitCommand
+                unit={selectedUnit}
+                name={getUnitName(selectedUnit)}
+                portrait={getUnitPortrait(selectedUnit)}
+                ap={selectedUnit.side === 'ally' ? availableAp(state, selectedUnit) : selectedClass.apPerTurn}
+                spend={selectedUnit.side === 'ally' ? previewCost : 0}
+                labels={{ lv: t.lv, attack: t.statAttack, defense: t.statDefense, attackKind: t.kindAttack, skillKind: t.skill }}
+                attackCard={selectedUnit.side === 'enemy' && enemySkillDue ? undefined : attackCardOf(selectedUnit)}
+                skillCard={selectedUnit.side === 'enemy' && !enemySkillDue ? undefined : skillCardOf(selectedUnit)}
+                action={action}
+                canAttack={canAttack}
+                canSkill={canSkill}
+                onAttack={handleAttackButton}
+                onSkill={handleSkillButton}
+                onHover={setHoverButton}
+              />
+            )}
+          </CommandBar>
         )}
 
         {/* フェーズの切り替わり */}
