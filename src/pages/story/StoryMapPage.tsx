@@ -8,8 +8,10 @@ import StageNode from './components/StageNode'
 import StageDrops from './components/StageDrops'
 import StageEnemies from './components/StageEnemies'
 import StageBoard from './components/StageBoard'
+import StoryGuide from './components/StoryGuide'
 import BattleResult from '../battle/components/BattleResult'
 import { useProgressStore } from '../../stores/progressStore'
+import { useTutorialStore } from '../../stores/tutorialStore'
 import { battleGuideRegistry } from '../../data/battleGuides'
 import { selectStamina, useStaminaStore } from '../../stores/staminaStore'
 import { chapters, isStageUnlocked, type Chapter, type ChapterStatus, type Stage, type StageStatus } from '../../data/stages'
@@ -45,6 +47,12 @@ export default function StoryMapPage() {
   const [selectedNode, setSelectedNode] = useState<StageNodeData | null>(null)
   const [isChapterSelectOpen, setIsChapterSelectOpen] = useState(false)
   const [isSkip, setIsSkip] = useState(true)
+  // 1-1 をクリアしたのにまだ案内を見ていなければ、メニューを開かせる
+  const [showGuide, setShowGuide] = useState(
+    () =>
+      useProgressStore.getState().clearedStageIds.includes('1-1') &&
+      !useTutorialStore.getState().completedSteps.includes('gacha'),
+  )
   const navigate = useNavigate()
   const { submission, submit, retry, clear } = useBattleResultSubmission()
   const maxChapter = useProgressStore((s) => s.chapter)
@@ -317,6 +325,8 @@ export default function StoryMapPage() {
           </>
         )}
       </ViewportLayer>
+
+      {showGuide && <StoryGuide onDone={() => setShowGuide(false)} />}
 
       <Screen background="images/story/1.avif" />
     </>

@@ -81,7 +81,7 @@ export default function ResourceBar() {
         {!isTopPage ?
          <div className="resource-bar-move-container fade-in">
            <button className="resource-bar-move-button back-button" onClick={backButton}></button>
-           <button className="resource-bar-move-button menu-button" onClick={handleMenuButton}></button>
+           <button className="resource-bar-move-button menu-button" data-guide="menu" onClick={handleMenuButton}></button>
          </div>
          :
          <div className="resource-bar-user-container fade-in">

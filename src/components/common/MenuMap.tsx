@@ -102,7 +102,7 @@ export default function MenuMap({ onSelect }: Props) {
     label: string,
     icon: string,
     info: ReactNode,
-    options: { notice?: boolean; badge?: ReactNode } = {},
+    options: { notice?: boolean; badge?: ReactNode; guide?: string } = {},
   ) => {
     const current = isCurrent(to)
     const className = [
@@ -118,6 +118,7 @@ export default function MenuMap({ onSelect }: Props) {
         className={className}
         style={{ '--i': index++ } as CSSProperties}
         disabled={current}
+        data-guide={options.guide}
         onClick={() => onSelect(to)}
       >
         <span className="menu-map-item-icon" style={iconStyle(icon)} />
@@ -159,6 +160,7 @@ export default function MenuMap({ onSelect }: Props) {
           t.menuMember,
           'top/menu-main/team.svg',
           null,
+          { guide: 'menu-member' },
         ),
       )}
 
@@ -211,6 +213,7 @@ export default function MenuMap({ onSelect }: Props) {
           t.menuRecruit,
           'top/menu-main/graduation_hat.svg',
           null,
+          { guide: 'menu-recruit' },
         ),
         tile(
           paths.mission,
