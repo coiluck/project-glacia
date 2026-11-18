@@ -1,15 +1,16 @@
 import { create } from 'zustand'
 import type { UserRow } from '../features/contract'
-import type { Lang, TextSize, TextSpeed } from '../data/settings'
+import type { AutoSpeed, Lang, TextSize, TextSpeed } from '../data/settings'
 
 export interface SettingsState {
   bgm: number // 0〜100
   se: number // 0〜100
   textSpeed: TextSpeed
+  autoSpeed: AutoSpeed
   textSize: TextSize
   lang: Lang
   dirty: boolean // 未保存の変更があるか
-  set: (patch: Partial<Pick<SettingsState, 'bgm' | 'se' | 'textSpeed' | 'textSize' | 'lang'>>) => void
+  set: (patch: Partial<Pick<SettingsState, 'bgm' | 'se' | 'textSpeed' | 'autoSpeed' | 'textSize' | 'lang'>>) => void
   hydrate: (row: UserRow) => void
   reset: () => void
 }
@@ -18,6 +19,7 @@ const initial = {
   bgm: 80,
   se: 80,
   textSpeed: 'normal' as TextSpeed,
+  autoSpeed: 'normal' as AutoSpeed,
   textSize: 'normal' as TextSize,
   // デフォルト言語はブラウザの言語から決める
   lang: (navigator.language.startsWith('ja') ? 'ja' : 'en') as Lang,
@@ -32,6 +34,7 @@ export const useSettingsStore = create<SettingsState>((set) => ({
       bgm: row.settings_bgm,
       se: row.settings_se,
       textSpeed: row.settings_text_speed,
+      autoSpeed: row.settings_auto_speed,
       textSize: row.settings_text_size,
       lang: row.settings_lang,
       dirty: false,

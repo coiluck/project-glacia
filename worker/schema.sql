@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS users (
   settings_bgm                   INTEGER NOT NULL DEFAULT 80,
   settings_se                    INTEGER NOT NULL DEFAULT 80,
   settings_text_speed            TEXT    NOT NULL DEFAULT 'normal',
+  settings_auto_speed            TEXT    NOT NULL DEFAULT 'normal',
   settings_text_size             TEXT    NOT NULL DEFAULT 'normal',
   settings_lang                  TEXT    NOT NULL DEFAULT 'ja'
 );

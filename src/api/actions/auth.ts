@@ -11,14 +11,14 @@ async function authenticate(
   password: string,
 ): Promise<void> {
   // ログイン前の設定変更も保存する
-  const { bgm, se, textSpeed, textSize, lang, dirty } = useSettingsStore.getState()
+  const { bgm, se, textSpeed, autoSpeed, textSize, lang, dirty } = useSettingsStore.getState()
   const res = await apiPost<CommandResponse<AuthResult>>(path, { name, password })
 
   setToken(res.result.token)
   distribute(res.me)
 
   if (path === '/auth/register' || dirty) {
-    useSettingsStore.getState().set({ bgm, se, textSpeed, textSize, lang })
+    useSettingsStore.getState().set({ bgm, se, textSpeed, autoSpeed, textSize, lang })
     await saveSettings().catch(() => undefined)
   }
 }

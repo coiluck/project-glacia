@@ -20,12 +20,10 @@
   "scenarioRead": "読む",
   "scenarioLocked": "クリアで解放",
   "scenarioEpilogue": "エピローグ",
-  "settingsSectionMusic": "サウンド",
   "settingsSectionScenario": "シナリオ",
   "settingsSectionOthers": "その他",
-  "settingsBgm": "BGM",
-  "settingsSe": "効果音",
   "settingsTextSpeed": "テキスト速度",
+  "settingsAutoSpeed": "オート速度",
   "settingsSlow": "遅い",
   "settingsNormal": "普通",
   "settingsFast": "速い",
@@ -35,6 +33,9 @@
   "settingsLanguage": "言語",
   "settingsJa": "日本語",
   "settingsEn": "English",
+  "settingsSample1": "氷の下にも、道は続いています。足元に気をつけてください。",
+  "settingsSample2": "ここから先は、私が前を歩きます。",
+  "settingsSample3": "……少し休みましょう。火を起こしてきます。",
   "settingsAccount": "アカウント",
   "settingsLogout": "ログアウト"
 }

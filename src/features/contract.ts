@@ -3,7 +3,7 @@ import type { MissionEvent } from '../data/missions'
 import type { BaseBuildingKind } from '../data/base'
 import type { BaseBuilding } from './base/types'
 import type { Axial } from './battle/hex'
-import type { Lang, TextSize, TextSpeed } from '../data/settings'
+import type { AutoSpeed, Lang, TextSize, TextSpeed } from '../data/settings'
 import type { TutorialStep } from './tutorial/resolve'
 
 // Cloudflare Workers (D1) が返すユーザーデータ
@@ -72,6 +72,7 @@ export interface UserRow {
   settings_bgm: number // 0〜100
   settings_se: number // 0〜100
   settings_text_speed: TextSpeed
+  settings_auto_speed: AutoSpeed
   settings_text_size: TextSize
   settings_lang: Lang
 }
@@ -120,6 +121,7 @@ export interface SettingsPayload {
   bgm: number
   se: number
   textSpeed: TextSpeed
+  autoSpeed: AutoSpeed
   textSize: TextSize
   lang: Lang
 }

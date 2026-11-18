@@ -2,7 +2,13 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 40px;
+}
+.system-settings-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
 }
 .system-settings-section {
   display: flex;
@@ -28,10 +34,19 @@
   gap: 24px;
 }
 
-/* スライダー */
+/* スライダー。両端の「遅い／速い」だけを出す */
+.system-settings-row-slider {
+  min-height: 96px;
+}
+.system-settings-slide {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  padding: 10px 0;
+}
 .system-settings-slider {
-  flex: 1;
-  max-width: 720px;
+  width: 100%;
   height: 22px;
   background: transparent;
   appearance: none;
@@ -62,12 +77,13 @@
   border-radius: 0;
   transform: rotate(45deg);
 }
-.system-settings-value {
-  width: 60px;
-  font-family: 'CaviarDreams', sans-serif;
-  font-size: 24px;
-  font-weight: 600;
-  text-align: right;
+.system-settings-ends {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+}
+.system-panel .system-settings-ends span {
+  color: var(--ink-sub);
 }
 
 .system-settings-segment {
@@ -92,4 +108,89 @@
 .system-panel .system-settings-account {
   flex: 1;
   color: var(--ink-sub);
+}
+
+/* プレビュー（シナリオ画面の会話窓。値は scenario.css と同じ。幅 1700px に合わせて 0.885 倍） */
+.system-settings-preview {
+  position: relative;
+  flex-shrink: 0;
+  height: 300px;
+  overflow: hidden;
+  background: #10161b;
+}
+.system-settings-preview-scene {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 1920px;
+  height: 1080px;
+  transform: scale(0.885);
+  transform-origin: left bottom;
+}
+.system-settings-preview-bg {
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-size: cover;
+}
+.system-settings-preview-face {
+  position: absolute;
+  left: 48px;
+  bottom: 0;
+  z-index: 2;
+  width: 270px;
+  height: 270px;
+  object-fit: cover;
+  object-position: top;
+}
+.system-settings-preview-box {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 280px;
+  padding: 32px 48px 56px 340px;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.76) 30%,
+    rgba(0, 0, 0, 0.7) 50%,
+    rgba(0, 0, 0, 0.55) 75%,
+    rgba(0, 0, 0, 0.25) 90%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+.system-panel .system-settings-preview-box * {
+  color: #fff;
+}
+.system-panel .system-settings-preview-box .system-settings-preview-name {
+  height: 50px;
+  font-size: 40px;
+  font-weight: bold;
+  line-height: 1.5;
+  color: #b1daff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+}
+.system-settings-preview-message {
+  max-width: 1350px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+}
+.system-settings-preview-message::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin: 10px 0;
+  background: #fff;
+}
+.system-settings-preview-cursor {
+  display: inline-block;
+  width: 1px;
+  height: 1.1em;
+  margin-left: 0.5em;
+  vertical-align: text-bottom;
+  background: #fff;
+  animation: scenarioCursorBlink 1.2s infinite;
 }

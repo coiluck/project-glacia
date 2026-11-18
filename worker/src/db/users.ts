@@ -170,7 +170,7 @@ export async function saveMe(
            mail_claimed = ?,
            favorite_character_id = ?,
            base_board = ?, base_members = ?, base_tower_level = ?, base_collected_at = ?,
-           settings_bgm = ?, settings_se = ?, settings_text_speed = ?, settings_text_size = ?, settings_lang = ?
+           settings_bgm = ?, settings_se = ?, settings_text_speed = ?, settings_auto_speed = ?, settings_text_size = ?, settings_lang = ?
          WHERE id = ?`,
       )
       .bind(
@@ -207,6 +207,7 @@ export async function saveMe(
         u.settings_bgm,
         u.settings_se,
         u.settings_text_speed,
+        u.settings_auto_speed,
         u.settings_text_size,
         u.settings_lang,
         userId,

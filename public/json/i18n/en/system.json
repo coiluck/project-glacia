@@ -20,12 +20,10 @@
   "scenarioRead": "Read",
   "scenarioLocked": "Clear to unlock",
   "scenarioEpilogue": "Epilogue",
-  "settingsSectionMusic": "Music",
   "settingsSectionScenario": "Scenario",
   "settingsSectionOthers": "Others",
-  "settingsBgm": "Music",
-  "settingsSe": "Sound",
   "settingsTextSpeed": "Text speed",
+  "settingsAutoSpeed": "Auto speed",
   "settingsSlow": "Slow",
   "settingsNormal": "Normal",
   "settingsFast": "Fast",
@@ -35,6 +33,9 @@
   "settingsLanguage": "Language",
   "settingsJa": "日本語",
   "settingsEn": "English",
+  "settingsSample1": "There is a path beneath the ice, too. Watch your step.",
+  "settingsSample2": "From here on, I will walk ahead of you.",
+  "settingsSample3": "...Let us rest a while. I will go and start a fire.",
   "settingsAccount": "Account",
   "settingsLogout": "Log out"
 }

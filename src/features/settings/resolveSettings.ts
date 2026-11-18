@@ -1,15 +1,16 @@
 // 設定保存のサーバー側の処理
 import type { MeResponse, SettingsPayload } from '../contract'
-import { LANGS, TEXT_SIZES, TEXT_SPEEDS } from '../../data/settings'
+import { AUTO_SPEEDS, LANGS, TEXT_SIZES, TEXT_SPEEDS } from '../../data/settings'
 
 const isVolume = (v: unknown) => Number.isInteger(v) && (v as number) >= 0 && (v as number) <= 100
 
 export function resolveSettings(me: MeResponse, payload: SettingsPayload): MeResponse {
-  const { bgm, se, textSpeed, textSize, lang } = payload
+  const { bgm, se, textSpeed, autoSpeed, textSize, lang } = payload
   if (
     !isVolume(bgm) ||
     !isVolume(se) ||
     !TEXT_SPEEDS.includes(textSpeed) ||
+    !AUTO_SPEEDS.includes(autoSpeed) ||
     !TEXT_SIZES.includes(textSize) ||
     !LANGS.includes(lang)
   ) {
@@ -23,6 +24,7 @@ export function resolveSettings(me: MeResponse, payload: SettingsPayload): MeRes
       settings_bgm: bgm,
       settings_se: se,
       settings_text_speed: textSpeed,
+      settings_auto_speed: autoSpeed,
       settings_text_size: textSize,
       settings_lang: lang,
     },

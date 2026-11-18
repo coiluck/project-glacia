@@ -108,7 +108,7 @@ function newMe(now: number): MeResponse {
       mission_day: 0, mission_counts: {}, mission_claimed: [], mission_done: [], mail_claimed: [],
       favorite_character_id: 'lapis',
       base_board: {}, base_members: {}, base_tower_level: 1, base_collected_at: now,
-      settings_bgm: 80, settings_se: 80, settings_text_speed: 'normal', settings_text_size: 'normal', settings_lang: 'ja',
+      settings_bgm: 80, settings_se: 80, settings_text_speed: 'normal', settings_auto_speed: 'normal', settings_text_size: 'normal', settings_lang: 'ja',
     },
     characters: [
       { masterId: 'lapis', level: 1, exp: 0, limitBreak: 0, dupe: 0, selectedSkillId: characterMasters.lapis.skills[0].def.id, skillLevels: {} },

@@ -8,7 +8,7 @@ import { useGameStore } from '../../stores/gameStore'
 import type { SceneSnapshot } from '../../features/scenario/types'
 import { useProgressStore } from '../../stores/progressStore'
 import { useSettingsStore } from '../../stores/settingsStore'
-import { TEXT_SIZE_PX, TEXT_SPEED_MS } from '../../data/settings'
+import { autoWaitMs, TEXT_SIZE_PX, TEXT_SPEED_MS } from '../../data/settings'
 import { useTranslations } from '../../i18n'
 import ViewportLayer from '../../layouts/ViewportLayer'
 import { Background } from './components/Background'
@@ -18,8 +18,6 @@ import { ScenarioLog } from './components/ScenarioLog'
 
 // log に表示する過去の行数
 const LOG_MAX_LINES = 50
-// auto で、テキストを出し終えてから次の行へ進むまでの時間
-const AUTO_ADVANCE_MS = 750
 // auto の進行時に前の行の進行（wait 命令など）がまだ終わっていなければ、この間隔で待ち直す
 const AUTO_RETRY_MS = 100
 
@@ -61,6 +59,7 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
   const shake = useGameStore((s) => s.shake)
   const pendingChoice = useGameStore((s) => s.pendingChoice)
   const textSize = useSettingsStore((s) => s.textSize)
+  const autoSpeed = useSettingsStore((s) => s.autoSpeed)
   const t = useTranslations('scenario', SCENARIO_TRANSLATION_MAPPING)
 
   const advancingRef = useRef(false)
@@ -162,7 +161,7 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
     }
   }
 
-  // auto: テキストを出し終えてから AUTO_ADVANCE_MS 後に次の行へ。選択肢とログ表示中は止まる。
+  // auto: テキストを出し終えてから、設定したオート速度（文字数に比例）の分だけ待って次の行へ。選択肢とログ表示中は止まる。
   // 同じテキストの行が続いても進むよう、snapshot ごとに数え直す
   const autoAdvance = useEffectEvent(() => {
     void advanceLine()
@@ -177,9 +176,9 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
       }
       autoAdvance()
     }
-    timer = window.setTimeout(tick, AUTO_ADVANCE_MS)
+    timer = window.setTimeout(tick, autoWaitMs(autoSpeed, snapshot.text.length))
     return () => window.clearTimeout(timer)
-  }, [auto, isTyping, pendingChoice, isLogOpen, snapshot])
+  }, [auto, autoSpeed, isTyping, pendingChoice, isLogOpen, snapshot])
 
   // prev: 1個前の状態に戻す
   const handlePrev = (e: React.MouseEvent) => {
@@ -191,6 +190,22 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
       setTyped({ text, count: text.length })
       persistProgress()
     } else instantNextRef.current = false
+  }
+
+  // log 表示中は ESC か右クリックでも閉じる
+  useEffect(() => {
+    if (!isLogOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsLogOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [isLogOpen])
+
+  const handleContextMenu = (e: React.MouseEvent) => {
+    if (!isLogOpen) return
+    e.preventDefault()
+    setIsLogOpen(false)
   }
 
   const handleAutoToggle = (e: React.MouseEvent) => {
@@ -235,7 +250,7 @@ function ScenarioRunner({ scenarioId, replay }: { scenarioId: string; replay: bo
 
   return (
     <ViewportLayer>
-      <div className="scenario-page fade-in" onClick={handleClick}>
+      <div className="scenario-page fade-in" onClick={handleClick} onContextMenu={handleContextMenu}>
         <Background bg={bg} motion={motion} shake={shake} />
         <CharacterSprite />
         <CharacterFace />

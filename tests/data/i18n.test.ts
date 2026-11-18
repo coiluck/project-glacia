@@ -3,10 +3,12 @@ import enCommon from '../../public/json/i18n/en/common.json';
 import enRecruit from '../../public/json/i18n/en/recruit.json';
 import enSortie from '../../public/json/i18n/en/sortie.json';
 import enStory from '../../public/json/i18n/en/story.json';
+import enSystem from '../../public/json/i18n/en/system.json';
 import jaCommon from '../../public/json/i18n/ja/common.json';
 import jaRecruit from '../../public/json/i18n/ja/recruit.json';
 import jaSortie from '../../public/json/i18n/ja/sortie.json';
 import jaStory from '../../public/json/i18n/ja/story.json';
+import jaSystem from '../../public/json/i18n/ja/system.json';
 import { RECRUIT_TRANSLATION_MAPPING } from '../../src/pages/recruit/texts';
 
 // 検証する名前空間。en と ja の組
@@ -15,6 +17,7 @@ const NAMESPACES: Record<string, [Record<string, string>, Record<string, string>
   story: [enStory, jaStory],
   sortie: [enSortie, jaSortie],
   recruit: [enRecruit, jaRecruit],
+  system: [enSystem, jaSystem],
 };
 
 // 文の中の {0} {1} … を並べたもの

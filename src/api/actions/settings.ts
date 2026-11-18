@@ -12,6 +12,7 @@ export async function saveSettings(): Promise<void> {
     bgm: s.bgm,
     se: s.se,
     textSpeed: s.textSpeed,
+    autoSpeed: s.autoSpeed,
     textSize: s.textSize,
     lang: s.lang,
   }
